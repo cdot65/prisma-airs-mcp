@@ -74,3 +74,5 @@ lerna-debug.log*
 # Security - prevent accidental commits of sensitive data
 # Use the .example files instead
 k8s/overlays/production/kustomization.yaml
+
+.claude
