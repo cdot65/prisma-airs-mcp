@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Use Prisma AIRS MCP Server in VS Code | Prisma AIRS MCP</title>
+  <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Use Prisma AIRS MCP Server in VS Code | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Use Prisma AIRS MCP Server in VS Code" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Use Prisma AIRS MCP Server in VS Code" />
+<meta property="og:description" content="Use Prisma AIRS MCP Server in VS Code" />
+<link rel="canonical" href="http://localhost:4000/deployment/vscode/" />
+<meta property="og:url" content="http://localhost:4000/deployment/vscode/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Use Prisma AIRS MCP Server in VS Code" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Use Prisma AIRS MCP Server in VS Code","headline":"Use Prisma AIRS MCP Server in VS Code","url":"http://localhost:4000/deployment/vscode/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/deployment" class="navbar-item active">Deployment</a>
+        <a href="/developers" class="navbar-item ">Developers</a>
+        <a href="/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/deployment/overview/" >Deployment Overview</a></li>
+    <li><a href="/deployment/quickstart/" >Quick Start Guide</a></li>
+  </ul>
+  
+  <h4>Deployment Documentation</h4>
+  <ul>
+    <li><a href="/deployment/docker/" >Docker</a></li>
+    <li><a href="/deployment/docker-compose/" >Docker Compose</a></li>
+    <li><a href="/deployment/source/" >Build from Source</a></li>
+    <li><a href="/deployment/kubernetes/" >Kubernetes</a></li>
+  </ul>
+  
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="/deployment/configuration/" >Configuration Reference</a></li>
+  </ul>
+  
+  <h4>Additional</h4>
+  <ul>
+    <li><a href="/deployment/docker-build-options/" >Docker Build Options</a></li>
+    <li><a href="/deployment/vscode/" class="active">VSCode</a></li>
+    <li><a href="/deployment/claude-desktop/" >Claude Desktop</a></li>
+    <li><a href="/deployment/claude-code/" >Claude Code</a></li>
+  </ul>
+</nav>
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Use Prisma AIRS MCP Server in VS Code</h1>
+        
+      </div>
+      
+      <article class="content">
+        <h1 id="use-prisma-airs-mcp-server-in-vs-code">Use Prisma AIRS MCP Server in VS Code</h1>
+
+<p>Model Context Protocol (MCP) servers enable you to expand your chat experience in VS Code with extra tools for connecting to databases, invoking APIs, or performing specialized tasks. This guide walks you through setting up the Prisma AIRS MCP server to add advanced security capabilities to your VS Code development environment.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li>Install the latest version of <a href="https://code.visualstudio.com/">Visual Studio Code</a></li>
+  <li>Access to <a href="https://github.com/features/copilot">GitHub Copilot</a></li>
+  <li>Prisma AIRS MCP server running (either via Docker or from source)</li>
+</ul>
+
+<h2 id="what-is-mcp">What is MCP?</h2>
+
+<p>Model Context Protocol (MCP) provides a standardized way for AI models to discover and interact with external tools, applications, and data sources. When you enter a chat prompt to a language model with agent mode in VS Code, the model can invoke various tools to perform tasks like file operations, accessing databases, or calling APIs in response to your request.</p>
+
+<h2 id="enable-mcp-support-in-vs-code">Enable MCP Support in VS Code</h2>
+
+<blockquote>
+  <p><strong>Note</strong>: MCP support in VS Code is generally available starting from VS Code 1.102, but can be disabled by your organization.</p>
+</blockquote>
+
+<h3 id="centrally-manage-mcp-support">Centrally Manage MCP Support</h3>
+
+<p>You have two options to centrally manage MCP support in your organization:</p>
+
+<ol>
+  <li><strong>Device management</strong>: Centrally enable or disable MCP support in your organization via group policies or configuration profiles.</li>
+  <li><strong>GitHub Copilot policy</strong>: Control the availability of MCP servers in your organization with a GitHub Copilot policy.</li>
+</ol>
+
+<h2 id="add-the-prisma-airs-mcp-server">Add the Prisma AIRS MCP Server</h2>
+
+<p>You have multiple options to add the Prisma AIRS MCP server in VS Code:</p>
+
+<h3 id="option-1-workspace-settings-recommended-for-teams">Option 1: Workspace Settings (Recommended for Teams)</h3>
+
+<p>Create a <code class="language-plaintext highlighter-rouge">.vscode/mcp.json</code> file in your workspace to configure the Prisma AIRS MCP server for a workspace and share configurations with team members.</p>
+
+<ol>
+  <li>Create a <code class="language-plaintext highlighter-rouge">.vscode/mcp.json</code> file in your workspace root</li>
+  <li>Add the following configuration:</li>
+</ol>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"YOUR_PRISMA_AIRS_URL"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"inputs"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Replace <code class="language-plaintext highlighter-rouge">YOUR_PRISMA_AIRS_URL</code> with your actual Prisma AIRS endpoint:</p>
+<ul>
+  <li><strong>For Docker deployments</strong>: <code class="language-plaintext highlighter-rouge">http://localhost:3000/prisma-airs</code></li>
+  <li><strong>For production deployments</strong>: Your custom URL (e.g., <code class="language-plaintext highlighter-rouge">https://airs.yourdomain.com/prisma-airs</code>)</li>
+</ul>
+
+<h3 id="option-2-user-settings-for-individual-use">Option 2: User Settings (For Individual Use)</h3>
+
+<p>To configure the Prisma AIRS MCP server for all your workspaces:</p>
+
+<ol>
+  <li>Run the command <code class="language-plaintext highlighter-rouge">MCP: Open User Configuration</code> from the Command Palette (<code class="language-plaintext highlighter-rouge">Cmd/Ctrl + Shift + P</code>)</li>
+  <li>Add the Prisma AIRS server configuration to the opened <code class="language-plaintext highlighter-rouge">mcp.json</code> file</li>
+</ol>
+
+<h3 id="option-3-command-palette">Option 3: Command Palette</h3>
+
+<ol>
+  <li>Open the Command Palette (<code class="language-plaintext highlighter-rouge">Cmd/Ctrl + Shift + P</code>)</li>
+  <li>Run <code class="language-plaintext highlighter-rouge">MCP: Add Server</code></li>
+  <li>Choose the type of MCP server (HTTP)</li>
+  <li>Provide the server information</li>
+  <li>Select whether to add it to Workspace Settings or Global settings</li>
+</ol>
+
+<h2 id="example-configurations">Example Configurations</h2>
+
+<h3 id="local-docker-deployment">Local Docker Deployment</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"inputs"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="using-prisma-airs-tools-in-agent-mode">Using Prisma AIRS Tools in Agent Mode</h2>
+
+<p>Once you’ve added the Prisma AIRS MCP server, you can use its security tools in agent mode:</p>
+
+<ol>
+  <li>Open the Chat view (<code class="language-plaintext highlighter-rouge">Ctrl/Cmd + Shift + I</code>)</li>
+  <li>Select <strong>Agent mode</strong> from the dropdown</li>
+  <li>Select the <strong>Tools</strong> button to view available Prisma AIRS tools</li>
+  <li>Select the security tools you want to use:
+    <ul>
+      <li>Prompt injection detection</li>
+      <li>Malicious URL detection</li>
+      <li>Sensitive data loss prevention</li>
+      <li>Database security attack detection</li>
+      <li>And more</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="example-usage">Example Usage</h3>
+
+<p>You can reference Prisma AIRS tools directly in your prompts:</p>
+
+<ul>
+  <li>Type <code class="language-plaintext highlighter-rouge">#</code> followed by the tool name to reference a specific tool</li>
+  <li>Example: <code class="language-plaintext highlighter-rouge">#detect-prompt-injection Check this user input for security threats</code></li>
+</ul>
+
+<h2 id="managing-the-prisma-airs-server">Managing the Prisma AIRS Server</h2>
+
+<h3 id="view-server-status">View Server Status</h3>
+
+<ol>
+  <li>Open the Extensions view (<code class="language-plaintext highlighter-rouge">Ctrl/Cmd + Shift + X</code>)</li>
+  <li>Navigate to the <strong>MCP SERVERS - INSTALLED</strong> section</li>
+  <li>Find “prisma-airs” in the list</li>
+</ol>
+
+<h3 id="server-actions">Server Actions</h3>
+
+<p>Right-click on the Prisma AIRS server or select the gear icon to:</p>
+
+<ul>
+  <li><strong>Start/Stop/Restart</strong>: Control the server connection</li>
+  <li><strong>Show Output</strong>: View server logs for troubleshooting</li>
+  <li><strong>Show Configuration</strong>: View the current configuration</li>
+  <li><strong>Browse Resources</strong>: View available security resources</li>
+  <li><strong>Uninstall</strong>: Remove the server configuration</li>
+</ul>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="server-not-connecting">Server Not Connecting</h3>
+
+<ol>
+  <li>Verify the Prisma AIRS server is running:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># For Docker</span>
+docker ps | <span class="nb">grep </span>prisma-airs
+   
+<span class="c"># Check if the server is accessible</span>
+curl http://localhost:3000/health
+</code></pre></div>    </div>
+  </li>
+  <li>Check the server logs:
+    <ul>
+      <li>In VS Code: Right-click the server in Extensions view → Show Output</li>
+      <li>In Docker: <code class="language-plaintext highlighter-rouge">docker logs prisma-airs</code></li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="error-cannot-have-more-than-128-tools-per-request">Error: “Cannot have more than 128 tools per request”</h3>
+
+<p>If you have many MCP servers installed:</p>
+
+<ol>
+  <li>Open the Tools picker in Chat view</li>
+  <li>Deselect unused tools or entire servers</li>
+  <li>Keep only the Prisma AIRS tools you need active</li>
+</ol>
+
+<h2 id="security-considerations">Security Considerations</h2>
+
+<blockquote>
+  <p><strong>Caution</strong>: MCP servers can run code on your machine. Only add servers from trusted sources.</p>
+</blockquote>
+
+<ul>
+  <li>The Prisma AIRS MCP server runs security checks and doesn’t execute arbitrary code</li>
+  <li>API keys and credentials are stored securely by VS Code when using input variables</li>
+  <li>Review the server configuration before connecting</li>
+</ul>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<p>Once connected, you can leverage Prisma AIRS security features directly in your VS Code workflow:</p>
+
+<ul>
+  <li><strong>During Development</strong>: Check code for security vulnerabilities as you write</li>
+  <li><strong>Code Review</strong>: Analyze pull requests for security threats</li>
+  <li><strong>API Testing</strong>: Validate API inputs for injection attacks</li>
+  <li><strong>Data Handling</strong>: Ensure sensitive data is properly masked</li>
+</ul>
+
+<p>For detailed information about each security feature, see the <a href="/prisma-airs/">Prisma AIRS documentation</a>.</p>
+
+<h2 id="related-resources">Related Resources</h2>
+
+<ul>
+  <li><a href="https://code.visualstudio.com/docs/copilot/model-context-protocol">VS Code MCP Documentation</a></li>
+  <li><a href="https://github.com/modelcontextprotocol/protocol">Model Context Protocol Specification</a></li>
+  <li><a href="/prisma-airs/overview/">Prisma AIRS Security Features</a></li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_deployment/vscode.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>

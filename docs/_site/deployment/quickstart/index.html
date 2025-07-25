@@ -14,40 +14,39 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Get Prisma AIRS MCP up and running in minutes" />
 <meta property="og:description" content="Get Prisma AIRS MCP up and running in minutes" />
-<link rel="canonical" href="https://cdot65.github.io/prisma-airs-mcp/deployment/quickstart/" />
-<meta property="og:url" content="https://cdot65.github.io/prisma-airs-mcp/deployment/quickstart/" />
+<link rel="canonical" href="http://localhost:4000/deployment/quickstart/" />
+<meta property="og:url" content="http://localhost:4000/deployment/quickstart/" />
 <meta property="og:site_name" content="Prisma AIRS MCP" />
-<meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-07-25T07:28:30-05:00" />
+<meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Quick Start Guide" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-07-25T07:28:30-05:00","datePublished":"2025-07-25T07:28:30-05:00","description":"Get Prisma AIRS MCP up and running in minutes","headline":"Quick Start Guide","mainEntityOfPage":{"@type":"WebPage","@id":"https://cdot65.github.io/prisma-airs-mcp/deployment/quickstart/"},"url":"https://cdot65.github.io/prisma-airs-mcp/deployment/quickstart/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Get Prisma AIRS MCP up and running in minutes","headline":"Quick Start Guide","url":"http://localhost:4000/deployment/quickstart/"}</script>
 <!-- End Jekyll SEO tag -->
 
   
   <!-- Styles -->
-  <link rel="stylesheet" href="/prisma-airs-mcp/assets/css/style.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Rouge syntax highlighting is handled by Jekyll -->
   
   <!-- Favicons -->
-  <link rel="icon" type="image/png" sizes="32x32" href="/prisma-airs-mcp/assets/img/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/prisma-airs-mcp/assets/img/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
 </head>
 <body>
   <nav class="navbar">
     <div class="container">
       <div class="navbar-brand">
-        <a href="/prisma-airs-mcp/" class="navbar-logo">
+        <a href="/" class="navbar-logo">
           <i class="fas fa-shield-alt"></i>
           Prisma AIRS MCP
         </a>
       </div>
       <div class="navbar-menu">
-        <a href="/prisma-airs-mcp/deployment" class="navbar-item active">Deployment</a>
-        <a href="/prisma-airs-mcp/developers" class="navbar-item ">Developers</a>
-        <a href="/prisma-airs-mcp/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="/deployment" class="navbar-item active">Deployment</a>
+        <a href="/developers" class="navbar-item ">Developers</a>
+        <a href="/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
         <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
           <i class="fab fa-github"></i>
         </a>
@@ -61,28 +60,29 @@
 <nav class="sidebar-nav">
   <h4>Getting Started</h4>
   <ul>
-    <li><a href="/prisma-airs-mcp/deployment/overview/" >Deployment Overview</a></li>
-    <li><a href="/prisma-airs-mcp/deployment/quickstart/" class="active">Quick Start Guide</a></li>
+    <li><a href="/deployment/overview/" >Deployment Overview</a></li>
+    <li><a href="/deployment/quickstart/" class="active">Quick Start Guide</a></li>
   </ul>
   
   <h4>Deployment Documentation</h4>
   <ul>
-    <li><a href="/prisma-airs-mcp/deployment/docker/" >Docker</a></li>
-    <li><a href="/prisma-airs-mcp/deployment/docker-compose/" >Docker Compose</a></li>
-    <li><a href="/prisma-airs-mcp/deployment/source/" >Build from Source</a></li>
-    <li><a href="/prisma-airs-mcp/deployment/kubernetes/" >Kubernetes</a></li>
+    <li><a href="/deployment/docker/" >Docker</a></li>
+    <li><a href="/deployment/docker-compose/" >Docker Compose</a></li>
+    <li><a href="/deployment/source/" >Build from Source</a></li>
+    <li><a href="/deployment/kubernetes/" >Kubernetes</a></li>
   </ul>
   
   <h4>Configuration</h4>
   <ul>
-    <li><a href="/prisma-airs-mcp/deployment/configuration/" >Configuration Reference</a></li>
+    <li><a href="/deployment/configuration/" >Configuration Reference</a></li>
   </ul>
   
   <h4>Additional</h4>
   <ul>
-    <li><a href="/prisma-airs-mcp/deployment/docker-build-options/" >Docker Build Options</a></li>
-    <li><a href="/prisma-airs-mcp/deployment/claude-desktop/" >Claude Desktop</a></li>
-    <li><a href="/prisma-airs-mcp/deployment/claude-code/" >Claude Code</a></li>
+    <li><a href="/deployment/docker-build-options/" >Docker Build Options</a></li>
+    <li><a href="/deployment/vscode/" >VSCode</a></li>
+    <li><a href="/deployment/claude-desktop/" >Claude Desktop</a></li>
+    <li><a href="/deployment/claude-code/" >Claude Code</a></li>
   </ul>
 </nav>
 
@@ -195,7 +195,7 @@ docker run <span class="nt">-d</span> <span class="se">\</span>
 curl http://localhost:3000/health
 </code></pre></div></div>
 
-<p><strong><a href="/prisma-airs-mcp/deployment/docker">Full Docker Guide →</a></strong></p>
+<p><strong><a href="/deployment/docker">Full Docker Guide →</a></strong></p>
 
 <h3 id="option-2-docker-compose-recommended">Option 2: Docker Compose (Recommended)</h3>
 
@@ -216,7 +216,7 @@ docker compose <span class="nt">--profile</span> prod up <span class="nt">-d</sp
 docker compose logs <span class="nt">-f</span>
 </code></pre></div></div>
 
-<p><strong><a href="/prisma-airs-mcp/deployment/docker-compose">Full Docker Compose Guide →</a></strong></p>
+<p><strong><a href="/deployment/docker-compose">Full Docker Compose Guide →</a></strong></p>
 
 <h3 id="option-3-build-from-source">Option 3: Build from Source</h3>
 
@@ -235,7 +235,7 @@ pnpm <span class="nb">install</span>
 pnpm dev
 </code></pre></div></div>
 
-<p><strong><a href="/prisma-airs-mcp/deployment/source">Full Source Build Guide →</a></strong></p>
+<p><strong><a href="/deployment/source">Full Source Build Guide →</a></strong></p>
 
 <h3 id="option-4-kubernetes">Option 4: Kubernetes</h3>
 
@@ -254,7 +254,7 @@ git clone https://github.com/cdot65/prisma-airs-mcp.git
 kubectl apply <span class="nt">-k</span> k8s/overlays/production
 </code></pre></div></div>
 
-<p><strong><a href="/prisma-airs-mcp/deployment/kubernetes">Full Kubernetes Guide →</a></strong></p>
+<p><strong><a href="/deployment/kubernetes">Full Kubernetes Guide →</a></strong></p>
 
 <h2 id="verify-installation">Verify Installation</h2>
 
@@ -307,7 +307,7 @@ CACHE_TTL_SECONDS=300
 RATE_LIMIT_MAX_REQUESTS=100
 </code></pre>
 
-<p><strong><a href="/prisma-airs-mcp/deployment/configuration">Full Configuration Reference →</a></strong></p>
+<p><strong><a href="/deployment/configuration">Full Configuration Reference →</a></strong></p>
 
 <h2 id="next-steps">Next Steps</h2>
 
@@ -319,23 +319,23 @@ RATE_LIMIT_MAX_REQUESTS=100
   <li>Start using Prisma AIRS security features</li>
 </ol>
 
-<p><strong><a href="/prisma-airs-mcp/deployment/claude-desktop">Claude Integration Guide →</a></strong></p>
+<p><strong><a href="/deployment/claude-desktop">Claude Integration Guide →</a></strong></p>
 
 <h3 id="deployment-guides">Deployment Guides</h3>
 
 <ul>
-  <li><strong><a href="/prisma-airs-mcp/deployment/overview">Compare All Options</a></strong> - Detailed comparison</li>
-  <li><strong><a href="/prisma-airs-mcp/deployment/docker">Docker Guide</a></strong> - Single container deployment</li>
-  <li><strong><a href="/prisma-airs-mcp/deployment/docker-compose">Docker Compose Guide</a></strong> - Multi-profile setup</li>
-  <li><strong><a href="/prisma-airs-mcp/deployment/kubernetes">Kubernetes Guide</a></strong> - Production deployment</li>
+  <li><strong><a href="/deployment/overview">Compare All Options</a></strong> - Detailed comparison</li>
+  <li><strong><a href="/deployment/docker">Docker Guide</a></strong> - Single container deployment</li>
+  <li><strong><a href="/deployment/docker-compose">Docker Compose Guide</a></strong> - Multi-profile setup</li>
+  <li><strong><a href="/deployment/kubernetes">Kubernetes Guide</a></strong> - Production deployment</li>
 </ul>
 
 <h3 id="development-resources">Development Resources</h3>
 
 <ul>
-  <li><strong><a href="/prisma-airs-mcp/developers/overview">SDK Documentation</a></strong> - Using the TypeScript SDK</li>
-  <li><strong><a href="/prisma-airs-mcp/developers/api/">API Reference</a></strong> - Complete API documentation</li>
-  <li><strong><a href="/prisma-airs-mcp/developers/examples/basic">Examples</a></strong> - Code samples</li>
+  <li><strong><a href="/developers/overview">SDK Documentation</a></strong> - Using the TypeScript SDK</li>
+  <li><strong><a href="/developers/api/">API Reference</a></strong> - Complete API documentation</li>
+  <li><strong><a href="/developers/examples/basic">Examples</a></strong> - Code samples</li>
 </ul>
 
 <h2 id="quick-troubleshooting">Quick Troubleshooting</h2>
@@ -390,7 +390,7 @@ lsof <span class="nt">-i</span> :3000
         <div class="pagination">
           
           
-          <a href="/prisma-airs-mcp/deployment/source/" class="next">
+          <a href="/deployment/source/" class="next">
             Build from Source <i class="fas fa-arrow-right"></i>
           </a>
           
@@ -406,6 +406,6 @@ lsof <span class="nt">-i</span> :3000
   </div>
 
   <!-- Syntax highlighting is handled by Jekyll Rouge -->
-  <script src="/prisma-airs-mcp/assets/js/main.js"></script>
+  <script src="/assets/js/main.js"></script>
 </body>
 </html>
