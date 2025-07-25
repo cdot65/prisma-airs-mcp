@@ -1,0 +1,82 @@
+# .claudeignore - Files and directories Claude Code should ignore
+
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+*.tsbuildinfo
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Environment files (may contain secrets)
+.env
+.env.*
+!.env.example
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Git
+.git/
+.gitignore
+
+# Docker
+.dockerignore
+
+# Generated files
+*.generated.*
+*.gen.ts
+
+# Large binary files
+*.zip
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Kubernetes secrets
+k8s/secrets/
+k8s/**/*secret*.yaml
+
+# Session-specific files
+.claude/context/session-context.md
+
+# Removed scripts
+start-claude.sh
+claude-start-simple.sh

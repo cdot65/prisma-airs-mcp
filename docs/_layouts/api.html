@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} | {{ site.title }} API</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+  
+  <!-- SEO Tags -->
+  {% seo %}
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/api.css' | relative_url }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/img/favicon-32x32.png' | relative_url }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/img/favicon-16x16.png' | relative_url }}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="{{ site.baseurl }}/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="{{ site.baseurl }}/deployment" class="navbar-item">Deployment</a>
+        <a href="{{ site.baseurl }}/developers" class="navbar-item">Developers</a>
+        <a href="{{ site.baseurl }}/prisma-airs/overview" class="navbar-item">Prisma AIRS</a>
+        <a href="{{ site.baseurl }}/api" class="navbar-item active">API</a>
+        <a href="https://github.com/{{ site.github_username }}/{{ site.github_repo }}" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="api-layout">
+    <aside class="api-sidebar">
+      {% include sidebar.html %}
+    </aside>
+    
+    <main class="api-content">
+      <div class="api-header">
+        <h1>{{ page.title }}</h1>
+        {% if page.description %}
+        <p class="api-description">{{ page.description }}</p>
+        {% endif %}
+      </div>
+      
+      <article class="api-documentation">
+        {{ content }}
+      </article>
+      
+      <div class="api-footer">
+        <div class="edit-page">
+          <a href="https://github.com/{{ site.github_username }}/{{ site.github_repo }}/edit/main/docs/{{ page.path }}">
+            <i class="fas fa-edit"></i> Edit this page
+          </a>
+        </div>
+      </div>
+    </main>
+    
+    <aside class="api-toc">
+      <div class="toc-header">
+        <h4>On this page</h4>
+      </div>
+      <nav id="table-of-contents"></nav>
+      
+      <div class="api-try-it">
+        <h4>Try it out</h4>
+        <button class="btn btn-primary btn-block" onclick="openApiPlayground()">
+          <i class="fas fa-play"></i> API Playground
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-typescript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+  <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+  <script>
+    function openApiPlayground() {
+      window.open('{{ site.baseurl }}/api/playground', '_blank');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+  ----
+  # Packet 0 from /Users/cdot/Desktop/capture.pcap
+  - 7
+  - 0.000113
+  - 10.42.0.1
+  - 10.42.0.170
+  - HTTP
+  - 176
+  - GET /ready HTTP/1.1
+    
+    ----
+  # Packet 1 from /Users/cdot/Desktop/capture.pcap
+  - 11
+  - 0.000646
+  - 10.42.0.170
+  - 10.42.0.1
+  - HTTP/JSON
+  - 382
+  - HTTP/1.1 200 OK , JSON (application/json)
+    
+    ----
+  # Packet 2 from /Users/cdot/Desktop/capture.pcap
+  - 31
+  - 4.623736
+  - 10.42.0.124
+  - 10.42.0.170
+  - HTTP/JSON
+  - 201
+  - POST / HTTP/1.1 , JSON (application/json)
+    
+    ----
+  # Packet 3 from /Users/cdot/Desktop/capture.pcap
+  - 119
+  - 5.145502
+  - 10.42.0.170
+  - 10.42.0.124
+  - HTTP/JSON
+  - 1194
+  - HTTP/1.1 200 OK , JSON (application/json)
+    
+    ----
+  # Packet 4 from /Users/cdot/Desktop/capture.pcap
+  - 151
+  - 10.000886
+  - 10.42.0.1
+  - 10.42.0.170
+  - HTTP
+  - 176
+  - GET /ready HTTP/1.1
+    
+    ----
+  # Packet 5 from /Users/cdot/Desktop/capture.pcap
+  - 155
+  - 10.001422
+  - 10.42.0.170
+  - 10.42.0.1
+  - HTTP/JSON
+  - 382
+  - HTTP/1.1 200 OK , JSON (application/json)
+    
+    ----
+  # Packet 6 from /Users/cdot/Desktop/capture.pcap
+  - 183
+  - 20.000184
+  - 10.42.0.1
+  - 10.42.0.170
+  - HTTP
+  - 176
+  - GET /ready HTTP/1.1
+    
+    ----
+  # Packet 7 from /Users/cdot/Desktop/capture.pcap
+  - 185
+  - 20.000188
+  - 10.42.0.1
+  - 10.42.0.170
+  - HTTP
+  - 177
+  - GET /health HTTP/1.1
+    
+    ----
+  # Packet 8 from /Users/cdot/Desktop/capture.pcap
+  - 191
+  - 20.001449
+  - 10.42.0.170
+  - 10.42.0.1
+  - HTTP/JSON
+  - 384
+  - HTTP/1.1 200 OK , JSON (application/json)
+    
+    ----
+  # Packet 9 from /Users/cdot/Desktop/capture.pcap
+  - 201
+  - 20.001920
+  - 10.42.0.170
+  - 10.42.0.1
+  - HTTP/JSON
+  - 382
+  - HTTP/1.1 200 OK , JSON (application/json)
+    
+    ----
+  # Packet 10 from /Users/cdot/Desktop/capture.pcap
+  - 219
+  - 30.000685
+  - 10.42.0.1
+  - 10.42.0.170
+  - HTTP
+  - 176
+  - GET /ready HTTP/1.1
+    
+    ----
+  # Packet 11 from /Users/cdot/Desktop/capture.pcap
+  - 223
+  - 30.001159
+  - 10.42.0.170
+  - 10.42.0.1
+  - HTTP/JSON
+  - 382
+  - HTTP/1.1 200 OK , JSON (application/json)

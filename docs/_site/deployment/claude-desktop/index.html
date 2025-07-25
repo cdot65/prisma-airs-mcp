@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Desktop Integration | Prisma AIRS MCP</title>
+  <meta name="description" content="Configure Prisma AIRS MCP for Claude Desktop">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Claude Desktop Integration | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Claude Desktop Integration" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Configure Prisma AIRS MCP for Claude Desktop" />
+<meta property="og:description" content="Configure Prisma AIRS MCP for Claude Desktop" />
+<link rel="canonical" href="https://cdot65.github.io/prisma-airs-mcp/deployment/claude-desktop/" />
+<meta property="og:url" content="https://cdot65.github.io/prisma-airs-mcp/deployment/claude-desktop/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-25T07:28:30-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Claude Desktop Integration" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-07-25T07:28:30-05:00","datePublished":"2025-07-25T07:28:30-05:00","description":"Configure Prisma AIRS MCP for Claude Desktop","headline":"Claude Desktop Integration","mainEntityOfPage":{"@type":"WebPage","@id":"https://cdot65.github.io/prisma-airs-mcp/deployment/claude-desktop/"},"url":"https://cdot65.github.io/prisma-airs-mcp/deployment/claude-desktop/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/prisma-airs-mcp/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/prisma-airs-mcp/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/prisma-airs-mcp/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/prisma-airs-mcp/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/prisma-airs-mcp/deployment" class="navbar-item active">Deployment</a>
+        <a href="/prisma-airs-mcp/developers" class="navbar-item ">Developers</a>
+        <a href="/prisma-airs-mcp/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/overview/" >Deployment Overview</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/quickstart/" >Quick Start Guide</a></li>
+  </ul>
+  
+  <h4>Deployment Documentation</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/docker/" >Docker</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/docker-compose/" >Docker Compose</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/source/" >Build from Source</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/kubernetes/" >Kubernetes</a></li>
+  </ul>
+  
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/configuration/" >Configuration Reference</a></li>
+  </ul>
+  
+  <h4>Additional</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/docker-build-options/" >Docker Build Options</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/claude-desktop/" class="active">Claude Desktop</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/claude-code/" >Claude Code</a></li>
+  </ul>
+</nav>
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Claude Desktop Integration</h1>
+        
+        <p class="lead">Configure Prisma AIRS MCP for Claude Desktop</p>
+        
+      </div>
+      
+      <article class="content">
+        <h2 id="overview">Overview</h2>
+
+<p>Claude Desktop supports the Model Context Protocol (MCP), allowing seamless integration with Prisma AIRS for real-time AI security scanning. This guide covers setup and configuration for Claude Desktop specifically.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li>Claude Desktop installed on your system</li>
+  <li>Node.js installed (for <code class="language-plaintext highlighter-rouge">npx</code> command)</li>
+  <li>Prisma AIRS MCP server running (locally or remotely)</li>
+</ul>
+
+<h2 id="configuration">Configuration</h2>
+
+<h3 id="location-of-configuration-file">Location of Configuration File</h3>
+
+<p><strong>macOS:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/Library/Application Support/Claude/claude_desktop_config.json
+</code></pre></div></div>
+
+<p><strong>Windows:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>%APPDATA%<span class="se">\C</span>laude<span class="se">\c</span>laude_desktop_config.json
+</code></pre></div></div>
+
+<h3 id="basic-configuration">Basic Configuration</h3>
+
+<p>For a local Prisma AIRS MCP server:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"http://localhost:3000"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="remote-server-configuration">Remote Server Configuration</h3>
+
+<p>For a deployed Prisma AIRS MCP server:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"https://your-server.com/prisma-airs"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="installation-steps">Installation Steps</h2>
+
+<h3 id="1-edit-configuration">1. Edit Configuration</h3>
+
+<p><strong>macOS:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Open configuration in your editor</span>
+nano ~/Library/Application<span class="se">\ </span>Support/Claude/claude_desktop_config.json
+
+<span class="c"># Or use a visual editor</span>
+open <span class="nt">-e</span> ~/Library/Application<span class="se">\ </span>Support/Claude/claude_desktop_config.json
+</code></pre></div></div>
+
+<p><strong>Windows:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Open configuration in Notepad</span>
+notepad %APPDATA%<span class="se">\C</span>laude<span class="se">\c</span>laude_desktop_config.json
+</code></pre></div></div>
+
+<h3 id="2-add-mcp-server-configuration">2. Add MCP Server Configuration</h3>
+
+<p>Add the Prisma AIRS configuration to your <code class="language-plaintext highlighter-rouge">claude_desktop_config.json</code>:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"http://localhost:3000"</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="3-save-and-restart-claude-desktop">3. Save and Restart Claude Desktop</h3>
+
+<ol>
+  <li>Save the configuration file</li>
+  <li>Completely quit Claude Desktop:
+    <ul>
+      <li><strong>macOS</strong>: Cmd+Q or Claude → Quit Claude</li>
+      <li><strong>Windows</strong>: Alt+F4 or File → Exit</li>
+    </ul>
+  </li>
+  <li>Restart Claude Desktop</li>
+</ol>
+
+<h3 id="4-verify-integration">4. Verify Integration</h3>
+
+<p>After restarting, the Prisma AIRS tools should be available. You can verify by asking Claude:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"What security scanning tools do you have available?"
+</code></pre></div></div>
+
+<p>Claude should list the Prisma AIRS tools:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">airs_scan_content</code></li>
+  <li><code class="language-plaintext highlighter-rouge">airs_scan_async</code></li>
+  <li><code class="language-plaintext highlighter-rouge">airs_get_scan_results</code></li>
+  <li><code class="language-plaintext highlighter-rouge">airs_get_threat_reports</code></li>
+  <li><code class="language-plaintext highlighter-rouge">airs_clear_cache</code></li>
+</ul>
+
+<h2 id="using-npx-vs-global-installation">Using npx vs Global Installation</h2>
+
+<h3 id="option-1-using-npx-recommended">Option 1: Using npx (Recommended)</h3>
+
+<p>The configuration above uses <code class="language-plaintext highlighter-rouge">npx</code> which downloads and runs <code class="language-plaintext highlighter-rouge">mcp-remote</code> on demand:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w"> </span><span class="s2">"http://localhost:3000"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Pros:</strong></p>
+<ul>
+  <li>No installation required</li>
+  <li>Always uses the latest version</li>
+  <li>Works out of the box</li>
+</ul>
+
+<p><strong>Cons:</strong></p>
+<ul>
+  <li>Slightly slower startup (downloads package if not cached)</li>
+  <li>Requires internet connection on first use</li>
+</ul>
+
+<h3 id="option-2-global-installation">Option 2: Global Installation</h3>
+
+<p>Install <code class="language-plaintext highlighter-rouge">mcp-remote</code> globally for faster startup:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install globally</span>
+npm <span class="nb">install</span> <span class="nt">-g</span> @modelcontextprotocol/mcp-remote
+
+<span class="c"># Verify installation</span>
+mcp-remote <span class="nt">--version</span>
+</code></pre></div></div>
+
+<p>Then update your configuration:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"http://localhost:3000"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="tools-not-appearing">Tools Not Appearing</h3>
+
+<ol>
+  <li><strong>Check JSON Syntax</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Validate JSON syntax</span>
+python <span class="nt">-m</span> json.tool ~/Library/Application<span class="se">\ </span>Support/Claude/claude_desktop_config.json
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Verify Server is Running</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:3000/health
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Check for Errors</strong>
+    <ul>
+      <li>Look for error messages in Claude Desktop</li>
+      <li>Enable debug logging in the configuration</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="connection-errors">Connection Errors</h3>
+
+<ol>
+  <li><strong>Local Server Not Accessible</strong>
+    <ul>
+      <li>Ensure the MCP server is running: <code class="language-plaintext highlighter-rouge">docker ps</code></li>
+      <li>Check the port: <code class="language-plaintext highlighter-rouge">lsof -i :3000</code></li>
+    </ul>
+  </li>
+  <li><strong>Remote Server Issues</strong>
+    <ul>
+      <li>Test the URL: <code class="language-plaintext highlighter-rouge">curl https://your-server.com/prisma-airs/health</code></li>
+      <li>Check firewall/security group settings</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="debug-mode">Debug Mode</h3>
+
+<p>Enable detailed logging:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"http://localhost:3000"</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"DEBUG"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mcp:*"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"LOG_LEVEL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debug"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<ol>
+  <li><strong>Use Environment-Specific Names</strong>
+    <ul>
+      <li>Name servers clearly: <code class="language-plaintext highlighter-rouge">prisma-airs-dev</code>, <code class="language-plaintext highlighter-rouge">prisma-airs-prod</code></li>
+      <li>Helps avoid confusion when switching environments</li>
+    </ul>
+  </li>
+  <li><strong>Secure Remote Connections</strong>
+    <ul>
+      <li>Always use HTTPS for remote servers</li>
+      <li>Consider using API keys or authentication headers</li>
+    </ul>
+  </li>
+  <li><strong>Monitor Performance</strong>
+    <ul>
+      <li>Check rate limits regularly</li>
+      <li>Monitor cache statistics for optimization</li>
+    </ul>
+  </li>
+  <li><strong>Regular Updates</strong>
+    <ul>
+      <li>Keep Claude Desktop updated</li>
+      <li>Update the MCP server regularly</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+  <li><a href="/prisma-airs-mcp/deployment/claude-code">Claude Code Integration</a> - Using with Claude Code</li>
+  <li><a href="/prisma-airs-mcp/deployment/quickstart">Quick Start Guide</a> - Full deployment guide</li>
+  <li><a href="/prisma-airs-mcp/deployment/configuration">Configuration Reference</a> - Server configuration</li>
+  <li><a href="/prisma-airs-mcp/prisma-airs/best-practices">Security Best Practices</a> - Security guidelines</li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_deployment/claude-desktop.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/prisma-airs-mcp/deployment/configuration/" class="next">
+            Configuration Reference <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/prisma-airs-mcp/assets/js/main.js"></script>
+</body>
+</html>

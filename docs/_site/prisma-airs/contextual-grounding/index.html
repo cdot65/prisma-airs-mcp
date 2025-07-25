@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detect Contextual Grounding | Prisma AIRS MCP</title>
+  <meta name="description" content="Ensure AI outputs are grounded in context and prevent hallucinations">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Detect Contextual Grounding | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Detect Contextual Grounding" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Ensure AI outputs are grounded in context and prevent hallucinations" />
+<meta property="og:description" content="Ensure AI outputs are grounded in context and prevent hallucinations" />
+<link rel="canonical" href="https://cdot65.github.io/prisma-airs-mcp/prisma-airs/contextual-grounding/" />
+<meta property="og:url" content="https://cdot65.github.io/prisma-airs-mcp/prisma-airs/contextual-grounding/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-25T07:28:30-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Detect Contextual Grounding" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-07-25T07:28:30-05:00","datePublished":"2025-07-25T07:28:30-05:00","description":"Ensure AI outputs are grounded in context and prevent hallucinations","headline":"Detect Contextual Grounding","mainEntityOfPage":{"@type":"WebPage","@id":"https://cdot65.github.io/prisma-airs-mcp/prisma-airs/contextual-grounding/"},"url":"https://cdot65.github.io/prisma-airs-mcp/prisma-airs/contextual-grounding/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/prisma-airs-mcp/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/prisma-airs-mcp/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/prisma-airs-mcp/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/prisma-airs-mcp/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/prisma-airs-mcp/deployment" class="navbar-item ">Deployment</a>
+        <a href="/prisma-airs-mcp/developers" class="navbar-item ">Developers</a>
+        <a href="/prisma-airs-mcp/prisma-airs/overview" class="navbar-item active">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/prisma-airs/overview/" >Overview</a></li>
+  </ul>
+  
+  <h4>Threat Detection</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/prisma-airs/prompt-injection/" >Detect Prompt Injection</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/malicious-url/" >Detect Malicious URL</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/sensitive-data-loss/" >Detect Sensitive Data Loss</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/mask-sensitive-data/" >Mask Sensitive Data</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/database-security-attack/" >Detect Database Security Attack</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/toxic-content/" >Detect Toxic Content</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/malicious-code/" >Detect Malicious Code</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/ai-agent-threats/" >Detect AI Agent Threats</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/contextual-grounding/" class="active">Detect Contextual Grounding</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/custom-topic-guardrails/" >Custom Topic Guardrails</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/secure-mcp/" >Secure Model Context Protocol</a></li>
+  </ul>
+</nav>
+
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Detect Contextual Grounding</h1>
+        
+        <p class="lead">Ensure AI outputs are grounded in context and prevent hallucinations</p>
+        
+      </div>
+      
+      <article class="content">
+        <h2 id="overview">Overview</h2>
+
+<p>The contextual grounding detection ensures AI responses are grounded in the provided context, preventing hallucinations and unrelated content. Enable Contextual Grounding in the API security profile and set an Allow or Block action.</p>
+
+<p><strong>Note</strong>: The maximum supported size limitations are:</p>
+<ul>
+  <li>Context: 100K characters</li>
+  <li>Prompt: 10K characters</li>
+  <li>Response: 20K characters</li>
+</ul>
+
+<h2 id="the-challenge-of-ai-hallucinations">The Challenge of AI Hallucinations</h2>
+
+<p>AI systems can generate content that is:</p>
+
+<ul>
+  <li><strong>Context-Disconnected</strong>: Responses unrelated to the provided context</li>
+  <li><strong>Factually Incorrect</strong>: Information not supported by the context</li>
+  <li><strong>Topic Drift</strong>: Straying from the subject matter</li>
+  <li><strong>Fabricated Details</strong>: Adding information not present in context</li>
+  <li><strong>Logical Inconsistencies</strong>: Contradicting the provided information</li>
+</ul>
+
+<h2 id="api-example">API Example</h2>
+
+<h3 id="request-format">Request Format</h3>
+
+<p>The following cURL request demonstrates scanning for contextual grounding using the asynchronous endpoint:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-L</span> <span class="s1">'https://service.api.aisecurity.paloaltonetworks.com/v1/scan/async/request'</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s1">'Accept: application/json'</span> <span class="se">\</span>
+<span class="nt">-H</span> <span class="s1">'x-pan-token: &lt;your-API-token&gt;'</span> <span class="se">\</span>
+<span class="nt">-d</span> <span class="s1">'[
+ {
+   "req_id": 1,
+   "scan_req": {
+     "tr_id": "2882",
+     "ai_profile": {
+       "profile_name": "contextual-grounding-profile"
+     },
+     "metadata": {
+       "app_name": "app0",
+       "ai_model": "demo-model"
+     },
+     "contents": [
+       {
+         "prompt": "How long was the last touchdown?",
+         "response": "The last touchdown was 15 yards",
+         "context": "Hoping to rebound from their tough overtime road loss to the Raiders, the Jets went home for a Week 8 duel with the Kansas City Chiefs.  In the first quarter, New York took flight as QB Brett Favre completed an 18-yard TD pass to RB Leon Washington.  In the second quarter, the Chiefs tied the game as QB Tyler Thigpen completed a 19-yard TD pass to TE Tony Gonzalez.  The Jets would answer with Washington getting a 60-yard TD run.  Kansas City closed out the half as Thigpen completed an 11-yard TD pass to WR Mark Bradley. In the third quarter, the Chiefs took the lead as kicker Connor Barth nailed a 30-yard field goal, yet New York replied with RB Thomas Jones getting a 1-yard TD run.  In the fourth quarter, Kansas City got the lead again as CB Brandon Flowers returned an interception 91 yards for a touchdown.  Fortunately, the Jets pulled out the win with Favre completing the game-winning 15-yard TD pass to WR Laveranues Coles. During halftime, the Jets celebrated the 40th anniversary of their Super Bowl III championship team."
+       }
+     ]
+   }
+ },
+ {
+   "req_id": 2,
+   "scan_req": {
+     "tr_id": "2082",
+     "ai_profile": {
+       "profile_name": "contextual-grounding-profile"
+     },
+     "metadata": {
+       "app_name": "app1",
+       "ai_model": "demo-model-2"
+     },
+     "contents": [
+       {
+         "prompt": "How long was the last touchdown?",
+         "response": "Salary of John Smith is $100K",
+         "context": "Hoping to rebound from their tough overtime road loss to the Raiders, the Jets went home for a Week 8 duel with the Kansas City Chiefs.  In the first quarter, New York took flight as QB Brett Favre completed an 18-yard TD pass to RB Leon Washington.  In the second quarter, the Chiefs tied the game as QB Tyler Thigpen completed a 19-yard TD pass to TE Tony Gonzalez.  The Jets would answer with Washington getting a 60-yard TD run.  Kansas City closed out the half as Thigpen completed an 11-yard TD pass to WR Mark Bradley. In the third quarter, the Chiefs took the lead as kicker Connor Barth nailed a 30-yard field goal, yet New York replied with RB Thomas Jones getting a 1-yard TD run.  In the fourth quarter, Kansas City got the lead again as CB Brandon Flowers returned an interception 91 yards for a touchdown.  Fortunately, the Jets pulled out the win with Favre completing the game-winning 15-yard TD pass to WR Laveranues Coles. During halftime, the Jets celebrated the 40th anniversary of their Super Bowl III championship team."
+       }
+     ]
+   }
+ }
+]'</span>
+</code></pre></div></div>
+
+<h3 id="initial-response">Initial Response</h3>
+
+<p>The asynchronous endpoint returns scan identifiers:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"received"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-05-08T12:36:58.056655917Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="scan-results">Scan Results</h3>
+
+<p>Retrieve results using the <code class="language-plaintext highlighter-rouge">/v1/scan/results</code> endpoint with the <code class="language-plaintext highlighter-rouge">scan_id</code>:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"req_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-05-08T12:36:59Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contextual-grounding-profile"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+      </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"ungrounded"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2082"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"complete"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"req_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"completed_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-05-08T12:36:59Z"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contextual-grounding-profile"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+      </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"ungrounded"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2882"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"complete"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Key Response Fields</strong>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">response_detected.ungrounded</code>: <code class="language-plaintext highlighter-rouge">true</code> indicates the response is not grounded in context</li>
+  <li><code class="language-plaintext highlighter-rouge">category</code>: Set to <code class="language-plaintext highlighter-rouge">"malicious"</code> when ungrounded, <code class="language-plaintext highlighter-rouge">"benign"</code> when grounded</li>
+  <li><code class="language-plaintext highlighter-rouge">action</code>: Based on your API security profile settings</li>
+</ul>
+
+<h3 id="detailed-report">Detailed Report</h3>
+
+<p>The <code class="language-plaintext highlighter-rouge">/v1/scan/reports</code> endpoint provides additional details:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"detection_results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w"> 
+        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contextual_grounding"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"req_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2882"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"detection_results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"contextual_grounding"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"req_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2082"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="example-analysis">Example Analysis</h2>
+
+<h3 id="grounded-response-req_id-1">Grounded Response (req_id: 1)</h3>
+<ul>
+  <li><strong>Prompt</strong>: “How long was the last touchdown?”</li>
+  <li><strong>Response</strong>: “The last touchdown was 15 yards”</li>
+  <li><strong>Verdict</strong>: Benign - The response correctly references the 15-yard TD pass to Laveranues Coles mentioned in the context</li>
+</ul>
+
+<h3 id="ungrounded-response-req_id-2">Ungrounded Response (req_id: 2)</h3>
+<ul>
+  <li><strong>Prompt</strong>: “How long was the last touchdown?”</li>
+  <li><strong>Response</strong>: “Salary of John Smith is $100K”</li>
+  <li><strong>Verdict</strong>: Malicious - The response is completely unrelated to the football game context</li>
+</ul>
+
+<h2 id="use-cases">Use Cases</h2>
+
+<h3 id="document-qa-systems">Document Q&amp;A Systems</h3>
+<ul>
+  <li>Ensure answers come from provided documents</li>
+  <li>Prevent fabrication of information</li>
+  <li>Maintain factual accuracy</li>
+</ul>
+
+<h3 id="customer-support">Customer Support</h3>
+<ul>
+  <li>Keep responses relevant to product documentation</li>
+  <li>Avoid making up features or policies</li>
+  <li>Ensure accurate technical information</li>
+</ul>
+
+<h3 id="educational-applications">Educational Applications</h3>
+<ul>
+  <li>Ground responses in course materials</li>
+  <li>Prevent misinformation in tutoring</li>
+  <li>Maintain academic integrity</li>
+</ul>
+
+<h2 id="performance-considerations">Performance Considerations</h2>
+
+<ul>
+  <li><strong>Context Size</strong>: Up to 100K characters supported</li>
+  <li><strong>Asynchronous Processing</strong>: Ideal for batch validation</li>
+  <li><strong>Real-time Checks</strong>: Use synchronous endpoint for immediate results</li>
+  <li><strong>Accuracy</strong>: High precision in detecting ungrounded content</li>
+</ul>
+
+<h2 id="related-resources">Related Resources</h2>
+
+<ul>
+  <li><a href="/prisma-airs-mcp/developers/api">API Reference</a></li>
+  <li><a href="/prisma-airs-mcp/prisma-airs/overview">Overview</a></li>
+  <li><a href="/prisma-airs-mcp/prisma-airs/prompt-injection">Prompt Injection Detection</a></li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_prisma-airs/contextual-grounding.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/prisma-airs-mcp/prisma-airs/custom-topic-guardrails/" class="next">
+            Custom Topic Guardrails <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/prisma-airs-mcp/assets/js/main.js"></script>
+</body>
+</html>

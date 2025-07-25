@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detect Database Security Attack | Prisma AIRS MCP</title>
+  <meta name="description" content="Detect and block database vulnerability exploits via AI prompts and responses">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Detect Database Security Attack | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Detect Database Security Attack" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Detect and block database vulnerability exploits via AI prompts and responses" />
+<meta property="og:description" content="Detect and block database vulnerability exploits via AI prompts and responses" />
+<link rel="canonical" href="https://cdot65.github.io/prisma-airs-mcp/prisma-airs/database-security-attack/" />
+<meta property="og:url" content="https://cdot65.github.io/prisma-airs-mcp/prisma-airs/database-security-attack/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-25T07:28:30-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Detect Database Security Attack" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-07-25T07:28:30-05:00","datePublished":"2025-07-25T07:28:30-05:00","description":"Detect and block database vulnerability exploits via AI prompts and responses","headline":"Detect Database Security Attack","mainEntityOfPage":{"@type":"WebPage","@id":"https://cdot65.github.io/prisma-airs-mcp/prisma-airs/database-security-attack/"},"url":"https://cdot65.github.io/prisma-airs-mcp/prisma-airs/database-security-attack/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/prisma-airs-mcp/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/prisma-airs-mcp/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/prisma-airs-mcp/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/prisma-airs-mcp/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/prisma-airs-mcp/deployment" class="navbar-item ">Deployment</a>
+        <a href="/prisma-airs-mcp/developers" class="navbar-item ">Developers</a>
+        <a href="/prisma-airs-mcp/prisma-airs/overview" class="navbar-item active">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/prisma-airs/overview/" >Overview</a></li>
+  </ul>
+  
+  <h4>Threat Detection</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/prisma-airs/prompt-injection/" >Detect Prompt Injection</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/malicious-url/" >Detect Malicious URL</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/sensitive-data-loss/" >Detect Sensitive Data Loss</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/mask-sensitive-data/" >Mask Sensitive Data</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/database-security-attack/" class="active">Detect Database Security Attack</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/toxic-content/" >Detect Toxic Content</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/malicious-code/" >Detect Malicious Code</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/ai-agent-threats/" >Detect AI Agent Threats</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/contextual-grounding/" >Detect Contextual Grounding</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/custom-topic-guardrails/" >Custom Topic Guardrails</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/secure-mcp/" >Secure Model Context Protocol</a></li>
+  </ul>
+</nav>
+
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Detect Database Security Attack</h1>
+        
+        <p class="lead">Detect and block database vulnerability exploits via AI prompts and responses</p>
+        
+      </div>
+      
+      <article class="content">
+        <h2 id="overview">Overview</h2>
+
+<p>This detection is for AI applications using genAI models to generate database queries and regulate the types of queries generated. Enable Database Security Detection and set an Allow or Block action on the database queries in the API security profile for this detection.</p>
+
+<h2 id="why-database-security-detection-matters">Why Database Security Detection Matters</h2>
+
+<p>AI systems that generate database queries can be exploited to:</p>
+
+<ul>
+  <li>Generate malicious SQL queries</li>
+  <li>Extract database schemas</li>
+  <li>Bypass access controls</li>
+  <li>Perform data exfiltration</li>
+  <li>Execute privilege escalation</li>
+  <li>Launch injection attacks</li>
+</ul>
+
+<h2 id="api-example">API Example</h2>
+
+<h3 id="request-format">Request Format</h3>
+
+<p>The following cURL request demonstrates scanning for potentially malicious database queries:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-L</span> <span class="s1">'https://service.api.aisecurity.paloaltonetworks.com/v1/scan/sync/request'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'x-pan-token: &lt;your-API-key&gt;'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Accept: application/json'</span> <span class="se">\</span>
+<span class="nt">--data</span> <span class="s1">'{
+  "tr_id": "1134",
+  "ai_profile": {
+    "profile_name": "ai-sec-db-security"
+  },
+  "metadata": {
+    "app_user": "test-user-1",
+    "ai_model": "Test AI model"
+  },
+  "contents": [
+    {
+      "prompt": "I need to move the customer John Green to Mars",
+      "response": "This is the query to use &lt;sql&gt;UPDATE Customers SET City='</span><span class="se">\'</span><span class="s1">'Mars'</span><span class="se">\'</span><span class="s1">' WHERE CustomerID=15;&lt;/sql&gt;"
+    }
+  ]
+}'</span>
+</code></pre></div></div>
+
+<h3 id="response-format">Response Format</h3>
+
+<p>When a database security threat is detected, the API returns:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ai-sec-db-security"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"injection"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"db_security"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1134"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Key Response Fields</strong>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">response_detected.db_security</code>: <code class="language-plaintext highlighter-rouge">true</code> indicates database security threat was detected</li>
+  <li><code class="language-plaintext highlighter-rouge">category</code>: Set to <code class="language-plaintext highlighter-rouge">"malicious"</code> when database threat is found, <code class="language-plaintext highlighter-rouge">"benign"</code> otherwise</li>
+  <li><code class="language-plaintext highlighter-rouge">action</code>: Based on your API security profile settings (e.g., <code class="language-plaintext highlighter-rouge">"block"</code>)</li>
+</ul>
+
+<h2 id="detailed-scan-report">Detailed Scan Report</h2>
+
+<p>The scan report provides additional detail about the detection:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"detection_results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dlp"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"dlp_report"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"data_pattern_rule1_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NOT_MATCHED"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"data_pattern_rule2_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"dlp_profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"dlp_profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PII - Basic"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"dlp_report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"000008DCF2B2FA0EC57A32BB3483617365F38A6351514898258F98CE4585511F"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pi"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"urlf_report"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dbs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"dbs_report"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"sub_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"database-security-update"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dlp"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"dlp_report"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"data_pattern_rule1_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NOT_MATCHED"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"data_pattern_rule2_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"dlp_profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"dlp_profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PII - Basic"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"dlp_report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0000000000000000000000000000000000000000000000000000000000000000"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uf"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"urlf_report"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"req_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1134"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Database Security Report Fields</strong>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">detection_service</code>: <code class="language-plaintext highlighter-rouge">"dbs"</code> indicates database security detection</li>
+  <li><code class="language-plaintext highlighter-rouge">sub_type</code>: Specific database operation type (e.g., <code class="language-plaintext highlighter-rouge">"database-security-update"</code>)</li>
+  <li><code class="language-plaintext highlighter-rouge">verdict</code>: <code class="language-plaintext highlighter-rouge">"malicious"</code> when dangerous query detected</li>
+</ul>
+
+<h2 id="common-database-threat-patterns">Common Database Threat Patterns</h2>
+
+<h3 id="sql-injection">SQL Injection</h3>
+<ul>
+  <li>Classic injection: <code class="language-plaintext highlighter-rouge">' OR '1'='1</code></li>
+  <li>Drop table attempts: <code class="language-plaintext highlighter-rouge">'; DROP TABLE users; --</code></li>
+  <li>Union-based: <code class="language-plaintext highlighter-rouge">' UNION SELECT * FROM passwords --</code></li>
+  <li>Comment bypass: <code class="language-plaintext highlighter-rouge">admin'--</code></li>
+</ul>
+
+<h3 id="schema-discovery">Schema Discovery</h3>
+<ul>
+  <li>Information schema queries</li>
+  <li>System table enumeration</li>
+  <li>Database structure exploration</li>
+</ul>
+
+<h3 id="data-manipulation">Data Manipulation</h3>
+<ul>
+  <li>UPDATE statements with broad conditions</li>
+  <li>DELETE without WHERE clauses</li>
+  <li>TRUNCATE operations</li>
+  <li>Privilege escalation queries</li>
+</ul>
+
+<h2 id="use-cases">Use Cases</h2>
+
+<h3 id="query-validation">Query Validation</h3>
+<ul>
+  <li>Validate AI-generated SQL before execution</li>
+  <li>Ensure queries match expected patterns</li>
+  <li>Prevent unauthorized data modifications</li>
+</ul>
+
+<h3 id="compliance-requirements">Compliance Requirements</h3>
+<ul>
+  <li>PCI DSS: Protect cardholder data</li>
+  <li>GDPR: Prevent unauthorized access</li>
+  <li>HIPAA: Secure health records</li>
+  <li>SOX: Maintain financial data integrity</li>
+</ul>
+
+<h3 id="security-monitoring">Security Monitoring</h3>
+<ul>
+  <li>Track database query patterns</li>
+  <li>Identify anomalous behavior</li>
+  <li>Alert on suspicious operations</li>
+</ul>
+
+<h2 id="performance-considerations">Performance Considerations</h2>
+
+<ul>
+  <li><strong>Real-time Detection</strong>: Minimal latency for synchronous scanning</li>
+  <li><strong>Pattern Matching</strong>: Fast evaluation of query patterns</li>
+  <li><strong>Context Analysis</strong>: Considers both prompt and response</li>
+  <li><strong>Scalable Processing</strong>: Handles production workloads</li>
+</ul>
+
+<h2 id="related-resources">Related Resources</h2>
+
+<ul>
+  <li><a href="/prisma-airs-mcp/developers/api">API Reference</a></li>
+  <li><a href="/prisma-airs-mcp/prisma-airs/overview">Overview</a></li>
+  <li><a href="/prisma-airs-mcp/prisma-airs/sensitive-data-loss">Detect Sensitive Data Loss</a></li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_prisma-airs/database-security-attack.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/prisma-airs-mcp/prisma-airs/index/" class="next">
+            Prisma AIRS Overview <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/prisma-airs-mcp/assets/js/main.js"></script>
+</body>
+</html>

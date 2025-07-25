@@ -1,0 +1,24 @@
+# Development configuration overrides
+# This file is merged with _config.yml during local development
+
+# Override baseurl for local development
+baseurl: ""
+
+# Development-specific settings
+show_drafts: true
+future: true
+unpublished: true
+
+# Disable some production features
+google_analytics: ""
+
+# More verbose output
+verbose: true
+
+# Faster rebuilds
+incremental: true
+
+# Include additional files in development
+include:
+  - _drafts
+  - scripts

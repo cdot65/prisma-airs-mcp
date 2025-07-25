@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docker Build Options | Prisma AIRS MCP</title>
+  <meta name="description" content="Platform-specific Docker builds and multi-architecture strategies for Prisma AIRS MCP">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Docker Build Options | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Docker Build Options" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Platform-specific Docker builds and multi-architecture strategies for Prisma AIRS MCP" />
+<meta property="og:description" content="Platform-specific Docker builds and multi-architecture strategies for Prisma AIRS MCP" />
+<link rel="canonical" href="https://cdot65.github.io/prisma-airs-mcp/deployment/docker-build-options/" />
+<meta property="og:url" content="https://cdot65.github.io/prisma-airs-mcp/deployment/docker-build-options/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-25T07:28:30-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Docker Build Options" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-07-25T07:28:30-05:00","datePublished":"2025-07-25T07:28:30-05:00","description":"Platform-specific Docker builds and multi-architecture strategies for Prisma AIRS MCP","headline":"Docker Build Options","mainEntityOfPage":{"@type":"WebPage","@id":"https://cdot65.github.io/prisma-airs-mcp/deployment/docker-build-options/"},"url":"https://cdot65.github.io/prisma-airs-mcp/deployment/docker-build-options/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/prisma-airs-mcp/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/prisma-airs-mcp/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/prisma-airs-mcp/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/prisma-airs-mcp/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/prisma-airs-mcp/deployment" class="navbar-item active">Deployment</a>
+        <a href="/prisma-airs-mcp/developers" class="navbar-item ">Developers</a>
+        <a href="/prisma-airs-mcp/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/overview/" >Deployment Overview</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/quickstart/" >Quick Start Guide</a></li>
+  </ul>
+  
+  <h4>Deployment Documentation</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/docker/" >Docker</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/docker-compose/" >Docker Compose</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/source/" >Build from Source</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/kubernetes/" >Kubernetes</a></li>
+  </ul>
+  
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/configuration/" >Configuration Reference</a></li>
+  </ul>
+  
+  <h4>Additional</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/docker-build-options/" class="active">Docker Build Options</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/claude-desktop/" >Claude Desktop</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/claude-code/" >Claude Code</a></li>
+  </ul>
+</nav>
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Docker Build Options</h1>
+        
+        <p class="lead">Platform-specific Docker builds and multi-architecture strategies for Prisma AIRS MCP</p>
+        
+      </div>
+      
+      <article class="content">
+        <h2 id="overview">Overview</h2>
+
+<p>This guide explains the Docker build architecture for Prisma AIRS MCP, including platform-specific builds, multi-architecture support, and optimization strategies.</p>
+
+<h2 id="architecture-support">Architecture Support</h2>
+
+<p>The project supports both ARM64 (Apple Silicon) and AMD64 (x86_64) architectures:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Architecture</th>
+      <th>Platforms</th>
+      <th>Use Cases</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>AMD64</strong></td>
+      <td>Intel/AMD CPUs, Most cloud providers</td>
+      <td>Production Kubernetes, CI/CD</td>
+    </tr>
+    <tr>
+      <td><strong>ARM64</strong></td>
+      <td>Apple M1/M2/M3, AWS Graviton</td>
+      <td>Development on Mac, ARM cloud instances</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="build-commands">Build Commands</h2>
+
+<h3 id="quick-reference">Quick Reference</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Local development (native platform)</span>
+pnpm run docker:build:local
+
+<span class="c"># Platform-specific builds</span>
+pnpm run docker:build:arm      <span class="c"># ARM64 only</span>
+pnpm run docker:build:amd64    <span class="c"># AMD64 only</span>
+
+<span class="c"># Multi-platform builds</span>
+pnpm run docker:build:dev      <span class="c"># Development (local load)</span>
+pnpm run docker:build:dev:multi <span class="c"># Development (registry push)</span>
+pnpm run docker:build:prod     <span class="c"># Production (AMD64 only)</span>
+</code></pre></div></div>
+
+<h3 id="development-builds">Development Builds</h3>
+
+<h4 id="native-platform-build">Native Platform Build</h4>
+
+<p>Fastest for local development:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Builds for your current platform</span>
+pnpm run docker:build:local
+
+<span class="c"># Equivalent to:</span>
+docker build <span class="nt">-t</span> ghcr.io/cdot65/prisma-airs-mcp:local <span class="nb">.</span>
+</code></pre></div></div>
+
+<h4 id="multi-platform-dev-build">Multi-Platform Dev Build</h4>
+
+<p>Supports both architectures but requires registry push:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build and push multi-platform image</span>
+pnpm run docker:build:dev:multi
+
+<span class="c"># Equivalent to:</span>
+docker buildx build <span class="se">\</span>
+  <span class="nt">--platform</span> linux/amd64,linux/arm64 <span class="se">\</span>
+  <span class="nt">-t</span> ghcr.io/cdot65/prisma-airs-mcp:dev <span class="se">\</span>
+  <span class="nt">--push</span> <span class="nb">.</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>Note</strong>: Multi-platform images cannot be loaded directly into your local Docker daemon. They must be pushed to a registry.</p>
+</blockquote>
+
+<h3 id="production-builds">Production Builds</h3>
+
+<p>Production builds are AMD64-only for consistency:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build production image</span>
+pnpm run docker:build:prod
+
+<span class="c"># Equivalent to:</span>
+./scripts/docker-build-k8s.sh <span class="nt">--platforms</span> linux/amd64 <span class="nt">--load</span>
+</code></pre></div></div>
+
+<h2 id="platform-specific-considerations">Platform-Specific Considerations</h2>
+
+<h3 id="apple-silicon-m1m2m3">Apple Silicon (M1/M2/M3)</h3>
+
+<p>For developers on Apple Silicon Macs:</p>
+
+<ol>
+  <li><strong>Local Development</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Use native ARM64 build for best performance</span>
+pnpm run docker:build:dev
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Testing AMD64 Compatibility</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build AMD64 image (will use emulation)</span>
+pnpm run docker:build:amd64
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Using Pre-built Images</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Dev tag supports both architectures</span>
+docker pull ghcr.io/cdot65/prisma-airs-mcp:dev
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="intelamd-systems">Intel/AMD Systems</h3>
+
+<p>For developers on x86_64 systems:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># All builds are native, no emulation needed</span>
+pnpm run docker:build:local
+pnpm run docker:build:prod
+</code></pre></div></div>
+
+<h2 id="docker-buildx-setup">Docker Buildx Setup</h2>
+
+<h3 id="enable-buildx">Enable Buildx</h3>
+
+<p>Docker Buildx is required for multi-platform builds:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check if buildx is available</span>
+docker buildx version
+
+<span class="c"># Create a new builder instance</span>
+docker buildx create <span class="nt">--name</span> multiarch-builder <span class="nt">--use</span>
+
+<span class="c"># Inspect the builder</span>
+docker buildx inspect <span class="nt">--bootstrap</span>
+
+<span class="c"># List available platforms</span>
+docker buildx <span class="nb">ls</span>
+</code></pre></div></div>
+
+<h3 id="builder-management">Builder Management</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Use specific builder</span>
+docker buildx use multiarch-builder
+
+<span class="c"># Remove builder</span>
+docker buildx <span class="nb">rm </span>multiarch-builder
+
+<span class="c"># Reset to default</span>
+docker buildx use default
+</code></pre></div></div>
+
+<h2 id="build-optimization">Build Optimization</h2>
+
+<h3 id="layer-caching">Layer Caching</h3>
+
+<p>Optimize build times with proper layer ordering:</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Good: Dependencies before source</span>
+<span class="k">COPY</span><span class="s"> package*.json ./</span>
+<span class="k">RUN </span>npm ci
+<span class="k">COPY</span><span class="s"> . .</span>
+
+<span class="c"># Bad: Source changes invalidate dependency cache</span>
+<span class="k">COPY</span><span class="s"> . .</span>
+<span class="k">RUN </span>npm ci
+</code></pre></div></div>
+
+<h3 id="multi-stage-builds">Multi-Stage Builds</h3>
+
+<p>The project uses multi-stage builds for optimization:</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build stage</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">COPY</span><span class="s"> package*.json ./</span>
+<span class="k">RUN </span>npm ci
+<span class="k">COPY</span><span class="s"> . .</span>
+<span class="k">RUN </span>npm run build
+
+<span class="c"># Production stage</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+<span class="k">COPY</span><span class="s"> package*.json ./</span>
+<span class="k">RUN </span>npm ci <span class="nt">--only</span><span class="o">=</span>production
+<span class="k">COPY</span><span class="s"> --from=builder /app/dist ./dist</span>
+</code></pre></div></div>
+
+<h3 id="build-arguments">Build Arguments</h3>
+
+<p>Pass build-time variables:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Set version during build</span>
+docker build <span class="se">\</span>
+  <span class="nt">--build-arg</span> <span class="nv">VERSION</span><span class="o">=</span>1.3.5 <span class="se">\</span>
+  <span class="nt">--build-arg</span> <span class="nv">BUILD_DATE</span><span class="o">=</span><span class="si">$(</span><span class="nb">date</span> <span class="nt">-u</span> +<span class="s2">"%Y-%m-%dT%H:%M:%SZ"</span><span class="si">)</span> <span class="se">\</span>
+  <span class="nt">-t</span> prisma-airs-mcp:1.3.5 <span class="nb">.</span>
+</code></pre></div></div>
+
+<h2 id="image-tags-and-registry">Image Tags and Registry</h2>
+
+<h3 id="tag-strategy">Tag Strategy</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Tag</th>
+      <th>Architecture</th>
+      <th>Purpose</th>
+      <th>Auto-update</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">latest</code></td>
+      <td>AMD64 only</td>
+      <td>Production stable</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dev</code></td>
+      <td>Multi-platform</td>
+      <td>Development/testing</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">v1.3.5</code></td>
+      <td>Multi-platform</td>
+      <td>Specific version</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">local</code></td>
+      <td>Native</td>
+      <td>Local development</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="publishing-images">Publishing Images</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Development (multi-platform)</span>
+pnpm run docker:publish:dev
+
+<span class="c"># Production (AMD64)</span>
+pnpm run docker:publish:prod
+
+<span class="c"># Versioned release</span>
+pnpm run docker:publish:version
+</code></pre></div></div>
+
+<h3 id="registry-authentication">Registry Authentication</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Login to GitHub Container Registry</span>
+<span class="nb">echo</span> <span class="nv">$CR_PAT</span> | docker login ghcr.io <span class="nt">-u</span> USERNAME <span class="nt">--password-stdin</span>
+
+<span class="c"># Push image</span>
+docker push ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h2 id="custom-dockerfiles">Custom Dockerfiles</h2>
+
+<h3 id="development-dockerfile">Development Dockerfile</h3>
+
+<p>Located at <code class="language-plaintext highlighter-rouge">docker/Dockerfile.dev</code>:</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> node:18-alpine</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+
+<span class="c"># Install development dependencies</span>
+<span class="k">RUN </span>apk add <span class="nt">--no-cache</span> python3 make g++
+
+<span class="c"># Copy and install dependencies</span>
+<span class="k">COPY</span><span class="s"> package*.json ./</span>
+<span class="k">RUN </span>npm ci
+
+<span class="c"># Copy source (mounted in compose)</span>
+<span class="k">COPY</span><span class="s"> . .</span>
+
+<span class="c"># Development command</span>
+<span class="k">CMD</span><span class="s"> ["npm", "run", "dev"]</span>
+</code></pre></div></div>
+
+<h3 id="production-dockerfile">Production Dockerfile</h3>
+
+<p>Located at <code class="language-plaintext highlighter-rouge">docker/Dockerfile</code>:</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="c"># Build stage...</span>
+
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">production</span>
+<span class="c"># Minimal runtime...</span>
+</code></pre></div></div>
+
+<h2 id="build-performance">Build Performance</h2>
+
+<h3 id="benchmark-results">Benchmark Results</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Platform</th>
+      <th>Build Type</th>
+      <th>Time</th>
+      <th>Size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>M1 Mac</td>
+      <td>Native ARM64</td>
+      <td>~45s</td>
+      <td>149MB</td>
+    </tr>
+    <tr>
+      <td>M1 Mac</td>
+      <td>AMD64 (emulated)</td>
+      <td>~3m</td>
+      <td>149MB</td>
+    </tr>
+    <tr>
+      <td>Intel Mac</td>
+      <td>Native AMD64</td>
+      <td>~50s</td>
+      <td>149MB</td>
+    </tr>
+    <tr>
+      <td>Linux AMD64</td>
+      <td>Native</td>
+      <td>~40s</td>
+      <td>149MB</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="optimization-tips">Optimization Tips</h3>
+
+<ol>
+  <li><strong>Use .dockerignore</strong>:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>node_modules
+dist
+.git
+*.log
+.env
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Leverage Build Cache</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Use cache from registry</span>
+docker build <span class="nt">--cache-from</span> ghcr.io/cdot65/prisma-airs-mcp:latest <span class="nb">.</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Parallel Builds</strong>:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build multiple platforms in parallel</span>
+docker buildx build <span class="nt">--platform</span> linux/amd64,linux/arm64 <span class="nb">.</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="platform-mismatch">Platform Mismatch</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># WARNING: The requested image platform does not match</span>
+<span class="c"># Force pull specific platform</span>
+docker pull <span class="nt">--platform</span> linux/amd64 ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h3 id="buildx-issues">Buildx Issues</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Reset buildx</span>
+docker buildx <span class="nb">rm </span>multiarch-builder
+docker buildx create <span class="nt">--name</span> multiarch-builder <span class="nt">--use</span>
+
+<span class="c"># Clear build cache</span>
+docker buildx prune <span class="nt">-a</span>
+</code></pre></div></div>
+
+<h3 id="slow-builds">Slow Builds</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check builder status</span>
+docker buildx inspect
+
+<span class="c"># Use native platform for development</span>
+pnpm run docker:build:local
+</code></pre></div></div>
+
+<h3 id="out-of-space">Out of Space</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clean up Docker system</span>
+docker system prune <span class="nt">-a</span> <span class="nt">--volumes</span>
+
+<span class="c"># Remove specific builders</span>
+docker buildx <span class="nb">ls
+</span>docker buildx <span class="nb">rm</span> &lt;builder-name&gt;
+</code></pre></div></div>
+
+<h2 id="cicd-integration">CI/CD Integration</h2>
+
+<h3 id="github-actions">GitHub Actions</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Set up Docker Buildx</span>
+  <span class="na">uses</span><span class="pi">:</span> <span class="s">docker/setup-buildx-action@v2</span>
+
+<span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build and push</span>
+  <span class="na">uses</span><span class="pi">:</span> <span class="s">docker/build-push-action@v4</span>
+  <span class="na">with</span><span class="pi">:</span>
+    <span class="na">context</span><span class="pi">:</span> <span class="s">.</span>
+    <span class="na">platforms</span><span class="pi">:</span> <span class="s">linux/amd64,linux/arm64</span>
+    <span class="na">push</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">tags</span><span class="pi">:</span> <span class="pi">|</span>
+      <span class="s">ghcr.io/cdot65/prisma-airs-mcp:latest</span>
+      <span class="s">ghcr.io/cdot65/prisma-airs-mcp:$</span>
+</code></pre></div></div>
+
+<h3 id="gitlab-ci">GitLab CI</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">docker-build</span><span class="pi">:</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">build</span>
+  <span class="na">script</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="s">docker buildx create --use</span>
+    <span class="pi">-</span> <span class="s">docker buildx build --platform linux/amd64,linux/arm64 --push -t $CI_REGISTRY_IMAGE:latest .</span>
+</code></pre></div></div>
+
+<h2 id="security-scanning">Security Scanning</h2>
+
+<h3 id="build-time-scanning">Build-time Scanning</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Scan during build</span>
+docker build <span class="nt">--secret</span> <span class="nb">id</span><span class="o">=</span>snyk,src<span class="o">=</span><span class="nv">$HOME</span>/.snyk/token <span class="se">\</span>
+  <span class="nt">--target</span> scan <span class="nt">-t</span> prisma-airs-mcp:scan <span class="nb">.</span>
+
+<span class="c"># Scan existing image</span>
+docker run <span class="nt">--rm</span> <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
+  aquasec/trivy image ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h3 id="multi-stage-security">Multi-stage Security</h3>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Security scanning stage</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">node:18-alpine</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">security</span>
+<span class="k">COPY</span><span class="s"> package*.json ./</span>
+<span class="k">RUN </span>npm audit <span class="nt">--production</span>
+
+<span class="c"># Only continue if audit passes</span>
+<span class="k">FROM</span><span class="w"> </span><span class="s">security</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="s">builder</span>
+<span class="c"># ... rest of build</span>
+</code></pre></div></div>
+
+<h2 id="advanced-techniques">Advanced Techniques</h2>
+
+<h3 id="build-matrix">Build Matrix</h3>
+
+<p>Build multiple variants:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nv">PLATFORMS</span><span class="o">=(</span><span class="s2">"linux/amd64"</span> <span class="s2">"linux/arm64"</span><span class="o">)</span>
+<span class="nv">VERSIONS</span><span class="o">=(</span><span class="s2">"18-alpine"</span> <span class="s2">"20-alpine"</span><span class="o">)</span>
+
+<span class="k">for </span>platform <span class="k">in</span> <span class="s2">"</span><span class="k">${</span><span class="nv">PLATFORMS</span><span class="p">[@]</span><span class="k">}</span><span class="s2">"</span><span class="p">;</span> <span class="k">do
+  for </span>version <span class="k">in</span> <span class="s2">"</span><span class="k">${</span><span class="nv">VERSIONS</span><span class="p">[@]</span><span class="k">}</span><span class="s2">"</span><span class="p">;</span> <span class="k">do
+    </span>docker buildx build <span class="se">\</span>
+      <span class="nt">--platform</span> <span class="nv">$platform</span> <span class="se">\</span>
+      <span class="nt">--build-arg</span> <span class="nv">NODE_VERSION</span><span class="o">=</span><span class="nv">$version</span> <span class="se">\</span>
+      <span class="nt">-t</span> prisma-airs-mcp:node<span class="nv">$version</span>-<span class="nv">$platform</span> <span class="se">\</span>
+      <span class="nb">.</span>
+  <span class="k">done
+done</span>
+</code></pre></div></div>
+
+<h3 id="cache-mounting">Cache Mounting</h3>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Use cache mount for npm</span>
+<span class="k">RUN </span><span class="nt">--mount</span><span class="o">=</span><span class="nb">type</span><span class="o">=</span>cache,target<span class="o">=</span>/root/.npm <span class="se">\
+</span>    npm ci <span class="nt">--only</span><span class="o">=</span>production
+</code></pre></div></div>
+
+<h3 id="remote-builders">Remote Builders</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Use remote Docker host</span>
+<span class="nb">export </span><span class="nv">DOCKER_HOST</span><span class="o">=</span>tcp://remote-docker:2376
+docker build <span class="nb">.</span>
+
+<span class="c"># Or use buildx remote</span>
+docker buildx create <span class="se">\</span>
+  <span class="nt">--name</span> remote <span class="se">\</span>
+  <span class="nt">--driver</span> docker-container <span class="se">\</span>
+  <span class="nt">--driver-opt</span> <span class="nv">network</span><span class="o">=</span>host <span class="se">\</span>
+  <span class="nt">--platform</span> linux/amd64,linux/arm64 <span class="se">\</span>
+  ssh://user@remote-host
+</code></pre></div></div>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<ol>
+  <li><strong>Development</strong>
+    <ul>
+      <li>Use native platform builds for speed</li>
+      <li>Test on target platform before deployment</li>
+      <li>Keep dev and prod Dockerfiles separate</li>
+    </ul>
+  </li>
+  <li><strong>Production</strong>
+    <ul>
+      <li>Always specify exact base image tags</li>
+      <li>Minimize layer count and image size</li>
+      <li>Scan images for vulnerabilities</li>
+      <li>Use multi-stage builds</li>
+    </ul>
+  </li>
+  <li><strong>Multi-platform</strong>
+    <ul>
+      <li>Test on all target platforms</li>
+      <li>Use platform-specific optimizations carefully</li>
+      <li>Document platform requirements</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+  <li><a href="/prisma-airs-mcp/deployment/docker">Docker Deployment</a> - Single container setup</li>
+  <li><a href="/prisma-airs-mcp/deployment/docker-compose">Docker Compose</a> - Multi-profile deployment</li>
+  <li><a href="/prisma-airs-mcp/deployment/kubernetes">Kubernetes</a> - Production orchestration</li>
+  <li><a href="/prisma-airs-mcp/deployment/configuration">Configuration Reference</a> - Environment variables</li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_deployment/docker-build-options.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/prisma-airs-mcp/deployment/docker-compose/" class="next">
+            Docker Compose Deployment <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/prisma-airs-mcp/assets/js/main.js"></script>
+</body>
+</html>

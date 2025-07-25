@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namePrefix: staging-
+
+labels:
+- pairs:
+    environment: staging
+
+resources:
+- ../../base
+
+replicas:
+- name: prisma-airs-mcp
+  count: 2
+
+patches:
+- path: deployment-patch.yaml
+
+configMapGenerator:
+- name: prisma-airs-mcp-config
+  behavior: merge
+  literals:
+  - airs.api.url=https://service.api.aisecurity.paloaltonetworks.com
+  - cache.ttl.seconds=180
+  - rate.limit.max.requests=150
+  - airs.default.profile.name=Prisma AIRS

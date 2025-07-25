@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docker Deployment | Prisma AIRS MCP</title>
+  <meta name="description" content="Deploy Prisma AIRS MCP using standalone Docker">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Docker Deployment | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Docker Deployment" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Deploy Prisma AIRS MCP using standalone Docker" />
+<meta property="og:description" content="Deploy Prisma AIRS MCP using standalone Docker" />
+<link rel="canonical" href="https://cdot65.github.io/prisma-airs-mcp/deployment/docker/" />
+<meta property="og:url" content="https://cdot65.github.io/prisma-airs-mcp/deployment/docker/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-25T07:28:30-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Docker Deployment" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-07-25T07:28:30-05:00","datePublished":"2025-07-25T07:28:30-05:00","description":"Deploy Prisma AIRS MCP using standalone Docker","headline":"Docker Deployment","mainEntityOfPage":{"@type":"WebPage","@id":"https://cdot65.github.io/prisma-airs-mcp/deployment/docker/"},"url":"https://cdot65.github.io/prisma-airs-mcp/deployment/docker/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/prisma-airs-mcp/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/prisma-airs-mcp/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/prisma-airs-mcp/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/prisma-airs-mcp/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/prisma-airs-mcp/deployment" class="navbar-item active">Deployment</a>
+        <a href="/prisma-airs-mcp/developers" class="navbar-item ">Developers</a>
+        <a href="/prisma-airs-mcp/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/overview/" >Deployment Overview</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/quickstart/" >Quick Start Guide</a></li>
+  </ul>
+  
+  <h4>Deployment Documentation</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/docker/" class="active">Docker</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/docker-compose/" >Docker Compose</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/source/" >Build from Source</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/kubernetes/" >Kubernetes</a></li>
+  </ul>
+  
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/configuration/" >Configuration Reference</a></li>
+  </ul>
+  
+  <h4>Additional</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/docker-build-options/" >Docker Build Options</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/claude-desktop/" >Claude Desktop</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/claude-code/" >Claude Code</a></li>
+  </ul>
+</nav>
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Docker Deployment</h1>
+        
+        <p class="lead">Deploy Prisma AIRS MCP using standalone Docker</p>
+        
+      </div>
+      
+      <article class="content">
+        <h2 id="overview">Overview</h2>
+
+<p>Deploy Prisma AIRS MCP as a standalone Docker container. This is the fastest deployment method, perfect for testing and single-instance deployments.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li>Docker Engine 20.10+ or Docker Desktop</li>
+  <li>Prisma AIRS API key from <a href="https://stratacloudmanager.paloaltonetworks.com">Strata Cloud Manager</a></li>
+</ul>
+
+<h2 id="quick-start">Quick Start</h2>
+
+<h3 id="1-create-configuration">1. Create Configuration</h3>
+
+<p>Create a <code class="language-plaintext highlighter-rouge">.env</code> file with your API credentials:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> <span class="o">&gt;</span> .env <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh">
+AIRS_API_URL=https://service.api.aisecurity.paloaltonetworks.com
+AIRS_API_KEY=your-api-key-here
+AIRS_DEFAULT_PROFILE_NAME=Prisma AIRS
+PORT=3000
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<h3 id="2-run-the-container">2. Run the Container</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Pull the latest image</span>
+docker pull ghcr.io/cdot65/prisma-airs-mcp:latest
+
+<span class="c"># Run the container</span>
+docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
+  <span class="nt">-p</span> 3000:3000 <span class="se">\</span>
+  <span class="nt">--env-file</span> .env <span class="se">\</span>
+  ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h3 id="3-verify-deployment">3. Verify Deployment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check health endpoint</span>
+curl http://localhost:3000/health
+
+<span class="c"># View logs</span>
+docker logs <span class="nt">-f</span> prisma-airs-mcp
+</code></pre></div></div>
+
+<h2 id="docker-run-options">Docker Run Options</h2>
+
+<h3 id="basic-usage">Basic Usage</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
+  <span class="nt">-p</span> 3000:3000 <span class="se">\</span>
+  <span class="nt">--env-file</span> .env <span class="se">\</span>
+  ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h3 id="advanced-options">Advanced Options</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
+  <span class="nt">-p</span> 3000:3000 <span class="se">\</span>
+  <span class="nt">--env-file</span> .env <span class="se">\</span>
+  <span class="nt">--restart</span> unless-stopped <span class="se">\</span>
+  <span class="nt">--memory</span> 512m <span class="se">\</span>
+  <span class="nt">--cpus</span> 1 <span class="se">\</span>
+  <span class="nt">--health-cmd</span> <span class="s2">"wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"</span> <span class="se">\</span>
+  <span class="nt">--health-interval</span> 30s <span class="se">\</span>
+  <span class="nt">--health-timeout</span> 3s <span class="se">\</span>
+  <span class="nt">--health-retries</span> 3 <span class="se">\</span>
+  ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h3 id="environment-variables">Environment Variables</h3>
+
+<p>Pass configuration via environment variables:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
+  <span class="nt">-p</span> 3000:3000 <span class="se">\</span>
+  <span class="nt">-e</span> <span class="nv">AIRS_API_URL</span><span class="o">=</span>https://service.api.aisecurity.paloaltonetworks.com <span class="se">\</span>
+  <span class="nt">-e</span> <span class="nv">AIRS_API_KEY</span><span class="o">=</span>your-api-key-here <span class="se">\</span>
+  <span class="nt">-e</span> <span class="nv">AIRS_DEFAULT_PROFILE_NAME</span><span class="o">=</span><span class="s2">"Prisma AIRS"</span> <span class="se">\</span>
+  <span class="nt">-e</span> <span class="nv">LOG_LEVEL</span><span class="o">=</span>info <span class="se">\</span>
+  ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h2 id="container-management">Container Management</h2>
+
+<h3 id="basic-commands">Basic Commands</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start container</span>
+docker start prisma-airs-mcp
+
+<span class="c"># Stop container</span>
+docker stop prisma-airs-mcp
+
+<span class="c"># Restart container</span>
+docker restart prisma-airs-mcp
+
+<span class="c"># Remove container</span>
+docker <span class="nb">rm </span>prisma-airs-mcp
+
+<span class="c"># Remove container (force)</span>
+docker <span class="nb">rm</span> <span class="nt">-f</span> prisma-airs-mcp
+</code></pre></div></div>
+
+<h3 id="monitoring">Monitoring</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># View logs</span>
+docker logs prisma-airs-mcp
+
+<span class="c"># Follow logs</span>
+docker logs <span class="nt">-f</span> prisma-airs-mcp
+
+<span class="c"># View last 100 lines</span>
+docker logs <span class="nt">--tail</span> 100 prisma-airs-mcp
+
+<span class="c"># View container stats</span>
+docker stats prisma-airs-mcp
+
+<span class="c"># View running processes</span>
+docker top prisma-airs-mcp
+</code></pre></div></div>
+
+<h3 id="debugging">Debugging</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Access container shell</span>
+docker <span class="nb">exec</span> <span class="nt">-it</span> prisma-airs-mcp sh
+
+<span class="c"># Run commands inside container</span>
+docker <span class="nb">exec </span>prisma-airs-mcp ps aux
+docker <span class="nb">exec </span>prisma-airs-mcp <span class="nb">env</span> | <span class="nb">grep </span>AIRS
+
+<span class="c"># Inspect container</span>
+docker inspect prisma-airs-mcp
+
+<span class="c"># View container health</span>
+docker inspect prisma-airs-mcp <span class="nt">--format</span><span class="o">=</span><span class="s1">'{{.State.Health.Status}}'</span>
+</code></pre></div></div>
+
+<h2 id="configuration">Configuration</h2>
+
+<h3 id="using-env-file">Using .env File</h3>
+
+<p>Create a <code class="language-plaintext highlighter-rouge">.env</code> file:</p>
+
+<pre><code class="language-env"># Required
+AIRS_API_URL=https://service.api.aisecurity.paloaltonetworks.com
+AIRS_API_KEY=your-api-key-here
+
+# Optional Profile
+AIRS_DEFAULT_PROFILE_NAME=Prisma AIRS
+
+# Server Settings
+PORT=3000
+NODE_ENV=production
+LOG_LEVEL=info
+
+# Performance
+CACHE_TTL_SECONDS=300
+RATE_LIMIT_MAX_REQUESTS=100
+</code></pre>
+
+<p>Run with env file:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">--env-file</span> .env ...
+</code></pre></div></div>
+
+<h3 id="using-docker-secrets-swarm-mode">Using Docker Secrets (Swarm Mode)</h3>
+
+<p>For Docker Swarm deployments:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create secrets</span>
+<span class="nb">echo</span> <span class="s2">"your-api-key"</span> | docker secret create airs_api_key -
+<span class="nb">echo</span> <span class="s2">"Prisma AIRS"</span> | docker secret create airs_profile_name -
+
+<span class="c"># Deploy service</span>
+docker service create <span class="se">\</span>
+  <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
+  <span class="nt">--publish</span> 3000:3000 <span class="se">\</span>
+  <span class="nt">--secret</span> airs_api_key <span class="se">\</span>
+  <span class="nt">--secret</span> airs_profile_name <span class="se">\</span>
+  ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h2 id="networking">Networking</h2>
+
+<h3 id="port-mapping">Port Mapping</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Map to different host port</span>
+docker run <span class="nt">-p</span> 8080:3000 ...
+
+<span class="c"># Bind to specific interface</span>
+docker run <span class="nt">-p</span> 127.0.0.1:3000:3000 ...
+
+<span class="c"># Random host port</span>
+docker run <span class="nt">-P</span> ...
+</code></pre></div></div>
+
+<h3 id="custom-networks">Custom Networks</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create network</span>
+docker network create prisma-network
+
+<span class="c"># Run container on network</span>
+docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
+  <span class="nt">--network</span> prisma-network <span class="se">\</span>
+  <span class="nt">-p</span> 3000:3000 <span class="se">\</span>
+  <span class="nt">--env-file</span> .env <span class="se">\</span>
+  ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h2 id="resource-management">Resource Management</h2>
+
+<h3 id="memory-and-cpu-limits">Memory and CPU Limits</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
+  <span class="nt">--memory</span> 512m <span class="se">\</span>
+  <span class="nt">--memory-reservation</span> 256m <span class="se">\</span>
+  <span class="nt">--cpus</span> 1 <span class="se">\</span>
+  <span class="nt">--cpu-shares</span> 1024 <span class="se">\</span>
+  <span class="nt">-p</span> 3000:3000 <span class="se">\</span>
+  <span class="nt">--env-file</span> .env <span class="se">\</span>
+  ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h3 id="storage-limits">Storage Limits</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
+  <span class="nt">--storage-opt</span> <span class="nv">size</span><span class="o">=</span>10G <span class="se">\</span>
+  <span class="nt">-p</span> 3000:3000 <span class="se">\</span>
+  <span class="nt">--env-file</span> .env <span class="se">\</span>
+  ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h2 id="health-checks">Health Checks</h2>
+
+<h3 id="built-in-health-check">Built-in Health Check</h3>
+
+<p>The container includes a health check that monitors the <code class="language-plaintext highlighter-rouge">/health</code> endpoint:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># View health status</span>
+docker ps <span class="nt">--format</span> <span class="s2">"table {{.Names}}</span><span class="se">\t</span><span class="s2">{{.Status}}"</span>
+
+<span class="c"># Get detailed health info</span>
+docker inspect prisma-airs-mcp <span class="nt">--format</span><span class="o">=</span><span class="s1">'{{json .State.Health}}'</span> | jq
+</code></pre></div></div>
+
+<h3 id="custom-health-check">Custom Health Check</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
+  <span class="nt">--health-cmd</span> <span class="s2">"curl -f http://localhost:3000/health || exit 1"</span> <span class="se">\</span>
+  <span class="nt">--health-interval</span> 30s <span class="se">\</span>
+  <span class="nt">--health-timeout</span> 3s <span class="se">\</span>
+  <span class="nt">--health-retries</span> 3 <span class="se">\</span>
+  <span class="nt">--health-start-period</span> 10s <span class="se">\</span>
+  <span class="nt">-p</span> 3000:3000 <span class="se">\</span>
+  <span class="nt">--env-file</span> .env <span class="se">\</span>
+  ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h2 id="updates-and-maintenance">Updates and Maintenance</h2>
+
+<h3 id="update-container">Update Container</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Pull latest image</span>
+docker pull ghcr.io/cdot65/prisma-airs-mcp:latest
+
+<span class="c"># Stop and remove old container</span>
+docker stop prisma-airs-mcp
+docker <span class="nb">rm </span>prisma-airs-mcp
+
+<span class="c"># Run new container</span>
+docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
+  <span class="nt">-p</span> 3000:3000 <span class="se">\</span>
+  <span class="nt">--env-file</span> .env <span class="se">\</span>
+  ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h3 id="automated-updates-watchtower">Automated Updates (Watchtower)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> watchtower <span class="se">\</span>
+  <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
+  containrrr/watchtower <span class="se">\</span>
+  <span class="nt">--interval</span> 86400 <span class="se">\</span>
+  prisma-airs-mcp
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="container-wont-start">Container Won’t Start</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check logs</span>
+docker logs prisma-airs-mcp
+
+<span class="c"># Common issues:</span>
+<span class="c"># - Invalid API key: Check AIRS_API_KEY</span>
+<span class="c"># - Port conflict: Use different port</span>
+<span class="c"># - Missing env vars: Verify .env file</span>
+</code></pre></div></div>
+
+<h3 id="port-already-in-use">Port Already in Use</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Find process using port</span>
+lsof <span class="nt">-i</span> :3000
+
+<span class="c"># Use different port</span>
+docker run <span class="nt">-p</span> 3001:3000 ...
+</code></pre></div></div>
+
+<h3 id="permission-denied">Permission Denied</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Add user to docker group</span>
+<span class="nb">sudo </span>usermod <span class="nt">-aG</span> docker <span class="nv">$USER</span>
+newgrp docker
+</code></pre></div></div>
+
+<h3 id="container-crashes">Container Crashes</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check exit code</span>
+docker ps <span class="nt">-a</span>
+
+<span class="c"># View detailed logs</span>
+docker logs <span class="nt">--details</span> prisma-airs-mcp
+
+<span class="c"># Increase memory if needed</span>
+docker run <span class="nt">--memory</span> 1g ...
+</code></pre></div></div>
+
+<h2 id="security-best-practices">Security Best Practices</h2>
+
+<ol>
+  <li><strong>Never hardcode secrets</strong> - Use .env files or Docker secrets</li>
+  <li><strong>Run as non-root</strong> - The container runs as node user by default</li>
+  <li><strong>Use specific tags</strong> - Avoid using <code class="language-plaintext highlighter-rouge">latest</code> in production</li>
+  <li><strong>Limit resources</strong> - Set memory and CPU limits</li>
+  <li><strong>Use read-only filesystem</strong> when possible:</li>
+</ol>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
+  <span class="nt">--read-only</span> <span class="se">\</span>
+  <span class="nt">--tmpfs</span> /tmp <span class="se">\</span>
+  <span class="nt">-p</span> 3000:3000 <span class="se">\</span>
+  <span class="nt">--env-file</span> .env <span class="se">\</span>
+  ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+  <li>For multi-container setups, see <a href="/prisma-airs-mcp/deployment/docker-compose">Docker Compose Deployment</a></li>
+  <li>For production deployments, consider <a href="/prisma-airs-mcp/deployment/kubernetes">Kubernetes</a></li>
+  <li>Review the <a href="/prisma-airs-mcp/deployment/configuration">Configuration Reference</a></li>
+  <li>Set up <a href="/prisma-airs-mcp/deployment/claude-desktop">Claude Integration</a></li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_deployment/docker.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/prisma-airs-mcp/deployment/index/" class="next">
+            Deployment Documentation <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/prisma-airs-mcp/assets/js/main.js"></script>
+</body>
+</html>

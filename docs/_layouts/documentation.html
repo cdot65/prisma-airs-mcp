@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} | {{ site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+  
+  <!-- SEO Tags -->
+  {% seo %}
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/img/favicon-32x32.png' | relative_url }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/img/favicon-16x16.png' | relative_url }}">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="{{ site.baseurl }}/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="{{ site.baseurl }}/deployment" class="navbar-item {% if page.category == 'deployment' %}active{% endif %}">Deployment</a>
+        <a href="{{ site.baseurl }}/developers" class="navbar-item {% if page.category == 'developers' %}active{% endif %}">Developers</a>
+        <a href="{{ site.baseurl }}/prisma-airs/overview" class="navbar-item {% if page.category == 'prisma-airs' %}active{% endif %}">Prisma AIRS</a>
+        <a href="https://github.com/{{ site.github_username }}/{{ site.github_repo }}" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      {% include sidebar.html %}
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>{{ page.title }}</h1>
+        {% if page.description %}
+        <p class="lead">{{ page.description }}</p>
+        {% endif %}
+      </div>
+      
+      <article class="content">
+        {{ content }}
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/{{ site.github_username }}/{{ site.github_repo }}/edit/main/docs/{{ page.path }}">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        {% if page.prev or page.next %}
+        <div class="pagination">
+          {% if page.prev %}
+          <a href="{{ page.prev.url | relative_url }}" class="prev">
+            <i class="fas fa-arrow-left"></i> {{ page.prev.title }}
+          </a>
+          {% endif %}
+          {% if page.next %}
+          <a href="{{ page.next.url | relative_url }}" class="next">
+            {{ page.next.title }} <i class="fas fa-arrow-right"></i>
+          </a>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>

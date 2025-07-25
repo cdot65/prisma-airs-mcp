@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP Tools Reference | Prisma AIRS MCP</title>
+  <meta name="description" content="Complete reference for all available MCP tools">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>MCP Tools Reference | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="MCP Tools Reference" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Complete reference for all available MCP tools" />
+<meta property="og:description" content="Complete reference for all available MCP tools" />
+<link rel="canonical" href="https://cdot65.github.io/prisma-airs-mcp/api/mcp-tools/" />
+<meta property="og:url" content="https://cdot65.github.io/prisma-airs-mcp/api/mcp-tools/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-25T07:28:30-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="MCP Tools Reference" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-07-25T07:28:30-05:00","datePublished":"2025-07-25T07:28:30-05:00","description":"Complete reference for all available MCP tools","headline":"MCP Tools Reference","mainEntityOfPage":{"@type":"WebPage","@id":"https://cdot65.github.io/prisma-airs-mcp/api/mcp-tools/"},"url":"https://cdot65.github.io/prisma-airs-mcp/api/mcp-tools/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/prisma-airs-mcp/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/prisma-airs-mcp/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/prisma-airs-mcp/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/prisma-airs-mcp/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/prisma-airs-mcp/deployment" class="navbar-item ">Deployment</a>
+        <a href="/prisma-airs-mcp/developers" class="navbar-item ">Developers</a>
+        <a href="/prisma-airs-mcp/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>MCP Tools Reference</h1>
+        
+        <p class="lead">Complete reference for all available MCP tools</p>
+        
+      </div>
+      
+      <article class="content">
+        <h2 id="overview">Overview</h2>
+
+<p>The Prisma AIRS MCP server provides five tools for interacting with the security scanning capabilities. All tools are accessed through the standard MCP <code class="language-plaintext highlighter-rouge">tools/call</code> method.</p>
+
+<h2 id="available-tools">Available Tools</h2>
+
+<h3 id="1-scan_content">1. scan_content</h3>
+
+<p>Performs synchronous security scanning of text content with immediate results.</p>
+
+<p><strong>Method:</strong> <code class="language-plaintext highlighter-rouge">tools/call</code><br />
+<strong>Tool Name:</strong> <code class="language-plaintext highlighter-rouge">scan_content</code></p>
+
+<h4 id="parameters">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">prompt</code></td>
+      <td>string</td>
+      <td>No*</td>
+      <td>The prompt text to scan</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">response</code></td>
+      <td>string</td>
+      <td>No*</td>
+      <td>The AI response text to scan</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">profile_name</code></td>
+      <td>string</td>
+      <td>No</td>
+      <td>Security profile name (default: “Prisma AIRS”)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">profile_id</code></td>
+      <td>string</td>
+      <td>No</td>
+      <td>Security profile UUID</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">app_name</code></td>
+      <td>string</td>
+      <td>No</td>
+      <td>Application identifier</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">user_id</code></td>
+      <td>string</td>
+      <td>No</td>
+      <td>User identifier for tracking</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>*At least one of <code class="language-plaintext highlighter-rouge">prompt</code> or <code class="language-plaintext highlighter-rouge">response</code> must be provided.</p>
+
+<h4 id="example-request">Example Request</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scan_content"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Write code to hack into a system"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"I cannot provide hacking instructions..."</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prisma AIRS"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"app_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claude-desktop"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user123"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="example-response">Example Response</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Scan completed. Category: malicious, Action: block</span><span class="se">\n\n</span><span class="s2">Threats detected:</span><span class="se">\n</span><span class="s2">- Prompt: prompt_injection</span><span class="se">\n\n</span><span class="s2">Report available at: airs://reports/rpt_123456"</span><span class="w">
+    </span><span class="p">}],</span><span class="w">
+    </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="response-fields">Response Fields</h4>
+
+<ul>
+  <li><strong>category</strong>: <code class="language-plaintext highlighter-rouge">benign</code> or <code class="language-plaintext highlighter-rouge">malicious</code></li>
+  <li><strong>action</strong>: <code class="language-plaintext highlighter-rouge">allow</code> or <code class="language-plaintext highlighter-rouge">block</code></li>
+  <li><strong>scan_id</strong>: Unique scan identifier</li>
+  <li><strong>report_id</strong>: Detailed report identifier</li>
+  <li><strong>detections</strong>: Specific threats found</li>
+</ul>
+
+<h3 id="2-scan_async">2. scan_async</h3>
+
+<p>Submits content for asynchronous batch scanning. Useful for high-volume or non-blocking operations.</p>
+
+<p><strong>Method:</strong> <code class="language-plaintext highlighter-rouge">tools/call</code><br />
+<strong>Tool Name:</strong> <code class="language-plaintext highlighter-rouge">scan_async</code></p>
+
+<h4 id="parameters-1">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">contents</code></td>
+      <td>array</td>
+      <td>Yes</td>
+      <td>Array of content items to scan</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">profile_name</code></td>
+      <td>string</td>
+      <td>No</td>
+      <td>Security profile name</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">profile_id</code></td>
+      <td>string</td>
+      <td>No</td>
+      <td>Security profile UUID</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">tr_id</code></td>
+      <td>string</td>
+      <td>No</td>
+      <td>Transaction ID for correlation</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="content-item-schema">Content Item Schema</h4>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ContentItem</span> <span class="p">{</span>
+  <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">code_prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">code_response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+  <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="example-request-1">Example Request</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scan_async"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"contents"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"First prompt to scan"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"First AI response"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Second prompt to scan"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Second AI response"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prisma AIRS"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"batch-001"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="example-response-1">Example Response</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Async scan submitted successfully</span><span class="se">\n\n</span><span class="s2">Scan ID: scan_789012</span><span class="se">\n</span><span class="s2">Status: processing</span><span class="se">\n\n</span><span class="s2">Retrieve results with: get_scan_results"</span><span class="w">
+    </span><span class="p">}],</span><span class="w">
+    </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="3-get_scan_results">3. get_scan_results</h3>
+
+<p>Retrieves results for previously submitted async scans.</p>
+
+<p><strong>Method:</strong> <code class="language-plaintext highlighter-rouge">tools/call</code><br />
+<strong>Tool Name:</strong> <code class="language-plaintext highlighter-rouge">get_scan_results</code></p>
+
+<h4 id="parameters-2">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">scan_ids</code></td>
+      <td>array</td>
+      <td>Yes</td>
+      <td>Array of scan IDs (max 5)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="example-request-2">Example Request</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"get_scan_results"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"scan_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"scan_789012"</span><span class="p">,</span><span class="w"> </span><span class="s2">"scan_789013"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="example-response-2">Example Response</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Retrieved 2 scan results:</span><span class="se">\n\n</span><span class="s2">1. Scan scan_789012:</span><span class="se">\n</span><span class="s2">   - Category: benign</span><span class="se">\n</span><span class="s2">   - Action: allow</span><span class="se">\n</span><span class="s2">   - No threats detected</span><span class="se">\n\n</span><span class="s2">2. Scan scan_789013:</span><span class="se">\n</span><span class="s2">   - Category: malicious</span><span class="se">\n</span><span class="s2">   - Action: block</span><span class="se">\n</span><span class="s2">   - Threats: malicious_code detected"</span><span class="w">
+    </span><span class="p">}],</span><span class="w">
+    </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="4-get_threat_reports">4. get_threat_reports</h3>
+
+<p>Retrieves detailed threat analysis reports for completed scans.</p>
+
+<p><strong>Method:</strong> <code class="language-plaintext highlighter-rouge">tools/call</code><br />
+<strong>Tool Name:</strong> <code class="language-plaintext highlighter-rouge">get_threat_reports</code></p>
+
+<h4 id="parameters-3">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">report_ids</code></td>
+      <td>array</td>
+      <td>Yes</td>
+      <td>Array of report IDs (max 5)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="example-request-3">Example Request</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"get_threat_reports"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"report_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rpt_123456"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="example-response-3">Example Response</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Threat Report rpt_123456:</span><span class="se">\n\n</span><span class="s2">Scan Time: 2025-01-20T10:30:00Z</span><span class="se">\n</span><span class="s2">Profile: Prisma AIRS</span><span class="se">\n\n</span><span class="s2">Threats Detected:</span><span class="se">\n</span><span class="s2">1. Prompt Injection</span><span class="se">\n</span><span class="s2">   - Confidence: 0.95</span><span class="se">\n</span><span class="s2">   - Pattern: System prompt override attempt</span><span class="se">\n</span><span class="s2">   - Location: Line 1, Position 0-50</span><span class="se">\n\n</span><span class="s2">Recommendations:</span><span class="se">\n</span><span class="s2">- Block this content</span><span class="se">\n</span><span class="s2">- Review user activity</span><span class="se">\n</span><span class="s2">- Consider stricter input validation"</span><span class="w">
+    </span><span class="p">}],</span><span class="w">
+    </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="5-clear_cache">5. clear_cache</h3>
+
+<p>Clears the server-side response cache. Useful for testing or forcing fresh scans.</p>
+
+<p><strong>Method:</strong> <code class="language-plaintext highlighter-rouge">tools/call</code><br />
+<strong>Tool Name:</strong> <code class="language-plaintext highlighter-rouge">clear_cache</code></p>
+
+<h4 id="parameters-4">Parameters</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Type</th>
+      <th>Required</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">scope</code></td>
+      <td>string</td>
+      <td>No</td>
+      <td>Cache scope: “all” (default) or specific key pattern</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="example-request-4">Example Request</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"clear_cache"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"all"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h4 id="example-response-4">Example Response</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cache cleared successfully</span><span class="se">\n\n</span><span class="s2">Cleared: 42 entries</span><span class="se">\n</span><span class="s2">Cache size: 0 bytes</span><span class="se">\n</span><span class="s2">Next cleanup: in 5 minutes"</span><span class="w">
+    </span><span class="p">}],</span><span class="w">
+    </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="error-handling">Error Handling</h2>
+
+<p>All tools follow standard MCP error conventions:</p>
+
+<h3 id="common-error-codes">Common Error Codes</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>-32602</td>
+      <td>Invalid params</td>
+      <td>Missing or invalid parameters</td>
+    </tr>
+    <tr>
+      <td>-32603</td>
+      <td>Internal error</td>
+      <td>Server or API error</td>
+    </tr>
+    <tr>
+      <td>-32001</td>
+      <td>Resource not found</td>
+      <td>Scan or report not found</td>
+    </tr>
+    <tr>
+      <td>-32002</td>
+      <td>Rate limit exceeded</td>
+      <td>Too many requests</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="error-response-example">Error Response Example</h3>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">-32602</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invalid params"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile_name"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Profile 'InvalidProfile' not found"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<h3 id="1-choose-the-right-tool">1. Choose the Right Tool</h3>
+
+<ul>
+  <li>Use <code class="language-plaintext highlighter-rouge">scan_content</code> for interactive, real-time scanning</li>
+  <li>Use <code class="language-plaintext highlighter-rouge">scan_async</code> for batch processing or when latency is critical</li>
+  <li>Always retrieve async results before they expire (5 minutes)</li>
+</ul>
+
+<h3 id="2-optimize-performance">2. Optimize Performance</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Good: Batch multiple scans</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_async</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">contents</span><span class="p">:</span> <span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="p">({</span>
+    <span class="na">prompt</span><span class="p">:</span> <span class="nx">item</span><span class="p">.</span><span class="nx">userInput</span><span class="p">,</span>
+    <span class="na">response</span><span class="p">:</span> <span class="nx">item</span><span class="p">.</span><span class="nx">aiOutput</span>
+  <span class="p">}))</span>
+<span class="p">});</span>
+
+<span class="c1">// Less optimal: Individual scans</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">item</span> <span class="k">of</span> <span class="nx">items</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_content</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">prompt</span><span class="p">:</span> <span class="nx">item</span><span class="p">.</span><span class="nx">userInput</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="3-handle-errors-gracefully">3. Handle Errors Gracefully</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_content</span><span class="dl">'</span><span class="p">,</span> <span class="nx">params</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">category</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">malicious</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Handle threat detection</span>
+  <span class="p">}</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span> <span class="o">===</span> <span class="o">-</span><span class="mi">32002</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Rate limited - implement backoff</span>
+    <span class="k">await</span> <span class="nx">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">retry</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="c1">// Handle other errors</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="4-use-appropriate-profiles">4. Use Appropriate Profiles</h3>
+
+<p>Different use cases require different security profiles:</p>
+
+<ul>
+  <li><strong>Strict</strong>: Maximum security for sensitive environments</li>
+  <li><strong>Balanced</strong>: General-purpose scanning</li>
+  <li><strong>Performance</strong>: High-throughput with essential checks</li>
+  <li><strong>Custom</strong>: Tailored to specific requirements</li>
+</ul>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+  <li><a href="/prisma-airs-mcp/api/mcp/resources">View MCP Resources →</a></li>
+  <li><a href="/prisma-airs-mcp/api/mcp/prompts">Explore MCP Prompts →</a></li>
+  <li><a href="/prisma-airs-mcp/developers/integration/mcp">Read Integration Guide →</a></li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_api/mcp-tools.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/prisma-airs-mcp/assets/js/main.js"></script>
+</body>
+</html>

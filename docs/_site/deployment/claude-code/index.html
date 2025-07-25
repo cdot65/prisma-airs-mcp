@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Integration | Prisma AIRS MCP</title>
+  <meta name="description" content="Configure Prisma AIRS MCP for Claude Code (claude.ai/code)">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Claude Code Integration | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Claude Code Integration" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Configure Prisma AIRS MCP for Claude Code (claude.ai/code)" />
+<meta property="og:description" content="Configure Prisma AIRS MCP for Claude Code (claude.ai/code)" />
+<link rel="canonical" href="https://cdot65.github.io/prisma-airs-mcp/deployment/claude-code/" />
+<meta property="og:url" content="https://cdot65.github.io/prisma-airs-mcp/deployment/claude-code/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-25T07:28:30-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Claude Code Integration" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-07-25T07:28:30-05:00","datePublished":"2025-07-25T07:28:30-05:00","description":"Configure Prisma AIRS MCP for Claude Code (claude.ai/code)","headline":"Claude Code Integration","mainEntityOfPage":{"@type":"WebPage","@id":"https://cdot65.github.io/prisma-airs-mcp/deployment/claude-code/"},"url":"https://cdot65.github.io/prisma-airs-mcp/deployment/claude-code/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/prisma-airs-mcp/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/prisma-airs-mcp/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/prisma-airs-mcp/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/prisma-airs-mcp/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/prisma-airs-mcp/deployment" class="navbar-item active">Deployment</a>
+        <a href="/prisma-airs-mcp/developers" class="navbar-item ">Developers</a>
+        <a href="/prisma-airs-mcp/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/overview/" >Deployment Overview</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/quickstart/" >Quick Start Guide</a></li>
+  </ul>
+  
+  <h4>Deployment Documentation</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/docker/" >Docker</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/docker-compose/" >Docker Compose</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/source/" >Build from Source</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/kubernetes/" >Kubernetes</a></li>
+  </ul>
+  
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/configuration/" >Configuration Reference</a></li>
+  </ul>
+  
+  <h4>Additional</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/docker-build-options/" >Docker Build Options</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/claude-desktop/" >Claude Desktop</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/claude-code/" class="active">Claude Code</a></li>
+  </ul>
+</nav>
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Claude Code Integration</h1>
+        
+        <p class="lead">Configure Prisma AIRS MCP for Claude Code (claude.ai/code)</p>
+        
+      </div>
+      
+      <article class="content">
+        <h2 id="overview">Overview</h2>
+
+<p>Claude Code (claude.ai/code) supports MCP servers through its CLI interface. Unlike Claude Desktop which uses JSON configuration files, Claude Code uses CLI commands to manage MCP server connections.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li>Claude Code CLI installed and configured</li>
+  <li>Prisma AIRS MCP server running (locally or remotely)</li>
+</ul>
+
+<h2 id="quick-setup">Quick Setup</h2>
+
+<h3 id="add-local-server">Add Local Server</h3>
+
+<p>For a locally running Prisma AIRS MCP server:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>claude mcp add <span class="nt">--transport</span> http prisma-airs http://localhost:3000
+</code></pre></div></div>
+
+<h3 id="add-remote-server">Add Remote Server</h3>
+
+<p>For a deployed Prisma AIRS MCP server:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>claude mcp add <span class="nt">--transport</span> http prisma-airs https://airs.cdot.io/prisma-airs
+</code></pre></div></div>
+
+<h2 id="mcp-server-management">MCP Server Management</h2>
+
+<h3 id="list-all-servers">List All Servers</h3>
+
+<p>View all configured MCP servers:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>claude mcp list
+</code></pre></div></div>
+
+<p>Example output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Name: prisma-airs
+Transport: http
+URL: http://localhost:3000
+Scope: local
+Status: Connected
+</code></pre></div></div>
+
+<h3 id="get-server-details">Get Server Details</h3>
+
+<p>Get detailed information about a specific server:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>claude mcp get prisma-airs
+</code></pre></div></div>
+
+<h3 id="remove-a-server">Remove a Server</h3>
+
+<p>Remove an MCP server configuration:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>claude mcp remove prisma-airs
+</code></pre></div></div>
+
+<h2 id="configuration-scopes">Configuration Scopes</h2>
+
+<p>Claude Code supports different scopes for MCP servers:</p>
+
+<h3 id="local-scope-default">Local Scope (Default)</h3>
+
+<p>Available only in the current project:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>claude mcp add <span class="nt">--transport</span> http prisma-airs http://localhost:3000
+</code></pre></div></div>
+
+<h3 id="project-scope">Project Scope</h3>
+
+<p>Shared with everyone via <code class="language-plaintext highlighter-rouge">.mcp.json</code> file in the project:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>claude mcp add <span class="nt">-s</span> project <span class="nt">--transport</span> http prisma-airs http://localhost:3000
+</code></pre></div></div>
+
+<p>This creates/updates <code class="language-plaintext highlighter-rouge">.mcp.json</code> in your project root:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"transport"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="user-scope">User Scope</h3>
+
+<p>Available across all your projects:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>claude mcp add <span class="nt">-s</span> user <span class="nt">--transport</span> http prisma-airs http://localhost:3000
+</code></pre></div></div>
+
+<h2 id="using-mcp-servers-in-claude-code">Using MCP Servers in Claude Code</h2>
+
+<h3 id="check-server-status">Check Server Status</h3>
+
+<p>Within Claude Code, use the <code class="language-plaintext highlighter-rouge">/mcp</code> command to check server status:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/mcp
+</code></pre></div></div>
+
+<p>This shows:</p>
+<ul>
+  <li>Connected servers</li>
+  <li>Available tools</li>
+  <li>Resources</li>
+  <li>Prompts</li>
+</ul>
+
+<h3 id="available-tools">Available Tools</h3>
+
+<p>Once connected, Prisma AIRS tools are automatically available:</p>
+
+<ul>
+  <li><strong>airs_scan_content</strong> - Scan text for security threats</li>
+  <li><strong>airs_scan_async</strong> - Asynchronous batch scanning</li>
+  <li><strong>airs_get_scan_results</strong> - Retrieve scan results</li>
+  <li><strong>airs_get_threat_reports</strong> - Get detailed threat analysis</li>
+  <li><strong>airs_clear_cache</strong> - Clear the response cache</li>
+</ul>
+
+<h3 id="example-usage">Example Usage</h3>
+
+<p>```
+User: Can you scan this prompt for security issues: “</p>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_deployment/claude-code.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/prisma-airs-mcp/deployment/claude-desktop/" class="next">
+            Claude Desktop Integration <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/prisma-airs-mcp/assets/js/main.js"></script>
+</body>
+</html>

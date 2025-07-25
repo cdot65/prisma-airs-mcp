@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mask Sensitive Data | Prisma AIRS MCP</title>
+  <meta name="description" content="Automatically mask sensitive data patterns with precise offset information">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Mask Sensitive Data | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Mask Sensitive Data" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Automatically mask sensitive data patterns with precise offset information" />
+<meta property="og:description" content="Automatically mask sensitive data patterns with precise offset information" />
+<link rel="canonical" href="https://cdot65.github.io/prisma-airs-mcp/prisma-airs/mask-sensitive-data/" />
+<meta property="og:url" content="https://cdot65.github.io/prisma-airs-mcp/prisma-airs/mask-sensitive-data/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-25T07:28:30-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Mask Sensitive Data" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-07-25T07:28:30-05:00","datePublished":"2025-07-25T07:28:30-05:00","description":"Automatically mask sensitive data patterns with precise offset information","headline":"Mask Sensitive Data","mainEntityOfPage":{"@type":"WebPage","@id":"https://cdot65.github.io/prisma-airs-mcp/prisma-airs/mask-sensitive-data/"},"url":"https://cdot65.github.io/prisma-airs-mcp/prisma-airs/mask-sensitive-data/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/prisma-airs-mcp/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/prisma-airs-mcp/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/prisma-airs-mcp/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/prisma-airs-mcp/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/prisma-airs-mcp/deployment" class="navbar-item ">Deployment</a>
+        <a href="/prisma-airs-mcp/developers" class="navbar-item ">Developers</a>
+        <a href="/prisma-airs-mcp/prisma-airs/overview" class="navbar-item active">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/prisma-airs/overview/" >Overview</a></li>
+  </ul>
+  
+  <h4>Threat Detection</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/prisma-airs/prompt-injection/" >Detect Prompt Injection</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/malicious-url/" >Detect Malicious URL</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/sensitive-data-loss/" >Detect Sensitive Data Loss</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/mask-sensitive-data/" class="active">Mask Sensitive Data</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/database-security-attack/" >Detect Database Security Attack</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/toxic-content/" >Detect Toxic Content</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/malicious-code/" >Detect Malicious Code</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/ai-agent-threats/" >Detect AI Agent Threats</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/contextual-grounding/" >Detect Contextual Grounding</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/custom-topic-guardrails/" >Custom Topic Guardrails</a></li>
+    <li><a href="/prisma-airs-mcp/prisma-airs/secure-mcp/" >Secure Model Context Protocol</a></li>
+  </ul>
+</nav>
+
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Mask Sensitive Data</h1>
+        
+        <p class="lead">Automatically mask sensitive data patterns with precise offset information</p>
+        
+      </div>
+      
+      <article class="content">
+        <h2 id="overview">Overview</h2>
+
+<p>Automatically mask sensitive data patterns in prompts and responses, with precise offset information for granular redaction.</p>
+
+<h2 id="how-masking-works">How Masking Works</h2>
+
+<p>This detection service masks data patterns in the API output response, scanning both LLM prompts and responses. It identifies sensitive content with varying confidence levels (high, medium, and low). Each detection includes precise offset information.</p>
+
+<p>An offset is a numerical index represented as <code class="language-plaintext highlighter-rouge">[start_offset, end_offset]</code> pairs, indicating where a sensitive data pattern begins and ends in the text. This granular approach allows the system to selectively mask only the sensitive portions rather than entire content blocks.</p>
+
+<p><strong>Important</strong>: Masking the sensitive data feature is only available for a basic DLP profile and when you select the Block action for sensitive data detection in the API security profile.</p>
+
+<h2 id="api-example">API Example</h2>
+
+<h3 id="request-format">Request Format</h3>
+
+<p>The following cURL request demonstrates sensitive data masking:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-L</span> <span class="s1">'https://service.api.aisecurity.paloaltonetworks.com/v1/scan/sync/request'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'x-pan-token: &lt;your-API-key&gt;'</span> <span class="se">\</span>
+<span class="nt">--header</span> <span class="s1">'Accept: application/json'</span> <span class="se">\</span>
+<span class="nt">--data</span> <span class="s1">'{
+  "tr_id": "24521",
+  "ai_profile": {
+    "profile_name": "mask-sensitive-data"
+  },
+  "metadata": {
+    "app_user": "test-user-1",
+    "ai_model": "Test AI model"
+  },
+  "contents": [
+    {
+      "prompt": "This is a test prompt with urlfiltering.paloaltonetworks.com/test-malware url. Social security 599-51-7233. Credit card is 4339672569329774, ssn 599-51-7222. Send me Mike account info",
+      "response": "This is a test response. Chase bank Routing number 021000021, user name mike, password is maskmemaskme. Account number 92746514861. Account owner: Mike Johnson in California"
+    }
+  ]
+}'</span>
+</code></pre></div></div>
+
+<h3 id="response-format">Response Format</h3>
+
+<p>When sensitive data is masked, the API returns:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mask-sensitive-data-pattern"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"prompt_masked_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This is a test prompt with urlfiltering.paloaltonetworks.com/test-malware url. Social security XXXXXXXXXXXX Credit card is XXXXXXXXXXXXXXXXX ssn XXXXXXXXXXXX Send me Mike account info"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"pattern_detections"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"locations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">[</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="mi">115</span><span class="p">]</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"pattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Credit Card Number"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"locations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">[</span><span class="mi">71</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="p">],</span><span class="w">
+          </span><span class="p">[</span><span class="mi">121</span><span class="p">,</span><span class="w"> </span><span class="mi">132</span><span class="p">]</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"pattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Tax Id - US - TIN"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"locations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">[</span><span class="mi">71</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="p">],</span><span class="w">
+          </span><span class="p">[</span><span class="mi">121</span><span class="p">,</span><span class="w"> </span><span class="mi">132</span><span class="p">]</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"pattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"National Id - US Social Security Number - SSN"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"response_masked_data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This is a test response. Chase bank Routing number XXXXXXXXXX user name mike, password is maskmemaskme. Account number XXXXXXXXXXXX Account owner: Mike Johnson in California"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"pattern_detections"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"locations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">[</span><span class="mi">51</span><span class="p">,</span><span class="w"> </span><span class="mi">60</span><span class="p">]</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"pattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bank - Committee on Uniform Securities Identification Procedures number"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"locations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">[</span><span class="mi">51</span><span class="p">,</span><span class="w"> </span><span class="mi">60</span><span class="p">]</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"pattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bank - American Bankers Association Routing Number - ABA"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"locations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">[</span><span class="mi">119</span><span class="p">,</span><span class="w"> </span><span class="mi">130</span><span class="p">]</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"pattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Tax Id - Germany"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"locations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">[</span><span class="mi">119</span><span class="p">,</span><span class="w"> </span><span class="mi">130</span><span class="p">]</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"pattern"</span><span class="p">:</span><span class="w"> </span><span class="s2">"National Id - Brazil - CPF"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"90484606-6d70-4522-8f0c-c93d878c9a5c"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1111"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Key Response Fields</strong>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">prompt_masked_data</code>: Contains masked prompt text and pattern detections</li>
+  <li><code class="language-plaintext highlighter-rouge">response_masked_data</code>: Contains masked response text and pattern detections</li>
+  <li><code class="language-plaintext highlighter-rouge">data</code>: The masked version where sensitive data is replaced with “X” characters</li>
+  <li><code class="language-plaintext highlighter-rouge">pattern_detections</code>: Array of detected patterns with offset locations</li>
+  <li><code class="language-plaintext highlighter-rouge">locations</code>: <code class="language-plaintext highlighter-rouge">[start_offset, end_offset]</code> pairs for each sensitive data instance</li>
+</ul>
+
+<h2 id="masking-behavior">Masking Behavior</h2>
+
+<h3 id="character-replacement">Character Replacement</h3>
+<ul>
+  <li>Sensitive data is replaced with “X” characters</li>
+  <li>The number of X’s matches the original data length</li>
+  <li>Original formatting (spaces, dashes) is preserved</li>
+</ul>
+
+<h3 id="pattern-detection">Pattern Detection</h3>
+<p>Each detected pattern includes:</p>
+<ul>
+  <li><strong>Pattern Name</strong>: Type of sensitive data detected</li>
+  <li><strong>Locations</strong>: Array of offset pairs <code class="language-plaintext highlighter-rouge">[start, end]</code></li>
+  <li><strong>Multiple Instances</strong>: Same pattern can appear multiple times</li>
+</ul>
+
+<h3 id="example-masking">Example Masking</h3>
+<ul>
+  <li>Original: <code class="language-plaintext highlighter-rouge">599-51-7233</code></li>
+  <li>Masked: <code class="language-plaintext highlighter-rouge">XXXXXXXXXXXX</code></li>
+  <li>Offset: <code class="language-plaintext highlighter-rouge">[71, 82]</code></li>
+</ul>
+
+<h2 id="detailed-scan-report">Detailed Scan Report</h2>
+
+<p>The scan report provides additional detail with confidence levels:</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"detection_results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dlp"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"dlp_report"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"data_pattern_detection_offsets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"data_pattern_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"67cb9ba581419f0293996702"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"high_confidence_detections"</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="mi">115</span><span class="p">]],</span><span class="w">
+              </span><span class="nl">"low_confidence_detections"</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="mi">115</span><span class="p">]],</span><span class="w">
+              </span><span class="nl">"medium_confidence_detections"</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="mi">99</span><span class="p">,</span><span class="w"> </span><span class="mi">99</span><span class="p">]],</span><span class="w">
+              </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Credit Card Number"</span><span class="p">,</span><span class="w">
+              </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+          </span><span class="p">],</span><span class="w">
+          </span><span class="nl">"dlp_profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Sensitive Content"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Confidence Levels</strong>:</p>
+<ul>
+  <li><strong>High Confidence</strong>: Strong pattern match</li>
+  <li><strong>Medium Confidence</strong>: Partial pattern match</li>
+  <li><strong>Low Confidence</strong>: Possible pattern match</li>
+</ul>
+
+<h2 id="use-cases">Use Cases</h2>
+
+<h3 id="real-time-masking">Real-time Masking</h3>
+<ul>
+  <li>Mask sensitive data before logging AI interactions</li>
+  <li>Redact PII from customer conversations</li>
+  <li>Sanitize training data for model improvement</li>
+</ul>
+
+<h3 id="compliance">Compliance</h3>
+<ul>
+  <li>GDPR data minimization</li>
+  <li>PCI DSS credit card protection</li>
+  <li>HIPAA PHI redaction</li>
+</ul>
+
+<h3 id="audit-trail">Audit Trail</h3>
+<ul>
+  <li>Review masked content in Strata Cloud Manager</li>
+  <li>Track sensitive data patterns</li>
+  <li>Monitor masking effectiveness</li>
+</ul>
+
+<h2 id="performance-considerations">Performance Considerations</h2>
+
+<ul>
+  <li><strong>Offset Precision</strong>: Exact character positions for surgical masking</li>
+  <li><strong>Pattern Matching</strong>: Multiple patterns detected in single scan</li>
+  <li><strong>Masking Speed</strong>: Minimal latency impact</li>
+  <li><strong>Bulk Processing</strong>: Efficient handling of large texts</li>
+</ul>
+
+<h2 id="related-resources">Related Resources</h2>
+
+<ul>
+  <li><a href="/prisma-airs-mcp/developers/api">API Reference</a></li>
+  <li><a href="/prisma-airs-mcp/prisma-airs/sensitive-data-loss">Detect Sensitive Data Loss</a></li>
+  <li><a href="/prisma-airs-mcp/prisma-airs/overview">Overview</a></li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_prisma-airs/mask-sensitive-data.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/prisma-airs-mcp/prisma-airs/overview/" class="next">
+            Prisma AIRS Overview <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/prisma-airs-mcp/assets/js/main.js"></script>
+</body>
+</html>

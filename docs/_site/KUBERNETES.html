@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kubernetes Deployment Guide - Prisma AIRS MCP</title>
+  <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
+  
+  <!-- SEO -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Kubernetes Deployment Guide" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection" />
+<meta property="og:description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection" />
+<link rel="canonical" href="https://cdot65.github.io/prisma-airs-mcp/KUBERNETES.html" />
+<meta property="og:url" content="https://cdot65.github.io/prisma-airs-mcp/KUBERNETES.html" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Kubernetes Deployment Guide" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection","headline":"Kubernetes Deployment Guide","url":"https://cdot65.github.io/prisma-airs-mcp/KUBERNETES.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="/prisma-airs-mcp/assets/css/style.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/prisma-airs-mcp/assets/favicon.png">
+</head>
+<body>
+  <h1 id="kubernetes-deployment-guide">Kubernetes Deployment Guide</h1>
+
+<p>This guide covers deploying the Prisma AIRS MCP server to a Kubernetes cluster.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li>Kubernetes cluster (1.21+)</li>
+  <li>kubectl configured to access your cluster</li>
+  <li>Traefik ingress controller installed (for IngressRoute)</li>
+  <li>Docker images built and available</li>
+</ul>
+
+<h2 id="directory-structure">Directory Structure</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>k8s/
+├── base/                    # Base Kubernetes manifests
+│   ├── deployment.yaml     # Main deployment
+│   ├── service.yaml        # ClusterIP service
+│   ├── ingressroute.yaml   # Traefik IngressRoute
+│   ├── kustomization.yaml  # Base kustomization
+│   └── secret-template.yaml # Secret template (DO NOT COMMIT)
+├── overlays/               # Environment-specific configurations
+│   ├── development/        # Development environment
+│   ├── staging/           # Staging environment
+│   └── production/        # Production environment
+└── scripts/               # Helper scripts
+    ├── deploy.sh          # Deployment script
+    └── manage-secrets.sh  # Secret management script
+</code></pre></div></div>
+
+<h2 id="quick-start">Quick Start</h2>
+
+<h3 id="1-create-registry-secret-if-using-private-registry">1. Create Registry Secret (if using private registry)</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">CR_PAT</span><span class="o">=</span><span class="s1">'your-github-personal-access-token'</span>
+./k8s/scripts/create-registry-secret.sh create
+</code></pre></div></div>
+
+<h3 id="2-create-api-secret">2. Create API Secret</h3>
+
+<p>Create the secret containing your Prisma AIRS API key:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># From .env file</span>
+./k8s/scripts/manage-secrets.sh create prisma-airs
+
+<span class="c"># Or provide directly</span>
+./k8s/scripts/manage-secrets.sh create prisma-airs <span class="s1">'your-api-key-here'</span>
+</code></pre></div></div>
+
+<h3 id="3-deploy-to-environment">3. Deploy to Environment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Deploy to development</span>
+./k8s/scripts/deploy.sh deploy development
+
+<span class="c"># Deploy to production</span>
+./k8s/scripts/deploy.sh deploy production
+</code></pre></div></div>
+
+<h3 id="4-verify-deployment">4. Verify Deployment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./k8s/scripts/deploy.sh status prisma-airs
+</code></pre></div></div>
+
+<h3 id="5-test-deployment">5. Test Deployment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./k8s/scripts/deploy.sh <span class="nb">test </span>prisma-airs
+</code></pre></div></div>
+
+<h2 id="deployment-environments">Deployment Environments</h2>
+
+<h3 id="development">Development</h3>
+
+<ul>
+  <li><strong>Namespace</strong>: <code class="language-plaintext highlighter-rouge">prisma-airs</code></li>
+  <li><strong>Replicas</strong>: 1</li>
+  <li><strong>Image</strong>: <code class="language-plaintext highlighter-rouge">ghcr.io/cdot65/prisma-airs-mcp:latest</code></li>
+  <li><strong>Resources</strong>: Minimal (64Mi-256Mi memory, 100m-500m CPU)</li>
+  <li><strong>Log Level</strong>: debug</li>
+  <li><strong>Name Prefix</strong>: <code class="language-plaintext highlighter-rouge">dev-</code></li>
+</ul>
+
+<h3 id="staging">Staging</h3>
+
+<ul>
+  <li><strong>Namespace</strong>: <code class="language-plaintext highlighter-rouge">prisma-airs</code></li>
+  <li><strong>Replicas</strong>: 2</li>
+  <li><strong>Image</strong>: <code class="language-plaintext highlighter-rouge">ghcr.io/cdot65/prisma-airs-mcp:latest</code></li>
+  <li><strong>Resources</strong>: Standard (128Mi-512Mi memory, 250m-1000m CPU)</li>
+  <li><strong>Log Level</strong>: info</li>
+  <li><strong>Name Prefix</strong>: <code class="language-plaintext highlighter-rouge">staging-</code></li>
+</ul>
+
+<h3 id="production">Production</h3>
+
+<ul>
+  <li><strong>Namespace</strong>: <code class="language-plaintext highlighter-rouge">prisma-airs</code></li>
+  <li><strong>Replicas</strong>: 3</li>
+  <li><strong>Image</strong>: <code class="language-plaintext highlighter-rouge">ghcr.io/cdot65/prisma-airs-mcp:latest</code></li>
+  <li><strong>Resources</strong>: High (256Mi-1Gi memory, 500m-2000m CPU)</li>
+  <li><strong>Log Level</strong>: warn</li>
+  <li><strong>Features</strong>: Pod anti-affinity, rate limiting</li>
+</ul>
+
+<h2 id="configuration">Configuration</h2>
+
+<h3 id="environment-variables">Environment Variables</h3>
+
+<p>Configuration is managed through ConfigMaps and Secrets:</p>
+
+<p><strong>ConfigMap</strong> (<code class="language-plaintext highlighter-rouge">prisma-airs-mcp-config</code>):</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">airs.api.url</code> - Prisma AIRS API endpoint</li>
+  <li><code class="language-plaintext highlighter-rouge">cache.enabled</code> - Enable/disable caching</li>
+  <li><code class="language-plaintext highlighter-rouge">cache.ttl.seconds</code> - Cache TTL in seconds</li>
+  <li><code class="language-plaintext highlighter-rouge">cache.max.size</code> - Maximum cache entries</li>
+  <li><code class="language-plaintext highlighter-rouge">rate.limit.enabled</code> - Enable/disable rate limiting</li>
+  <li><code class="language-plaintext highlighter-rouge">rate.limit.max.requests</code> - Max requests per window</li>
+  <li><code class="language-plaintext highlighter-rouge">rate.limit.window.ms</code> - Rate limit window in milliseconds</li>
+</ul>
+
+<p><strong>Secret</strong> (<code class="language-plaintext highlighter-rouge">prisma-airs-mcp-secrets</code>):</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">airs.api.key</code> - Prisma AIRS API key</li>
+</ul>
+
+<h3 id="customizing-configuration">Customizing Configuration</h3>
+
+<p>To override configuration for an environment, edit the corresponding overlay:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># k8s/overlays/production/kustomization.yaml</span>
+<span class="na">configMapGenerator</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp-config</span>
+    <span class="na">behavior</span><span class="pi">:</span> <span class="s">merge</span>
+    <span class="na">literals</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">airs.api.url=https://api.prismaairs-prod.example.com</span>
+      <span class="pi">-</span> <span class="s">cache.ttl.seconds=600</span>
+</code></pre></div></div>
+
+<h2 id="deployment-commands">Deployment Commands</h2>
+
+<h3 id="deploy-with-custom-namespace">Deploy with Custom Namespace</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Deploy staging to a custom namespace</span>
+./k8s/scripts/deploy.sh deploy staging my-staging-namespace
+</code></pre></div></div>
+
+<h3 id="dry-run-deployment">Dry Run Deployment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Preview what will be deployed without applying</span>
+./k8s/scripts/deploy.sh deploy production <span class="nt">--dry-run</span>
+</code></pre></div></div>
+
+<h3 id="delete-deployment">Delete Deployment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Remove all resources</span>
+./k8s/scripts/deploy.sh delete development
+</code></pre></div></div>
+
+<h2 id="secret-management">Secret Management</h2>
+
+<h3 id="create-secret">Create Secret</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./k8s/scripts/manage-secrets.sh create &lt;namespace&gt; <span class="s1">'&lt;api-key&gt;'</span>
+</code></pre></div></div>
+
+<h3 id="verify-secret">Verify Secret</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./k8s/scripts/manage-secrets.sh verify &lt;namespace&gt;
+</code></pre></div></div>
+
+<h3 id="rotate-secret">Rotate Secret</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Rotate secret and restart pods</span>
+./k8s/scripts/manage-secrets.sh rotate &lt;namespace&gt; <span class="s1">'&lt;new-api-key&gt;'</span>
+</code></pre></div></div>
+
+<h2 id="traefik-ingressroute">Traefik IngressRoute</h2>
+
+<p>The service is exposed through Traefik with the following configuration:</p>
+
+<ul>
+  <li><strong>Path</strong>: <code class="language-plaintext highlighter-rouge">/prisma-airs</code></li>
+  <li><strong>Strip Prefix</strong>: Yes (removes <code class="language-plaintext highlighter-rouge">/prisma-airs</code> before forwarding)</li>
+  <li><strong>TLS</strong>: Enabled on port 443 with existing cluster certificate</li>
+  <li><strong>Headers</strong>: Security headers added</li>
+  <li><strong>Rate Limiting</strong>: Enabled in production (100 req/min)</li>
+</ul>
+
+<h3 id="custom-domain-production">Custom Domain (Production)</h3>
+
+<p>Edit <code class="language-plaintext highlighter-rouge">k8s/overlays/production/ingressroute-patch.yaml</code>:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">spec</span><span class="pi">:</span>
+  <span class="na">routes</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">match</span><span class="pi">:</span> <span class="s">Host(`your-domain.com`) &amp;&amp; PathPrefix(`/airs`)</span>
+</code></pre></div></div>
+
+<h2 id="monitoring">Monitoring</h2>
+
+<h3 id="view-logs">View Logs</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># View logs from all pods</span>
+kubectl logs <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>prisma-airs-mcp <span class="nt">-n</span> development <span class="nt">--tail</span><span class="o">=</span>100 <span class="nt">-f</span>
+
+<span class="c"># View logs from specific pod</span>
+kubectl logs &lt;pod-name&gt; <span class="nt">-n</span> development
+</code></pre></div></div>
+
+<h3 id="check-pod-status">Check Pod Status</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># List all pods</span>
+kubectl get pods <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>prisma-airs-mcp <span class="nt">-n</span> development
+
+<span class="c"># Describe pod for details</span>
+kubectl describe pod &lt;pod-name&gt; <span class="nt">-n</span> development
+</code></pre></div></div>
+
+<h3 id="execute-commands-in-pod">Execute Commands in Pod</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Open shell in pod</span>
+kubectl <span class="nb">exec</span> <span class="nt">-it</span> &lt;pod-name&gt; <span class="nt">-n</span> development <span class="nt">--</span> sh
+
+<span class="c"># Test internal endpoints</span>
+kubectl <span class="nb">exec</span> &lt;pod-name&gt; <span class="nt">-n</span> development <span class="nt">--</span> wget <span class="nt">-qO-</span> http://localhost:3000/health
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="pod-not-starting">Pod Not Starting</h3>
+
+<ol>
+  <li>
+    <p>Check pod events:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl describe pod &lt;pod-name&gt; <span class="nt">-n</span> &lt;namespace&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Check logs:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl logs &lt;pod-name&gt; <span class="nt">-n</span> &lt;namespace&gt; <span class="nt">--previous</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Verify secret exists:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./k8s/scripts/manage-secrets.sh verify &lt;namespace&gt;
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="service-not-accessible">Service Not Accessible</h3>
+
+<ol>
+  <li>
+    <p>Check service endpoints:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get endpoints prisma-airs-mcp <span class="nt">-n</span> &lt;namespace&gt;
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Test service internally:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl run test-pod <span class="nt">--image</span><span class="o">=</span>busybox <span class="nt">-it</span> <span class="nt">--rm</span> <span class="nt">--</span> wget <span class="nt">-qO-</span> http://prisma-airs-mcp/health
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Check IngressRoute:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get ingressroute prisma-airs-mcp <span class="nt">-n</span> &lt;namespace&gt; <span class="nt">-o</span> yaml
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="configuration-issues">Configuration Issues</h3>
+
+<ol>
+  <li>
+    <p>View current ConfigMap:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl get configmap <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>prisma-airs-mcp <span class="nt">-n</span> &lt;namespace&gt; <span class="nt">-o</span> yaml
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Check environment variables in pod:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nb">exec</span> &lt;pod-name&gt; <span class="nt">-n</span> &lt;namespace&gt; <span class="nt">--</span> <span class="nb">env</span> | <span class="nb">grep </span>AIRS
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h2 id="security-considerations">Security Considerations</h2>
+
+<ol>
+  <li><strong>Secrets</strong>: Never commit actual API keys. Use the secret management script.</li>
+  <li><strong>Network Policies</strong>: Consider implementing network policies to restrict traffic.</li>
+  <li><strong>RBAC</strong>: Ensure proper RBAC rules for service accounts.</li>
+  <li><strong>Security Context</strong>: Pods run as non-root user (1001) with read-only root filesystem.</li>
+  <li><strong>Resource Limits</strong>: All containers have resource limits to prevent resource exhaustion.</li>
+</ol>
+
+<h2 id="scaling">Scaling</h2>
+
+<h3 id="manual-scaling">Manual Scaling</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Scale to 5 replicas</span>
+kubectl scale deployment prisma-airs-mcp <span class="nt">-n</span> production <span class="nt">--replicas</span><span class="o">=</span>5
+</code></pre></div></div>
+
+<h3 id="horizontal-pod-autoscaler">Horizontal Pod Autoscaler</h3>
+
+<p>Create an HPA for automatic scaling:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">autoscaling/v2</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">HorizontalPodAutoscaler</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">scaleTargetRef</span><span class="pi">:</span>
+    <span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+    <span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp</span>
+  <span class="na">minReplicas</span><span class="pi">:</span> <span class="m">2</span>
+  <span class="na">maxReplicas</span><span class="pi">:</span> <span class="m">10</span>
+  <span class="na">metrics</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">type</span><span class="pi">:</span> <span class="s">Resource</span>
+      <span class="na">resource</span><span class="pi">:</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s">cpu</span>
+        <span class="na">target</span><span class="pi">:</span>
+          <span class="na">type</span><span class="pi">:</span> <span class="s">Utilization</span>
+          <span class="na">averageUtilization</span><span class="pi">:</span> <span class="m">70</span>
+</code></pre></div></div>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<ol>
+  <li><strong>Always use dry-run</strong> first when deploying to production</li>
+  <li><strong>Monitor logs</strong> during and after deployment</li>
+  <li><strong>Test endpoints</strong> after deployment using the test script</li>
+  <li><strong>Rotate secrets</strong> regularly using the secret management script</li>
+  <li><strong>Keep overlays minimal</strong> - only override what’s necessary</li>
+  <li><strong>Document changes</strong> in overlay files with comments</li>
+</ol>
+
+<h2 id="advanced-topics">Advanced Topics</h2>
+
+<h3 id="custom-kustomization">Custom Kustomization</h3>
+
+<p>To add custom resources or patches:</p>
+
+<ol>
+  <li>Create new files in the overlay directory</li>
+  <li>Add them to the overlay’s <code class="language-plaintext highlighter-rouge">kustomization.yaml</code></li>
+  <li>Test with: <code class="language-plaintext highlighter-rouge">kustomize build k8s/overlays/&lt;environment&gt;</code></li>
+</ol>
+
+<h3 id="multi-region-deployment">Multi-Region Deployment</h3>
+
+<p>For multi-region deployments:</p>
+
+<ol>
+  <li>Create region-specific overlays (e.g., <code class="language-plaintext highlighter-rouge">production-us-east</code>, <code class="language-plaintext highlighter-rouge">production-eu-west</code>)</li>
+  <li>Override necessary configurations (endpoints, replicas, etc.)</li>
+  <li>Deploy to different namespaces or clusters</li>
+</ol>
+
+<h3 id="backup-and-restore">Backup and Restore</h3>
+
+<p>To backup configuration:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Export all resources</span>
+kubectl get all,configmap,secret,ingressroute <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>prisma-airs-mcp <span class="nt">-n</span> production <span class="nt">-o</span> yaml <span class="o">&gt;</span> backup.yaml
+</code></pre></div></div>
+
+<h2 id="support">Support</h2>
+
+<p>For issues or questions:</p>
+
+<ol>
+  <li>Check pod logs and events</li>
+  <li>Review this documentation</li>
+  <li>Consult the main README.md</li>
+  <li>Check Kubernetes and Traefik documentation</li>
+</ol>
+
+</body>
+</html>

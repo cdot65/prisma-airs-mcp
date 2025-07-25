@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuration Reference | Prisma AIRS MCP</title>
+  <meta name="description" content="Complete configuration reference for Prisma AIRS MCP">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Configuration Reference | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Configuration Reference" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Complete configuration reference for Prisma AIRS MCP" />
+<meta property="og:description" content="Complete configuration reference for Prisma AIRS MCP" />
+<link rel="canonical" href="https://cdot65.github.io/prisma-airs-mcp/deployment/configuration/" />
+<meta property="og:url" content="https://cdot65.github.io/prisma-airs-mcp/deployment/configuration/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-25T07:28:30-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Configuration Reference" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-07-25T07:28:30-05:00","datePublished":"2025-07-25T07:28:30-05:00","description":"Complete configuration reference for Prisma AIRS MCP","headline":"Configuration Reference","mainEntityOfPage":{"@type":"WebPage","@id":"https://cdot65.github.io/prisma-airs-mcp/deployment/configuration/"},"url":"https://cdot65.github.io/prisma-airs-mcp/deployment/configuration/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/prisma-airs-mcp/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/prisma-airs-mcp/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/prisma-airs-mcp/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/prisma-airs-mcp/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/prisma-airs-mcp/deployment" class="navbar-item active">Deployment</a>
+        <a href="/prisma-airs-mcp/developers" class="navbar-item ">Developers</a>
+        <a href="/prisma-airs-mcp/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/overview/" >Deployment Overview</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/quickstart/" >Quick Start Guide</a></li>
+  </ul>
+  
+  <h4>Deployment Documentation</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/docker/" >Docker</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/docker-compose/" >Docker Compose</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/source/" >Build from Source</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/kubernetes/" >Kubernetes</a></li>
+  </ul>
+  
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/configuration/" class="active">Configuration Reference</a></li>
+  </ul>
+  
+  <h4>Additional</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/docker-build-options/" >Docker Build Options</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/claude-desktop/" >Claude Desktop</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/claude-code/" >Claude Code</a></li>
+  </ul>
+</nav>
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Configuration Reference</h1>
+        
+        <p class="lead">Complete configuration reference for Prisma AIRS MCP</p>
+        
+      </div>
+      
+      <article class="content">
+        <h2 id="overview">Overview</h2>
+
+<p>This reference covers all configuration options for Prisma AIRS MCP. Configuration can be provided through environment variables, <code class="language-plaintext highlighter-rouge">.env</code> files, or Kubernetes ConfigMaps/Secrets.</p>
+
+<h2 id="configuration-priority">Configuration Priority</h2>
+
+<p>Configuration is loaded in the following order (later sources override earlier ones):</p>
+
+<ol>
+  <li>Default values in code</li>
+  <li><code class="language-plaintext highlighter-rouge">.env</code> file</li>
+  <li>Environment variables</li>
+  <li>Command line arguments (if applicable)</li>
+</ol>
+
+<h2 id="required-configuration">Required Configuration</h2>
+
+<p>These settings must be configured for the server to start:</p>
+
+<h3 id="airs-api-settings">AIRS API Settings</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_API_URL</code></td>
+      <td>Prisma AIRS API endpoint</td>
+      <td><code class="language-plaintext highlighter-rouge">https://service.api.aisecurity.paloaltonetworks.com</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_API_KEY</code></td>
+      <td>Your Prisma AIRS API key</td>
+      <td><code class="language-plaintext highlighter-rouge">your-api-key-here</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="profile-configuration">Profile Configuration</h3>
+
+<p>You must specify either a profile name OR profile ID (not both):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_DEFAULT_PROFILE_NAME</code></td>
+      <td>Profile name to use</td>
+      <td><code class="language-plaintext highlighter-rouge">Prisma AIRS</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_DEFAULT_PROFILE_ID</code></td>
+      <td>Profile UUID (alternative)</td>
+      <td><code class="language-plaintext highlighter-rouge">123e4567-e89b-12d3-a456-426614174000</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p><strong>Note</strong>: If neither is specified, the server defaults to using the “Prisma AIRS” profile.</p>
+</blockquote>
+
+<h2 id="server-configuration">Server Configuration</h2>
+
+<h3 id="basic-settings">Basic Settings</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+      <th>Default</th>
+      <th>Valid Values</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">PORT</code></td>
+      <td>Server port</td>
+      <td><code class="language-plaintext highlighter-rouge">3000</code></td>
+      <td>Any valid port number</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">NODE_ENV</code></td>
+      <td>Environment mode</td>
+      <td><code class="language-plaintext highlighter-rouge">production</code></td>
+      <td><code class="language-plaintext highlighter-rouge">development</code>, <code class="language-plaintext highlighter-rouge">production</code>, <code class="language-plaintext highlighter-rouge">test</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">LOG_LEVEL</code></td>
+      <td>Logging verbosity</td>
+      <td><code class="language-plaintext highlighter-rouge">info</code></td>
+      <td><code class="language-plaintext highlighter-rouge">debug</code>, <code class="language-plaintext highlighter-rouge">info</code>, <code class="language-plaintext highlighter-rouge">warn</code>, <code class="language-plaintext highlighter-rouge">error</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="advanced-settings">Advanced Settings</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">SHUTDOWN_TIMEOUT_MS</code></td>
+      <td>Graceful shutdown timeout</td>
+      <td><code class="language-plaintext highlighter-rouge">30000</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">REQUEST_TIMEOUT_MS</code></td>
+      <td>Request processing timeout</td>
+      <td><code class="language-plaintext highlighter-rouge">30000</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">BODY_SIZE_LIMIT</code></td>
+      <td>Maximum request body size</td>
+      <td><code class="language-plaintext highlighter-rouge">1mb</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="caching-configuration">Caching Configuration</h2>
+
+<p>Control the in-memory cache behavior:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+      <th>Default</th>
+      <th>Range</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CACHE_TTL_SECONDS</code></td>
+      <td>Cache time-to-live</td>
+      <td><code class="language-plaintext highlighter-rouge">300</code></td>
+      <td>60-3600</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CACHE_MAX_SIZE</code></td>
+      <td>Maximum cache entries</td>
+      <td><code class="language-plaintext highlighter-rouge">1000</code></td>
+      <td>100-10000</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CACHE_CHECK_PERIOD_SECONDS</code></td>
+      <td>Cleanup interval</td>
+      <td><code class="language-plaintext highlighter-rouge">60</code></td>
+      <td>30-300</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="cache-strategy">Cache Strategy</h3>
+
+<pre><code class="language-env"># Conservative (minimize API calls)
+CACHE_TTL_SECONDS=3600
+CACHE_MAX_SIZE=5000
+
+# Aggressive (fresh data)
+CACHE_TTL_SECONDS=60
+CACHE_MAX_SIZE=500
+
+# Balanced (recommended)
+CACHE_TTL_SECONDS=300
+CACHE_MAX_SIZE=1000
+</code></pre>
+
+<h2 id="rate-limiting">Rate Limiting</h2>
+
+<p>Protect against abuse and ensure fair usage:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RATE_LIMIT_MAX_REQUESTS</code></td>
+      <td>Maximum requests per window</td>
+      <td><code class="language-plaintext highlighter-rouge">100</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RATE_LIMIT_WINDOW_MS</code></td>
+      <td>Time window in milliseconds</td>
+      <td><code class="language-plaintext highlighter-rouge">60000</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RATE_LIMIT_SKIP_SUCCESSFUL_REQUESTS</code></td>
+      <td>Only count failed requests</td>
+      <td><code class="language-plaintext highlighter-rouge">false</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">RATE_LIMIT_SKIP_FAILED_REQUESTS</code></td>
+      <td>Only count successful requests</td>
+      <td><code class="language-plaintext highlighter-rouge">false</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="rate-limit-strategies">Rate Limit Strategies</h3>
+
+<pre><code class="language-env"># Strict (API protection)
+RATE_LIMIT_MAX_REQUESTS=50
+RATE_LIMIT_WINDOW_MS=60000
+
+# Lenient (development)
+RATE_LIMIT_MAX_REQUESTS=1000
+RATE_LIMIT_WINDOW_MS=60000
+
+# Per-minute limiting
+RATE_LIMIT_MAX_REQUESTS=60
+RATE_LIMIT_WINDOW_MS=60000
+</code></pre>
+
+<h2 id="airs-client-configuration">AIRS Client Configuration</h2>
+
+<p>Fine-tune the AIRS API client behavior:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_RETRY_ATTEMPTS</code></td>
+      <td>Number of retry attempts</td>
+      <td><code class="language-plaintext highlighter-rouge">3</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_RETRY_DELAY_MS</code></td>
+      <td>Initial retry delay</td>
+      <td><code class="language-plaintext highlighter-rouge">1000</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_RETRY_MAX_DELAY_MS</code></td>
+      <td>Maximum retry delay</td>
+      <td><code class="language-plaintext highlighter-rouge">30000</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_RETRY_FACTOR</code></td>
+      <td>Exponential backoff factor</td>
+      <td><code class="language-plaintext highlighter-rouge">2</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_REQUEST_TIMEOUT_MS</code></td>
+      <td>API request timeout</td>
+      <td><code class="language-plaintext highlighter-rouge">30000</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="retry-configuration-examples">Retry Configuration Examples</h3>
+
+<pre><code class="language-env"># Quick retry (unstable network)
+AIRS_RETRY_ATTEMPTS=5
+AIRS_RETRY_DELAY_MS=500
+AIRS_RETRY_MAX_DELAY_MS=10000
+
+# Conservative retry (stable network)
+AIRS_RETRY_ATTEMPTS=2
+AIRS_RETRY_DELAY_MS=2000
+AIRS_RETRY_MAX_DELAY_MS=60000
+</code></pre>
+
+<h2 id="security-configuration">Security Configuration</h2>
+
+<h3 id="cors-settings">CORS Settings</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CORS_ENABLED</code></td>
+      <td>Enable CORS</td>
+      <td><code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CORS_ORIGIN</code></td>
+      <td>Allowed origins</td>
+      <td><code class="language-plaintext highlighter-rouge">*</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CORS_METHODS</code></td>
+      <td>Allowed methods</td>
+      <td><code class="language-plaintext highlighter-rouge">GET,POST,OPTIONS</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">CORS_CREDENTIALS</code></td>
+      <td>Allow credentials</td>
+      <td><code class="language-plaintext highlighter-rouge">false</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="security-headers">Security Headers</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">HELMET_ENABLED</code></td>
+      <td>Enable security headers</td>
+      <td><code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TRUST_PROXY</code></td>
+      <td>Trust proxy headers</td>
+      <td><code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ENABLE_COMPRESSION</code></td>
+      <td>Enable response compression</td>
+      <td><code class="language-plaintext highlighter-rouge">true</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="complete-example-configurations">Complete Example Configurations</h2>
+
+<h3 id="development-configuration">Development Configuration</h3>
+
+<pre><code class="language-env"># Development environment
+NODE_ENV=development
+PORT=3000
+LOG_LEVEL=debug
+
+# AIRS API
+AIRS_API_URL=https://service.api.aisecurity.paloaltonetworks.com
+AIRS_API_KEY=your-dev-api-key
+AIRS_DEFAULT_PROFILE_NAME=Prisma AIRS
+
+# Relaxed limits for development
+RATE_LIMIT_MAX_REQUESTS=1000
+CACHE_TTL_SECONDS=60
+
+# Detailed logging
+LOG_LEVEL=debug
+</code></pre>
+
+<h3 id="production-configuration">Production Configuration</h3>
+
+<pre><code class="language-env"># Production environment
+NODE_ENV=production
+PORT=3000
+LOG_LEVEL=info
+
+# AIRS API
+AIRS_API_URL=https://service.api.aisecurity.paloaltonetworks.com
+AIRS_API_KEY=your-prod-api-key
+AIRS_DEFAULT_PROFILE_NAME=Prisma AIRS
+
+# Performance optimization
+CACHE_TTL_SECONDS=300
+CACHE_MAX_SIZE=1000
+RATE_LIMIT_MAX_REQUESTS=100
+RATE_LIMIT_WINDOW_MS=60000
+
+# Security
+CORS_ORIGIN=https://your-domain.com
+CORS_CREDENTIALS=true
+HELMET_ENABLED=true
+
+# Reliability
+AIRS_RETRY_ATTEMPTS=3
+AIRS_RETRY_DELAY_MS=1000
+SHUTDOWN_TIMEOUT_MS=30000
+</code></pre>
+
+<h3 id="kubernetes-configuration">Kubernetes Configuration</h3>
+
+<p>For Kubernetes deployments, use ConfigMaps and Secrets:</p>
+
+<p><strong>ConfigMap</strong> (<code class="language-plaintext highlighter-rouge">configmap.yaml</code>):</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ConfigMap</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-config</span>
+<span class="na">data</span><span class="pi">:</span>
+  <span class="na">NODE_ENV</span><span class="pi">:</span> <span class="s2">"</span><span class="s">production"</span>
+  <span class="na">PORT</span><span class="pi">:</span> <span class="s2">"</span><span class="s">3000"</span>
+  <span class="na">LOG_LEVEL</span><span class="pi">:</span> <span class="s2">"</span><span class="s">info"</span>
+  <span class="na">AIRS_API_URL</span><span class="pi">:</span> <span class="s2">"</span><span class="s">https://service.api.aisecurity.paloaltonetworks.com"</span>
+  <span class="na">CACHE_TTL_SECONDS</span><span class="pi">:</span> <span class="s2">"</span><span class="s">300"</span>
+  <span class="na">RATE_LIMIT_MAX_REQUESTS</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100"</span>
+</code></pre></div></div>
+
+<p><strong>Secret</strong> (<code class="language-plaintext highlighter-rouge">secret.yaml</code>):</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Secret</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-secret</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">Opaque</span>
+<span class="na">stringData</span><span class="pi">:</span>
+  <span class="na">api-key</span><span class="pi">:</span> <span class="s2">"</span><span class="s">your-api-key-here"</span>
+  <span class="na">profile-name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Prisma</span><span class="nv"> </span><span class="s">AIRS"</span>
+</code></pre></div></div>
+
+<h2 id="environment-specific-settings">Environment-Specific Settings</h2>
+
+<h3 id="docker-compose">Docker Compose</h3>
+
+<p>In <code class="language-plaintext highlighter-rouge">docker-compose.yml</code>:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">prod</span><span class="pi">:</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">NODE_ENV=production</span>
+      <span class="pi">-</span> <span class="s">PORT=3000</span>
+      <span class="pi">-</span> <span class="s">LOG_LEVEL=info</span>
+    <span class="na">env_file</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">.env</span>
+</code></pre></div></div>
+
+<h3 id="systemd">Systemd</h3>
+
+<p>In service file:</p>
+<div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[Service]</span>
+<span class="py">Environment</span><span class="p">=</span><span class="s">"NODE_ENV=production"</span>
+<span class="py">Environment</span><span class="p">=</span><span class="s">"PORT=3000"</span>
+<span class="py">EnvironmentFile</span><span class="p">=</span><span class="s">/etc/prisma-airs-mcp/.env</span>
+</code></pre></div></div>
+
+<h3 id="pm2">PM2</h3>
+
+<p>In <code class="language-plaintext highlighter-rouge">ecosystem.config.js</code>:</p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="na">apps</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">prisma-airs-mcp</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">env</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">NODE_ENV</span><span class="p">:</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">PORT</span><span class="p">:</span> <span class="mi">3000</span>
+    <span class="p">},</span>
+    <span class="na">env_production</span><span class="p">:</span> <span class="p">{</span>
+      <span class="na">NODE_ENV</span><span class="p">:</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">LOG_LEVEL</span><span class="p">:</span> <span class="dl">'</span><span class="s1">info</span><span class="dl">'</span>
+    <span class="p">}</span>
+  <span class="p">}]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="validation">Validation</h2>
+
+<p>The server validates configuration on startup. Invalid configuration will prevent the server from starting with descriptive error messages:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Error: Invalid configuration
+- AIRS_API_KEY: Required
+- PORT: Must be a valid port number (received: "abc")
+- CACHE_TTL_SECONDS: Must be between 60 and 3600 (received: 10)
+</code></pre></div></div>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<h3 id="security">Security</h3>
+
+<ol>
+  <li><strong>Never commit secrets to version control</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># .gitignore</span>
+.env
+.env.<span class="k">*</span>
+<span class="o">!</span>.env.example
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Use secret management tools</strong>
+    <ul>
+      <li>Kubernetes Secrets</li>
+      <li>AWS Secrets Manager</li>
+      <li>HashiCorp Vault</li>
+      <li>Azure Key Vault</li>
+    </ul>
+  </li>
+  <li><strong>Rotate API keys regularly</strong></li>
+</ol>
+
+<h3 id="performance">Performance</h3>
+
+<ol>
+  <li><strong>Tune cache settings based on usage</strong>
+    <ul>
+      <li>High-traffic: Increase TTL and size</li>
+      <li>Frequent updates: Decrease TTL</li>
+    </ul>
+  </li>
+  <li><strong>Monitor rate limits</strong>
+    <ul>
+      <li>Adjust based on actual usage</li>
+      <li>Consider per-user limits</li>
+    </ul>
+  </li>
+  <li><strong>Set appropriate timeouts</strong>
+    <ul>
+      <li>Balance between reliability and responsiveness</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="reliability">Reliability</h3>
+
+<ol>
+  <li><strong>Configure retries for network issues</strong></li>
+  <li><strong>Set graceful shutdown timeouts</strong></li>
+  <li><strong>Use health checks in production</strong></li>
+</ol>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="configuration-not-loading">Configuration Not Loading</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check environment variables</span>
+<span class="nb">env</span> | <span class="nb">grep </span>AIRS
+
+<span class="c"># Verify .env file</span>
+<span class="nb">cat</span> .env
+
+<span class="c"># Test with explicit variables</span>
+<span class="nv">AIRS_API_KEY</span><span class="o">=</span><span class="nb">test </span><span class="nv">PORT</span><span class="o">=</span>3001 npm start
+</code></pre></div></div>
+
+<h3 id="validation-errors">Validation Errors</h3>
+
+<p>Common issues and solutions:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Error</th>
+      <th>Solution</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>“AIRS_API_KEY: Required”</td>
+      <td>Set the API key in environment</td>
+    </tr>
+    <tr>
+      <td>“Invalid port number”</td>
+      <td>Use a number between 1-65535</td>
+    </tr>
+    <tr>
+      <td>“Profile not found”</td>
+      <td>Check profile name/ID is correct</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="debug-configuration">Debug Configuration</h3>
+
+<p>Enable debug logging to see configuration:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">LOG_LEVEL</span><span class="o">=</span>debug npm start
+</code></pre></div></div>
+
+<p>The server logs the loaded configuration (with secrets redacted) on startup.</p>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_deployment/configuration.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/prisma-airs-mcp/deployment/docker-build-options/" class="next">
+            Docker Build Options <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/prisma-airs-mcp/assets/js/main.js"></script>
+</body>
+</html>

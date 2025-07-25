@@ -1,0 +1,127 @@
+{% if page.category == 'developers' %}
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/overview/" {% if page.url == '/developers/overview/' %}class="active"{% endif %}>Overview</a></li>
+  </ul>
+  
+  <h4>MCP Server Documentation</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/client/" {% if page.url == '/developers/client/' %}class="active"{% endif %}>AIRS Client Integration</a></li>
+    <li><a href="{{ site.baseurl }}/developers/resources/" {% if page.url == '/developers/resources/' %}class="active"{% endif %}>MCP Resources</a></li>
+    <li><a href="{{ site.baseurl }}/developers/tools/" {% if page.url == '/developers/tools/' %}class="active"{% endif %}>MCP Tools</a></li>
+  </ul>
+  
+  <h4>API</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/api/" {% if page.url == '/developers/api/' %}class="active"{% endif %}>API Reference</a></li>
+  </ul>
+</nav>
+
+{% elsif page.category == 'prisma-airs' %}
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/prisma-airs/overview/" {% if page.url contains '/overview' %}class="active"{% endif %}>Overview</a></li>
+  </ul>
+  
+  <h4>Threat Detection</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/prisma-airs/prompt-injection/" {% if page.url contains 'prompt-injection' %}class="active"{% endif %}>Detect Prompt Injection</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/malicious-url/" {% if page.url contains 'malicious-url' %}class="active"{% endif %}>Detect Malicious URL</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/sensitive-data-loss/" {% if page.url contains 'sensitive-data-loss' %}class="active"{% endif %}>Detect Sensitive Data Loss</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/mask-sensitive-data/" {% if page.url contains 'mask-sensitive-data' %}class="active"{% endif %}>Mask Sensitive Data</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/database-security-attack/" {% if page.url contains 'database-security-attack' %}class="active"{% endif %}>Detect Database Security Attack</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/toxic-content/" {% if page.url contains 'toxic-content' %}class="active"{% endif %}>Detect Toxic Content</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/malicious-code/" {% if page.url contains 'malicious-code' %}class="active"{% endif %}>Detect Malicious Code</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/ai-agent-threats/" {% if page.url contains 'ai-agent-threats' %}class="active"{% endif %}>Detect AI Agent Threats</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/contextual-grounding/" {% if page.url contains 'contextual-grounding' %}class="active"{% endif %}>Detect Contextual Grounding</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/custom-topic-guardrails/" {% if page.url contains 'custom-topic-guardrails' %}class="active"{% endif %}>Custom Topic Guardrails</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/secure-mcp/" {% if page.url contains 'secure-mcp' %}class="active"{% endif %}>Secure Model Context Protocol</a></li>
+  </ul>
+</nav>
+
+
+{% elsif page.category == 'deployment' %}
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/deployment/overview/" {% if page.url == '/deployment/overview/' %}class="active"{% endif %}>Deployment Overview</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/quickstart/" {% if page.url == '/deployment/quickstart/' %}class="active"{% endif %}>Quick Start Guide</a></li>
+  </ul>
+  
+  <h4>Deployment Documentation</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/deployment/docker/" {% if page.url == '/deployment/docker/' %}class="active"{% endif %}>Docker</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/docker-compose/" {% if page.url == '/deployment/docker-compose/' %}class="active"{% endif %}>Docker Compose</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/source/" {% if page.url == '/deployment/source/' %}class="active"{% endif %}>Build from Source</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/kubernetes/" {% if page.url == '/deployment/kubernetes/' %}class="active"{% endif %}>Kubernetes</a></li>
+  </ul>
+  
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/deployment/configuration/" {% if page.url == '/deployment/configuration/' %}class="active"{% endif %}>Configuration Reference</a></li>
+  </ul>
+  
+  <h4>Additional</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/deployment/docker-build-options/" {% if page.url == '/deployment/docker-build-options/' %}class="active"{% endif %}>Docker Build Options</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/claude-desktop/" {% if page.url == '/deployment/claude-desktop/' %}class="active"{% endif %}>Claude Desktop</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/claude-code/" {% if page.url == '/deployment/claude-code/' %}class="active"{% endif %}>Claude Code</a></li>
+  </ul>
+</nav>
+
+{% endif %}
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>

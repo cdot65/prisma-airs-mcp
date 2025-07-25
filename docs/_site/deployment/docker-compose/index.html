@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docker Compose Deployment | Prisma AIRS MCP</title>
+  <meta name="description" content="Deploy Prisma AIRS MCP using Docker Compose with development and production profiles">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Docker Compose Deployment | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Docker Compose Deployment" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Deploy Prisma AIRS MCP using Docker Compose with development and production profiles" />
+<meta property="og:description" content="Deploy Prisma AIRS MCP using Docker Compose with development and production profiles" />
+<link rel="canonical" href="https://cdot65.github.io/prisma-airs-mcp/deployment/docker-compose/" />
+<meta property="og:url" content="https://cdot65.github.io/prisma-airs-mcp/deployment/docker-compose/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-25T07:28:30-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Docker Compose Deployment" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-07-25T07:28:30-05:00","datePublished":"2025-07-25T07:28:30-05:00","description":"Deploy Prisma AIRS MCP using Docker Compose with development and production profiles","headline":"Docker Compose Deployment","mainEntityOfPage":{"@type":"WebPage","@id":"https://cdot65.github.io/prisma-airs-mcp/deployment/docker-compose/"},"url":"https://cdot65.github.io/prisma-airs-mcp/deployment/docker-compose/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/prisma-airs-mcp/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/prisma-airs-mcp/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/prisma-airs-mcp/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/prisma-airs-mcp/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/prisma-airs-mcp/deployment" class="navbar-item active">Deployment</a>
+        <a href="/prisma-airs-mcp/developers" class="navbar-item ">Developers</a>
+        <a href="/prisma-airs-mcp/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/overview/" >Deployment Overview</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/quickstart/" >Quick Start Guide</a></li>
+  </ul>
+  
+  <h4>Deployment Documentation</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/docker/" >Docker</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/docker-compose/" class="active">Docker Compose</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/source/" >Build from Source</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/kubernetes/" >Kubernetes</a></li>
+  </ul>
+  
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/configuration/" >Configuration Reference</a></li>
+  </ul>
+  
+  <h4>Additional</h4>
+  <ul>
+    <li><a href="/prisma-airs-mcp/deployment/docker-build-options/" >Docker Build Options</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/claude-desktop/" >Claude Desktop</a></li>
+    <li><a href="/prisma-airs-mcp/deployment/claude-code/" >Claude Code</a></li>
+  </ul>
+</nav>
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Docker Compose Deployment</h1>
+        
+        <p class="lead">Deploy Prisma AIRS MCP using Docker Compose with development and production profiles</p>
+        
+      </div>
+      
+      <article class="content">
+        <h2 id="overview">Overview</h2>
+
+<p>Docker Compose provides a structured way to deploy Prisma AIRS MCP with separate development and production configurations. This guide covers multi-profile deployments with proper environment management.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<ul>
+  <li>Docker Engine 20.10+ with Docker Compose v2</li>
+  <li>Prisma AIRS API key from <a href="https://stratacloudmanager.paloaltonetworks.com">Strata Cloud Manager</a></li>
+  <li>Git (to clone the repository)</li>
+</ul>
+
+<h2 id="quick-start">Quick Start</h2>
+
+<h3 id="1-clone-the-repository">1. Clone the Repository</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/cdot65/prisma-airs-mcp.git
+<span class="nb">cd </span>prisma-airs-mcp
+</code></pre></div></div>
+
+<h3 id="2-configure-environment">2. Configure Environment</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Copy example configuration</span>
+<span class="nb">cp</span> .env.example .env
+
+<span class="c"># Edit .env with your API key</span>
+nano .env
+</code></pre></div></div>
+
+<h3 id="3-start-the-service">3. Start the Service</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># For production</span>
+docker compose <span class="nt">--profile</span> prod up <span class="nt">-d</span>
+
+<span class="c"># For development</span>
+docker compose <span class="nt">--profile</span> dev up <span class="nt">-d</span>
+</code></pre></div></div>
+
+<h2 id="understanding-profiles">Understanding Profiles</h2>
+
+<p>The project uses Docker Compose profiles to separate environments:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Profile</th>
+      <th>Purpose</th>
+      <th>Features</th>
+      <th>Use Case</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">dev</code></td>
+      <td>Development</td>
+      <td>Hot reloading, debug logs, source mounting</td>
+      <td>Local development</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">prod</code></td>
+      <td>Production</td>
+      <td>Optimized build, resource limits, health checks</td>
+      <td>Production deployment</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p><strong>Note</strong>: Only one profile can run at a time as both use port 3000.</p>
+</blockquote>
+
+<h2 id="development-profile">Development Profile</h2>
+
+<h3 id="features">Features</h3>
+
+<ul>
+  <li><strong>Hot Reloading</strong>: Source code mounted for live updates</li>
+  <li><strong>Debug Logging</strong>: Detailed logs for troubleshooting</li>
+  <li><strong>No Resource Limits</strong>: Full system resources available</li>
+  <li><strong>Development Tools</strong>: Shell access and debugging utilities</li>
+</ul>
+
+<h3 id="starting-development">Starting Development</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start in background</span>
+docker compose <span class="nt">--profile</span> dev up <span class="nt">-d</span>
+
+<span class="c"># Start with logs</span>
+docker compose <span class="nt">--profile</span> dev up
+
+<span class="c"># View logs</span>
+docker compose logs <span class="nt">-f</span> dev
+
+<span class="c"># Access shell</span>
+docker compose <span class="nt">--profile</span> dev <span class="nb">exec </span>dev sh
+</code></pre></div></div>
+
+<h3 id="development-docker-composeyml">Development docker-compose.yml</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">dev</span><span class="pi">:</span>
+    <span class="na">profiles</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">dev</span>
+    <span class="na">build</span><span class="pi">:</span>
+      <span class="na">context</span><span class="pi">:</span> <span class="s">.</span>
+      <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">docker/Dockerfile.dev</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">ghcr.io/cdot65/prisma-airs-mcp:dev-local</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp-dev</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3000:3000"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./src:/app/src:ro</span>
+      <span class="pi">-</span> <span class="s">./package.json:/app/package.json:ro</span>
+      <span class="pi">-</span> <span class="s">./tsconfig.json:/app/tsconfig.json:ro</span>
+      <span class="pi">-</span> <span class="s">node_modules:/app/node_modules</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">NODE_ENV=development</span>
+      <span class="pi">-</span> <span class="s">LOG_LEVEL=debug</span>
+    <span class="na">env_file</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">.env</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
+</code></pre></div></div>
+
+<h2 id="production-profile">Production Profile</h2>
+
+<h3 id="features-1">Features</h3>
+
+<ul>
+  <li><strong>Optimized Image</strong>: Minimal size (149MB)</li>
+  <li><strong>Resource Limits</strong>: CPU and memory constraints</li>
+  <li><strong>Health Checks</strong>: Automatic container monitoring</li>
+  <li><strong>Security Hardening</strong>: Read-only filesystem options</li>
+  <li><strong>Auto-restart</strong>: Ensures high availability</li>
+</ul>
+
+<h3 id="starting-production">Starting Production</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start in background</span>
+docker compose <span class="nt">--profile</span> prod up <span class="nt">-d</span>
+
+<span class="c"># Start with logs</span>
+docker compose <span class="nt">--profile</span> prod up
+
+<span class="c"># View logs</span>
+docker compose logs <span class="nt">-f</span> prod
+
+<span class="c"># Check health</span>
+docker compose ps
+</code></pre></div></div>
+
+<h3 id="production-docker-composeyml">Production docker-compose.yml</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">prod</span><span class="pi">:</span>
+    <span class="na">profiles</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">prod</span>
+    <span class="na">build</span><span class="pi">:</span>
+      <span class="na">context</span><span class="pi">:</span> <span class="s">.</span>
+      <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">docker/Dockerfile</span>
+      <span class="na">target</span><span class="pi">:</span> <span class="s">production</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">ghcr.io/cdot65/prisma-airs-mcp:latest</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp-prod</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3000:3000"</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">NODE_ENV=production</span>
+      <span class="pi">-</span> <span class="s">LOG_LEVEL=info</span>
+    <span class="na">env_file</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">.env</span>
+    <span class="na">healthcheck</span><span class="pi">:</span>
+      <span class="na">test</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">CMD"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">node"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">-e"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">require('http').get('http://localhost:3000/health',</span><span class="nv"> </span><span class="s">(res)</span><span class="nv"> </span><span class="s">=&gt;</span><span class="nv"> </span><span class="s">{</span><span class="nv"> </span><span class="s">process.exit(res.statusCode</span><span class="nv"> </span><span class="s">===</span><span class="nv"> </span><span class="s">200</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">1);</span><span class="nv"> </span><span class="s">});"</span><span class="pi">]</span>
+      <span class="na">interval</span><span class="pi">:</span> <span class="s">30s</span>
+      <span class="na">timeout</span><span class="pi">:</span> <span class="s">3s</span>
+      <span class="na">retries</span><span class="pi">:</span> <span class="m">3</span>
+      <span class="na">start_period</span><span class="pi">:</span> <span class="s">10s</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
+    <span class="na">deploy</span><span class="pi">:</span>
+      <span class="na">resources</span><span class="pi">:</span>
+        <span class="na">limits</span><span class="pi">:</span>
+          <span class="na">cpus</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1"</span>
+          <span class="na">memory</span><span class="pi">:</span> <span class="s">512M</span>
+        <span class="na">reservations</span><span class="pi">:</span>
+          <span class="na">cpus</span><span class="pi">:</span> <span class="s2">"</span><span class="s">0.25"</span>
+          <span class="na">memory</span><span class="pi">:</span> <span class="s">128M</span>
+</code></pre></div></div>
+
+<h2 id="common-commands">Common Commands</h2>
+
+<h3 id="service-management">Service Management</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start services</span>
+docker compose <span class="nt">--profile</span> dev up <span class="nt">-d</span>
+docker compose <span class="nt">--profile</span> prod up <span class="nt">-d</span>
+
+<span class="c"># Stop services</span>
+docker compose <span class="nt">--profile</span> dev down
+docker compose <span class="nt">--profile</span> prod down
+
+<span class="c"># Stop all services</span>
+docker compose down
+
+<span class="c"># Restart services</span>
+docker compose <span class="nt">--profile</span> prod restart
+
+<span class="c"># View status</span>
+docker compose ps
+</code></pre></div></div>
+
+<h3 id="building-images">Building Images</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build development image</span>
+docker compose <span class="nt">--profile</span> dev build
+
+<span class="c"># Build production image</span>
+docker compose <span class="nt">--profile</span> prod build
+
+<span class="c"># Build without cache</span>
+docker compose <span class="nt">--profile</span> prod build <span class="nt">--no-cache</span>
+
+<span class="c"># Build with specific arguments</span>
+docker compose <span class="nt">--profile</span> prod build <span class="nt">--build-arg</span> <span class="nv">VERSION</span><span class="o">=</span>1.3.5
+</code></pre></div></div>
+
+<h3 id="logs-and-monitoring">Logs and Monitoring</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># View all logs</span>
+docker compose logs
+
+<span class="c"># Follow logs for specific service</span>
+docker compose logs <span class="nt">-f</span> dev
+docker compose logs <span class="nt">-f</span> prod
+
+<span class="c"># View last 100 lines</span>
+docker compose logs <span class="nt">--tail</span> 100 prod
+
+<span class="c"># View logs with timestamps</span>
+docker compose logs <span class="nt">-t</span> prod
+</code></pre></div></div>
+
+<h3 id="debugging">Debugging</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Execute commands in container</span>
+docker compose <span class="nt">--profile</span> dev <span class="nb">exec </span>dev sh
+docker compose <span class="nt">--profile</span> prod <span class="nb">exec </span>prod sh
+
+<span class="c"># Run one-off commands</span>
+docker compose <span class="nt">--profile</span> dev run <span class="nt">--rm</span> dev npm <span class="nb">test
+</span>docker compose <span class="nt">--profile</span> prod run <span class="nt">--rm</span> prod <span class="nb">env</span>
+
+<span class="c"># View container details</span>
+docker compose <span class="nt">--profile</span> prod ps <span class="nt">-a</span>
+docker compose <span class="nt">--profile</span> prod top
+</code></pre></div></div>
+
+<h2 id="configuration">Configuration</h2>
+
+<h3 id="environment-variables">Environment Variables</h3>
+
+<p>Create a <code class="language-plaintext highlighter-rouge">.env</code> file in the project root:</p>
+
+<pre><code class="language-env"># Required
+AIRS_API_URL=https://service.api.aisecurity.paloaltonetworks.com
+AIRS_API_KEY=your-api-key-here
+
+# Optional Profile Configuration
+AIRS_DEFAULT_PROFILE_NAME=Prisma AIRS
+# Or use profile ID
+# AIRS_DEFAULT_PROFILE_ID=your-profile-id
+
+# Server Configuration
+PORT=3000
+NODE_ENV=production
+
+# Logging
+LOG_LEVEL=info
+
+# Performance
+CACHE_TTL_SECONDS=300
+CACHE_MAX_SIZE=1000
+
+# Rate Limiting
+RATE_LIMIT_MAX_REQUESTS=100
+RATE_LIMIT_WINDOW_MS=60000
+</code></pre>
+
+<h3 id="override-files">Override Files</h3>
+
+<p>Create environment-specific overrides:</p>
+
+<p><strong>docker-compose.dev.yml</strong>:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">dev</span><span class="pi">:</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">LOG_LEVEL=debug</span>
+      <span class="pi">-</span> <span class="s">CACHE_TTL_SECONDS=60</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3001:3000"</span>
+</code></pre></div></div>
+
+<p>Use with:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose <span class="nt">-f</span> docker-compose.yml <span class="nt">-f</span> docker-compose.dev.yml <span class="nt">--profile</span> dev up
+</code></pre></div></div>
+
+<h3 id="secrets-management">Secrets Management</h3>
+
+<p>For production, use Docker secrets:</p>
+
+<p><strong>docker-compose.prod.yml</strong>:</p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">prod</span><span class="pi">:</span>
+    <span class="na">secrets</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">airs_api_key</span>
+      <span class="pi">-</span> <span class="s">airs_profile_name</span>
+    <span class="na">environment</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">AIRS_API_KEY_FILE=/run/secrets/airs_api_key</span>
+      <span class="pi">-</span> <span class="s">AIRS_PROFILE_NAME_FILE=/run/secrets/airs_profile_name</span>
+
+<span class="na">secrets</span><span class="pi">:</span>
+  <span class="na">airs_api_key</span><span class="pi">:</span>
+    <span class="na">external</span><span class="pi">:</span> <span class="no">true</span>
+  <span class="na">airs_profile_name</span><span class="pi">:</span>
+    <span class="na">external</span><span class="pi">:</span> <span class="no">true</span>
+</code></pre></div></div>
+
+<h2 id="advanced-configuration">Advanced Configuration</h2>
+
+<h3 id="custom-networks">Custom Networks</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">prod</span><span class="pi">:</span>
+    <span class="na">networks</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">prisma-network</span>
+
+<span class="na">networks</span><span class="pi">:</span>
+  <span class="na">prisma-network</span><span class="pi">:</span>
+    <span class="na">driver</span><span class="pi">:</span> <span class="s">bridge</span>
+    <span class="na">ipam</span><span class="pi">:</span>
+      <span class="na">config</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">subnet</span><span class="pi">:</span> <span class="s">172.20.0.0/16</span>
+</code></pre></div></div>
+
+<h3 id="volume-management">Volume Management</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">dev</span><span class="pi">:</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./src:/app/src:ro</span>
+      <span class="pi">-</span> <span class="s">node_modules:/app/node_modules</span>
+      <span class="pi">-</span> <span class="s">logs:/app/logs</span>
+
+<span class="na">volumes</span><span class="pi">:</span>
+  <span class="na">node_modules</span><span class="pi">:</span>
+  <span class="na">logs</span><span class="pi">:</span>
+    <span class="na">driver</span><span class="pi">:</span> <span class="s">local</span>
+</code></pre></div></div>
+
+<h3 id="health-check-customization">Health Check Customization</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">prod</span><span class="pi">:</span>
+    <span class="na">healthcheck</span><span class="pi">:</span>
+      <span class="na">test</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">CMD-SHELL"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">wget</span><span class="nv"> </span><span class="s">--no-verbose</span><span class="nv"> </span><span class="s">--tries=1</span><span class="nv"> </span><span class="s">--spider</span><span class="nv"> </span><span class="s">http://localhost:3000/health</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">exit</span><span class="nv"> </span><span class="s">1"</span><span class="pi">]</span>
+      <span class="na">interval</span><span class="pi">:</span> <span class="s">30s</span>
+      <span class="na">timeout</span><span class="pi">:</span> <span class="s">3s</span>
+      <span class="na">retries</span><span class="pi">:</span> <span class="m">3</span>
+      <span class="na">start_period</span><span class="pi">:</span> <span class="s">10s</span>
+      <span class="na">disable</span><span class="pi">:</span> <span class="no">false</span>
+</code></pre></div></div>
+
+<h3 id="resource-limits">Resource Limits</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">prod</span><span class="pi">:</span>
+    <span class="na">deploy</span><span class="pi">:</span>
+      <span class="na">resources</span><span class="pi">:</span>
+        <span class="na">limits</span><span class="pi">:</span>
+          <span class="na">cpus</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2"</span>
+          <span class="na">memory</span><span class="pi">:</span> <span class="s">1G</span>
+        <span class="na">reservations</span><span class="pi">:</span>
+          <span class="na">cpus</span><span class="pi">:</span> <span class="s2">"</span><span class="s">0.5"</span>
+          <span class="na">memory</span><span class="pi">:</span> <span class="s">256M</span>
+</code></pre></div></div>
+
+<h2 id="scaling">Scaling</h2>
+
+<h3 id="manual-scaling">Manual Scaling</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Scale to 3 instances (requires removing container_name)</span>
+docker compose <span class="nt">--profile</span> prod up <span class="nt">-d</span> <span class="nt">--scale</span> <span class="nv">prod</span><span class="o">=</span>3
+
+<span class="c"># View scaled instances</span>
+docker compose ps
+</code></pre></div></div>
+
+<h3 id="load-balancing">Load Balancing</h3>
+
+<p>Add a load balancer service:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">nginx</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">nginx:alpine</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">80:80"</span>
+    <span class="na">volumes</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">./nginx.conf:/etc/nginx/nginx.conf:ro</span>
+    <span class="na">depends_on</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">prod</span>
+
+  <span class="na">prod</span><span class="pi">:</span>
+    <span class="c1"># Remove ports mapping</span>
+    <span class="c1"># Remove container_name for scaling</span>
+    <span class="na">deploy</span><span class="pi">:</span>
+      <span class="na">replicas</span><span class="pi">:</span> <span class="m">3</span>
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="profile-issues">Profile Issues</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Verify profile configuration</span>
+docker compose config <span class="nt">--profile</span> dev
+docker compose config <span class="nt">--profile</span> prod
+
+<span class="c"># List available profiles</span>
+docker compose config <span class="nt">--profiles</span>
+</code></pre></div></div>
+
+<h3 id="port-conflicts">Port Conflicts</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check what's using port 3000</span>
+lsof <span class="nt">-i</span> :3000
+
+<span class="c"># Use different port</span>
+<span class="c"># Edit docker-compose.yml or use override:</span>
+docker compose <span class="nt">--profile</span> prod up <span class="nt">-d</span> <span class="nt">-p</span> 3001:3000
+</code></pre></div></div>
+
+<h3 id="build-failures">Build Failures</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clean build cache</span>
+docker system prune <span class="nt">-a</span>
+
+<span class="c"># Build with verbose output</span>
+docker compose <span class="nt">--profile</span> prod build <span class="nt">--progress</span> plain
+
+<span class="c"># Force rebuild</span>
+docker compose <span class="nt">--profile</span> prod build <span class="nt">--no-cache</span>
+</code></pre></div></div>
+
+<h3 id="container-wont-start">Container Won’t Start</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check logs</span>
+docker compose logs prod
+
+<span class="c"># Check events</span>
+docker events <span class="nt">--filter</span> <span class="nv">container</span><span class="o">=</span>prisma-airs-mcp-prod
+
+<span class="c"># Inspect container</span>
+docker compose <span class="nt">--profile</span> prod ps <span class="nt">-a</span>
+</code></pre></div></div>
+
+<h3 id="memory-issues">Memory Issues</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check memory usage</span>
+docker stats prisma-airs-mcp-prod
+
+<span class="c"># Increase memory limit in docker-compose.yml</span>
+deploy:
+  resources:
+    limits:
+      memory: 1G
+</code></pre></div></div>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<ol>
+  <li><strong>Environment Separation</strong>
+    <ul>
+      <li>Never use dev profile in production</li>
+      <li>Keep separate .env files for each environment</li>
+      <li>Use override files for environment-specific settings</li>
+    </ul>
+  </li>
+  <li><strong>Security</strong>
+    <ul>
+      <li>Store secrets in Docker secrets or external vaults</li>
+      <li>Use read-only volumes where possible</li>
+      <li>Regularly update base images</li>
+    </ul>
+  </li>
+  <li><strong>Performance</strong>
+    <ul>
+      <li>Set appropriate resource limits</li>
+      <li>Use health checks for automatic recovery</li>
+      <li>Monitor container metrics</li>
+    </ul>
+  </li>
+  <li><strong>Maintenance</strong>
+    <ul>
+      <li>Tag images with versions</li>
+      <li>Keep compose files in version control</li>
+      <li>Document custom configurations</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="migration-from-docker-run">Migration from Docker Run</h2>
+
+<p>Converting from <code class="language-plaintext highlighter-rouge">docker run</code> to Docker Compose:</p>
+
+<p><strong>From:</strong></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="se">\</span>
+  <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
+  <span class="nt">-p</span> 3000:3000 <span class="se">\</span>
+  <span class="nt">--env-file</span> .env <span class="se">\</span>
+  <span class="nt">--restart</span> unless-stopped <span class="se">\</span>
+  ghcr.io/cdot65/prisma-airs-mcp:latest
+</code></pre></div></div>
+
+<p><strong>To docker-compose.yml:</strong></p>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
+  <span class="na">app</span><span class="pi">:</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">ghcr.io/cdot65/prisma-airs-mcp:latest</span>
+    <span class="na">container_name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp</span>
+    <span class="na">ports</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s2">"</span><span class="s">3000:3000"</span>
+    <span class="na">env_file</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="s">.env</span>
+    <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
+</code></pre></div></div>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+  <li>Review <a href="/prisma-airs-mcp/deployment/docker-build-options">Docker Build Options</a> for custom builds</li>
+  <li>Explore <a href="/prisma-airs-mcp/deployment/kubernetes">Kubernetes Deployment</a> for orchestration</li>
+  <li>Check <a href="/prisma-airs-mcp/deployment/configuration">Configuration Reference</a> for all options</li>
+  <li>Set up <a href="/prisma-airs-mcp/deployment/claude-desktop">Claude Integration</a></li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_deployment/docker-compose.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/prisma-airs-mcp/deployment/docker/" class="next">
+            Docker Deployment <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/prisma-airs-mcp/assets/js/main.js"></script>
+</body>
+</html>
