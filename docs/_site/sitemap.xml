@@ -43,13 +43,7 @@
 <loc>http://localhost:4000/developers/api/</loc>
 </url>
 <url>
-<loc>http://localhost:4000/developers/client/</loc>
-</url>
-<url>
 <loc>http://localhost:4000/developers/overview/</loc>
-</url>
-<url>
-<loc>http://localhost:4000/developers/resources/</loc>
 </url>
 <url>
 <loc>http://localhost:4000/developers/src/airs/</loc>
@@ -77,9 +71,6 @@
 </url>
 <url>
 <loc>http://localhost:4000/developers/src/utils/</loc>
-</url>
-<url>
-<loc>http://localhost:4000/developers/tools/</loc>
 </url>
 <url>
 <loc>http://localhost:4000/prisma-airs/ai-agent-threats/</loc>

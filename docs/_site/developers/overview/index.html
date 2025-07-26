@@ -63,13 +63,6 @@
     <li><a href="/developers/overview/" class="active">Overview</a></li>
   </ul>
   
-  <h4>MCP Server Documentation</h4>
-  <ul>
-    <li><a href="/developers/client/" >AIRS Client Integration</a></li>
-    <li><a href="/developers/resources/" >MCP Resources</a></li>
-    <li><a href="/developers/tools/" >MCP Tools</a></li>
-  </ul>
-  
   <h4>Source Code Documentation</h4>
   <ul>
     <li><a href="/developers/src/" >Root (src/)</a></li>
@@ -156,7 +149,9 @@
       <article class="content">
         <h2 id="introduction">Introduction</h2>
 
-<p>The Prisma AIRS MCP server is a production-ready implementation of the Model Context Protocol that acts as an API bridge between AI applications and Palo Alto Networks’ Prisma AIRS security platform. It exposes security scanning capabilities through standard MCP tools, resources, and prompts.</p>
+<p>The Prisma AIRS MCP server is a production-ready implementation of the Model Context Protocol that acts as an API bridge
+between AI applications and Palo Alto Networks’ Prisma AIRS security platform. It exposes security scanning capabilities
+through standard MCP tools, resources, and prompts.</p>
 
 <h2 id="architecture-overview">Architecture Overview</h2>
 
@@ -192,430 +187,294 @@
 └─────────────────────────────────────────────────────────┘
 </code></pre></div></div>
 
-<h2 id="core-components">Core Components</h2>
+<h2 id="source-code-documentation">Source Code Documentation</h2>
 
-<h3 id="1-express-http-server">1. Express HTTP Server</h3>
+<p>Our source code is organized into modular components, each serving a specific purpose in the MCP server architecture.
+Here’s a high-level overview of each module:</p>
 
-<p>The server uses Express.js to handle MCP requests via HTTP and optional SSE streaming.</p>
+<h3 id="types-module-srctypes"><a href="/developers/src/types/">Types Module</a> (<code class="language-plaintext highlighter-rouge">src/types/</code>)</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Server initialization with health checks</span>
-<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">cors</span><span class="p">());</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> <span class="na">limit</span><span class="p">:</span> <span class="dl">'</span><span class="s1">10mb</span><span class="dl">'</span> <span class="p">}));</span>
+<p>The centralized type system providing TypeScript definitions for the entire application:</p>
 
-<span class="c1">// Main MCP endpoint - handles JSON-RPC 2.0</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">await</span> <span class="nx">transport</span><span class="p">.</span><span class="nx">handleRequest</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
-<span class="p">});</span>
+<ul>
+  <li><strong>Purpose</strong>: Single source of truth for all type definitions</li>
+  <li><strong>Key Features</strong>:
+    <ul>
+      <li>Module-prefixed naming convention (Airs<em>, Mcp</em>, Config*, etc.)</li>
+      <li>Prevents circular dependencies</li>
+      <li>Enables type-safe development across all modules</li>
+    </ul>
+  </li>
+  <li><strong>Components</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">airs.ts</code> - AIRS API types</li>
+      <li><code class="language-plaintext highlighter-rouge">mcp.ts</code> - MCP protocol types</li>
+      <li><code class="language-plaintext highlighter-rouge">config.ts</code> - Configuration types</li>
+      <li><code class="language-plaintext highlighter-rouge">tools.ts</code> - Tool handler types</li>
+      <li><code class="language-plaintext highlighter-rouge">transport.ts</code> - HTTP/SSE transport types</li>
+    </ul>
+  </li>
+</ul>
 
-<span class="c1">// SSE endpoint for streaming</span>
-<span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="nx">accept</span><span class="p">?.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">'</span><span class="s1">text/event-stream</span><span class="dl">'</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nx">transport</span><span class="p">.</span><span class="nx">handleSSEConnection</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">});</span>
-</code></pre></div></div>
+<h3 id="airs-module-srcairs"><a href="/developers/src/airs/">AIRS Module</a> (<code class="language-plaintext highlighter-rouge">src/airs/</code>)</h3>
 
-<h3 id="2-transport-layer">2. Transport Layer</h3>
+<p>The core integration layer with Prisma AIRS security API:</p>
 
-<p>Custom HTTP transport with SSE support and session management.</p>
+<ul>
+  <li><strong>Purpose</strong>: Provides robust, production-ready API client with enterprise features</li>
+  <li><strong>Key Features</strong>:
+    <ul>
+      <li>REST API client with automatic retry logic</li>
+      <li>LRU caching system for performance optimization</li>
+      <li>Token bucket rate limiting to prevent API throttling</li>
+      <li>Singleton factory pattern for consistent client instances</li>
+    </ul>
+  </li>
+  <li><strong>Components</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">client.ts</code> - Base API client with error handling</li>
+      <li><code class="language-plaintext highlighter-rouge">cache.ts</code> - In-memory LRU cache implementation</li>
+      <li><code class="language-plaintext highlighter-rouge">rate-limiter.ts</code> - Token bucket rate limiting</li>
+      <li><code class="language-plaintext highlighter-rouge">index.ts</code> - Enhanced client orchestrating all features</li>
+      <li><code class="language-plaintext highlighter-rouge">factory.ts</code> - Singleton pattern implementation</li>
+    </ul>
+  </li>
+</ul>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">HttpServerTransport</span> <span class="p">{</span>
-    <span class="k">private</span> <span class="nx">sessions</span><span class="p">:</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="p">{</span> <span class="na">clientId</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span> <span class="nl">createdAt</span><span class="p">:</span> <span class="nb">Date</span> <span class="p">}</span><span class="o">&gt;</span><span class="p">;</span>
-    <span class="k">private</span> <span class="nx">sseTransport</span><span class="p">:</span> <span class="nx">SSETransport</span><span class="p">;</span>
+<h3 id="transport-module-srctransport"><a href="/developers/src/transport/">Transport Module</a> (<code class="language-plaintext highlighter-rouge">src/transport/</code>)</h3>
 
-    <span class="k">async</span> <span class="nx">handleRequest</span><span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
-        <span class="kd">const</span> <span class="p">{</span> <span class="nx">method</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="nx">id</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
-        <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">routeRequest</span><span class="p">(</span><span class="nx">method</span><span class="p">,</span> <span class="nx">params</span><span class="p">);</span>
+<p>Handles MCP protocol communication over HTTP and Server-Sent Events:</p>
 
-        <span class="c1">// Optional SSE streaming for long operations</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">shouldStreamResponse</span><span class="p">(</span><span class="nx">method</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">acceptsSSE</span><span class="p">(</span><span class="nx">req</span><span class="p">))</span> <span class="p">{</span>
-            <span class="c1">// Stream via SSE</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> <span class="na">jsonrpc</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2.0</span><span class="dl">'</span><span class="p">,</span> <span class="nx">result</span><span class="p">,</span> <span class="nx">id</span> <span class="p">});</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<ul>
+  <li><strong>Purpose</strong>: Implements the transport layer for MCP JSON-RPC 2.0 protocol</li>
+  <li><strong>Key Features</strong>:
+    <ul>
+      <li>HTTP server for standard request/response</li>
+      <li>SSE support for streaming operations</li>
+      <li>Session management for persistent connections</li>
+      <li>Request routing to appropriate handlers</li>
+    </ul>
+  </li>
+  <li><strong>Components</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">http.ts</code> - Express-based HTTP transport</li>
+      <li><code class="language-plaintext highlighter-rouge">sse.ts</code> - Server-Sent Events implementation</li>
+    </ul>
+  </li>
+</ul>
 
-<h3 id="3-enhanced-airs-client">3. Enhanced AIRS Client</h3>
+<h3 id="tools-module-srctools"><a href="/developers/src/tools/">Tools Module</a> (<code class="language-plaintext highlighter-rouge">src/tools/</code>)</h3>
 
-<p>Type-safe client with built-in caching and rate limiting.</p>
+<p>Implements MCP tools for security scanning operations:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">EnhancedAIRSClientConfig</span> <span class="kd">extends</span> <span class="nx">AIRSClientConfig</span> <span class="p">{</span>
-    <span class="nl">cache</span><span class="p">?:</span> <span class="p">{</span>
-        <span class="na">maxSize</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span> <span class="c1">// Max items in cache</span>
-        <span class="nl">ttl</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span> <span class="c1">// Time-to-live in ms</span>
-    <span class="p">};</span>
-    <span class="nl">rateLimiter</span><span class="p">?:</span> <span class="p">{</span>
-        <span class="na">tokensPerInterval</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
-        <span class="nl">interval</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span> <span class="c1">// ms</span>
-        <span class="nl">maxBurst</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
-    <span class="p">};</span>
-<span class="p">}</span>
+<ul>
+  <li><strong>Purpose</strong>: Exposes AIRS functionality as callable MCP tools</li>
+  <li><strong>Available Tools</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">airs_scan_content</code> - Synchronous content scanning</li>
+      <li><code class="language-plaintext highlighter-rouge">airs_scan_async</code> - Batch asynchronous scanning</li>
+      <li><code class="language-plaintext highlighter-rouge">airs_get_scan_results</code> - Retrieve scan results</li>
+      <li><code class="language-plaintext highlighter-rouge">airs_get_threat_reports</code> - Get detailed threat analysis</li>
+      <li><code class="language-plaintext highlighter-rouge">airs_clear_cache</code> - Cache management</li>
+    </ul>
+  </li>
+  <li><strong>Features</strong>:
+    <ul>
+      <li>JSON Schema validation for inputs</li>
+      <li>Progress indicators for long operations</li>
+      <li>Resource references in responses</li>
+    </ul>
+  </li>
+</ul>
 
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">EnhancedPrismaAIRSClient</span> <span class="p">{</span>
-    <span class="k">async</span> <span class="nx">scanSync</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">ScanRequest</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ScanResponse</span><span class="o">&gt;</span> <span class="p">{</span>
-        <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">rateLimiter</span><span class="p">?.</span><span class="nx">waitForLimit</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan</span><span class="dl">'</span><span class="p">);</span>
+<h3 id="resources-module-srcresources"><a href="/developers/src/resources/">Resources Module</a> (<code class="language-plaintext highlighter-rouge">src/resources/</code>)</h3>
 
-        <span class="kd">const</span> <span class="nx">cacheKey</span> <span class="o">=</span> <span class="nx">AIRSCache</span><span class="p">.</span><span class="nx">generateScanKey</span><span class="p">(</span><span class="dl">'</span><span class="s1">sync</span><span class="dl">'</span><span class="p">,</span> <span class="nx">request</span><span class="p">);</span>
-        <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">?.</span><span class="kd">get</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">);</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="k">return</span> <span class="nx">cached</span><span class="p">;</span>
+<p>Provides access to AIRS data through MCP resource URIs:</p>
 
-        <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">scanSync</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">?.</span><span class="kd">set</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">,</span> <span class="nx">response</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nx">response</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<ul>
+  <li><strong>Purpose</strong>: Implements MCP resource interface for data access</li>
+  <li><strong>Resource Types</strong>:
+    <ul>
+      <li>Static: Cache stats, rate limit status</li>
+      <li>Dynamic: Scan results, threat reports</li>
+    </ul>
+  </li>
+  <li><strong>URI Scheme</strong>: <code class="language-plaintext highlighter-rouge">airs://{type}/{id}</code></li>
+  <li><strong>Features</strong>:
+    <ul>
+      <li>RESTful resource access pattern</li>
+      <li>JSON content type for all resources</li>
+      <li>Automatic caching through AIRS client</li>
+    </ul>
+  </li>
+</ul>
 
-<h3 id="4-resource-handlers">4. Resource Handlers</h3>
+<h3 id="prompts-module-srcprompts"><a href="/developers/src/prompts/">Prompts Module</a> (<code class="language-plaintext highlighter-rouge">src/prompts/</code>)</h3>
 
-<p>MCP resources provide access to AIRS data and system status.</p>
+<p>Pre-defined conversation workflows for common security tasks:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">ResourceHandler</span> <span class="p">{</span>
-    <span class="c1">// Static resources</span>
-    <span class="nx">listResources</span><span class="p">():</span> <span class="nx">ResourcesListResult</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="na">resources</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">{</span>
-                    <span class="na">uri</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs://cache-stats/current</span><span class="dl">'</span><span class="p">,</span>
-                    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Cache Statistics</span><span class="dl">'</span><span class="p">,</span>
-                    <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
-                <span class="p">},</span>
-                <span class="p">{</span>
-                    <span class="na">uri</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs://rate-limit-status/current</span><span class="dl">'</span><span class="p">,</span>
-                    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Rate Limit Status</span><span class="dl">'</span><span class="p">,</span>
-                    <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
-                <span class="p">},</span>
-            <span class="p">],</span>
-        <span class="p">};</span>
-    <span class="p">}</span>
+<ul>
+  <li><strong>Purpose</strong>: Provides structured security analysis workflows</li>
+  <li><strong>Available Prompts</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">security_analysis</code> - Comprehensive threat analysis</li>
+      <li><code class="language-plaintext highlighter-rouge">threat_investigation</code> - Deep dive into specific threats</li>
+      <li><code class="language-plaintext highlighter-rouge">compliance_check</code> - Regulatory compliance verification</li>
+      <li><code class="language-plaintext highlighter-rouge">incident_response</code> - Security incident handling guide</li>
+    </ul>
+  </li>
+  <li><strong>Features</strong>:
+    <ul>
+      <li>Argument interpolation</li>
+      <li>Step-by-step workflows</li>
+      <li>Integration with tools and resources</li>
+    </ul>
+  </li>
+</ul>
 
-    <span class="c1">// Dynamic resources accessed via URI</span>
-    <span class="k">async</span> <span class="nx">readResource</span><span class="p">(</span>
-        <span class="nx">params</span><span class="p">:</span> <span class="nx">ResourcesReadParams</span><span class="p">,</span>
-    <span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ResourcesReadResult</span><span class="o">&gt;</span> <span class="p">{</span>
-        <span class="c1">// Handles: airs://scan-results/{scanId}</span>
-        <span class="c1">//          airs://threat-reports/{reportId}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<h3 id="configuration-module-srcconfig"><a href="/developers/src/config/">Configuration Module</a> (<code class="language-plaintext highlighter-rouge">src/config/</code>)</h3>
 
-<h3 id="5-tool-handlers">5. Tool Handlers</h3>
+<p>Centralized configuration management with runtime validation:</p>
 
-<p>MCP tools execute AIRS security operations.</p>
+<ul>
+  <li><strong>Purpose</strong>: Type-safe configuration with environment variable support</li>
+  <li><strong>Key Features</strong>:
+    <ul>
+      <li>Zod schema validation</li>
+      <li>Singleton pattern for consistency</li>
+      <li>Environment-based defaults</li>
+      <li>Runtime type checking</li>
+    </ul>
+  </li>
+  <li><strong>Configuration Areas</strong>:
+    <ul>
+      <li>Server settings (port, environment)</li>
+      <li>AIRS API credentials and settings</li>
+      <li>MCP protocol configuration</li>
+    </ul>
+  </li>
+</ul>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">ToolHandler</span> <span class="p">{</span>
-    <span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="nx">TOOLS</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="na">SCAN_CONTENT</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">SCAN_ASYNC</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_scan_async</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">GET_SCAN_RESULTS</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_get_scan_results</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">GET_THREAT_REPORTS</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_get_threat_reports</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">CLEAR_CACHE</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_clear_cache</span><span class="dl">'</span><span class="p">,</span>
-    <span class="p">};</span>
+<h3 id="utils-module-srcutils"><a href="/developers/src/utils/">Utils Module</a> (<code class="language-plaintext highlighter-rouge">src/utils/</code>)</h3>
 
-    <span class="nx">listTools</span><span class="p">():</span> <span class="nx">ToolsListResult</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="na">tools</span><span class="p">:</span> <span class="p">[</span>
-                <span class="p">{</span>
-                    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span>
-                    <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Analyze content for security threats</span><span class="dl">'</span><span class="p">,</span>
-                    <span class="na">inputSchema</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">object</span><span class="dl">'</span><span class="p">,</span>
-                        <span class="na">properties</span><span class="p">:</span> <span class="p">{</span>
-                            <span class="na">prompt</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span> <span class="p">},</span>
-                            <span class="na">response</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span> <span class="p">},</span>
-                            <span class="na">context</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span> <span class="p">},</span>
-                            <span class="na">profileName</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span> <span class="p">},</span>
-                            <span class="na">metadata</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">object</span><span class="dl">'</span> <span class="p">},</span>
-                        <span class="p">},</span>
-                    <span class="p">},</span>
-                <span class="p">},</span>
-            <span class="p">],</span>
-        <span class="p">};</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<p>Shared utilities and cross-cutting concerns:</p>
 
-<h2 id="key-features">Key Features</h2>
+<ul>
+  <li><strong>Purpose</strong>: Common functionality used across modules</li>
+  <li><strong>Components</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">logger.ts</code> - Winston-based structured logging</li>
+    </ul>
+  </li>
+  <li><strong>Features</strong>:
+    <ul>
+      <li>Environment-aware log levels</li>
+      <li>JSON formatting for production</li>
+      <li>Request ID tracking</li>
+    </ul>
+  </li>
+</ul>
 
-<h3 id="type-safety">Type Safety</h3>
+<h3 id="root-module-srcindexts"><a href="/developers/src/">Root Module</a> (<code class="language-plaintext highlighter-rouge">src/index.ts</code>)</h3>
 
-<p>All components use TypeScript with strict mode:</p>
+<p>The application entry point and Express server setup:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Strongly typed interfaces</span>
-<span class="kr">interface</span> <span class="nx">ScanRequest</span> <span class="p">{</span>
-    <span class="nl">tr_id</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">ai_profile</span><span class="p">:</span> <span class="nx">AiProfile</span><span class="p">;</span>
-    <span class="nl">metadata</span><span class="p">?:</span> <span class="nx">Metadata</span><span class="p">;</span>
-    <span class="nl">contents</span><span class="p">:</span> <span class="nx">ContentItem</span><span class="p">[];</span>
-<span class="p">}</span>
+<ul>
+  <li><strong>Purpose</strong>: Initializes and orchestrates all components</li>
+  <li><strong>Responsibilities</strong>:
+    <ul>
+      <li>Express server configuration</li>
+      <li>Health and readiness endpoints</li>
+      <li>MCP endpoint routing</li>
+      <li>Graceful shutdown handling</li>
+    </ul>
+  </li>
+  <li><strong>Endpoints</strong>:
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">POST /</code> - Main MCP JSON-RPC endpoint</li>
+      <li><code class="language-plaintext highlighter-rouge">GET /</code> - SSE streaming endpoint</li>
+      <li><code class="language-plaintext highlighter-rouge">GET /health</code> - Health check</li>
+      <li><code class="language-plaintext highlighter-rouge">GET /ready</code> - Readiness probe</li>
+    </ul>
+  </li>
+</ul>
 
-<span class="c1">// Type guards for runtime validation</span>
-<span class="kd">function</span> <span class="nx">isScanResponse</span><span class="p">(</span><span class="nx">data</span><span class="p">:</span> <span class="nx">unknown</span><span class="p">):</span> <span class="nx">data</span> <span class="k">is</span> <span class="nx">ScanResponse</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">typeof</span> <span class="nx">data</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">object</span><span class="dl">'</span> <span class="o">&amp;&amp;</span> <span class="nx">data</span> <span class="o">!==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="dl">'</span><span class="s1">scan_id</span><span class="dl">'</span> <span class="k">in</span> <span class="nx">data</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<h2 id="key-design-patterns">Key Design Patterns</h2>
 
-<h3 id="error-handling">Error Handling</h3>
+<h3 id="1-centralized-type-system">1. Centralized Type System</h3>
 
-<p>Comprehensive error handling with AIRS-specific and MCP error codes:</p>
+<p>All TypeScript types are centralized in <code class="language-plaintext highlighter-rouge">src/types/</code> with consistent module prefixing to prevent naming conflicts and
+circular dependencies.</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AIRS API errors</span>
-<span class="k">export</span> <span class="kd">class</span> <span class="nx">AIRSAPIError</span> <span class="kd">extends</span> <span class="nb">Error</span> <span class="p">{</span>
-    <span class="kd">constructor</span><span class="p">(</span>
-        <span class="nx">message</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
-        <span class="k">public</span> <span class="nx">statusCode</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span>
-        <span class="k">public</span> <span class="nx">response</span><span class="p">?:</span> <span class="nx">AIRSErrorResponse</span><span class="p">,</span>
-    <span class="p">)</span> <span class="p">{</span>
-        <span class="k">super</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">AIRSAPIError</span><span class="dl">'</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<h3 id="2-layered-architecture">2. Layered Architecture</h3>
 
-<span class="c1">// MCP protocol errors</span>
-<span class="k">export</span> <span class="kr">enum</span> <span class="nx">MCPErrorCode</span> <span class="p">{</span>
-    <span class="nx">ParseError</span> <span class="o">=</span> <span class="o">-</span><span class="mi">32700</span><span class="p">,</span>
-    <span class="nx">InvalidRequest</span> <span class="o">=</span> <span class="o">-</span><span class="mi">32600</span><span class="p">,</span>
-    <span class="nx">MethodNotFound</span> <span class="o">=</span> <span class="o">-</span><span class="mi">32601</span><span class="p">,</span>
-    <span class="nx">InvalidParams</span> <span class="o">=</span> <span class="o">-</span><span class="mi">32602</span><span class="p">,</span>
-    <span class="nx">InternalError</span> <span class="o">=</span> <span class="o">-</span><span class="mi">32603</span><span class="p">,</span>
-<span class="p">}</span>
+<p>Clear separation of concerns with transport, business logic, and data access layers.</p>
 
-<span class="c1">// Automatic retry on rate limiting</span>
-<span class="k">if</span> <span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span> <span class="o">===</span> <span class="mi">429</span> <span class="o">&amp;&amp;</span> <span class="nx">retryCount</span> <span class="o">&lt;</span> <span class="nx">maxRetries</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">delay</span> <span class="o">=</span> <span class="nx">calculateRetryDelay</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
-    <span class="k">await</span> <span class="nx">sleep</span><span class="p">(</span><span class="nx">delay</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nx">makeRequest</span><span class="p">(</span><span class="nx">method</span><span class="p">,</span> <span class="nx">path</span><span class="p">,</span> <span class="nx">body</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="nx">retryCount</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<h3 id="3-singleton-pattern">3. Singleton Pattern</h3>
+
+<p>Configuration and AIRS client use singleton pattern to ensure consistent state across the application.</p>
+
+<h3 id="4-factory-pattern">4. Factory Pattern</h3>
+
+<p>AIRS client factory manages instance creation and lifecycle.</p>
+
+<h3 id="5-handler-pattern">5. Handler Pattern</h3>
+
+<p>Separate handlers for tools, resources, and prompts implement the Strategy pattern for extensibility.</p>
+
+<h2 id="performance--reliability-features">Performance &amp; Reliability Features</h2>
 
 <h3 id="caching-system">Caching System</h3>
 
-<p>LRU cache with TTL and size limits:</p>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">AIRSCache</span> <span class="p">{</span>
-    <span class="k">private</span> <span class="nx">cache</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">CacheEntry</span><span class="o">&gt;</span><span class="p">();</span>
-    <span class="k">private</span> <span class="nx">accessOrder</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
-
-    <span class="kd">set</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">value</span><span class="p">:</span> <span class="nx">T</span><span class="p">,</span> <span class="nx">ttl</span><span class="p">?:</span> <span class="kr">number</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
-        <span class="c1">// Evict least recently used if at capacity</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">size</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">maxSize</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
-            <span class="kd">const</span> <span class="nx">lru</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accessOrder</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nx">lru</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="nx">lru</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="kd">const</span> <span class="nx">expiry</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="nx">ttl</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">defaultTTL</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="p">{</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">expiry</span> <span class="p">});</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">updateAccessOrder</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
-    <span class="p">}</span>
-
-    <span class="k">static</span> <span class="nx">generateScanKey</span><span class="p">(</span><span class="kd">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">request</span><span class="p">:</span> <span class="nx">ScanRequest</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
-        <span class="kd">const</span> <span class="nx">hash</span> <span class="o">=</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="dl">'</span><span class="s1">sha256</span><span class="dl">'</span><span class="p">);</span>
-        <span class="nx">hash</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="kd">type</span><span class="p">,</span> <span class="nx">request</span> <span class="p">}));</span>
-        <span class="k">return</span> <span class="s2">`scan:</span><span class="p">${</span><span class="nx">hash</span><span class="p">.</span><span class="nx">digest</span><span class="p">(</span><span class="dl">'</span><span class="s1">hex</span><span class="dl">'</span><span class="p">)}</span><span class="s2">`</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<ul>
+  <li>LRU (Least Recently Used) eviction policy</li>
+  <li>Configurable TTL (Time To Live)</li>
+  <li>SHA-256 based cache key generation</li>
+  <li>Automatic cache invalidation for incomplete results</li>
+</ul>
 
 <h3 id="rate-limiting">Rate Limiting</h3>
 
-<p>Token bucket algorithm with configurable limits per operation:</p>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">AIRSRateLimiter</span> <span class="p">{</span>
-    <span class="k">private</span> <span class="nx">buckets</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">TokenBucket</span><span class="o">&gt;</span><span class="p">();</span>
-
-    <span class="k">async</span> <span class="nx">waitForLimit</span><span class="p">(</span><span class="nx">operation</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
-        <span class="kd">const</span> <span class="nx">bucket</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getBucket</span><span class="p">(</span><span class="nx">operation</span><span class="p">);</span>
-
-        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">tryConsume</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
-            <span class="kd">const</span> <span class="nx">waitTime</span> <span class="o">=</span> <span class="nx">bucket</span><span class="p">.</span><span class="nx">timeUntilNextToken</span><span class="p">();</span>
-            <span class="k">await</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">waitTime</span><span class="p">));</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="k">private</span> <span class="nx">getBucket</span><span class="p">(</span><span class="nx">operation</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nx">TokenBucket</span> <span class="p">{</span>
-        <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">limits</span><span class="p">[</span><span class="nx">operation</span><span class="p">]</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">defaultLimit</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="nx">TokenBucket</span><span class="p">(</span>
-            <span class="nx">config</span><span class="p">.</span><span class="nx">tokensPerInterval</span><span class="p">,</span>
-            <span class="nx">config</span><span class="p">.</span><span class="nx">interval</span><span class="p">,</span>
-            <span class="nx">config</span><span class="p">.</span><span class="nx">maxBurst</span><span class="p">,</span>
-        <span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h2 id="api-usage-patterns">API Usage Patterns</h2>
-
-<h3 id="basic-mcp-request">Basic MCP Request</h3>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Example MCP request to the server</span>
-<span class="kd">const</span> <span class="nx">request</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="na">jsonrpc</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2.0</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">tools/call</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
-        <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span>
-            <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">User input to scan</span><span class="dl">'</span><span class="p">,</span>
-            <span class="na">profileName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span><span class="p">,</span>
-        <span class="p">},</span>
-    <span class="p">},</span>
-    <span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-<span class="p">};</span>
-
-<span class="c1">// Send via HTTP POST to server endpoint</span>
-<span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://localhost:3000</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-    <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">headers</span><span class="p">:</span> <span class="p">{</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span> <span class="p">},</span>
-    <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">request</span><span class="p">),</span>
-<span class="p">});</span>
-</code></pre></div></div>
-
-<h3 id="using-mcp-client-libraries">Using MCP Client Libraries</h3>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// With any MCP-compatible client</span>
-<span class="k">try</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">mcpClient</span><span class="p">.</span><span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-        <span class="na">prompt</span><span class="p">:</span> <span class="nx">userInput</span><span class="p">,</span>
-        <span class="na">response</span><span class="p">:</span> <span class="nx">aiResponse</span><span class="p">,</span>
-        <span class="na">profileName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span><span class="p">,</span>
-    <span class="p">});</span>
-
-    <span class="c1">// Check response content</span>
-    <span class="kd">const</span> <span class="nx">scanResult</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">content</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">scanResult</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">'</span><span class="s1">malicious</span><span class="dl">'</span><span class="p">))</span> <span class="p">{</span>
-        <span class="c1">// Handle threat detection</span>
-    <span class="p">}</span>
-<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span> <span class="o">===</span> <span class="o">-</span><span class="mi">32603</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// Server error - check logs</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h3 id="resource-access">Resource Access</h3>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// List available resources via MCP</span>
-<span class="kd">const</span> <span class="nx">resources</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">mcpClient</span><span class="p">.</span><span class="nx">listResources</span><span class="p">();</span>
-
-<span class="c1">// Read specific resource</span>
-<span class="kd">const</span> <span class="nx">cacheStats</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">mcpClient</span><span class="p">.</span><span class="nx">readResource</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs://cache-stats</span><span class="dl">'</span><span class="p">);</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Cache statistics:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">cacheStats</span><span class="p">);</span>
-</code></pre></div></div>
-
-<h2 id="available-mcp-operations">Available MCP Operations</h2>
-
-<h3 id="tools-5-available">Tools (5 available)</h3>
-
-<ol>
-  <li><strong>airs_scan_content</strong> - Synchronous content scanning</li>
-  <li><strong>airs_scan_async</strong> - Batch asynchronous scanning</li>
-  <li><strong>airs_get_scan_results</strong> - Retrieve scan results by ID</li>
-  <li><strong>airs_get_threat_reports</strong> - Get detailed threat reports</li>
-  <li><strong>airs_clear_cache</strong> - Clear the response cache</li>
-</ol>
-
-<h3 id="resources">Resources</h3>
-
-<p><strong>Static Resources:</strong></p>
-
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">airs://cache-stats/current</code> - Cache performance metrics</li>
-  <li><code class="language-plaintext highlighter-rouge">airs://rate-limit-status/current</code> - Rate limiting status</li>
+  <li>Token bucket algorithm</li>
+  <li>Per-operation rate limits</li>
+  <li>Automatic request queuing</li>
+  <li>Graceful degradation under load</li>
 </ul>
 
-<p><strong>Dynamic Resources:</strong></p>
+<h3 id="error-handling">Error Handling</h3>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">airs://scan-results/{scanId}</code> - Individual scan results</li>
-  <li><code class="language-plaintext highlighter-rouge">airs://threat-reports/{reportId}</code> - Detailed threat reports</li>
-</ul>
-
-<h3 id="prompts-4-workflows">Prompts (4 workflows)</h3>
-
-<ol>
-  <li><strong>security_analysis</strong> - Comprehensive security analysis</li>
-  <li><strong>threat_investigation</strong> - Detailed threat investigation</li>
-  <li><strong>compliance_check</strong> - Regulatory compliance checking</li>
-  <li><strong>incident_response</strong> - Security incident response guide</li>
-</ol>
-
-<h2 id="performance-considerations">Performance Considerations</h2>
-
-<h3 id="connection-management">Connection Management</h3>
-
-<ul>
-  <li>HTTP Keep-Alive for connection reuse</li>
-  <li>Configurable request timeout (default 30s)</li>
+  <li>Comprehensive error types for AIRS API and MCP protocol</li>
   <li>Automatic retry with exponential backoff</li>
-  <li>Session management for SSE connections</li>
+  <li>Detailed error logging with context</li>
+  <li>Client-friendly error messages</li>
 </ul>
 
-<h3 id="request-batching">Request Batching</h3>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Batch multiple scans for efficiency</span>
-<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">mcpClient</span><span class="p">.</span><span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_scan_async</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-    <span class="na">requests</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span> <span class="na">reqId</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">content1</span><span class="dl">'</span><span class="p">,</span> <span class="na">profileName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span> <span class="p">},</span>
-        <span class="p">{</span> <span class="na">reqId</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">content2</span><span class="dl">'</span><span class="p">,</span> <span class="na">profileName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span> <span class="p">},</span>
-    <span class="p">],</span>
-<span class="p">});</span>
-</code></pre></div></div>
-
-<h3 id="caching-strategy">Caching Strategy</h3>
+<h3 id="monitoring--observability">Monitoring &amp; Observability</h3>
 
 <ul>
-  <li><strong>Default TTL</strong>: 5 minutes for scan results</li>
-  <li><strong>Cache Size</strong>: Configurable max items (default 1000)</li>
-  <li><strong>LRU Eviction</strong>: Least recently used items removed first</li>
-  <li><strong>Key Generation</strong>: SHA-256 hash of request parameters</li>
-  <li><strong>Skip Cache</strong>: Async operations and incomplete results</li>
+  <li>Health and readiness endpoints</li>
+  <li>Structured JSON logging</li>
+  <li>Performance metrics (cache hit rate, rate limit status)</li>
+  <li>Request tracing with correlation IDs</li>
 </ul>
 
-<h2 id="best-practices">Best Practices</h2>
+<h2 id="security-considerations">Security Considerations</h2>
 
-<ol>
-  <li><strong>Error Handling</strong>: Check for both MCP protocol errors and AIRS API errors</li>
-  <li><strong>Rate Limiting</strong>: Server implements automatic waiting - no manual backoff needed</li>
-  <li><strong>Caching</strong>: Use <code class="language-plaintext highlighter-rouge">airs_clear_cache</code> tool when fresh results are required</li>
-  <li><strong>Batching</strong>: Use async scanning for multiple items to reduce API calls</li>
-  <li><strong>Security</strong>: API keys are handled server-side - never exposed to clients</li>
-  <li><strong>Monitoring</strong>: Check health endpoint at <code class="language-plaintext highlighter-rouge">/health</code> and ready at <code class="language-plaintext highlighter-rouge">/ready</code></li>
-</ol>
-
-<h2 id="configuration">Configuration</h2>
-
-<p>Key environment variables:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># AIRS API Configuration</span>
-<span class="nv">AIRS_API_URL</span><span class="o">=</span>https://api.prismacloud.io/airs
-<span class="nv">AIRS_API_KEY</span><span class="o">=</span>your-api-key
-<span class="nv">AIRS_DEFAULT_PROFILE_NAME</span><span class="o">=</span><span class="s2">"Prisma AIRS"</span>
-
-<span class="c"># Server Configuration</span>
-<span class="nv">PORT</span><span class="o">=</span>3000
-<span class="nv">NODE_ENV</span><span class="o">=</span>production
-<span class="nv">LOG_LEVEL</span><span class="o">=</span>info
-
-<span class="c"># Cache Configuration</span>
-<span class="nv">CACHE_ENABLED</span><span class="o">=</span><span class="nb">true
-</span><span class="nv">CACHE_MAX_SIZE</span><span class="o">=</span>1000
-<span class="nv">CACHE_TTL</span><span class="o">=</span>300000  <span class="c"># 5 minutes</span>
-
-<span class="c"># Rate Limiting</span>
-<span class="nv">RATE_LIMIT_ENABLED</span><span class="o">=</span><span class="nb">true
-</span><span class="nv">RATE_LIMIT_SCAN_TOKENS</span><span class="o">=</span>10
-<span class="nv">RATE_LIMIT_SCAN_INTERVAL</span><span class="o">=</span>60000  <span class="c"># 1 minute</span>
-</code></pre></div></div>
+<ul>
+  <li>API keys stored server-side only</li>
+  <li>Input validation on all endpoints</li>
+  <li>No execution of arbitrary code</li>
+  <li>Secure handling of sensitive scan results</li>
+  <li>Rate limiting to prevent abuse</li>
+</ul>
 
 <h2 id="next-steps">Next Steps</h2>
 
 <ul>
-  <li><a href="/developers/client">AIRS Client Integration</a> - Deep dive into AIRS API client</li>
-  <li><a href="/developers/resources">MCP Resources</a> - Working with server resources</li>
-  <li><a href="/developers/tools">MCP Tools</a> - Available security scanning tools</li>
-  <li><a href="/developers/api">API Reference</a> - Complete API documentation</li>
+  <li><a href="/developers/src/">Source Code Documentation</a> - Detailed documentation of each module</li>
+  <li><a href="/developers/api/">API Reference</a> - Complete API documentation</li>
 </ul>
 
       </article>
@@ -631,8 +490,8 @@
         <div class="pagination">
           
           
-          <a href="/developers/resources/" class="next">
-            MCP Resources <i class="fas fa-arrow-right"></i>
+          <a href="/developers/src/airs/" class="next">
+            AIRS Module (src/airs/) <i class="fas fa-arrow-right"></i>
           </a>
           
         </div>
