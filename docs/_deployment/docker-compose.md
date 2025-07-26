@@ -545,4 +545,4 @@ services:
 - Review [Docker Build Options]({{ site.baseurl }}/deployment/docker-build-options) for custom builds
 - Explore [Kubernetes Deployment]({{ site.baseurl }}/deployment/kubernetes) for orchestration
 - Check [Configuration Reference]({{ site.baseurl }}/deployment/configuration) for all options
-- Set up [Claude Integration]({{ site.baseurl }}/deployment/claude-desktop)
+- Set up [Claude Integration]({{ site.baseurl }}/deployment/mcp/claude-desktop)

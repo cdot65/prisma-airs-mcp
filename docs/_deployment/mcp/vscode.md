@@ -1,7 +1,7 @@
 ---
 layout: documentation
 title: Use Prisma AIRS MCP Server in VS Code
-permalink: /deployment/vscode/
+permalink: /deployment/mcp/vscode/
 category: deployment
 order: 8
 ---

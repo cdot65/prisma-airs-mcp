@@ -2,6 +2,7 @@
 layout: documentation
 title: Claude Desktop Integration
 description: Configure Prisma AIRS MCP for Claude Desktop
+permalink: /deployment/mcp/claude-desktop/
 category: deployment
 ---
 
@@ -236,7 +237,7 @@ Enable detailed logging:
 
 ## Next Steps
 
-- [Claude Code Integration]({{ site.baseurl }}/deployment/claude-code) - Using with Claude Code
+- [Claude Code Integration]({{ site.baseurl }}/deployment/mcp/claude-code) - Using with Claude Code
 - [Quick Start Guide]({{ site.baseurl }}/deployment/quickstart) - Full deployment guide
 - [Configuration Reference]({{ site.baseurl }}/deployment/configuration) - Server configuration
 - [Security Best Practices]({{ site.baseurl }}/prisma-airs/best-practices) - Security guidelines

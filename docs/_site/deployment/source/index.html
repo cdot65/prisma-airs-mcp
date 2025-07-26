@@ -64,25 +64,25 @@
     <li><a href="/deployment/quickstart/" >Quick Start Guide</a></li>
   </ul>
   
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="/deployment/configuration/" >Configuration Reference</a></li>
+  </ul>
+  
   <h4>Deployment Documentation</h4>
   <ul>
     <li><a href="/deployment/docker/" >Docker</a></li>
     <li><a href="/deployment/docker-compose/" >Docker Compose</a></li>
     <li><a href="/deployment/source/" class="active">Build from Source</a></li>
     <li><a href="/deployment/kubernetes/" >Kubernetes</a></li>
-  </ul>
-  
-  <h4>Configuration</h4>
-  <ul>
-    <li><a href="/deployment/configuration/" >Configuration Reference</a></li>
-  </ul>
-  
-  <h4>Additional</h4>
-  <ul>
     <li><a href="/deployment/docker-build-options/" >Docker Build Options</a></li>
-    <li><a href="/deployment/vscode/" >VSCode</a></li>
-    <li><a href="/deployment/claude-desktop/" >Claude Desktop</a></li>
-    <li><a href="/deployment/claude-code/" >Claude Code</a></li>
+  </ul>
+  
+  <h4>MCP Client Config</h4>
+  <ul>
+    <li><a href="/deployment/mcp/vscode/" >VSCode</a></li>
+    <li><a href="/deployment/mcp/claude-desktop/" >Claude Desktop</a></li>
+    <li><a href="/deployment/mcp/claude-code/" >Claude Code</a></li>
   </ul>
 </nav>
 
@@ -267,6 +267,27 @@ npm run dev
   <li>Enable source maps for debugging</li>
 </ul>
 
+<h3 id="docker-development-mode">Docker Development Mode</h3>
+
+<p>For testing MCP clients with a containerized server:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build and run development container on port 3100</span>
+pnpm docker:dev
+
+<span class="c"># This command:</span>
+<span class="c"># 1. Builds the development Docker image</span>
+<span class="c"># 2. Runs the container on port 3100</span>
+<span class="c"># 3. Mounts your .env file for configuration</span>
+<span class="c"># 4. Enables hot reload through volume mounts</span>
+</code></pre></div></div>
+
+<p>This is ideal for:</p>
+<ul>
+  <li>Testing with MCP clients in isolation</li>
+  <li>Verifying Docker deployment before production</li>
+  <li>Development in a containerized environment</li>
+</ul>
+
 <h3 id="production-mode">Production Mode</h3>
 
 <p>For production deployment from source:</p>
@@ -314,6 +335,11 @@ pnpm dev              <span class="c"># Start development server</span>
 pnpm build            <span class="c"># Build TypeScript</span>
 pnpm start            <span class="c"># Start production server</span>
 
+<span class="c"># Docker Development</span>
+pnpm docker:dev       <span class="c"># Build and run dev container on port 3100</span>
+pnpm docker:build:dev <span class="c"># Build development Docker image</span>
+pnpm docker:run:dev:3100 <span class="c"># Run dev container on port 3100</span>
+
 <span class="c"># Testing</span>
 pnpm <span class="nb">test</span>             <span class="c"># Run all tests</span>
 pnpm <span class="nb">test</span>:unit        <span class="c"># Run unit tests only</span>
@@ -335,11 +361,15 @@ pnpm docs:serve       <span class="c"># Serve documentation locally</span>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>prisma-airs-mcp/
 ├── src/                    # Source code
-│   ├── server/            # MCP server implementation
-│   ├── handlers/          # Request handlers
-│   ├── airs/             # AIRS API client
+│   ├── index.ts          # Application entry point
+│   ├── airs/             # AIRS API client module
 │   ├── config/           # Configuration management
-│   └── types/            # TypeScript types
+│   ├── prompts/          # MCP prompt handlers
+│   ├── resources/        # MCP resource handlers
+│   ├── tools/            # MCP tool handlers
+│   ├── transport/        # HTTP/SSE transport layer
+│   ├── types/            # Centralized TypeScript types
+│   └── utils/            # Shared utilities
 ├── tests/                 # Test files
 ├── docs/                  # Documentation
 ├── k8s/                   # Kubernetes manifests
@@ -577,7 +607,7 @@ pm2 startup
 <ul>
   <li>Review the <a href="/deployment/configuration">Configuration Reference</a></li>
   <li>Follow the <a href="/deployment/quickstart">Quick Start Guide</a></li>
-  <li>Set up <a href="/deployment/claude-desktop">Claude Integration</a></li>
+  <li>Set up <a href="/deployment/mcp/claude-desktop">Claude Integration</a></li>
   <li>Consider <a href="/deployment/docker">Docker</a> or <a href="/deployment/kubernetes">Kubernetes</a> for easier deployment</li>
 </ul>
 
@@ -590,15 +620,6 @@ pm2 startup
           </a>
         </div>
         
-        
-        <div class="pagination">
-          
-          
-          <a href="/deployment/vscode/" class="next">
-            Use Prisma AIRS MCP Server in VS Code <i class="fas fa-arrow-right"></i>
-          </a>
-          
-        </div>
         
       </div>
     </main>

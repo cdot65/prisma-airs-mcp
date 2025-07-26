@@ -2,6 +2,7 @@
 layout: documentation
 title: Claude Code Integration
 description: Configure Prisma AIRS MCP for Claude Code (claude.ai/code)
+permalink: /deployment/mcp/claude-code/
 category: deployment
 ---
 

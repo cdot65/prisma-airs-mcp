@@ -127,6 +127,26 @@ The server will:
 - Show detailed debug logs
 - Enable source maps for debugging
 
+### Docker Development Mode
+
+For testing MCP clients with a containerized server:
+
+```bash
+# Build and run development container on port 3100
+pnpm docker:dev
+
+# This command:
+# 1. Builds the development Docker image
+# 2. Runs the container on port 3100
+# 3. Mounts your .env file for configuration
+# 4. Enables hot reload through volume mounts
+```
+
+This is ideal for:
+- Testing with MCP clients in isolation
+- Verifying Docker deployment before production
+- Development in a containerized environment
+
 ### Production Mode
 
 For production deployment from source:
@@ -177,6 +197,11 @@ pnpm dev              # Start development server
 pnpm build            # Build TypeScript
 pnpm start            # Start production server
 
+# Docker Development
+pnpm docker:dev       # Build and run dev container on port 3100
+pnpm docker:build:dev # Build development Docker image
+pnpm docker:run:dev:3100 # Run dev container on port 3100
+
 # Testing
 pnpm test             # Run all tests
 pnpm test:unit        # Run unit tests only
@@ -199,11 +224,15 @@ pnpm docs:serve       # Serve documentation locally
 ```
 prisma-airs-mcp/
 ├── src/                    # Source code
-│   ├── server/            # MCP server implementation
-│   ├── handlers/          # Request handlers
-│   ├── airs/             # AIRS API client
+│   ├── index.ts          # Application entry point
+│   ├── airs/             # AIRS API client module
 │   ├── config/           # Configuration management
-│   └── types/            # TypeScript types
+│   ├── prompts/          # MCP prompt handlers
+│   ├── resources/        # MCP resource handlers
+│   ├── tools/            # MCP tool handlers
+│   ├── transport/        # HTTP/SSE transport layer
+│   ├── types/            # Centralized TypeScript types
+│   └── utils/            # Shared utilities
 ├── tests/                 # Test files
 ├── docs/                  # Documentation
 ├── k8s/                   # Kubernetes manifests
@@ -452,5 +481,5 @@ module.exports = {
 
 - Review the [Configuration Reference]({{ site.baseurl }}/deployment/configuration)
 - Follow the [Quick Start Guide]({{ site.baseurl }}/deployment/quickstart)
-- Set up [Claude Integration]({{ site.baseurl }}/deployment/claude-desktop)
+- Set up [Claude Integration]({{ site.baseurl }}/deployment/mcp/claude-desktop)
 - Consider [Docker]({{ site.baseurl }}/deployment/docker) or [Kubernetes]({{ site.baseurl }}/deployment/kubernetes) for easier deployment
