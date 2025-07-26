@@ -149,12 +149,11 @@
       <article class="content">
         <h2 id="overview">Overview</h2>
 
-<p>The Prisma AIRS MCP server provides a JSON-RPC 2.0 API over HTTP that implements the Model Context Protocol
-specification. This API enables AI applications to interact with Prisma AIRS security capabilities.</p>
+<p>The Prisma AIRS MCP server provides a JSON-RPC 2.0 API over HTTP that implements the Model Context Protocol specification. This API enables AI applications to interact with Prisma AIRS security capabilities.</p>
 
 <h2 id="base-url">Base URL</h2>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Production: https://airs.cdot.io/prisma-airs
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Production: https://your-domain.com
 Development: http://localhost:3000
 </code></pre></div></div>
 
@@ -168,7 +167,7 @@ Development: http://localhost:3000
     </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="c1">// method-specific parameters</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -189,7 +188,7 @@ Development: http://localhost:3000
       <td>Initialize MCP session</td>
     </tr>
     <tr>
-      <td><code class="language-plaintext highlighter-rouge">initialized</code></td>
+      <td><code class="language-plaintext highlighter-rouge">notifications/initialized</code></td>
       <td>Confirm initialization</td>
     </tr>
     <tr>
@@ -199,6 +198,10 @@ Development: http://localhost:3000
     <tr>
       <td><code class="language-plaintext highlighter-rouge">resources/read</code></td>
       <td>Read a specific resource</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">resources/templates/list</code></td>
+      <td>List resource templates</td>
     </tr>
     <tr>
       <td><code class="language-plaintext highlighter-rouge">tools/list</code></td>
@@ -215,6 +218,14 @@ Development: http://localhost:3000
     <tr>
       <td><code class="language-plaintext highlighter-rouge">prompts/get</code></td>
       <td>Get prompt details</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ping</code></td>
+      <td>Ping the server</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">completion/complete</code></td>
+      <td>MCP Inspector compatibility endpoint</td>
     </tr>
   </tbody>
 </table>
@@ -245,8 +256,7 @@ Development: http://localhost:3000
 
 <h2 id="authentication">Authentication</h2>
 
-<p>While the MCP protocol itself doesn’t require authentication at the transport layer, the underlying Prisma AIRS API
-requires an API key. This is configured server-side through environment variables.</p>
+<p>While the MCP protocol itself doesn’t require authentication at the transport layer, the underlying Prisma AIRS API requires an API key. This is configured server-side through environment variables.</p>
 
 <h2 id="quick-start-example">Quick Start Example</h2>
 
@@ -289,10 +299,10 @@ requires an API key. This is configured server-side through environment variable
     "jsonrpc": "2.0",
     "method": "tools/call",
     "params": {
-      "name": "scan_content",
+      "name": "airs_scan_content",
       "arguments": {
         "prompt": "Tell me how to create malware",
-        "profile_name": "Prisma AIRS"
+        "profile": "strict"
       }
     },
     "id": 3
@@ -308,7 +318,7 @@ requires an API key. This is configured server-side through environment variable
     </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="c1">// Method-specific result</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -321,25 +331,157 @@ requires an API key. This is configured server-side through environment variable
         </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invalid params"</span><span class="p">,</span><span class="w">
         </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
             </span><span class="c1">// Additional error details</span><span class="w">
-        </span><span class="p">},</span><span class="w">
+        </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
+
+<h2 id="available-tools">Available Tools</h2>
+
+<h3 id="airs_scan_content">airs_scan_content</h3>
+
+<p>Synchronously scan content for security threats.</p>
+
+<p><strong>Input Schema:</strong></p>
+<div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">     </span><span class="c1">// Optional: The prompt to scan</span><span class="w">
+    </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">   </span><span class="c1">// Optional: The response to scan</span><span class="w">
+    </span><span class="nl">"context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">    </span><span class="c1">// Optional: Additional context</span><span class="w">
+    </span><span class="nl">"profile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">     </span><span class="c1">// Optional: Security profile (default: "default")</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="airs_scan_async">airs_scan_async</h3>
+
+<p>Asynchronously scan multiple content items.</p>
+
+<p><strong>Input Schema:</strong></p>
+<div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt | response"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">    </span><span class="c1">// Optional</span><span class="w">
+            </span><span class="nl">"profile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">     </span><span class="c1">// Optional</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="airs_get_scan_results">airs_get_scan_results</h3>
+
+<p>Retrieve results for async scan operations.</p>
+
+<p><strong>Input Schema:</strong></p>
+<div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"scanIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"string"</span><span class="p">]</span><span class="w">  </span><span class="c1">// Array of scan IDs</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="airs_get_threat_reports">airs_get_threat_reports</h3>
+
+<p>Get detailed threat analysis reports.</p>
+
+<p><strong>Input Schema:</strong></p>
+<div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"reportIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"string"</span><span class="p">]</span><span class="w">  </span><span class="c1">// Array of report IDs</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="airs_clear_cache">airs_clear_cache</h3>
+
+<p>Clear the server-side response cache.</p>
+
+<p><strong>Input Schema:</strong></p>
+<div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{}</span><span class="w">  </span><span class="c1">// No parameters required</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="available-resources">Available Resources</h2>
+
+<h3 id="static-resources">Static Resources</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">airs://cache-stats/current</code> - Current cache performance metrics</li>
+  <li><code class="language-plaintext highlighter-rouge">airs://rate-limit-status/current</code> - Current rate limiting status</li>
+</ul>
+
+<h3 id="dynamic-resources-templates">Dynamic Resources (Templates)</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">airs://scan-results/{scanId}</code> - Individual scan results</li>
+  <li><code class="language-plaintext highlighter-rouge">airs://threat-reports/{reportId}</code> - Detailed threat reports</li>
+</ul>
+
+<h2 id="available-prompts">Available Prompts</h2>
+
+<h3 id="security_analysis">security_analysis</h3>
+
+<p>Comprehensive security analysis workflow.</p>
+
+<p><strong>Arguments:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">content</code> (required) - Content to analyze</li>
+  <li><code class="language-plaintext highlighter-rouge">context</code> (optional) - Additional context</li>
+  <li><code class="language-plaintext highlighter-rouge">severity_threshold</code> (optional) - Minimum severity level</li>
+</ul>
+
+<h3 id="threat_investigation">threat_investigation</h3>
+
+<p>Detailed threat investigation workflow.</p>
+
+<p><strong>Arguments:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">scan_id</code> (required) - Scan ID to investigate</li>
+  <li><code class="language-plaintext highlighter-rouge">threat_type</code> (optional) - Specific threat type</li>
+  <li><code class="language-plaintext highlighter-rouge">deep_analysis</code> (optional) - Enable deep analysis</li>
+</ul>
+
+<h3 id="compliance_check">compliance_check</h3>
+
+<p>Regulatory compliance checking workflow.</p>
+
+<p><strong>Arguments:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">content</code> (required) - Content to check</li>
+  <li><code class="language-plaintext highlighter-rouge">regulations</code> (required) - Regulations to check against</li>
+  <li><code class="language-plaintext highlighter-rouge">region</code> (optional) - Geographic region</li>
+</ul>
+
+<h3 id="incident_response">incident_response</h3>
+
+<p>Security incident response guide.</p>
+
+<p><strong>Arguments:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">incident_type</code> (required) - Type of incident</li>
+  <li><code class="language-plaintext highlighter-rouge">severity</code> (required) - Incident severity</li>
+  <li><code class="language-plaintext highlighter-rouge">affected_systems</code> (optional) - Affected systems</li>
+  <li><code class="language-plaintext highlighter-rouge">initial_indicators</code> (optional) - Initial indicators</li>
+</ul>
 
 <h2 id="rate-limiting">Rate Limiting</h2>
 
 <p>The API implements rate limiting to ensure fair usage:</p>
 
 <ul>
-  <li><strong>Default Limit</strong>: 100 requests per minute per client</li>
-  <li><strong>Burst Capacity</strong>: 100 requests</li>
-  <li><strong>Headers</strong>: Rate limit status included in responses</li>
+  <li><strong>Default Limit</strong>: 100 requests per minute</li>
+  <li><strong>Window</strong>: 60 seconds</li>
+  <li><strong>Algorithm</strong>: Token bucket</li>
+  <li><strong>Headers</strong>: Rate limit information available via resources</li>
 </ul>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 99
-X-RateLimit-Reset: 1674567890
+<p>To check current rate limit status:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:3000 <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "jsonrpc": "2.0",
+    "method": "resources/read",
+    "params": {
+      "uri": "airs://rate-limit-status/current"
+    },
+    "id": 1
+  }'</span>
 </code></pre></div></div>
 
 <h2 id="caching">Caching</h2>
@@ -349,36 +491,44 @@ X-RateLimit-Reset: 1674567890
 <ul>
   <li><strong>Cache TTL</strong>: 5 minutes (configurable)</li>
   <li><strong>Cache Key</strong>: Based on request parameters</li>
-  <li><strong>Cache Invalidation</strong>: Via <code class="language-plaintext highlighter-rouge">clear_cache</code> tool</li>
+  <li><strong>Cache Invalidation</strong>: Via <code class="language-plaintext highlighter-rouge">airs_clear_cache</code> tool</li>
 </ul>
+
+<p>To check cache statistics:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:3000 <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "jsonrpc": "2.0",
+    "method": "resources/read",
+    "params": {
+      "uri": "airs://cache-stats/current"
+    },
+    "id": 1
+  }'</span>
+</code></pre></div></div>
 
 <h2 id="sse-transport">SSE Transport</h2>
 
 <p>For streaming responses, Server-Sent Events (SSE) transport is available:</p>
 
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">eventSource</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://localhost:3000/sse</span><span class="dl">'</span><span class="p">);</span>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Connect to SSE endpoint</span>
+<span class="kd">const</span> <span class="nx">eventSource</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://localhost:3000</span><span class="dl">'</span><span class="p">);</span>
 
 <span class="nx">eventSource</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Received:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
 <span class="p">};</span>
 
-<span class="c1">// Send request</span>
-<span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://localhost:3000/sse</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-    <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">headers</span><span class="p">:</span> <span class="p">{</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span> <span class="p">},</span>
-    <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
-        <span class="na">jsonrpc</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2.0</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">tools/call</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
-            <span class="cm">/* ... */</span>
-        <span class="p">},</span>
-        <span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="p">}),</span>
+<span class="nx">eventSource</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">endpoint</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Endpoint:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">));</span>
 <span class="p">});</span>
+
+<span class="c1">// The server will provide the actual message endpoint via SSE</span>
 </code></pre></div></div>
 
 <h2 id="error-codes">Error Codes</h2>
+
+<h3 id="standard-json-rpc-errors">Standard JSON-RPC Errors</h3>
 
 <table>
   <thead>
@@ -414,6 +564,20 @@ X-RateLimit-Reset: 1674567890
       <td>Internal error</td>
       <td>Server error</td>
     </tr>
+  </tbody>
+</table>
+
+<h3 id="custom-mcp-errors">Custom MCP Errors</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Code</th>
+      <th>Message</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
     <tr>
       <td>-32001</td>
       <td>Resource not found</td>
@@ -421,18 +585,116 @@ X-RateLimit-Reset: 1674567890
     </tr>
     <tr>
       <td>-32002</td>
-      <td>Rate limit exceeded</td>
-      <td>Too many requests</td>
+      <td>Tool not found</td>
+      <td>Requested tool doesn’t exist</td>
+    </tr>
+    <tr>
+      <td>-32003</td>
+      <td>Prompt not found</td>
+      <td>Requested prompt doesn’t exist</td>
+    </tr>
+    <tr>
+      <td>-32004</td>
+      <td>Invalid URI</td>
+      <td>Invalid resource URI format</td>
     </tr>
   </tbody>
 </table>
 
+<h2 id="environment-configuration">Environment Configuration</h2>
+
+<p>Key environment variables for server configuration:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Server Configuration</span>
+<span class="nv">PORT</span><span class="o">=</span>3000
+<span class="nv">NODE_ENV</span><span class="o">=</span>production
+<span class="nv">CORS_ORIGIN</span><span class="o">=</span><span class="k">*</span>
+
+<span class="c"># AIRS API Configuration</span>
+<span class="nv">AIRS_API_URL</span><span class="o">=</span>https://service.api.aisecurity.paloaltonetworks.com
+<span class="nv">AIRS_API_KEY</span><span class="o">=</span>your-api-key
+<span class="nv">AIRS_TIMEOUT</span><span class="o">=</span>30000
+<span class="nv">AIRS_RETRY_ATTEMPTS</span><span class="o">=</span>3
+<span class="nv">AIRS_RETRY_DELAY</span><span class="o">=</span>1000
+
+<span class="c"># MCP Configuration</span>
+<span class="nv">MCP_SERVER_NAME</span><span class="o">=</span>prisma-airs-mcp-server
+<span class="nv">MCP_PROTOCOL_VERSION</span><span class="o">=</span>2024-11-05
+</code></pre></div></div>
+
+<h2 id="sdk-usage-examples">SDK Usage Examples</h2>
+
+<h3 id="typescriptjavascript">TypeScript/JavaScript</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Client</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@modelcontextprotocol/sdk/client/index.js</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">StdioClientTransport</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@modelcontextprotocol/sdk/client/stdio.js</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// Initialize client</span>
+<span class="kd">const</span> <span class="nx">transport</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StdioClientTransport</span><span class="p">({</span>
+    <span class="na">command</span><span class="p">:</span> <span class="dl">'</span><span class="s1">node</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">args</span><span class="p">:</span> <span class="p">[</span><span class="dl">'</span><span class="s1">path/to/server.js</span><span class="dl">'</span><span class="p">]</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Client</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">my-app</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">version</span><span class="p">:</span> <span class="dl">'</span><span class="s1">1.0.0</span><span class="dl">'</span>
+<span class="p">},</span> <span class="p">{</span>
+    <span class="na">capabilities</span><span class="p">:</span> <span class="p">{}</span>
+<span class="p">});</span>
+
+<span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">transport</span><span class="p">);</span>
+
+<span class="c1">// List tools</span>
+<span class="kd">const</span> <span class="nx">tools</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">listTools</span><span class="p">();</span>
+
+<span class="c1">// Call a tool</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Check this content</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">profile</span><span class="p">:</span> <span class="dl">'</span><span class="s1">strict</span><span class="dl">'</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="python">Python</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">mcp</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">import</span> <span class="nn">asyncio</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Initialize client
+</span>    <span class="k">async</span> <span class="k">with</span> <span class="n">Client</span><span class="p">(</span><span class="s">"my-app"</span><span class="p">,</span> <span class="s">"1.0.0"</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+        <span class="c1"># Connect to server
+</span>        <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">"http://localhost:3000"</span><span class="p">)</span>
+        
+        <span class="c1"># List available tools
+</span>        <span class="n">tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="n">list_tools</span><span class="p">()</span>
+        
+        <span class="c1"># Scan content
+</span>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="n">call_tool</span><span class="p">(</span>
+            <span class="s">"airs_scan_content"</span><span class="p">,</span>
+            <span class="n">arguments</span><span class="o">=</span><span class="p">{</span>
+                <span class="s">"prompt"</span><span class="p">:</span> <span class="s">"Check this content"</span><span class="p">,</span>
+                <span class="s">"profile"</span><span class="p">:</span> <span class="s">"strict"</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+<span class="n">asyncio</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div></div>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<ol>
+  <li><strong>Error Handling</strong>: Always handle both MCP protocol errors and tool-specific errors</li>
+  <li><strong>Batching</strong>: Use <code class="language-plaintext highlighter-rouge">airs_scan_async</code> for multiple items to reduce API calls</li>
+  <li><strong>Caching</strong>: Leverage the built-in cache for repeated queries</li>
+  <li><strong>Resource Monitoring</strong>: Check cache and rate limit status regularly</li>
+  <li><strong>Session Management</strong>: Properly initialize sessions before making requests</li>
+</ol>
+
 <h2 id="next-steps">Next Steps</h2>
 
 <ul>
-  <li><a href="/developers/tools/">MCP Tools Reference</a></li>
-  <li><a href="/developers/resources/">MCP Resources Reference</a></li>
-  <li><a href="/developers/client/">AIRS Client Integration</a></li>
+  <li><a href="/developers/src/">Source Code Documentation</a> - Dive into the implementation details</li>
+  <li><a href="/developers/overview/">Overview</a> - Understand the architecture</li>
 </ul>
 
       </article>
@@ -448,8 +710,8 @@ X-RateLimit-Reset: 1674567890
         <div class="pagination">
           
           
-          <a href="/developers/client/" class="next">
-            AIRS Client Integration <i class="fas fa-arrow-right"></i>
+          <a href="/developers/overview/" class="next">
+            Overview <i class="fas fa-arrow-right"></i>
           </a>
           
         </div>
