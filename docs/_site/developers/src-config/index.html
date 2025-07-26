@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuration Module (src/config/) | Prisma AIRS MCP</title>
+  <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Configuration Module (src/config/) | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Configuration Module (src/config/)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Configuration Module Documentation" />
+<meta property="og:description" content="Configuration Module Documentation" />
+<link rel="canonical" href="http://localhost:4000/developers/src-config/" />
+<meta property="og:url" content="http://localhost:4000/developers/src-config/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Configuration Module (src/config/)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Configuration Module Documentation","headline":"Configuration Module (src/config/)","url":"http://localhost:4000/developers/src-config/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/deployment" class="navbar-item ">Deployment</a>
+        <a href="/developers" class="navbar-item active">Developers</a>
+        <a href="/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/developers/overview/" >Overview</a></li>
+  </ul>
+  
+  <h4>MCP Server Documentation</h4>
+  <ul>
+    <li><a href="/developers/client/" >AIRS Client Integration</a></li>
+    <li><a href="/developers/resources/" >MCP Resources</a></li>
+    <li><a href="/developers/tools/" >MCP Tools</a></li>
+  </ul>
+  
+  <h4>Source Code Documentation</h4>
+  <ul>
+    <li><a href="/developers/src-root/" >Root (src/)</a></li>
+    <li><a href="/developers/src-airs/" >AIRS Module</a></li>
+    <li><a href="/developers/src-config/" class="active">Configuration</a></li>
+    <li><a href="/developers/src-mcp/" >MCP Types</a></li>
+    <li><a href="/developers/src-prompts/" >Prompts</a></li>
+    <li><a href="/developers/src-resources/" >Resources</a></li>
+    <li><a href="/developers/src-tools/" >Tools</a></li>
+    <li><a href="/developers/src-transport/" >Transport</a></li>
+    <li><a href="/developers/src-utils/" >Utilities</a></li>
+  </ul>
+  
+  <h4>API</h4>
+  <ul>
+    <li><a href="/developers/api/" >API Reference</a></li>
+  </ul>
+</nav>
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Configuration Module (src/config/)</h1>
+        
+      </div>
+      
+      <article class="content">
+        <h1 id="configuration-module-documentation">Configuration Module Documentation</h1>
+
+<p>The configuration module provides centralized environment configuration management for the Prisma AIRS MCP server. It uses Zod for schema validation and type safety, ensuring all configuration values are properly validated at startup.</p>
+
+<h2 id="module-overview">Module Overview</h2>
+
+<p>The configuration module consists of a single file that handles:</p>
+
+<ul>
+  <li>Environment variable parsing</li>
+  <li>Schema validation using Zod</li>
+  <li>Type-safe configuration access</li>
+  <li>Default value management</li>
+  <li>Version detection from version.json</li>
+</ul>
+
+<h2 id="configuration-schema">Configuration Schema</h2>
+
+<h3 id="complete-configuration-structure">Complete Configuration Structure</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">type</span> <span class="nx">Config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">// Server configuration</span>
+    <span class="na">server</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">port</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>                    <span class="c1">// Server port (1-65535)</span>
+        <span class="nl">environment</span><span class="p">:</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span><span class="p">;</span>
+        <span class="nl">logLevel</span><span class="p">:</span> <span class="dl">'</span><span class="s1">error</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">warn</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">info</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">debug</span><span class="dl">'</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="c1">// Prisma AIRS configuration</span>
+    <span class="nl">airs</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">apiUrl</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>                  <span class="c1">// Valid URL required</span>
+        <span class="nl">apiKey</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>                  <span class="c1">// Required, non-empty</span>
+        <span class="nl">timeout</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>                 <span class="c1">// Min 1000ms, default 30000ms</span>
+        <span class="nl">retryAttempts</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>           <span class="c1">// Min 0, default 3</span>
+        <span class="nl">retryDelay</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>              <span class="c1">// Min 100ms, default 1000ms</span>
+        <span class="nl">defaultProfileId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>       <span class="c1">// Optional</span>
+        <span class="nl">defaultProfileName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>     <span class="c1">// Optional</span>
+    <span class="p">};</span>
+
+    <span class="c1">// Cache configuration</span>
+    <span class="nl">cache</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">ttlSeconds</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>              <span class="c1">// Min 0, default 300</span>
+        <span class="nl">maxSize</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>                 <span class="c1">// Min 0, default 1000</span>
+        <span class="nl">enabled</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>                <span class="c1">// Default true</span>
+    <span class="p">};</span>
+
+    <span class="c1">// Rate limiting configuration</span>
+    <span class="nl">rateLimit</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">maxRequests</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>             <span class="c1">// Min 1, default 100</span>
+        <span class="nl">windowMs</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>                <span class="c1">// Min 1000ms, default 60000ms</span>
+        <span class="nl">enabled</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>                <span class="c1">// Default true</span>
+    <span class="p">};</span>
+
+    <span class="c1">// MCP configuration</span>
+    <span class="nl">mcp</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">serverName</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>              <span class="c1">// Default 'prisma-airs-mcp'</span>
+        <span class="nl">serverVersion</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>           <span class="c1">// Default from version.json or '1.0.0'</span>
+        <span class="nl">protocolVersion</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>         <span class="c1">// Default '2024-11-05'</span>
+    <span class="p">};</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="environment-variables">Environment Variables</h2>
+
+<h3 id="server-configuration">Server Configuration</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Server port (default: 3000)</span>
+<span class="nv">PORT</span><span class="o">=</span>3000
+
+<span class="c"># Environment mode (default: development)</span>
+<span class="c"># Options: development, production, test</span>
+<span class="nv">NODE_ENV</span><span class="o">=</span>production
+
+<span class="c"># Log level (default: info)</span>
+<span class="c"># Options: error, warn, info, debug</span>
+<span class="nv">LOG_LEVEL</span><span class="o">=</span>debug
+</code></pre></div></div>
+
+<h3 id="airs-configuration">AIRS Configuration</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Required: Prisma AIRS API endpoint</span>
+<span class="nv">AIRS_API_URL</span><span class="o">=</span>https://api.prismacloud.io/airs
+
+<span class="c"># Required: API authentication key</span>
+<span class="nv">AIRS_API_KEY</span><span class="o">=</span>your-api-key-here
+
+<span class="c"># Request timeout in milliseconds (default: 30000)</span>
+<span class="nv">AIRS_TIMEOUT</span><span class="o">=</span>30000
+
+<span class="c"># Number of retry attempts (default: 3)</span>
+<span class="nv">AIRS_RETRY_ATTEMPTS</span><span class="o">=</span>3
+
+<span class="c"># Initial retry delay in milliseconds (default: 1000)</span>
+<span class="nv">AIRS_RETRY_DELAY</span><span class="o">=</span>1000
+
+<span class="c"># Optional: Default security profile</span>
+<span class="nv">AIRS_DEFAULT_PROFILE_ID</span><span class="o">=</span>uuid-of-profile
+<span class="nv">AIRS_DEFAULT_PROFILE_NAME</span><span class="o">=</span><span class="s2">"Prisma AIRS"</span>
+</code></pre></div></div>
+
+<h3 id="cache-configuration">Cache Configuration</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Cache time-to-live in seconds (default: 300)</span>
+<span class="nv">CACHE_TTL_SECONDS</span><span class="o">=</span>300
+
+<span class="c"># Maximum cache size in bytes (default: 1000)</span>
+<span class="nv">CACHE_MAX_SIZE</span><span class="o">=</span>10485760
+
+<span class="c"># Enable/disable caching (default: true)</span>
+<span class="nv">CACHE_ENABLED</span><span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
+
+<h3 id="rate-limiting-configuration">Rate Limiting Configuration</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Maximum requests per window (default: 100)</span>
+<span class="nv">RATE_LIMIT_MAX_REQUESTS</span><span class="o">=</span>100
+
+<span class="c"># Time window in milliseconds (default: 60000)</span>
+<span class="nv">RATE_LIMIT_WINDOW_MS</span><span class="o">=</span>60000
+
+<span class="c"># Enable/disable rate limiting (default: true)</span>
+<span class="nv">RATE_LIMIT_ENABLED</span><span class="o">=</span><span class="nb">true</span>
+</code></pre></div></div>
+
+<h3 id="mcp-configuration">MCP Configuration</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># MCP server name (default: prisma-airs-mcp)</span>
+<span class="nv">MCP_SERVER_NAME</span><span class="o">=</span>prisma-airs-mcp
+
+<span class="c"># Server version (default: from version.json)</span>
+<span class="nv">MCP_SERVER_VERSION</span><span class="o">=</span>1.0.0
+
+<span class="c"># MCP protocol version (default: 2024-11-05)</span>
+<span class="nv">MCP_PROTOCOL_VERSION</span><span class="o">=</span>2024-11-05
+</code></pre></div></div>
+
+<h2 id="implementation-details">Implementation Details</h2>
+
+<h3 id="version-detection">Version Detection</h3>
+
+<p>The module automatically detects the server version from <code class="language-plaintext highlighter-rouge">version.json</code>:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Read version from version.json if available</span>
+<span class="kd">let</span> <span class="nx">versionFromFile</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">1.0.0</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">versionJson</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span>
+        <span class="nx">readFileSync</span><span class="p">(</span><span class="nx">join</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">(),</span> <span class="dl">'</span><span class="s1">version.json</span><span class="dl">'</span><span class="p">),</span> <span class="dl">'</span><span class="s1">utf-8</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="p">{</span> <span class="na">version</span><span class="p">:</span> <span class="kr">string</span> <span class="p">};</span>
+    <span class="nx">versionFromFile</span> <span class="o">=</span> <span class="nx">versionJson</span><span class="p">.</span><span class="nx">version</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+    <span class="c1">// Fall back to default if file doesn't exist</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="configuration-parsing">Configuration Parsing</h3>
+
+<p>The configuration is parsed and validated using Zod:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">parseConfig</span><span class="p">():</span> <span class="nx">Config</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">configSchema</span><span class="p">.</span><span class="nx">parse</span><span class="p">({</span>
+        <span class="na">server</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">port</span><span class="p">:</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">??</span> <span class="dl">'</span><span class="s1">3000</span><span class="dl">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+            <span class="na">environment</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">??</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">logLevel</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">LOG_LEVEL</span> <span class="o">??</span> <span class="dl">'</span><span class="s1">info</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="c1">// ... other configuration sections</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="singleton-pattern">Singleton Pattern</h3>
+
+<p>The configuration uses a singleton pattern for efficiency:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">config</span><span class="p">:</span> <span class="nx">Config</span> <span class="o">|</span> <span class="kc">null</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">getConfig</span><span class="p">():</span> <span class="nx">Config</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="nx">config</span> <span class="o">=</span> <span class="nx">parseConfig</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nx">z</span><span class="p">.</span><span class="nx">ZodError</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Configuration validation failed:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">issues</span><span class="p">);</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span>
+                    <span class="s2">`Invalid configuration: </span><span class="p">${</span><span class="nx">error</span><span class="p">.</span><span class="nx">issues</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">, </span><span class="dl">'</span><span class="p">)}</span><span class="s2">`</span>
+                <span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">config</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="usage-examples">Usage Examples</h2>
+
+<h3 id="basic-usage">Basic Usage</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">getConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./config</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// Get configuration instance</span>
+<span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+
+<span class="c1">// Access configuration values</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Server running on port </span><span class="p">${</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`AIRS API URL: </span><span class="p">${</span><span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Cache enabled: </span><span class="p">${</span><span class="nx">config</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">enabled</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="using-in-other-modules">Using in Other Modules</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In AIRS client factory</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">getConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../config</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">getAIRSClient</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+    
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">EnhancedPrismaAIRSClient</span><span class="p">({</span>
+        <span class="na">apiUrl</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">,</span>
+        <span class="na">apiKey</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">,</span>
+        <span class="na">timeout</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">timeout</span><span class="p">,</span>
+        <span class="c1">// ... other settings</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="error-handling">Error Handling</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+    <span class="c1">// Use configuration</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to load configuration:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="validation-rules">Validation Rules</h2>
+
+<h3 id="url-validation">URL Validation</h3>
+
+<p>The AIRS API URL is validated to ensure it’s a valid URL:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">apiUrl</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">refine</span><span class="p">((</span><span class="nx">val</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">globalThis</span><span class="p">.</span><span class="nx">URL</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">},</span> <span class="dl">'</span><span class="s1">Invalid URL</span><span class="dl">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="numeric-ranges">Numeric Ranges</h3>
+
+<p>All numeric values have minimum (and sometimes maximum) constraints:</p>
+
+<ul>
+  <li>Port: 1-65535</li>
+  <li>Timeouts: minimum 1000ms</li>
+  <li>Retry attempts: minimum 0</li>
+  <li>Retry delay: minimum 100ms</li>
+  <li>Cache TTL: minimum 0 seconds</li>
+  <li>Rate limit window: minimum 1000ms</li>
+</ul>
+
+<h3 id="boolean-parsing">Boolean Parsing</h3>
+
+<p>Boolean environment variables use negative checking:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">enabled</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CACHE_ENABLED</span> <span class="o">!==</span> <span class="dl">'</span><span class="s1">false</span><span class="dl">'</span>
+</code></pre></div></div>
+
+<p>This means any value other than ‘false’ (including undefined) is treated as true.</p>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<ol>
+  <li><strong>Always use getConfig()</strong> - Never access process.env directly</li>
+  <li><strong>Handle validation errors</strong> - Configuration errors should fail fast at startup</li>
+  <li><strong>Use type safety</strong> - Import the Config type for type-safe access</li>
+  <li><strong>Set required values</strong> - Ensure AIRS_API_URL and AIRS_API_KEY are always set</li>
+  <li><strong>Use appropriate defaults</strong> - The module provides sensible defaults for optional values</li>
+</ol>
+
+<h2 id="integration-with-other-modules">Integration with Other Modules</h2>
+
+<p>The configuration module is used throughout the application:</p>
+
+<ul>
+  <li><strong>Server initialization</strong> - Port and environment settings</li>
+  <li><strong>Logger setup</strong> - Log level configuration</li>
+  <li><strong>AIRS client</strong> - API connection settings</li>
+  <li><strong>Cache system</strong> - TTL and size limits</li>
+  <li><strong>Rate limiter</strong> - Request limits and windows</li>
+  <li><strong>MCP server</strong> - Protocol and version information</li>
+</ul>
+
+<h2 id="environment-specific-configuration">Environment-Specific Configuration</h2>
+
+<h3 id="development">Development</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">NODE_ENV</span><span class="o">=</span>development
+<span class="nv">LOG_LEVEL</span><span class="o">=</span>debug
+<span class="nv">CACHE_ENABLED</span><span class="o">=</span><span class="nb">true
+</span><span class="nv">RATE_LIMIT_ENABLED</span><span class="o">=</span><span class="nb">false</span>
+</code></pre></div></div>
+
+<h3 id="production">Production</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">NODE_ENV</span><span class="o">=</span>production
+<span class="nv">LOG_LEVEL</span><span class="o">=</span>warn
+<span class="nv">CACHE_ENABLED</span><span class="o">=</span><span class="nb">true
+</span><span class="nv">RATE_LIMIT_ENABLED</span><span class="o">=</span><span class="nb">true
+</span><span class="nv">CACHE_MAX_SIZE</span><span class="o">=</span>104857600  <span class="c"># 100MB</span>
+</code></pre></div></div>
+
+<h3 id="testing">Testing</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">NODE_ENV</span><span class="o">=</span><span class="nb">test
+</span><span class="nv">LOG_LEVEL</span><span class="o">=</span>error
+<span class="nv">CACHE_ENABLED</span><span class="o">=</span><span class="nb">false
+</span><span class="nv">RATE_LIMIT_ENABLED</span><span class="o">=</span><span class="nb">false</span>
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="common-issues">Common Issues</h3>
+
+<ol>
+  <li><strong>Invalid URL Error</strong>
+    <ul>
+      <li>Ensure AIRS_API_URL includes protocol (https://)</li>
+      <li>Check for trailing slashes (they’re automatically removed)</li>
+    </ul>
+  </li>
+  <li><strong>Missing Required Fields</strong>
+    <ul>
+      <li>AIRS_API_URL and AIRS_API_KEY are required</li>
+      <li>Set them in environment or .env file</li>
+    </ul>
+  </li>
+  <li><strong>Type Conversion Errors</strong>
+    <ul>
+      <li>Ensure numeric values are valid integers</li>
+      <li>Check for typos in boolean values</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="debug-configuration">Debug Configuration</h3>
+
+<p>To debug configuration issues:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">getConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./config</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Configuration loaded:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">));</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Configuration error:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+  <li><a href="/developers/src-airs/">AIRS Module</a> - How AIRS client uses configuration</li>
+  <li><a href="/developers/src-root/">Server Root</a> - Server initialization with config</li>
+  <li><a href="/developers/src-utils/">Utils Module</a> - Logger configuration usage</li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_developers/src-config.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/developers/src-root/" class="next">
+            Root Module (src/) <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>

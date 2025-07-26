@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources Module (src/resources/) | Prisma AIRS MCP</title>
+  <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Resources Module (src/resources/) | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Resources Module (src/resources/)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Resources Module Documentation" />
+<meta property="og:description" content="Resources Module Documentation" />
+<link rel="canonical" href="http://localhost:4000/developers/src-resources/" />
+<meta property="og:url" content="http://localhost:4000/developers/src-resources/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Resources Module (src/resources/)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Resources Module Documentation","headline":"Resources Module (src/resources/)","url":"http://localhost:4000/developers/src-resources/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/deployment" class="navbar-item ">Deployment</a>
+        <a href="/developers" class="navbar-item active">Developers</a>
+        <a href="/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/developers/overview/" >Overview</a></li>
+  </ul>
+  
+  <h4>MCP Server Documentation</h4>
+  <ul>
+    <li><a href="/developers/client/" >AIRS Client Integration</a></li>
+    <li><a href="/developers/resources/" >MCP Resources</a></li>
+    <li><a href="/developers/tools/" >MCP Tools</a></li>
+  </ul>
+  
+  <h4>Source Code Documentation</h4>
+  <ul>
+    <li><a href="/developers/src-root/" >Root (src/)</a></li>
+    <li><a href="/developers/src-airs/" >AIRS Module</a></li>
+    <li><a href="/developers/src-config/" >Configuration</a></li>
+    <li><a href="/developers/src-mcp/" >MCP Types</a></li>
+    <li><a href="/developers/src-prompts/" >Prompts</a></li>
+    <li><a href="/developers/src-resources/" class="active">Resources</a></li>
+    <li><a href="/developers/src-tools/" >Tools</a></li>
+    <li><a href="/developers/src-transport/" >Transport</a></li>
+    <li><a href="/developers/src-utils/" >Utilities</a></li>
+  </ul>
+  
+  <h4>API</h4>
+  <ul>
+    <li><a href="/developers/api/" >API Reference</a></li>
+  </ul>
+</nav>
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Resources Module (src/resources/)</h1>
+        
+      </div>
+      
+      <article class="content">
+        <h1 id="resources-module-documentation">Resources Module Documentation</h1>
+
+<p>The resources module provides MCP resource handlers for accessing Prisma AIRS data. Resources represent external data sources that can be read by AI models, including scan results, threat reports, and system statistics.</p>
+
+<h2 id="module-overview">Module Overview</h2>
+
+<p>The resources module consists of a single file (<code class="language-plaintext highlighter-rouge">index.ts</code>) that implements:</p>
+
+<ul>
+  <li>Resource URI scheme for AIRS data</li>
+  <li>Scan result retrieval</li>
+  <li>Threat report access</li>
+  <li>Cache statistics monitoring</li>
+  <li>Rate limit status checking</li>
+  <li>Resource reference creation for tool results</li>
+</ul>
+
+<h2 id="resource-uri-scheme">Resource URI Scheme</h2>
+
+<p>All resources follow the URI pattern: <code class="language-plaintext highlighter-rouge">airs://{type}/{id}</code></p>
+
+<h3 id="resource-types">Resource Types</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>URI Pattern</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">scan-results</code></td>
+      <td><code class="language-plaintext highlighter-rouge">airs://scan-results/{scanId}</code></td>
+      <td>Individual scan results</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">threat-reports</code></td>
+      <td><code class="language-plaintext highlighter-rouge">airs://threat-reports/{reportId}</code></td>
+      <td>Detailed threat reports</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cache-stats</code></td>
+      <td><code class="language-plaintext highlighter-rouge">airs://cache-stats/current</code></td>
+      <td>Current cache statistics</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">rate-limit-status</code></td>
+      <td><code class="language-plaintext highlighter-rouge">airs://rate-limit-status/current</code></td>
+      <td>Rate limiting status</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="available-resources">Available Resources</h2>
+
+<h3 id="1-scan-results">1. Scan Results</h3>
+
+<p><strong>URI Pattern:</strong> <code class="language-plaintext highlighter-rouge">airs://scan-results/{scanId}</code><br />
+<strong>MIME Type:</strong> <code class="language-plaintext highlighter-rouge">application/json</code><br />
+<strong>Description:</strong> Retrieves detailed scan results by scan ID</p>
+
+<h4 id="content-structure">Content Structure</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"req_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"complete"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scan_12345"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rpt_12345"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scan_12345"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"injection"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"toxic_content"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"malicious_code"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+        </span><span class="err">//</span><span class="w"> </span><span class="err">...</span><span class="w"> </span><span class="err">additional</span><span class="w"> </span><span class="err">fields</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="2-threat-reports">2. Threat Reports</h3>
+
+<p><strong>URI Pattern:</strong> <code class="language-plaintext highlighter-rouge">airs://threat-reports/{reportId}</code><br />
+<strong>MIME Type:</strong> <code class="language-plaintext highlighter-rouge">application/json</code><br />
+<strong>Description:</strong> Retrieves detailed threat analysis reports</p>
+
+<h4 id="content-structure-1">Content Structure</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"rpt_12345"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scan_12345"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tr_67890"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"detection_results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"injection_detection"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="err">//</span><span class="w"> </span><span class="err">Service-specific</span><span class="w"> </span><span class="err">details</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="3-cache-statistics">3. Cache Statistics</h3>
+
+<p><strong>URI Pattern:</strong> <code class="language-plaintext highlighter-rouge">airs://cache-stats/current</code><br />
+<strong>MIME Type:</strong> <code class="language-plaintext highlighter-rouge">application/json</code><br />
+<strong>Description:</strong> Current cache performance metrics</p>
+
+<h4 id="content-structure-2">Content Structure</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">1048576</span><span class="p">,</span><span class="w">          </span><span class="err">//</span><span class="w"> </span><span class="err">Current</span><span class="w"> </span><span class="err">cache</span><span class="w"> </span><span class="err">size</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">bytes</span><span class="w">
+    </span><span class="nl">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w">              </span><span class="err">//</span><span class="w"> </span><span class="err">Number</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">cached</span><span class="w"> </span><span class="err">entries</span><span class="w">
+    </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">          </span><span class="err">//</span><span class="w"> </span><span class="err">Cache</span><span class="w"> </span><span class="err">enabled</span><span class="w"> </span><span class="err">status</span><span class="w">
+    </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-01-01T12:00:00Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="4-rate-limit-status">4. Rate Limit Status</h3>
+
+<p><strong>URI Pattern:</strong> <code class="language-plaintext highlighter-rouge">airs://rate-limit-status/current</code><br />
+<strong>MIME Type:</strong> <code class="language-plaintext highlighter-rouge">application/json</code><br />
+<strong>Description:</strong> Current rate limiting status and quotas</p>
+
+<h4 id="content-structure-3">Content Structure</h4>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"bucketCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">         </span><span class="err">//</span><span class="w"> </span><span class="err">Active</span><span class="w"> </span><span class="err">rate</span><span class="w"> </span><span class="err">limit</span><span class="w"> </span><span class="err">buckets</span><span class="w">
+    </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">          </span><span class="err">//</span><span class="w"> </span><span class="err">Rate</span><span class="w"> </span><span class="err">limiting</span><span class="w"> </span><span class="err">enabled</span><span class="w">
+    </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-01-01T12:00:00Z"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h2 id="implementation-details">Implementation Details</h2>
+
+<h3 id="resourcehandler-class">ResourceHandler Class</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">ResourceHandler</span> <span class="p">{</span>
+    <span class="c1">// Resource type constants</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="nx">RESOURCE_TYPES</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">SCAN_RESULT</span><span class="p">:</span> <span class="dl">'</span><span class="s1">scan-results</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">THREAT_REPORT</span><span class="p">:</span> <span class="dl">'</span><span class="s1">threat-reports</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">CACHE_STATS</span><span class="p">:</span> <span class="dl">'</span><span class="s1">cache-stats</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">RATE_LIMIT_STATUS</span><span class="p">:</span> <span class="dl">'</span><span class="s1">rate-limit-status</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">}</span> <span class="k">as</span> <span class="kd">const</span><span class="p">;</span>
+
+    <span class="c1">// List available static resources</span>
+    <span class="nx">listResources</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">ResourcesListParams</span><span class="p">):</span> <span class="nx">ResourcesListResult</span>
+
+    <span class="c1">// Read a specific resource by URI</span>
+    <span class="k">async</span> <span class="nx">readResource</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">ResourcesReadParams</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ResourcesReadResult</span><span class="o">&gt;</span>
+
+    <span class="c1">// Create resource reference for tool results</span>
+    <span class="k">static</span> <span class="nx">createResourceReference</span><span class="p">(</span>
+        <span class="kd">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+        <span class="nx">id</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+        <span class="nx">title</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+        <span class="nx">data</span><span class="p">?:</span> <span class="nx">unknown</span>
+    <span class="p">):</span> <span class="nx">ResourceContent</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="uri-parsing">URI Parsing</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">parseResourceUri</span><span class="p">(</span><span class="nx">uri</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="p">{</span> <span class="nl">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span> <span class="nl">id</span><span class="p">:</span> <span class="kr">string</span> <span class="p">}</span> <span class="o">|</span> <span class="kc">null</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">match</span> <span class="o">=</span> <span class="nx">uri</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^airs:</span><span class="se">\/\/([^/]</span><span class="sr">+</span><span class="se">)\/(</span><span class="sr">.+</span><span class="se">)</span><span class="sr">$/</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">match</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="na">type</span><span class="p">:</span> <span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">,</span>
+        <span class="na">id</span><span class="p">:</span> <span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">,</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="usage-examples">Usage Examples</h2>
+
+<h3 id="listing-resources">Listing Resources</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">ResourceHandler</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./resources</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ResourceHandler</span><span class="p">();</span>
+
+<span class="c1">// List available static resources</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">resources</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">listResources</span><span class="p">({});</span>
+
+<span class="nx">resources</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">resource</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">resource</span><span class="p">.</span><span class="nx">uri</span><span class="p">}</span><span class="s2">: </span><span class="p">${</span><span class="nx">resource</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`  </span><span class="p">${</span><span class="nx">resource</span><span class="p">.</span><span class="nx">description</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="reading-scan-results">Reading Scan Results</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Read scan result by ID</span>
+<span class="kd">const</span> <span class="nx">scanResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">readResource</span><span class="p">({</span>
+    <span class="na">uri</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs://scan-results/scan_12345</span><span class="dl">'</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">scanResult</span><span class="p">.</span><span class="nx">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="o">!</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Scan status: </span><span class="p">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">status</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Category: </span><span class="p">${</span><span class="nx">data</span><span class="p">.</span><span class="nx">result</span><span class="p">?.</span><span class="nx">category</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="reading-system-statistics">Reading System Statistics</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Get cache statistics</span>
+<span class="kd">const</span> <span class="nx">cacheStats</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">readResource</span><span class="p">({</span>
+    <span class="na">uri</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs://cache-stats/current</span><span class="dl">'</span>
+<span class="p">});</span>
+
+<span class="kd">const</span> <span class="nx">stats</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">cacheStats</span><span class="p">.</span><span class="nx">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="o">!</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Cache entries: </span><span class="p">${</span><span class="nx">stats</span><span class="p">.</span><span class="nx">count</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Cache size: </span><span class="p">${</span><span class="nx">stats</span><span class="p">.</span><span class="nx">size</span><span class="p">}</span><span class="s2"> bytes`</span><span class="p">);</span>
+
+<span class="c1">// Get rate limit status</span>
+<span class="kd">const</span> <span class="nx">rateLimitStatus</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">readResource</span><span class="p">({</span>
+    <span class="na">uri</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs://rate-limit-status/current</span><span class="dl">'</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="creating-resource-references">Creating Resource References</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In tool handlers, create resource references</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">ResourceHandler</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../resources</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// After scan completes</span>
+<span class="kd">const</span> <span class="nx">scanResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">airsClient</span><span class="p">.</span><span class="nx">scanSync</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
+
+<span class="c1">// Create resource reference</span>
+<span class="kd">const</span> <span class="nx">resourceRef</span> <span class="o">=</span> <span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">createResourceReference</span><span class="p">(</span>
+    <span class="dl">'</span><span class="s1">scan-results</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">scanResult</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">,</span>
+    <span class="s2">`Scan Result </span><span class="p">${</span><span class="nx">scanResult</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="nx">scanResult</span>
+<span class="p">);</span>
+
+<span class="c1">// Include in tool result</span>
+<span class="k">return</span> <span class="p">{</span>
+    <span class="na">content</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">text</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Scan completed successfully</span><span class="dl">'</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">resource</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">resource</span><span class="p">:</span> <span class="nx">resourceRef</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="integration-with-tools">Integration with Tools</h2>
+
+<p>Resources are commonly referenced in tool results:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Tool returns resource reference</span>
+<span class="kd">const</span> <span class="nx">toolResult</span><span class="p">:</span> <span class="nx">ToolsCallResult</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">content</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">text</span><span class="p">:</span> <span class="s2">`Found </span><span class="p">${</span><span class="nx">threats</span><span class="p">.</span><span class="nx">length</span><span class="p">}</span><span class="s2"> threats`</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">resource</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">resource</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">uri</span><span class="p">:</span> <span class="s2">`airs://threat-reports/</span><span class="p">${</span><span class="nx">reportId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+                <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+                <span class="na">text</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">threatReport</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="error-handling">Error Handling</h2>
+
+<p>The module handles various error scenarios:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Invalid URI format</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">parsed</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Invalid resource URI: </span><span class="p">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">uri</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Unknown resource type</span>
+<span class="nl">default</span><span class="p">:</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Unknown resource type: </span><span class="p">${</span><span class="kd">type</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+
+<span class="c1">// Resource not found</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Scan result not found: </span><span class="p">${</span><span class="nx">scanId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="resource-discovery">Resource Discovery</h2>
+
+<h3 id="static-resources">Static Resources</h3>
+
+<p>Static resources (cache stats, rate limit status) are listed by <code class="language-plaintext highlighter-rouge">listResources</code>:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">resources</span><span class="p">:</span> <span class="nx">Resource</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="na">uri</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs://cache-stats/current</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Cache Statistics</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Current cache statistics and performance metrics</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="c1">// ... other static resources</span>
+<span class="p">];</span>
+</code></pre></div></div>
+
+<h3 id="dynamic-resources">Dynamic Resources</h3>
+
+<p>Dynamic resources (scan results, threat reports) are not listed but can be accessed directly when their URIs are known (typically from tool results).</p>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<ol>
+  <li><strong>URI Validation</strong> - Always validate URI format before parsing</li>
+  <li><strong>Error Handling</strong> - Provide clear error messages for invalid URIs</li>
+  <li><strong>Resource References</strong> - Include data in resource references when possible</li>
+  <li><strong>Async Operations</strong> - Use async/await for AIRS client calls</li>
+  <li><strong>Logging</strong> - Log resource access for debugging</li>
+</ol>
+
+<h2 id="performance-considerations">Performance Considerations</h2>
+
+<ol>
+  <li><strong>Caching</strong> - Resources are cached by the AIRS client when enabled</li>
+  <li><strong>Rate Limiting</strong> - Resource reads count against rate limits</li>
+  <li><strong>Large Resources</strong> - Consider pagination for large result sets</li>
+  <li><strong>Concurrent Access</strong> - Resources can be read concurrently</li>
+</ol>
+
+<h2 id="security-considerations">Security Considerations</h2>
+
+<ol>
+  <li><strong>Access Control</strong> - Resources inherit AIRS API authentication</li>
+  <li><strong>Data Sensitivity</strong> - Scan results may contain sensitive information</li>
+  <li><strong>URI Validation</strong> - Prevent injection through URI parameters</li>
+  <li><strong>Error Messages</strong> - Avoid exposing internal details in errors</li>
+</ol>
+
+<h2 id="testing-resources">Testing Resources</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Test resource URI parsing</span>
+<span class="kd">const</span> <span class="nx">parsed</span> <span class="o">=</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">parseResourceUri</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs://scan-results/123</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">assert</span><span class="p">(</span><span class="nx">parsed</span><span class="p">?.</span><span class="kd">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">scan-results</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">assert</span><span class="p">(</span><span class="nx">parsed</span><span class="p">?.</span><span class="nx">id</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="c1">// Test invalid URI</span>
+<span class="k">try</span> <span class="p">{</span>
+    <span class="k">await</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">readResource</span><span class="p">({</span> <span class="na">uri</span><span class="p">:</span> <span class="dl">'</span><span class="s1">invalid://uri</span><span class="dl">'</span> <span class="p">});</span>
+    <span class="nx">assert</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="dl">'</span><span class="s1">Should throw error</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">assert</span><span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">'</span><span class="s1">Invalid resource URI</span><span class="dl">'</span><span class="p">));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+  <li><a href="/developers/src-tools/">Tools Module</a> - Tools that create resource references</li>
+  <li><a href="/developers/src-mcp/">MCP Types</a> - Resource type definitions</li>
+  <li><a href="/developers/src-airs/">AIRS Module</a> - Client used for resource data</li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_developers/src-resources.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/developers/src-root/" class="next">
+            Root Module (src/) <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompts Module (src/prompts/) | Prisma AIRS MCP</title>
+  <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Prompts Module (src/prompts/) | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Prompts Module (src/prompts/)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Prompts Module Documentation" />
+<meta property="og:description" content="Prompts Module Documentation" />
+<link rel="canonical" href="http://localhost:4000/developers/src-prompts/" />
+<meta property="og:url" content="http://localhost:4000/developers/src-prompts/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Prompts Module (src/prompts/)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"Prompts Module Documentation","headline":"Prompts Module (src/prompts/)","url":"http://localhost:4000/developers/src-prompts/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/deployment" class="navbar-item ">Deployment</a>
+        <a href="/developers" class="navbar-item active">Developers</a>
+        <a href="/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/developers/overview/" >Overview</a></li>
+  </ul>
+  
+  <h4>MCP Server Documentation</h4>
+  <ul>
+    <li><a href="/developers/client/" >AIRS Client Integration</a></li>
+    <li><a href="/developers/resources/" >MCP Resources</a></li>
+    <li><a href="/developers/tools/" >MCP Tools</a></li>
+  </ul>
+  
+  <h4>Source Code Documentation</h4>
+  <ul>
+    <li><a href="/developers/src-root/" >Root (src/)</a></li>
+    <li><a href="/developers/src-airs/" >AIRS Module</a></li>
+    <li><a href="/developers/src-config/" >Configuration</a></li>
+    <li><a href="/developers/src-mcp/" >MCP Types</a></li>
+    <li><a href="/developers/src-prompts/" class="active">Prompts</a></li>
+    <li><a href="/developers/src-resources/" >Resources</a></li>
+    <li><a href="/developers/src-tools/" >Tools</a></li>
+    <li><a href="/developers/src-transport/" >Transport</a></li>
+    <li><a href="/developers/src-utils/" >Utilities</a></li>
+  </ul>
+  
+  <h4>API</h4>
+  <ul>
+    <li><a href="/developers/api/" >API Reference</a></li>
+  </ul>
+</nav>
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>Prompts Module (src/prompts/)</h1>
+        
+      </div>
+      
+      <article class="content">
+        <h1 id="prompts-module-documentation">Prompts Module Documentation</h1>
+
+<p>The prompts module provides pre-defined conversation templates for common security workflows using Prisma AIRS. These prompts guide AI models through structured security analysis, threat investigation, compliance checking, and incident response procedures.</p>
+
+<h2 id="module-overview">Module Overview</h2>
+
+<p>The prompts module consists of a single file (<code class="language-plaintext highlighter-rouge">index.ts</code>) that implements:</p>
+
+<ul>
+  <li>Security analysis workflows</li>
+  <li>Threat investigation procedures</li>
+  <li>Compliance checking protocols</li>
+  <li>Incident response guidance</li>
+  <li>Structured prompt generation with arguments</li>
+</ul>
+
+<h2 id="available-prompts">Available Prompts</h2>
+
+<h3 id="1-security-analysis-workflow">1. Security Analysis Workflow</h3>
+
+<p><strong>Name:</strong> <code class="language-plaintext highlighter-rouge">security_analysis</code><br />
+<strong>Purpose:</strong> Analyze content for security threats and provide recommendations</p>
+
+<h4 id="arguments">Arguments</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">content</code></td>
+      <td>The content to analyze (prompt, response, or both)</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">context</code></td>
+      <td>Additional context about the content source</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">severity_threshold</code></td>
+      <td>Minimum severity level to report (low, medium, high)</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="generated-workflow">Generated Workflow</h4>
+
+<p>The prompt guides through:</p>
+<ol>
+  <li>Scanning content using AIRS tools</li>
+  <li>Reporting threats above severity threshold</li>
+  <li>Providing specific examples for each threat</li>
+  <li>Suggesting remediation steps</li>
+  <li>Overall security assessment and risk score</li>
+</ol>
+
+<h3 id="2-threat-investigation-workflow">2. Threat Investigation Workflow</h3>
+
+<p><strong>Name:</strong> <code class="language-plaintext highlighter-rouge">threat_investigation</code><br />
+<strong>Purpose:</strong> Investigate detected threats and provide detailed analysis</p>
+
+<h4 id="arguments-1">Arguments</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">scan_id</code></td>
+      <td>The scan ID to investigate</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">focus_area</code></td>
+      <td>Specific threat type to focus on (e.g., injection, dlp, toxic_content)</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="generated-workflow-1">Generated Workflow</h4>
+
+<p>The prompt includes:</p>
+<ol>
+  <li>Retrieving scan details using AIRS tools</li>
+  <li>Analyzing each detected threat</li>
+  <li>Assessing potential impact and attack vectors</li>
+  <li>False positive evaluation</li>
+  <li>Timeline and correlation analysis</li>
+  <li>Immediate actions and long-term mitigations</li>
+</ol>
+
+<h3 id="3-compliance-check-workflow">3. Compliance Check Workflow</h3>
+
+<p><strong>Name:</strong> <code class="language-plaintext highlighter-rouge">compliance_check</code><br />
+<strong>Purpose:</strong> Check content against compliance policies and regulations</p>
+
+<h4 id="arguments-2">Arguments</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">content</code></td>
+      <td>The content to check for compliance</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">regulations</code></td>
+      <td>Comma-separated list of regulations (e.g., GDPR, HIPAA, PCI)</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">profile_name</code></td>
+      <td>Security profile to use for compliance checking</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="generated-workflow-2">Generated Workflow</h4>
+
+<p>The prompt covers:</p>
+<ol>
+  <li>Scanning for regulatory violations</li>
+  <li>Identifying PII, PHI, and PCI data</li>
+  <li>Mapping findings to specific regulations</li>
+  <li>Risk level assessment</li>
+  <li>Remediation guidance</li>
+  <li>Compliance checklist generation</li>
+</ol>
+
+<h3 id="4-incident-response-workflow">4. Incident Response Workflow</h3>
+
+<p><strong>Name:</strong> <code class="language-plaintext highlighter-rouge">incident_response</code><br />
+<strong>Purpose:</strong> Guide through incident response for detected security issues</p>
+
+<h4 id="arguments-3">Arguments</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">incident_type</code></td>
+      <td>Type of incident (e.g., data_leak, injection_attempt, malicious_code)</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">report_id</code></td>
+      <td>Threat report ID if available</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">urgency</code></td>
+      <td>Incident urgency level (low, medium, high, critical)</td>
+      <td>No</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="generated-workflow-3">Generated Workflow</h4>
+
+<p>The prompt provides phased response:</p>
+<ol>
+  <li><strong>Immediate Actions</strong> (0-15 minutes)
+    <ul>
+      <li>Containment steps</li>
+      <li>Evidence preservation</li>
+      <li>Initial assessment</li>
+    </ul>
+  </li>
+  <li><strong>Investigation</strong> (15-60 minutes)
+    <ul>
+      <li>Scope and impact analysis</li>
+      <li>Attack vector identification</li>
+    </ul>
+  </li>
+  <li><strong>Mitigation</strong> (1-4 hours)
+    <ul>
+      <li>Threat elimination</li>
+      <li>Vulnerability patching</li>
+    </ul>
+  </li>
+  <li><strong>Recovery</strong> (4-24 hours)
+    <ul>
+      <li>Normal operations restoration</li>
+      <li>Security posture verification</li>
+    </ul>
+  </li>
+  <li><strong>Lessons Learned</strong>
+    <ul>
+      <li>Root cause analysis</li>
+      <li>Process improvements</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="implementation-details">Implementation Details</h2>
+
+<h3 id="prompthandler-class">PromptHandler Class</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">PromptHandler</span> <span class="p">{</span>
+    <span class="c1">// Static prompt identifiers</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="nx">PROMPTS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">SECURITY_ANALYSIS</span><span class="p">:</span> <span class="dl">'</span><span class="s1">security_analysis</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">THREAT_INVESTIGATION</span><span class="p">:</span> <span class="dl">'</span><span class="s1">threat_investigation</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">COMPLIANCE_CHECK</span><span class="p">:</span> <span class="dl">'</span><span class="s1">compliance_check</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">INCIDENT_RESPONSE</span><span class="p">:</span> <span class="dl">'</span><span class="s1">incident_response</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">}</span> <span class="k">as</span> <span class="kd">const</span><span class="p">;</span>
+
+    <span class="c1">// List all available prompts</span>
+    <span class="nx">listPrompts</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">PromptsListParams</span><span class="p">):</span> <span class="nx">PromptsListResult</span>
+
+    <span class="c1">// Get a specific prompt with arguments</span>
+    <span class="nx">getPrompt</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">PromptsGetParams</span><span class="p">):</span> <span class="nx">PromptsGetResult</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="prompt-structure">Prompt Structure</h3>
+
+<p>Each prompt returns a conversation with:</p>
+<ul>
+  <li>User message containing the structured workflow</li>
+  <li>Assistant message acknowledging the task</li>
+  <li>Detailed instructions and requirements</li>
+  <li>Expected output structure</li>
+</ul>
+
+<h2 id="usage-examples">Usage Examples</h2>
+
+<h3 id="basic-prompt-listing">Basic Prompt Listing</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">PromptHandler</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./prompts</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PromptHandler</span><span class="p">();</span>
+
+<span class="c1">// List all available prompts</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">prompts</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">listPrompts</span><span class="p">({});</span>
+
+<span class="nx">prompts</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">prompt</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">prompt</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2">: </span><span class="p">${</span><span class="nx">prompt</span><span class="p">.</span><span class="nx">title</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="nx">prompt</span><span class="p">.</span><span class="nx">arguments</span><span class="p">?.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">arg</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`  - </span><span class="p">${</span><span class="nx">arg</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2"> (</span><span class="p">${</span><span class="nx">arg</span><span class="p">.</span><span class="nx">required</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">required</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">optional</span><span class="dl">'</span><span class="p">}</span><span class="s2">)`</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="security-analysis-example">Security Analysis Example</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Get security analysis prompt</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">getPrompt</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">security_analysis</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">content</span><span class="p">:</span> <span class="dl">'</span><span class="s1">User input containing potential SQL injection</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">context</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Form submission from public website</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">severity_threshold</span><span class="p">:</span> <span class="dl">'</span><span class="s1">medium</span><span class="dl">'</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// Result contains structured messages</span>
+<span class="nx">result</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">msg</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">msg</span><span class="p">.</span><span class="nx">role</span><span class="p">}</span><span class="s2">: </span><span class="p">${</span><span class="nx">msg</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">text</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="incident-response-example">Incident Response Example</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Critical incident response</span>
+<span class="kd">const</span> <span class="nx">incident</span> <span class="o">=</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">getPrompt</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">incident_response</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">incident_type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">data_leak</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">report_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">rpt_12345</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">urgency</span><span class="p">:</span> <span class="dl">'</span><span class="s1">critical</span><span class="dl">'</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// Messages guide through phased response</span>
+</code></pre></div></div>
+
+<h2 id="integration-with-mcp-server">Integration with MCP Server</h2>
+
+<p>The prompts integrate with the MCP server through:</p>
+
+<ol>
+  <li><strong>Registration</strong> - Prompts are registered during server initialization</li>
+  <li><strong>Discovery</strong> - Clients can list available prompts</li>
+  <li><strong>Execution</strong> - Prompts generate messages for AI models</li>
+  <li><strong>Tool Integration</strong> - Prompts reference AIRS tools by name</li>
+</ol>
+
+<h3 id="server-registration">Server Registration</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In server initialization</span>
+<span class="nx">server</span><span class="p">.</span><span class="nx">setRequestHandler</span><span class="p">(</span><span class="nx">PromptsListMethod</span><span class="p">,</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">listPrompts</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">handler</span><span class="p">));</span>
+<span class="nx">server</span><span class="p">.</span><span class="nx">setRequestHandler</span><span class="p">(</span><span class="nx">PromptsGetMethod</span><span class="p">,</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">getPrompt</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="nx">handler</span><span class="p">));</span>
+</code></pre></div></div>
+
+<h3 id="client-usage">Client Usage</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MCP client requests</span>
+<span class="kd">const</span> <span class="nx">prompts</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">listPrompts</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">workflow</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">getPrompt</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">security_analysis</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span> <span class="na">content</span><span class="p">:</span> <span class="dl">'</span><span class="s1">suspicious content</span><span class="dl">'</span> <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="prompt-design-principles">Prompt Design Principles</h2>
+
+<ol>
+  <li><strong>Structured Workflows</strong> - Each prompt follows a clear structure</li>
+  <li><strong>Tool Integration</strong> - Explicitly mentions AIRS tools to use</li>
+  <li><strong>Output Format</strong> - Specifies expected response structure</li>
+  <li><strong>Progressive Detail</strong> - Starts with summary, then detailed analysis</li>
+  <li><strong>Actionable Results</strong> - Always includes recommendations</li>
+</ol>
+
+<h2 id="customization-guidelines">Customization Guidelines</h2>
+
+<h3 id="adding-new-prompts">Adding New Prompts</h3>
+
+<ol>
+  <li>Add identifier to <code class="language-plaintext highlighter-rouge">PROMPTS</code> constant</li>
+  <li>Define prompt metadata in <code class="language-plaintext highlighter-rouge">listPrompts</code></li>
+  <li>Implement prompt generation method</li>
+  <li>Add case in <code class="language-plaintext highlighter-rouge">getPrompt</code> switch</li>
+</ol>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Add new prompt identifier</span>
+<span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="nx">PROMPTS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">// ... existing prompts</span>
+    <span class="na">CUSTOM_WORKFLOW</span><span class="p">:</span> <span class="dl">'</span><span class="s1">custom_workflow</span><span class="dl">'</span><span class="p">,</span>
+<span class="p">}</span> <span class="k">as</span> <span class="kd">const</span><span class="p">;</span>
+
+<span class="c1">// Add to listPrompts</span>
+<span class="p">{</span>
+    <span class="na">name</span><span class="p">:</span> <span class="nx">PromptHandler</span><span class="p">.</span><span class="nx">PROMPTS</span><span class="p">.</span><span class="nx">CUSTOM_WORKFLOW</span><span class="p">,</span>
+    <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Custom Security Workflow</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Description of workflow</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">arguments</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span> <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">param1</span><span class="dl">'</span><span class="p">,</span> <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Parameter description</span><span class="dl">'</span><span class="p">,</span> <span class="na">required</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
+<span class="c1">// Implement generation method</span>
+<span class="k">private</span> <span class="nx">getCustomWorkflowPrompt</span><span class="p">(</span><span class="nx">args</span><span class="p">:</span> <span class="nb">Record</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">string</span><span class="o">&gt;</span><span class="p">):</span> <span class="nx">PromptsGetResult</span> <span class="p">{</span>
+    <span class="c1">// Generate prompt messages</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="modifying-existing-prompts">Modifying Existing Prompts</h3>
+
+<ol>
+  <li>Update argument definitions in <code class="language-plaintext highlighter-rouge">listPrompts</code></li>
+  <li>Modify prompt generation logic</li>
+  <li>Ensure backward compatibility</li>
+  <li>Update documentation</li>
+</ol>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<ol>
+  <li><strong>Validate Arguments</strong> - Check required arguments before use</li>
+  <li><strong>Provide Defaults</strong> - Use sensible defaults for optional arguments</li>
+  <li><strong>Clear Instructions</strong> - Make workflow steps explicit</li>
+  <li><strong>Tool References</strong> - Use exact tool names from the tools module</li>
+  <li><strong>Structured Output</strong> - Request specific output formats</li>
+</ol>
+
+<h2 id="error-handling">Error Handling</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Unknown prompt handling</span>
+<span class="nx">getPrompt</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">PromptsGetParams</span><span class="p">):</span> <span class="nx">PromptsGetResult</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// ... prompt cases</span>
+        <span class="nl">default</span><span class="p">:</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Unknown prompt: </span><span class="p">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="testing-prompts">Testing Prompts</h2>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Test prompt generation</span>
+<span class="kd">const</span> <span class="nx">testPrompt</span> <span class="o">=</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">getPrompt</span><span class="p">({</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">security_analysis</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">content</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test content</span><span class="dl">'</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// Verify structure</span>
+<span class="nx">assert</span><span class="p">(</span><span class="nx">testPrompt</span><span class="p">.</span><span class="nx">messages</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">2</span><span class="p">);</span>
+<span class="nx">assert</span><span class="p">(</span><span class="nx">testPrompt</span><span class="p">.</span><span class="nx">messages</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">role</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">user</span><span class="dl">'</span><span class="p">);</span>
+<span class="nx">assert</span><span class="p">(</span><span class="nx">testPrompt</span><span class="p">.</span><span class="nx">messages</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">role</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">assistant</span><span class="dl">'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+  <li><a href="/developers/src-tools/">Tools Module</a> - Tools referenced in prompts</li>
+  <li><a href="/developers/src-mcp/">MCP Types</a> - Type definitions used</li>
+  <li><a href="/developers/src-transport/">Transport Module</a> - How prompts are served</li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_developers/src-prompts.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/developers/src-root/" class="next">
+            Root Module (src/) <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>
