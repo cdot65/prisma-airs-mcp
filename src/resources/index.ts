@@ -2,17 +2,18 @@
  * MCP Resource handlers for Prisma AIRS data
  */
 
-import { getLogger } from '../utils/logger.js';
-import { getAirsClient } from '../airs/factory.js';
+import { getLogger } from '../utils/logger';
+import { getAirsClient } from '../airs/factory';
 import type { Logger } from 'winston';
+
 import type {
-    Resource,
-    ResourceContent,
-    ResourcesListParams,
-    ResourcesListResult,
-    ResourcesReadParams,
-    ResourcesReadResult,
-} from '../mcp/types.js';
+    McpResource,
+    McpResourceContent,
+    McpResourcesListParams,
+    McpResourcesListResult,
+    McpResourcesReadParams,
+    McpResourcesReadResult,
+} from '../types';
 
 export class ResourceHandler {
     private readonly logger: Logger;
@@ -33,10 +34,10 @@ export class ResourceHandler {
     /**
      * List available resources
      */
-    listResources(params: ResourcesListParams): ResourcesListResult {
+    listResources(params: McpResourcesListParams): McpResourcesListResult {
         this.logger.debug('Listing resources', { cursor: params?.cursor });
 
-        const resources: Resource[] = [
+        const resources: McpResource[] = [
             // Static resources for system status
             {
                 uri: `airs://${ResourceHandler.RESOURCE_TYPES.CACHE_STATS}/current`,
@@ -64,7 +65,7 @@ export class ResourceHandler {
     /**
      * Read a specific resource
      */
-    async readResource(params: ResourcesReadParams): Promise<ResourcesReadResult> {
+    async readResource(params: McpResourcesReadParams): Promise<McpResourcesReadResult> {
         this.logger.debug('Reading resource', { uri: params.uri });
 
         const parsed = this.parseResourceUri(params.uri);
@@ -112,7 +113,7 @@ export class ResourceHandler {
     /**
      * Read scan result by scan ID
      */
-    private async readScanResult(scanId: string): Promise<ResourcesReadResult> {
+    private async readScanResult(scanId: string): Promise<McpResourcesReadResult> {
         try {
             const results = await this.airsClient.getScanResults([scanId]);
 
@@ -121,7 +122,7 @@ export class ResourceHandler {
             }
 
             const result = results[0];
-            const content: ResourceContent = {
+            const content: McpResourceContent = {
                 uri: `airs://${ResourceHandler.RESOURCE_TYPES.SCAN_RESULT}/${scanId}`,
                 mimeType: 'application/json',
             };
@@ -143,7 +144,7 @@ export class ResourceHandler {
     /**
      * Read threat report by report ID
      */
-    private async readThreatReport(reportId: string): Promise<ResourcesReadResult> {
+    private async readThreatReport(reportId: string): Promise<McpResourcesReadResult> {
         try {
             const reports = await this.airsClient.getThreatScanReports([reportId]);
 
@@ -152,7 +153,7 @@ export class ResourceHandler {
             }
 
             const report = reports[0];
-            const content: ResourceContent = {
+            const content: McpResourceContent = {
                 uri: `airs://${ResourceHandler.RESOURCE_TYPES.THREAT_REPORT}/${reportId}`,
                 mimeType: 'application/json',
             };
@@ -174,14 +175,14 @@ export class ResourceHandler {
     /**
      * Read cache statistics
      */
-    private readCacheStats(): ResourcesReadResult {
+    private readCacheStats(): McpResourcesReadResult {
         const stats = this.airsClient.getCacheStats() || {
             size: 0,
             count: 0,
             enabled: false,
         };
 
-        const content: ResourceContent = {
+        const content: McpResourceContent = {
             uri: `airs://${ResourceHandler.RESOURCE_TYPES.CACHE_STATS}/current`,
             mimeType: 'application/json',
             text: JSON.stringify(
@@ -200,13 +201,13 @@ export class ResourceHandler {
     /**
      * Read rate limit status
      */
-    private readRateLimitStatus(): ResourcesReadResult {
+    private readRateLimitStatus(): McpResourcesReadResult {
         const stats = this.airsClient.getRateLimiterStats() || {
             bucketCount: 0,
             enabled: false,
         };
 
-        const content: ResourceContent = {
+        const content: McpResourceContent = {
             uri: `airs://${ResourceHandler.RESOURCE_TYPES.RATE_LIMIT_STATUS}/current`,
             mimeType: 'application/json',
             text: JSON.stringify(
@@ -230,7 +231,7 @@ export class ResourceHandler {
         id: string,
         _title: string,
         data?: unknown,
-    ): ResourceContent {
+    ): McpResourceContent {
         const uri = `airs://${type}/${id}`;
 
         return {

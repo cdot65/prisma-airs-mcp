@@ -2,16 +2,16 @@
  * MCP Prompt handlers for Prisma AIRS workflows
  */
 
-import { getLogger } from '../utils/logger.js';
+import { getLogger } from '../utils/logger';
 import type { Logger } from 'winston';
 import type {
-    Prompt,
-    PromptsListParams,
-    PromptsListResult,
-    PromptsGetParams,
-    PromptsGetResult,
-    PromptMessage,
-} from '../mcp/types.js';
+    McpPrompt,
+    McpPromptMessage,
+    McpPromptsGetParams,
+    McpPromptsGetResult,
+    McpPromptsListParams,
+    McpPromptsListResult,
+} from '../types';
 
 export class PromptHandler {
     private readonly logger: Logger;
@@ -31,10 +31,10 @@ export class PromptHandler {
     /**
      * List available prompts
      */
-    listPrompts(params: PromptsListParams): PromptsListResult {
+    listPrompts(params: McpPromptsListParams): McpPromptsListResult {
         this.logger.debug('Listing prompts', { cursor: params?.cursor });
 
-        const prompts: Prompt[] = [
+        const prompts: McpPrompt[] = [
             {
                 name: PromptHandler.PROMPTS.SECURITY_ANALYSIS,
                 title: 'Security Analysis Workflow',
@@ -129,7 +129,7 @@ export class PromptHandler {
     /**
      * Get a specific prompt
      */
-    getPrompt(params: PromptsGetParams): PromptsGetResult {
+    getPrompt(params: McpPromptsGetParams): McpPromptsGetResult {
         this.logger.debug('Getting prompt', {
             name: params.name,
             hasArguments: !!params.arguments,
@@ -158,12 +158,12 @@ export class PromptHandler {
     /**
      * Get security analysis prompt
      */
-    private getSecurityAnalysisPrompt(args: Record<string, string>): PromptsGetResult {
+    private getSecurityAnalysisPrompt(args: Record<string, string>): McpPromptsGetResult {
         const content = args.content || '[No content provided]';
         const context = args.context || 'No additional context';
         const threshold = args.severity_threshold || 'low';
 
-        const messages: PromptMessage[] = [
+        const messages: McpPromptMessage[] = [
             {
                 role: 'user',
                 content: {
@@ -205,11 +205,11 @@ Please structure your response with:
     /**
      * Get threat investigation prompt
      */
-    private getThreatInvestigationPrompt(args: Record<string, string>): PromptsGetResult {
+    private getThreatInvestigationPrompt(args: Record<string, string>): McpPromptsGetResult {
         const scanId = args.scan_id || '[No scan ID provided]';
         const focusArea = args.focus_area;
 
-        const messages: PromptMessage[] = [
+        const messages: McpPromptMessage[] = [
             {
                 role: 'user',
                 content: {
@@ -247,12 +247,12 @@ Format your investigation as a professional security report.`,
     /**
      * Get compliance check prompt
      */
-    private getComplianceCheckPrompt(args: Record<string, string>): PromptsGetResult {
+    private getComplianceCheckPrompt(args: Record<string, string>): McpPromptsGetResult {
         const content = args.content || '[No content provided]';
         const regulations = args.regulations || 'GDPR, HIPAA, PCI-DSS';
         const profileName = args.profile_name;
 
-        const messages: PromptMessage[] = [
+        const messages: McpPromptMessage[] = [
             {
                 role: 'user',
                 content: {
@@ -298,12 +298,12 @@ Structure your response as:
     /**
      * Get incident response prompt
      */
-    private getIncidentResponsePrompt(args: Record<string, string>): PromptsGetResult {
+    private getIncidentResponsePrompt(args: Record<string, string>): McpPromptsGetResult {
         const incidentType = args.incident_type || 'unknown';
         const reportId = args.report_id;
         const urgency = args.urgency || 'medium';
 
-        const messages: PromptMessage[] = [
+        const messages: McpPromptMessage[] = [
             {
                 role: 'user',
                 content: {

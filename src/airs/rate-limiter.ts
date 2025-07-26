@@ -12,14 +12,14 @@ interface TokenBucket {
     lastRefill: number;
 }
 
-export class AIRSRateLimiter {
+export class PrismaAirsRateLimiter {
     private readonly logger: Logger;
     private readonly buckets = new Map<string, TokenBucket>();
 
     constructor(private readonly config: AirsRateLimiterConfig) {
         this.logger = getLogger();
 
-        this.logger.info('AIRS rate limiter initialized', {
+        this.logger.info('Prisma AIRS rate limiter initialized', {
             maxRequests: config.maxRequests,
             windowMs: config.windowMs,
             enabled: config.enabled !== false,

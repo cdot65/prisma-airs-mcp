@@ -8,22 +8,21 @@ import { getConfig } from '../config';
 import { ResourceHandler } from '../resources';
 import type { Logger } from 'winston';
 import type {
-    Tool,
-    ToolResultContent,
-    ToolsCallParams,
-    ToolsCallResult,
-    ToolsListParams,
-    ToolsListResult,
-} from '../mcp/types.js';
-import type { AsyncScanObject, ScanRequest } from '../airs';
-import type {
-    AsyncScanRequestItem,
-    GetScanResultsArgs,
-    GetThreatReportsArgs,
-    ScanAsyncArgs,
-    ScanContentArgs,
-    ScanResponseWithDetected,
-} from './types.js';
+    AirsAsyncScanObject,
+    AirsScanRequest,
+    McpTool,
+    McpToolResultContent,
+    McpToolsCallParams,
+    McpToolsCallResult,
+    McpToolsListParams,
+    McpToolsListResult,
+    ToolsAsyncScanRequestItem,
+    ToolsGetScanResultsArgs,
+    ToolsGetThreatReportsArgs,
+    ToolsScanAsyncArgs,
+    ToolsScanContentArgs,
+    ToolsScanResponseWithDetected,
+} from '../types';
 
 export class ToolHandler {
     private readonly logger: Logger;
@@ -45,10 +44,10 @@ export class ToolHandler {
     /**
      * List available tools
      */
-    listTools(params: ToolsListParams): ToolsListResult {
+    listTools(params: McpToolsListParams): McpToolsListResult {
         this.logger.debug('Listing tools', { cursor: params?.cursor });
 
-        const tools: Tool[] = [
+        const tools: McpTool[] = [
             {
                 name: ToolHandler.TOOLS.SCAN_CONTENT,
                 title: 'Scan Content for Threats',
@@ -189,7 +188,7 @@ export class ToolHandler {
     /**
      * Execute a tool
      */
-    async callTool(params: ToolsCallParams): Promise<ToolsCallResult> {
+    async callTool(params: McpToolsCallParams): Promise<McpToolsCallResult> {
         this.logger.debug('Calling tool', {
             name: params.name,
             hasArguments: !!params.arguments,
@@ -223,9 +222,9 @@ export class ToolHandler {
     /**
      * Scan content synchronously
      */
-    private async scanContent(args: Record<string, unknown>): Promise<ToolsCallResult> {
-        const typedArgs = args as ScanContentArgs;
-        const scanRequest: ScanRequest = {
+    private async scanContent(args: Record<string, unknown>): Promise<McpToolsCallResult> {
+        const typedArgs = args as ToolsScanContentArgs;
+        const scanRequest: AirsScanRequest = {
             tr_id: Date.now().toString(), // Generate unique transaction ID
             ai_profile: {},
             contents: [],
@@ -276,7 +275,7 @@ export class ToolHandler {
         const result = await this.airsClient.scanSync(scanRequest);
 
         // Create tool result
-        const contents: ToolResultContent[] = [
+        const contents: McpToolResultContent[] = [
             {
                 type: 'text',
                 text: `Scan completed. Category: ${result.category}, Action: ${result.action}`,
@@ -311,17 +310,17 @@ export class ToolHandler {
     /**
      * Scan content asynchronously
      */
-    private async scanAsync(args: Record<string, unknown>): Promise<ToolsCallResult> {
-        const typedArgs = args as unknown as ScanAsyncArgs;
+    private async scanAsync(args: Record<string, unknown>): Promise<McpToolsCallResult> {
+        const typedArgs = args as unknown as ToolsScanAsyncArgs;
 
         if (!Array.isArray(typedArgs.requests)) {
             throw new Error('requests must be an array');
         }
 
         const config = getConfig();
-        const asyncRequests: AsyncScanObject[] = typedArgs.requests.map(
-            (req: AsyncScanRequestItem) => {
-                const scanRequest: ScanRequest = {
+        const asyncRequests: AirsAsyncScanObject[] = typedArgs.requests.map(
+            (req: ToolsAsyncScanRequestItem) => {
+                const scanRequest: AirsScanRequest = {
                     ai_profile: {},
                     contents: [],
                 };
@@ -362,7 +361,7 @@ export class ToolHandler {
         // Submit async scan
         const result = await this.airsClient.scanAsync(asyncRequests);
 
-        const contents: ToolResultContent[] = [
+        const contents: McpToolResultContent[] = [
             {
                 type: 'text',
                 text: `Async scan submitted. Scan ID: ${result.scan_id}`,
@@ -382,8 +381,8 @@ export class ToolHandler {
     /**
      * Get scan results
      */
-    private async getScanResults(args: Record<string, unknown>): Promise<ToolsCallResult> {
-        const typedArgs = args as unknown as GetScanResultsArgs;
+    private async getScanResults(args: Record<string, unknown>): Promise<McpToolsCallResult> {
+        const typedArgs = args as unknown as ToolsGetScanResultsArgs;
 
         if (!Array.isArray(typedArgs.scanIds)) {
             throw new Error('scanIds must be an array');
@@ -392,7 +391,7 @@ export class ToolHandler {
         const scanIds = typedArgs.scanIds.map(String);
         const results = await this.airsClient.getScanResults(scanIds);
 
-        const contents: ToolResultContent[] = [
+        const contents: McpToolResultContent[] = [
             {
                 type: 'text',
                 text: `Retrieved ${results.length} scan results`,
@@ -420,8 +419,8 @@ export class ToolHandler {
     /**
      * Get threat reports
      */
-    private async getThreatReports(args: Record<string, unknown>): Promise<ToolsCallResult> {
-        const typedArgs = args as unknown as GetThreatReportsArgs;
+    private async getThreatReports(args: Record<string, unknown>): Promise<McpToolsCallResult> {
+        const typedArgs = args as unknown as ToolsGetThreatReportsArgs;
 
         if (!Array.isArray(typedArgs.reportIds)) {
             throw new Error('reportIds must be an array');
@@ -430,7 +429,7 @@ export class ToolHandler {
         const reportIds = typedArgs.reportIds.map(String);
         const reports = await this.airsClient.getThreatScanReports(reportIds);
 
-        const contents: ToolResultContent[] = [
+        const contents: McpToolResultContent[] = [
             {
                 type: 'text',
                 text: `Retrieved ${reports.length} threat reports`,
@@ -458,7 +457,7 @@ export class ToolHandler {
     /**
      * Clear cache
      */
-    private clearCache(): ToolsCallResult {
+    private clearCache(): McpToolsCallResult {
         this.airsClient.clearCache();
 
         return {
@@ -474,7 +473,7 @@ export class ToolHandler {
     /**
      * Summarize threats from scan response
      */
-    private summarizeThreats(result: ScanResponseWithDetected): string {
+    private summarizeThreats(result: ToolsScanResponseWithDetected): string {
         const threats: string[] = [];
 
         if (result.prompt_detected) {
@@ -506,7 +505,7 @@ export class ToolHandler {
     /**
      * Create error result
      */
-    private createErrorResult(error: unknown): ToolsCallResult {
+    private createErrorResult(error: unknown): McpToolsCallResult {
         let message = 'Unknown error occurred';
 
         if (error instanceof Error) {

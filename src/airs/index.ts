@@ -1,28 +1,28 @@
 /**
  * Enhanced Prisma AIRS Client Module
- * 
+ *
  * This module provides an enhanced wrapper around the base Prisma AIRS API client,
  * adding critical production features:
- * 
+ *
  * 1. **Caching**: Reduces API calls by storing responses with configurable TTL
  * 2. **Rate Limiting**: Prevents API quota exhaustion with token bucket algorithm
  * 3. **Unified Interface**: Single entry point for all AIRS API operations
  * 4. **Performance Optimization**: Automatic cache hit detection for repeated requests
- * 
+ *
  * The enhanced client orchestrates the base client, cache, and rate limiter to provide
  * a robust, production-ready interface for interacting with the Prisma AIRS API.
- * 
+ *
  * @example
  * ```typescript
  * import { EnhancedPrismaAirsClient } from './airs';
- * 
+ *
  * const client = new EnhancedPrismaAirsClient({
  *   apiUrl: 'https://api.airs.example.com',
  *   apiKey: 'your-api-key',
  *   cache: { ttlSeconds: 300, maxSize: 1000, enabled: true },
  *   rateLimiter: { maxRequests: 100, windowMs: 60000, enabled: true }
  * });
- * 
+ *
  * // All requests automatically benefit from caching and rate limiting
  * const result = await client.scanSync(request);
  * ```
@@ -30,7 +30,7 @@
 
 import { PrismaAirsClient } from './client';
 import { PrismaAirsCache } from './cache';
-import { AIRSRateLimiter } from './rate-limiter';
+import { PrismaAirsRateLimiter } from './rate-limiter';
 import { getLogger } from '../utils/logger';
 import type { Logger } from 'winston';
 import type {
@@ -47,7 +47,7 @@ import type {
 export class EnhancedPrismaAirsClient {
     private readonly client: PrismaAirsClient;
     private readonly cache?: PrismaAirsCache;
-    private readonly rateLimiter?: AIRSRateLimiter;
+    private readonly rateLimiter?: PrismaAirsRateLimiter;
     private readonly logger: Logger;
 
     constructor(config: AirsEnhancedClientConfig) {
@@ -61,7 +61,7 @@ export class EnhancedPrismaAirsClient {
 
         // Initialize rate limiter if configured
         if (config.rateLimiter) {
-            this.rateLimiter = new AIRSRateLimiter(config.rateLimiter);
+            this.rateLimiter = new PrismaAirsRateLimiter(config.rateLimiter);
         }
 
         this.logger.info('Enhanced Prisma AIRS client initialized', {
@@ -205,7 +205,7 @@ export class EnhancedPrismaAirsClient {
     /**
      * Get rate limiter statistics
      */
-    getRateLimiterStats(): ReturnType<AIRSRateLimiter['getStats']> | null {
+    getRateLimiterStats(): ReturnType<PrismaAirsRateLimiter['getStats']> | null {
         return this.rateLimiter?.getStats() || null;
     }
 
