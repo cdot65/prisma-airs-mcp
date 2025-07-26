@@ -1,24 +1,29 @@
 ---
 layout: documentation
-title: Claude Desktop Integration
-description: Configure Prisma AIRS MCP for Claude Desktop
+title: Claude Desktop Configuration
+description: Configure Prisma AIRS MCP for Claude Desktop application
 permalink: /deployment/mcp/claude-desktop/
 category: deployment
 ---
 
 ## Overview
 
-Claude Desktop supports the Model Context Protocol (MCP), allowing seamless integration with Prisma AIRS for real-time AI security scanning. This guide covers setup and configuration for Claude Desktop specifically.
+Claude Desktop is a native application that supports the Model Context Protocol, enabling AI-powered security scanning through Prisma AIRS. This integration provides real-time threat detection and security analysis within your Claude conversations.
 
 ## Prerequisites
 
-- Claude Desktop installed on your system
-- Node.js installed (for `npx` command)
-- Prisma AIRS MCP server running (locally or remotely)
+- Claude Desktop application installed
+- Node.js v16 or later (for `npx` command)
+- Prisma AIRS MCP server running and accessible
+
+## Quick Start
+
+1. Locate your Claude Desktop configuration file
+2. Add the Prisma AIRS server configuration
+3. Restart Claude Desktop
+4. Verify tools are available
 
 ## Configuration
-
-### Location of Configuration File
 
 **macOS:**
 
@@ -32,39 +37,39 @@ Claude Desktop supports the Model Context Protocol (MCP), allowing seamless inte
 %APPDATA%\Claude\claude_desktop_config.json
 ```
 
-### Basic Configuration
+### Configuration Examples
 
-For a local Prisma AIRS MCP server:
+#### Development Environment
 
 ```json
 {
     "mcpServers": {
-        "prisma-airs": {
+        "prisma-airs-dev": {
             "command": "npx",
-            "args": ["mcp-remote", "http://localhost:3000"]
+            "args": ["-y", "@modelcontextprotocol/mcp-remote", "http://localhost:3000"]
         }
     }
 }
 ```
 
-### Remote Server Configuration
-
-For a deployed Prisma AIRS MCP server:
+#### Production Environment
 
 ```json
 {
     "mcpServers": {
-        "prisma-airs": {
+        "prisma-airs-prod": {
             "command": "npx",
-            "args": ["mcp-remote", "https://your-server.com/prisma-airs"]
+            "args": ["-y", "@modelcontextprotocol/mcp-remote", "https://airs.example.com"]
         }
     }
 }
 ```
 
-## Installation Steps
+> **Note**: The `-y` flag ensures `npx` runs without prompts
 
-### 1. Edit Configuration
+## Setup Instructions
+
+### Step 1: Open Configuration File
 
 **macOS:**
 
@@ -83,72 +88,66 @@ open -e ~/Library/Application\ Support/Claude/claude_desktop_config.json
 notepad %APPDATA%\Claude\claude_desktop_config.json
 ```
 
-### 2. Add MCP Server Configuration
+### Step 2: Add Server Configuration
 
-Add the Prisma AIRS configuration to your `claude_desktop_config.json`:
+Add the Prisma AIRS server to your configuration. Choose based on your deployment:
 
-```json
-{
-    "mcpServers": {
-        "prisma-airs": {
-            "command": "npx",
-            "args": ["mcp-remote", "http://localhost:3000"]
-        }
-    }
-}
-```
+| Environment | Server URL |
+|-------------|------------|
+| Local Development | `http://localhost:3000` |
+| Docker (default) | `http://localhost:3000` |
+| Docker (custom port) | `http://localhost:3100` |
+| Production | `https://airs.example.com` |
 
-### 3. Save and Restart Claude Desktop
+### Step 3: Save and Restart
 
 1. Save the configuration file
-2. Completely quit Claude Desktop:
-    - **macOS**: Cmd+Q or Claude → Quit Claude
-    - **Windows**: Alt+F4 or File → Exit
-3. Restart Claude Desktop
+2. **Completely quit** Claude Desktop (not just close the window):
+   - **macOS**: `Cmd+Q` or Claude → Quit Claude
+   - **Windows**: `Alt+F4` or File → Exit
+3. Launch Claude Desktop again
 
-### 4. Verify Integration
+### Step 4: Verify Connection
 
-After restarting, the Prisma AIRS tools should be available. You can verify by asking Claude:
+Test the integration by asking Claude:
 
-```
-"What security scanning tools do you have available?"
-```
+> "What MCP tools do you have available for security scanning?"
 
-Claude should list the Prisma AIRS tools:
+Claude should list these Prisma AIRS tools:
 
-- `airs_scan_content`
-- `airs_scan_async`
-- `airs_get_scan_results`
-- `airs_get_threat_reports`
-- `airs_clear_cache`
+| Tool Name | Description |
+|-----------|-------------|
+| `airs_scan_content` | Real-time security scanning |
+| `airs_scan_async` | Batch content scanning |
+| `airs_get_scan_results` | Retrieve scan results |
+| `airs_get_threat_reports` | Detailed threat analysis |
+| `airs_clear_cache` | Clear server cache |
 
-## Using npx vs Global Installation
+## Connection Methods
 
-### Option 1: Using npx (Recommended)
+### Method 1: Using npx (Recommended)
 
-The configuration above uses `npx` which downloads and runs `mcp-remote` on demand:
+Uses `npx` to run mcp-remote without installation:
 
 ```json
 {
     "command": "npx",
-    "args": ["mcp-remote", "http://localhost:3000"]
+    "args": ["-y", "@modelcontextprotocol/mcp-remote", "http://localhost:3000"]
 }
 ```
 
-**Pros:**
+**Advantages:**
+- Zero installation required
+- Automatically uses latest version
+- Works immediately
 
-- No installation required
-- Always uses the latest version
-- Works out of the box
+**Considerations:**
+- First run downloads the package (~2-3 seconds)
+- Cached for subsequent uses
 
-**Cons:**
+### Method 2: Global Installation
 
-- Slightly slower startup (downloads package if not cached)
-- Requires internet connection on first use
-
-### Option 2: Global Installation
-
-Install `mcp-remote` globally for faster startup:
+For faster startup, install mcp-remote globally:
 
 ```bash
 # Install globally
@@ -158,7 +157,7 @@ npm install -g @modelcontextprotocol/mcp-remote
 mcp-remote --version
 ```
 
-Then update your configuration:
+Then use direct command:
 
 ```json
 {
@@ -167,50 +166,130 @@ Then update your configuration:
 }
 ```
 
+**Advantages:**
+- Faster startup time
+- No network required after installation
+
+**Considerations:**
+- Requires manual updates
+- Additional installation step
+
+## Using Security Tools
+
+### Example Conversations
+
+**Security Analysis:**
+> "Can you analyze this code snippet for security vulnerabilities?"
+
+**Threat Detection:**
+> "Please scan this user input for potential injection attacks."
+
+**Compliance Check:**
+> "Check if this document contains any sensitive data that should be masked."
+
+### Tool Capabilities
+
+Prisma AIRS tools in Claude Desktop can:
+
+- Detect prompt injection attempts
+- Identify malicious URLs and code
+- Find sensitive data exposure
+- Analyze database queries for SQL injection
+- Check for toxic or harmful content
+- Validate AI agent security
+
 ## Troubleshooting
 
-### Tools Not Appearing
+### Common Issues
 
-1. **Check JSON Syntax**
+#### Tools Not Appearing
 
-    ```bash
-    # Validate JSON syntax
-    python -m json.tool ~/Library/Application\ Support/Claude/claude_desktop_config.json
-    ```
+**Symptoms:** Claude doesn't show Prisma AIRS tools
 
-2. **Verify Server is Running**
+**Solutions:**
 
-    ```bash
-    curl http://localhost:3000/health
-    ```
+1. **Validate JSON syntax:**
+   ```bash
+   # macOS
+   cat ~/Library/Application\ Support/Claude/claude_desktop_config.json | jq .
+   
+   # Windows
+   type %APPDATA%\Claude\claude_desktop_config.json | jq .
+   ```
 
-3. **Check for Errors**
-    - Look for error messages in Claude Desktop
-    - Enable debug logging in the configuration
+2. **Check server health:**
+   ```bash
+   curl http://localhost:3000/health
+   ```
 
-### Connection Errors
+3. **Verify complete restart:**
+   - Ensure Claude Desktop was fully quit (not just closed)
+   - Check system tray/menu bar for running instances
 
-1. **Local Server Not Accessible**
-    - Ensure the MCP server is running: `docker ps`
-    - Check the port: `lsof -i :3000`
+#### Connection Failed
 
-2. **Remote Server Issues**
-    - Test the URL: `curl https://your-server.com/prisma-airs/health`
-    - Check firewall/security group settings
+**Error:** "Failed to connect to MCP server"
+
+**Solutions:**
+
+1. **For local servers:**
+   ```bash
+   # Check if server is running
+   docker ps | grep prisma-airs
+   
+   # Test connection
+   curl -I http://localhost:3000
+   ```
+
+2. **For remote servers:**
+   - Verify URL is accessible
+   - Check firewall rules
+   - Ensure HTTPS certificate is valid
+
+#### npx Download Issues
+
+**Error:** "npx failed to download package"
+
+**Solutions:**
+
+1. **Check npm registry:**
+   ```bash
+   npm config get registry
+   # Should be: https://registry.npmjs.org/
+   ```
+
+2. **Clear npm cache:**
+   ```bash
+   npm cache clean --force
+   ```
+
+3. **Use explicit registry:**
+   ```json
+   {
+       "command": "npx",
+       "args": [
+           "--registry=https://registry.npmjs.org/",
+           "-y",
+           "@modelcontextprotocol/mcp-remote",
+           "http://localhost:3000"
+       ]
+   }
+   ```
 
 ### Debug Mode
 
-Enable detailed logging:
+Enable verbose logging for troubleshooting:
 
 ```json
 {
     "mcpServers": {
         "prisma-airs": {
             "command": "npx",
-            "args": ["mcp-remote", "http://localhost:3000"],
+            "args": ["-y", "@modelcontextprotocol/mcp-remote", "http://localhost:3000"],
             "env": {
                 "DEBUG": "mcp:*",
-                "LOG_LEVEL": "debug"
+                "MCP_LOG_LEVEL": "debug",
+                "NODE_ENV": "development"
             }
         }
     }
@@ -219,25 +298,70 @@ Enable detailed logging:
 
 ## Best Practices
 
-1. **Use Environment-Specific Names**
-    - Name servers clearly: `prisma-airs-dev`, `prisma-airs-prod`
-    - Helps avoid confusion when switching environments
+### 1. Environment Management
 
-2. **Secure Remote Connections**
-    - Always use HTTPS for remote servers
-    - Consider using API keys or authentication headers
+**Use descriptive server names:**
+```json
+{
+    "mcpServers": {
+        "prisma-airs-dev": { /* dev config */ },
+        "prisma-airs-prod": { /* prod config */ }
+    }
+}
+```
 
-3. **Monitor Performance**
-    - Check rate limits regularly
-    - Monitor cache statistics for optimization
+### 2. Security Considerations
 
-4. **Regular Updates**
-    - Keep Claude Desktop updated
-    - Update the MCP server regularly
+- Always use HTTPS for production servers
+- Keep server URLs private
+- Regularly update both Claude Desktop and MCP server
+- Monitor server logs for suspicious activity
+
+### 3. Performance Optimization
+
+- Use local servers for development
+- Monitor rate limits via `airs_get_rate_limit_status`
+- Clear cache periodically with `airs_clear_cache`
+- Consider geographic server placement for latency
+
+### 4. Team Collaboration
+
+- Document server URLs and environments
+- Share configuration templates
+- Establish naming conventions
+- Create runbooks for common issues
+
+## Integration Examples
+
+### Security-First Development
+
+1. Configure Claude Desktop with Prisma AIRS
+2. Before committing code, ask:
+   > "Scan my recent changes for security vulnerabilities"
+3. Address any findings before pushing
+
+### Document Review Workflow
+
+1. Open sensitive document
+2. Ask Claude:
+   > "Check this document for data that should be redacted"
+3. Apply recommended masking
+
+### Incident Response
+
+1. During security incident, ask:
+   > "Analyze this log file for signs of compromise"
+2. Use threat reports for detailed analysis
+3. Document findings for post-mortem
 
 ## Next Steps
 
-- [Claude Code Integration]({{ site.baseurl }}/deployment/mcp/claude-code) - Using with Claude Code
-- [Quick Start Guide]({{ site.baseurl }}/deployment/quickstart) - Full deployment guide
-- [Configuration Reference]({{ site.baseurl }}/deployment/configuration) - Server configuration
-- [Security Best Practices]({{ site.baseurl }}/prisma-airs/best-practices) - Security guidelines
+- Configure [additional MCP clients]({{ site.baseurl }}/deployment/mcp/)
+- Explore [security features]({{ site.baseurl }}/prisma-airs/)
+- Review [API documentation]({{ site.baseurl }}/developers/api/)
+
+## Additional Resources
+
+- [Claude Desktop Documentation](https://claude.ai/docs/desktop)
+- [MCP Remote Repository](https://github.com/modelcontextprotocol/servers/tree/main/src/mcp-remote)
+- [Prisma AIRS Overview]({{ site.baseurl }}/prisma-airs/overview/)

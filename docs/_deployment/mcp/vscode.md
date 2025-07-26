@@ -1,31 +1,28 @@
 ---
 layout: documentation
-title: Use Prisma AIRS MCP Server in VS Code
+title: Visual Studio Code Configuration
+description: Configure Prisma AIRS MCP for Visual Studio Code
 permalink: /deployment/mcp/vscode/
 category: deployment
-order: 8
 ---
+
+## Overview
+
+Visual Studio Code supports the Model Context Protocol through its AI assistant features, enabling real-time security scanning during development. This integration allows developers to identify and fix security issues as they write code.
 
 ## Prerequisites
 
-- Install the latest version of [Visual Studio Code](https://code.visualstudio.com/)
-- Access to [GitHub Copilot](https://github.com/features/copilot)
-- Prisma AIRS MCP server running (either via Docker or from source)
+- Visual Studio Code v1.102 or later
+- [GitHub Copilot](https://github.com/features/copilot) subscription
+- Prisma AIRS MCP server running and accessible
 
-## Enable MCP Support in VS Code
+## Quick Start
 
-> **Note**: MCP support in VS Code is generally available starting from VS Code 1.102, but can be disabled by your organization.
+1. Create `.vscode/mcp.json` in your project root
+2. Add the Prisma AIRS server configuration
+3. Open VS Code and start using security tools
 
-### Centrally Manage MCP Support
-
-You have two options to centrally manage MCP support in your organization:
-
-1. **Device management**: Centrally enable or disable MCP support in your organization via group policies or configuration profiles.
-2. **GitHub Copilot policy**: Control the availability of MCP servers in your organization with a GitHub Copilot policy.
-
-## Add the Prisma AIRS MCP Server
-
-You have multiple options to add the Prisma AIRS MCP server in VS Code:
+## Configuration Methods
 
 ### Option 1: Workspace Settings (Recommended for Teams)
 
@@ -46,10 +43,14 @@ Create a `.vscode/mcp.json` file in your workspace to configure the Prisma AIRS 
 }
 ```
 
-Replace `YOUR_PRISMA_AIRS_URL` with your actual Prisma AIRS endpoint:
+Replace `YOUR_PRISMA_AIRS_URL` with your server endpoint:
 
-- **For Docker deployments**: `http://localhost:3000/prisma-airs`
-- **For production deployments**: Your custom URL (e.g., `https://airs.yourdomain.com/prisma-airs`)
+| Environment | URL Example |
+|-------------|-------------|
+| Local Development | `http://localhost:3000` |
+| Docker (default) | `http://localhost:3000` |
+| Docker (custom port) | `http://localhost:3100` |
+| Production | `https://airs.example.com` |
 
 ### Option 2: User Settings (For Individual Use)
 
@@ -66,14 +67,14 @@ To configure the Prisma AIRS MCP server for all your workspaces:
 4. Provide the server information
 5. Select whether to add it to Workspace Settings or Global settings
 
-## Example Configurations
+## Configuration Examples
 
-### Local Docker Deployment
+### Development Environment
 
 ```json
 {
     "servers": {
-        "prisma-airs": {
+        "prisma-airs-dev": {
             "url": "http://localhost:3000",
             "type": "http"
         }
@@ -82,84 +83,169 @@ To configure the Prisma AIRS MCP server for all your workspaces:
 }
 ```
 
-## Using Prisma AIRS Tools in Agent Mode
+### Production Environment
 
-Once you've added the Prisma AIRS MCP server, you can use its security tools in agent mode:
+```json
+{
+    "servers": {
+        "prisma-airs-prod": {
+            "url": "https://airs.example.com",
+            "type": "http"
+        }
+    },
+    "inputs": []
+}
+```
 
-1. Open the Chat view (`Ctrl/Cmd + Shift + I`)
+## Using Security Tools
+
+### Available Tools
+
+Once connected, these Prisma AIRS security tools become available:
+
+| Tool Name | Description |
+|-----------|-------------|
+| `airs_scan_content` | Real-time security scanning |
+| `airs_scan_async` | Batch content scanning |
+| `airs_get_scan_results` | Retrieve scan results |
+| `airs_get_threat_reports` | Detailed threat analysis |
+| `airs_clear_cache` | Clear server cache |
+
+### Accessing Tools in VS Code
+
+1. Open the Chat view: `Ctrl/Cmd + Shift + I`
 2. Select **Agent mode** from the dropdown
-3. Select the **Tools** button to view available Prisma AIRS tools
-4. Select the security tools you want to use:
-    - Prompt injection detection
-    - Malicious URL detection
-    - Sensitive data loss prevention
-    - Database security attack detection
-    - And more
+3. Click the **Tools** button to see available tools
+4. Select the Prisma AIRS tools you need
 
-### Example Usage
+### Example Workflows
 
-You can reference Prisma AIRS tools directly in your prompts:
+**Security Code Review:**
+```
+Can you review this function for security vulnerabilities using the Prisma AIRS tools?
+```
 
-- Type `#` followed by the tool name to reference a specific tool
-- Example: `#detect-prompt-injection Check this user input for security threats`
+**API Input Validation:**
+```
+Please scan this API endpoint input for potential injection attacks.
+```
 
-## Managing the Prisma AIRS Server
+**Data Handling Check:**
+```
+Check if this code properly handles sensitive data according to security policies.
+```
 
-### View Server Status
+## Server Management
 
-1. Open the Extensions view (`Ctrl/Cmd + Shift + X`)
-2. Navigate to the **MCP SERVERS - INSTALLED** section
-3. Find "prisma-airs" in the list
+### Viewing Server Status
 
-### Server Actions
+1. Open Extensions view: `Ctrl/Cmd + Shift + X`
+2. Find **MCP SERVERS - INSTALLED** section
+3. Locate your Prisma AIRS server
 
-Right-click on the Prisma AIRS server or select the gear icon to:
+### Available Actions
 
-- **Start/Stop/Restart**: Control the server connection
-- **Show Output**: View server logs for troubleshooting
-- **Show Configuration**: View the current configuration
-- **Browse Resources**: View available security resources
-- **Uninstall**: Remove the server configuration
+| Action | Description | How to Access |
+|--------|-------------|---------------|
+| Start/Stop | Control server connection | Right-click → Start/Stop |
+| View Logs | See server output | Right-click → Show Output |
+| Check Config | Review current settings | Right-click → Show Configuration |
+| Browse Resources | See available resources | Right-click → Browse Resources |
+| Remove | Uninstall server | Right-click → Uninstall |
 
 ## Troubleshooting
 
-### Server Not Connecting
+### Common Issues
 
-1. Verify the Prisma AIRS server is running:
+#### Server Not Connecting
 
-    ```bash
-    # For Docker
-    docker ps | grep prisma-airs
+**Symptoms:** Tools not appearing, connection errors
 
-    # Check if the server is accessible
-    curl http://localhost:3000/health
-    ```
+**Solutions:**
+1. Verify server is running:
+   ```bash
+   # Check server health
+   curl http://localhost:3000/health
+   
+   # For Docker deployments
+   docker ps | grep prisma-airs
+   ```
 
-2. Check the server logs:
-    - In VS Code: Right-click the server in Extensions view → Show Output
-    - In Docker: `docker logs prisma-airs`
+2. Check VS Code MCP logs:
+   - Extensions view → MCP Servers → Right-click → Show Output
 
-### Error: "Cannot have more than 128 tools per request"
+3. Verify configuration file syntax:
+   ```bash
+   # Validate JSON
+   cat .vscode/mcp.json | jq .
+   ```
 
-If you have many MCP servers installed:
+#### Tool Limit Exceeded
 
-1. Open the Tools picker in Chat view
-2. Deselect unused tools or entire servers
-3. Keep only the Prisma AIRS tools you need active
+**Error:** "Cannot have more than 128 tools per request"
+
+**Solution:** Disable unused MCP servers:
+1. Open Chat view → Tools picker
+2. Deselect unnecessary tools/servers
+3. Keep only required Prisma AIRS tools active
+
+#### Permission Issues
+
+**Symptoms:** MCP features disabled
+
+**Solutions:**
+- Check organization policies for MCP support
+- Verify GitHub Copilot subscription is active
+- Contact IT if MCP is disabled by policy
+
+## Best Practices
+
+1. **Environment Naming**
+   - Use descriptive names: `prisma-airs-dev`, `prisma-airs-staging`
+   - Helps prevent accidental connections to wrong environment
+
+2. **Team Collaboration**
+   - Use workspace settings (`.vscode/mcp.json`) for shared configs
+   - Commit MCP configuration to version control
+   - Document server URLs in README
+
+3. **Security**
+   - Always use HTTPS for production servers
+   - Don't commit sensitive URLs to public repositories
+   - Use environment-specific configurations
+
+4. **Performance**
+   - Limit active tools to those you need
+   - Monitor rate limits through server resources
+   - Use caching effectively
+
+## Integration Examples
+
+### Pre-commit Security Check
+```json
+// In .vscode/tasks.json
+{
+    "label": "Security Scan",
+    "type": "shell",
+    "command": "echo 'Run Prisma AIRS scan on staged files'",
+    "problemMatcher": []
+}
+```
+
+### Code Review Workflow
+1. Open PR in VS Code
+2. Use Copilot with Prisma AIRS tools
+3. Ask: "Scan this PR for security issues"
+4. Review and address findings
 
 ## Next Steps
 
-Once connected, you can leverage Prisma AIRS security features directly in your VS Code workflow:
+- Explore [available security features]({{ site.baseurl }}/prisma-airs/)
+- Review [security best practices]({{ site.baseurl }}/prisma-airs/overview/)
+- Set up [CI/CD integration]({{ site.baseurl }}/deployment/)
 
-- **During Development**: Check code for security vulnerabilities as you write
-- **Code Review**: Analyze pull requests for security threats
-- **API Testing**: Validate API inputs for injection attacks
-- **Data Handling**: Ensure sensitive data is properly masked
-
-For detailed information about each security feature, see the [Prisma AIRS documentation]({{ site.baseurl }}/prisma-airs/).
-
-## Related Resources
+## Additional Resources
 
 - [VS Code MCP Documentation](https://code.visualstudio.com/docs/copilot/model-context-protocol)
-- [Model Context Protocol Specification](https://github.com/modelcontextprotocol/protocol)
-- [Prisma AIRS Security Features]({{ site.baseurl }}/prisma-airs/overview/)
+- [MCP Protocol Specification](https://github.com/modelcontextprotocol/protocol)
+- [Prisma AIRS API Documentation]({{ site.baseurl }}/developers/api/)

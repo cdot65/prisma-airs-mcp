@@ -28,6 +28,9 @@
 <loc>http://localhost:4000/deployment/mcp/claude-desktop/</loc>
 </url>
 <url>
+<loc>http://localhost:4000/deployment/mcp/</loc>
+</url>
+<url>
 <loc>http://localhost:4000/deployment/mcp/vscode/</loc>
 </url>
 <url>
