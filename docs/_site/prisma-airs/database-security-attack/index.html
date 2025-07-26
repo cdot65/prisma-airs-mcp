@@ -195,27 +195,28 @@
 <p>When a database security threat is detected, the API returns:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ai-sec-db-security"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"injection"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"db_security"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1134"</span><span class="w">
+    </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ai-sec-db-security"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"injection"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"db_security"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1134"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p><strong>Key Response Fields</strong>:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">response_detected.db_security</code>: <code class="language-plaintext highlighter-rouge">true</code> indicates database security threat was detected</li>
   <li><code class="language-plaintext highlighter-rouge">category</code>: Set to <code class="language-plaintext highlighter-rouge">"malicious"</code> when database threat is found, <code class="language-plaintext highlighter-rouge">"benign"</code> otherwise</li>
@@ -227,88 +228,89 @@
 <p>The scan report provides additional detail about the detection:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"detection_results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dlp"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"dlp_report"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"data_pattern_rule1_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NOT_MATCHED"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"data_pattern_rule2_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"dlp_profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"dlp_profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PII - Basic"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"dlp_report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"000008DCF2B2FA0EC57A32BB3483617365F38A6351514898258F98CE4585511F"</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pi"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uf"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"urlf_report"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dbs"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"dbs_report"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"detection_results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
             </span><span class="p">{</span><span class="w">
-              </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
-              </span><span class="nl">"sub_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"database-security-update"</span><span class="p">,</span><span class="w">
-              </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
+                </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dlp"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"dlp_report"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"data_pattern_rule1_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NOT_MATCHED"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"data_pattern_rule2_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"dlp_profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"dlp_profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PII - Basic"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"dlp_report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"000008DCF2B2FA0EC57A32BB3483617365F38A6351514898258F98CE4585511F"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pi"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+                </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"urlf_report"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dbs"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"dbs_report"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                        </span><span class="p">{</span><span class="w">
+                            </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+                            </span><span class="nl">"sub_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"database-security-update"</span><span class="p">,</span><span class="w">
+                            </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                    </span><span class="p">]</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dlp"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"dlp_report"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"data_pattern_rule1_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NOT_MATCHED"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"data_pattern_rule2_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"dlp_profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"dlp_profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PII - Basic"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"dlp_report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0000000000000000000000000000000000000000000000000000000000000000"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uf"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"urlf_report"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
             </span><span class="p">}</span><span class="w">
-          </span><span class="p">]</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dlp"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"dlp_report"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"data_pattern_rule1_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"NOT_MATCHED"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"data_pattern_rule2_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"dlp_profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"dlp_profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PII - Basic"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"dlp_report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0000000000000000000000000000000000000000000000000000000000000000"</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
-      </span><span class="p">},</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allow"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uf"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"urlf_report"</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"req_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1134"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"req_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1134"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre></div></div>
 
 <p><strong>Database Security Report Fields</strong>:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">detection_service</code>: <code class="language-plaintext highlighter-rouge">"dbs"</code> indicates database security detection</li>
   <li><code class="language-plaintext highlighter-rouge">sub_type</code>: Specific database operation type (e.g., <code class="language-plaintext highlighter-rouge">"database-security-update"</code>)</li>
@@ -318,6 +320,7 @@
 <h2 id="common-database-threat-patterns">Common Database Threat Patterns</h2>
 
 <h3 id="sql-injection">SQL Injection</h3>
+
 <ul>
   <li>Classic injection: <code class="language-plaintext highlighter-rouge">' OR '1'='1</code></li>
   <li>Drop table attempts: <code class="language-plaintext highlighter-rouge">'; DROP TABLE users; --</code></li>
@@ -326,6 +329,7 @@
 </ul>
 
 <h3 id="schema-discovery">Schema Discovery</h3>
+
 <ul>
   <li>Information schema queries</li>
   <li>System table enumeration</li>
@@ -333,6 +337,7 @@
 </ul>
 
 <h3 id="data-manipulation">Data Manipulation</h3>
+
 <ul>
   <li>UPDATE statements with broad conditions</li>
   <li>DELETE without WHERE clauses</li>
@@ -343,6 +348,7 @@
 <h2 id="use-cases">Use Cases</h2>
 
 <h3 id="query-validation">Query Validation</h3>
+
 <ul>
   <li>Validate AI-generated SQL before execution</li>
   <li>Ensure queries match expected patterns</li>
@@ -350,6 +356,7 @@
 </ul>
 
 <h3 id="compliance-requirements">Compliance Requirements</h3>
+
 <ul>
   <li>PCI DSS: Protect cardholder data</li>
   <li>GDPR: Prevent unauthorized access</li>
@@ -358,6 +365,7 @@
 </ul>
 
 <h3 id="security-monitoring">Security Monitoring</h3>
+
 <ul>
   <li>Track database query patterns</li>
   <li>Identify anomalous behavior</li>

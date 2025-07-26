@@ -166,6 +166,7 @@
 <h3 id="data-types-protected">Data Types Protected</h3>
 
 <h4 id="financial-information">Financial Information</h4>
+
 <ul>
   <li><strong>Credit Card Numbers</strong>: All major card types</li>
   <li><strong>Bank Account Numbers</strong>: Domestic and IBAN</li>
@@ -174,6 +175,7 @@
 </ul>
 
 <h4 id="personal-identifiable-information-pii">Personal Identifiable Information (PII)</h4>
+
 <ul>
   <li><strong>Social Security Numbers</strong>: US SSN format</li>
   <li><strong>National IDs</strong>: 50+ country formats</li>
@@ -182,6 +184,7 @@
 </ul>
 
 <h4 id="authentication-credentials">Authentication Credentials</h4>
+
 <ul>
   <li><strong>API Keys</strong>: 100+ service patterns</li>
   <li><strong>Passwords</strong>: Plain text passwords</li>
@@ -190,6 +193,7 @@
 </ul>
 
 <h4 id="healthcare-data-phi">Healthcare Data (PHI)</h4>
+
 <ul>
   <li><strong>Medical Record Numbers</strong>: MRN patterns</li>
   <li><strong>Insurance IDs</strong>: Policy numbers</li>
@@ -230,25 +234,26 @@
 <p>When sensitive data is detected, the API returns:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aisec-profile-demo"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"injection"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="w">
+    </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"aisec-profile-demo"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"injection"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p><strong>Key Response Fields</strong>:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">prompt_detected.dlp</code>: <code class="language-plaintext highlighter-rouge">true</code> indicates sensitive data was detected in the prompt</li>
   <li><code class="language-plaintext highlighter-rouge">response_detected.dlp</code>: <code class="language-plaintext highlighter-rouge">true</code> indicates sensitive data was detected in the response</li>
@@ -261,6 +266,7 @@
 <h2 id="common-sensitive-data-patterns">Common Sensitive Data Patterns</h2>
 
 <h3 id="financial-data">Financial Data</h3>
+
 <ul>
   <li>Bank account numbers with routing numbers</li>
   <li>Credit card numbers (all major formats)</li>
@@ -269,6 +275,7 @@
 </ul>
 
 <h3 id="authentication-secrets">Authentication Secrets</h3>
+
 <ul>
   <li>API keys and tokens</li>
   <li>OAuth credentials</li>
@@ -277,6 +284,7 @@
 </ul>
 
 <h3 id="personal-information">Personal Information</h3>
+
 <ul>
   <li>Social Security Numbers</li>
   <li>Passport numbers</li>

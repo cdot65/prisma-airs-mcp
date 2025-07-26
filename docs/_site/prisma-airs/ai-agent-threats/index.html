@@ -217,9 +217,9 @@
 <p>The asynchronous endpoint returns scan identifiers:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"received"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-05-08T15:54:21.922531408Z"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="w">
+    </span><span class="nl">"received"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2025-05-08T15:54:21.922531408Z"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -228,57 +228,58 @@
 <p>Retrieve the detailed report using the <code class="language-plaintext highlighter-rouge">/v1/scan/reports</code> endpoint with the <code class="language-plaintext highlighter-rouge">report_id</code>:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"detection_results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent_security"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"agent_report"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"agent_framework"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AWS_Agent_Builder"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"agent_patterns"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
-            </span><span class="nl">"model_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"req_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2882"</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"detection_results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent_security"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"agent_report"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"agent_framework"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AWS_Agent_Builder"</span><span class="p">,</span><span class="w">
-            </span><span class="nl">"agent_patterns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-              </span><span class="p">{</span><span class="w">
-                </span><span class="nl">"category_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools-memory-manipulation"</span><span class="p">,</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"detection_results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent_security"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"agent_report"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"agent_framework"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AWS_Agent_Builder"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"agent_patterns"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+                        </span><span class="nl">"model_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">},</span><span class="w">
                 </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
-              </span><span class="p">}</span><span class="w">
-            </span><span class="p">],</span><span class="w">
-            </span><span class="nl">"model_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
-          </span><span class="p">}</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"req_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2082"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"req_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2882"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"detection_results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"data_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prompt"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"detection_service"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent_security"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"result_detail"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"agent_report"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                        </span><span class="nl">"agent_framework"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AWS_Agent_Builder"</span><span class="p">,</span><span class="w">
+                        </span><span class="nl">"agent_patterns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                            </span><span class="p">{</span><span class="w">
+                                </span><span class="nl">"category_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools-memory-manipulation"</span><span class="p">,</span><span class="w">
+                                </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
+                            </span><span class="p">}</span><span class="w">
+                        </span><span class="p">],</span><span class="w">
+                        </span><span class="nl">"model_verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"benign"</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="nl">"verdict"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"req_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"transaction_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2082"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">]</span><span class="w">
 </span></code></pre></div></div>
 
 <p><strong>Key Report Fields</strong>:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">detection_service</code>: <code class="language-plaintext highlighter-rouge">"agent_security"</code> indicates AI agent threat detection</li>
   <li><code class="language-plaintext highlighter-rouge">agent_framework</code>: Detected agent framework (e.g., “AWS_Agent_Builder”)</li>
@@ -290,9 +291,11 @@
 <h2 id="detection-types">Detection Types</h2>
 
 <h3 id="model-based-detection">Model-Based Detection</h3>
+
 <p>For <code class="language-plaintext highlighter-rouge">req_id=1</code> in the example, the <code class="language-plaintext highlighter-rouge">model_verdict</code> is “malicious”, detected directly by the AI model analyzing the prompt for agent manipulation attempts.</p>
 
 <h3 id="pattern-based-detection">Pattern-Based Detection</h3>
+
 <p>For <code class="language-plaintext highlighter-rouge">req_id=2</code>, the <code class="language-plaintext highlighter-rouge">model_verdict</code> is “benign”, but pattern-matching detected a threat with <code class="language-plaintext highlighter-rouge">category_type: tools-memory-manipulation</code>, resulting in a malicious verdict.</p>
 
 <p>Both requests were blocked according to the security profile settings.</p>
@@ -300,6 +303,7 @@
 <h2 id="common-threat-patterns">Common Threat Patterns</h2>
 
 <h3 id="tool-memory-manipulation">Tool Memory Manipulation</h3>
+
 <ul>
   <li>Attempts to access or modify agent tool descriptions</li>
   <li>Extracting system prompts or configurations</li>
@@ -307,6 +311,7 @@
 </ul>
 
 <h3 id="agent-goal-override">Agent Goal Override</h3>
+
 <ul>
   <li>Commands to ignore previous instructions</li>
   <li>Attempts to change agent objectives</li>
@@ -314,6 +319,7 @@
 </ul>
 
 <h3 id="function-exploitation">Function Exploitation</h3>
+
 <ul>
   <li>Recursive tool calling patterns</li>
   <li>Parameter injection attempts</li>
@@ -323,6 +329,7 @@
 <h2 id="use-cases">Use Cases</h2>
 
 <h3 id="agent-framework-protection">Agent Framework Protection</h3>
+
 <ul>
   <li>Secure AWS Agent Builder deployments</li>
   <li>Protect Microsoft AutoGen applications</li>
@@ -330,6 +337,7 @@
 </ul>
 
 <h3 id="tool-security">Tool Security</h3>
+
 <ul>
   <li>Validate tool descriptions and parameters</li>
   <li>Prevent unauthorized tool access</li>
@@ -337,6 +345,7 @@
 </ul>
 
 <h3 id="workflow-integrity">Workflow Integrity</h3>
+
 <ul>
   <li>Ensure agent goals remain unchanged</li>
   <li>Detect workflow hijacking attempts</li>

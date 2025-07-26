@@ -1,7 +1,7 @@
 ---
 layout: documentation
 title: Root Module (src/)
-permalink: /developers/src-root/
+permalink: /developers/src/
 category: developers
 ---
 
@@ -491,10 +491,10 @@ Key environment variables used:
 - `PORT` - Server port (default: 3000)
 - `NODE_ENV` - Environment (development/production)
 - `LOG_LEVEL` - Logging verbosity
-- See [Configuration]({{ site.baseurl }}/developers/src-config/) for full list
+- See [Configuration]({{ site.baseurl }}/developers/src/config/) for full list
 
 ## Next Steps
 
-- [Transport Layer]({{ site.baseurl }}/developers/src-transport/) - HTTP and SSE transport implementation
-- [Configuration]({{ site.baseurl }}/developers/src-config/) - Server configuration management
-- [AIRS Module]({{ site.baseurl }}/developers/src-airs/) - AIRS API client integration
+- [Transport Layer]({{ site.baseurl }}/developers/src/transport/) - HTTP and SSE transport implementation
+- [Configuration]({{ site.baseurl }}/developers/src/config/) - Server configuration management
+- [AIRS Module]({{ site.baseurl }}/developers/src/airs/) - AIRS API client integration

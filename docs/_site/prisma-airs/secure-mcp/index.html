@@ -154,6 +154,7 @@
 <p>As the blog post highlights, MCP is “insecure by default” - similar to how HTTP was when first released. The Model Context Protocol introduces new attack vectors:</p>
 
 <h3 id="tool-poisoning">Tool Poisoning</h3>
+
 <p>Tool Poisoning is a form of indirect prompt injection where MCP servers embed malicious instructions inside tool descriptions. These instructions can be invisible to end users but visible to AI applications/agents, enabling attackers to potentially:</p>
 
 <ul>
@@ -321,6 +322,7 @@
 <h2 id="key-implementation-points">Key Implementation Points</h2>
 
 <h3 id="detection-capabilities">Detection Capabilities</h3>
+
 <ul>
   <li><strong>SHA256 hashing</strong> to detect tool description changes</li>
   <li><strong>SQLite persistence</strong> for tracking tool description history</li>
@@ -329,7 +331,9 @@
 </ul>
 
 <h3 id="user-experience">User Experience</h3>
+
 <p>When a guardrail is triggered:</p>
+
 <ul>
   <li><strong>Rug Pull Detection</strong>: Shows old vs new descriptions, prompts for approval</li>
   <li><strong>Tool Poisoning Detection</strong>: Blocks malicious tool descriptions with clear error messages</li>
@@ -338,7 +342,9 @@
 <h2 id="best-practices">Best Practices</h2>
 
 <h3 id="1-defense-in-depth">1. Defense in Depth</h3>
+
 <p>Just as HTTP evolved with SSL/TLS, PKI, and browser safeguards, MCP security requires multiple layers:</p>
+
 <ul>
   <li>Hash-based change detection</li>
   <li>API-based threat scanning</li>
@@ -347,14 +353,18 @@
 </ul>
 
 <h3 id="2-structure-agent-flows">2. Structure Agent Flows</h3>
+
 <p>Design your agent flows so that tripping a guardrail results in either:</p>
+
 <ul>
   <li>Prompting the end user for permission to continue</li>
   <li>Exiting to avoid possible exploitation</li>
 </ul>
 
 <h3 id="3-scan-multiple-points">3. Scan Multiple Points</h3>
+
 <p>Don’t just scan tool descriptions - also scan:</p>
+
 <ul>
   <li>Context retrieved via MCP</li>
   <li>Prompt templates</li>

@@ -14,14 +14,14 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Tools Module Documentation" />
 <meta property="og:description" content="Tools Module Documentation" />
-<link rel="canonical" href="http://localhost:4000/developers/src-tools/" />
-<meta property="og:url" content="http://localhost:4000/developers/src-tools/" />
+<link rel="canonical" href="http://localhost:4000/developers/src/tools/" />
+<meta property="og:url" content="http://localhost:4000/developers/src/tools/" />
 <meta property="og:site_name" content="Prisma AIRS MCP" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Tools Module (src/tools/)" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Tools Module Documentation","headline":"Tools Module (src/tools/)","url":"http://localhost:4000/developers/src-tools/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Tools Module Documentation","headline":"Tools Module (src/tools/)","url":"http://localhost:4000/developers/src/tools/"}</script>
 <!-- End Jekyll SEO tag -->
 
   
@@ -72,15 +72,15 @@
   
   <h4>Source Code Documentation</h4>
   <ul>
-    <li><a href="/developers/src-root/" >Root (src/)</a></li>
-    <li><a href="/developers/src-airs/" >AIRS Module</a></li>
-    <li><a href="/developers/src-config/" >Configuration</a></li>
-    <li><a href="/developers/src-mcp/" >MCP Types</a></li>
-    <li><a href="/developers/src-prompts/" >Prompts</a></li>
-    <li><a href="/developers/src-resources/" >Resources</a></li>
-    <li><a href="/developers/src-tools/" class="active">Tools</a></li>
-    <li><a href="/developers/src-transport/" >Transport</a></li>
-    <li><a href="/developers/src-utils/" >Utilities</a></li>
+    <li><a href="/developers/src/" >Root (src/)</a></li>
+    <li><a href="/developers/src/types/" >Types Module</a></li>
+    <li><a href="/developers/src/airs/" >AIRS Module</a></li>
+    <li><a href="/developers/src/config/" >Configuration</a></li>
+    <li><a href="/developers/src/prompts/" >Prompts</a></li>
+    <li><a href="/developers/src/resources/" >Resources</a></li>
+    <li><a href="/developers/src/tools/" class="active">Tools</a></li>
+    <li><a href="/developers/src/transport/" >Transport</a></li>
+    <li><a href="/developers/src/utils/" >Utilities</a></li>
   </ul>
   
   <h4>API</h4>
@@ -175,12 +175,13 @@
 <h4 id="input-schema">Input Schema</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ScanContentArgs</span> <span class="p">{</span>
-    <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>          <span class="c1">// The prompt content to scan</span>
-    <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>        <span class="c1">// The response content to scan</span>
-    <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>         <span class="c1">// Additional context for the scan</span>
-    <span class="nl">profileName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>     <span class="c1">// Security profile name (defaults to "Prisma AIRS")</span>
-    <span class="nl">profileId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>       <span class="c1">// Security profile ID</span>
-    <span class="nl">metadata</span><span class="p">?:</span> <span class="p">{</span>              <span class="c1">// Additional metadata</span>
+    <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// The prompt content to scan</span>
+    <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// The response content to scan</span>
+    <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Additional context for the scan</span>
+    <span class="nl">profileName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Security profile name (defaults to "Prisma AIRS")</span>
+    <span class="nl">profileId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Security profile ID</span>
+    <span class="nl">metadata</span><span class="p">?:</span> <span class="p">{</span>
+        <span class="c1">// Additional metadata</span>
         <span class="nx">appName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
         <span class="nl">appUser</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
         <span class="nl">aiModel</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
@@ -240,12 +241,12 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ScanAsyncArgs</span> <span class="p">{</span>
     <span class="nl">requests</span><span class="p">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="p">{</span>
-        <span class="na">reqId</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>           <span class="c1">// Unique identifier (required)</span>
-        <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>         <span class="c1">// Prompt to scan</span>
-        <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>       <span class="c1">// Response to scan</span>
-        <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>        <span class="c1">// Additional context</span>
-        <span class="nl">profileName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>    <span class="c1">// Security profile name</span>
-        <span class="nl">profileId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>      <span class="c1">// Security profile ID</span>
+        <span class="na">reqId</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span> <span class="c1">// Unique identifier (required)</span>
+        <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Prompt to scan</span>
+        <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Response to scan</span>
+        <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Additional context</span>
+        <span class="nl">profileName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Security profile name</span>
+        <span class="nl">profileId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Security profile ID</span>
     <span class="p">}</span><span class="o">&gt;</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -295,7 +296,7 @@
 <h4 id="input-schema-2">Input Schema</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">GetScanResultsArgs</span> <span class="p">{</span>
-    <span class="nl">scanIds</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span>    <span class="c1">// Array of scan IDs (max 5)</span>
+    <span class="nl">scanIds</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span> <span class="c1">// Array of scan IDs (max 5)</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -345,7 +346,7 @@
 <h4 id="input-schema-3">Input Schema</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">GetThreatReportsArgs</span> <span class="p">{</span>
-    <span class="nl">reportIds</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span>    <span class="c1">// Array of report IDs (max 5)</span>
+    <span class="nl">reportIds</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span> <span class="c1">// Array of report IDs (max 5)</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -419,10 +420,10 @@
     <span class="p">}</span> <span class="k">as</span> <span class="kd">const</span><span class="p">;</span>
 
     <span class="c1">// List available tools</span>
-    <span class="nx">listTools</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">ToolsListParams</span><span class="p">):</span> <span class="nx">ToolsListResult</span>
+    <span class="nx">listTools</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">ToolsListParams</span><span class="p">):</span> <span class="nx">ToolsListResult</span><span class="p">;</span>
 
     <span class="c1">// Execute a tool</span>
-    <span class="k">async</span> <span class="nx">callTool</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">ToolsCallParams</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ToolsCallResult</span><span class="o">&gt;</span>
+    <span class="k">async</span> <span class="nx">callTool</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">ToolsCallParams</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ToolsCallResult</span><span class="o">&gt;</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -457,17 +458,17 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">summarizeThreats</span><span class="p">(</span><span class="nx">result</span><span class="p">:</span> <span class="nx">ScanResponseWithDetected</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">threats</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
-    
+
     <span class="c1">// Check prompt threats</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">prompt_detected</span><span class="p">?.</span><span class="nx">injection</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">prompt_injection</span><span class="dl">'</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">prompt_detected</span><span class="p">?.</span><span class="nx">dlp</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">prompt_dlp</span><span class="dl">'</span><span class="p">);</span>
     <span class="c1">// ... other threat types</span>
-    
+
     <span class="c1">// Check response threats</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">response_detected</span><span class="p">?.</span><span class="nx">malicious_code</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">response_malicious_code</span><span class="dl">'</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">response_detected</span><span class="p">?.</span><span class="nx">ungrounded</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">response_ungrounded</span><span class="dl">'</span><span class="p">);</span>
     <span class="c1">// ... other threat types</span>
-    
+
     <span class="k">return</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">, </span><span class="dl">'</span><span class="p">)</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">unknown threats</span><span class="dl">'</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -495,20 +496,27 @@
 <h3 id="common-error-scenarios">Common Error Scenarios</h3>
 
 <ol>
-  <li><strong>Missing Required Arguments</strong>
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>At least one of prompt, response, or context is required
+  <li>
+    <p><strong>Missing Required Arguments</strong></p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> At least one of prompt, response, or context is required
 </code></pre></div>    </div>
   </li>
-  <li><strong>Invalid Array Arguments</strong>
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scanIds must be an array
+  <li>
+    <p><strong>Invalid Array Arguments</strong></p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> scanIds must be an array
 </code></pre></div>    </div>
   </li>
-  <li><strong>API Errors</strong>
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>API Error (401): Invalid API key
+  <li>
+    <p><strong>API Errors</strong></p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> API Error (401): Invalid API key
 </code></pre></div>    </div>
   </li>
-  <li><strong>Rate Limiting</strong>
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>API Error (429): Too many requests
+  <li>
+    <p><strong>Rate Limiting</strong></p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> API Error (429): Too many requests
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -524,12 +532,13 @@
         <span class="dl">'</span><span class="s1">scan-result</span><span class="dl">'</span><span class="p">,</span>
         <span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">,</span>
         <span class="dl">'</span><span class="s1">Scan Result Details</span><span class="dl">'</span><span class="p">,</span>
-        <span class="nx">result</span>
-    <span class="p">)</span>
+        <span class="nx">result</span><span class="p">,</span>
+    <span class="p">),</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
 <p>This allows AI models to:</p>
+
 <ol>
   <li>Get summary information immediately</li>
   <li>Access detailed results through resource URIs</li>
@@ -584,7 +593,7 @@
 <span class="c1">// Test tool execution</span>
 <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">callTool</span><span class="p">({</span>
     <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span> <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test content</span><span class="dl">'</span> <span class="p">}</span>
+    <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span> <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test content</span><span class="dl">'</span> <span class="p">},</span>
 <span class="p">});</span>
 <span class="nx">assert</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
 <span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">result</span><span class="p">.</span><span class="nx">isError</span><span class="p">);</span>
@@ -598,12 +607,12 @@
     <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span>
     <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span>
         <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">SQL injection test</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">profileName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test Profile</span><span class="dl">'</span>
-    <span class="p">}</span>
+        <span class="na">profileName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test Profile</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">},</span>
 <span class="p">});</span>
 
 <span class="c1">// Verify resource creation</span>
-<span class="kd">const</span> <span class="nx">resourceContent</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="nx">c</span> <span class="o">=&gt;</span> <span class="nx">c</span><span class="p">.</span><span class="kd">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">resource</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">resourceContent</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">find</span><span class="p">((</span><span class="nx">c</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">c</span><span class="p">.</span><span class="kd">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">resource</span><span class="dl">'</span><span class="p">);</span>
 <span class="nx">assert</span><span class="p">(</span><span class="nx">resourceContent</span><span class="p">?.</span><span class="nx">resource</span><span class="p">?.</span><span class="nx">uri</span><span class="p">.</span><span class="nx">startsWith</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs://</span><span class="dl">'</span><span class="p">));</span>
 </code></pre></div></div>
 
@@ -628,17 +637,17 @@
 <h2 id="next-steps">Next Steps</h2>
 
 <ul>
-  <li><a href="/developers/src-resources/">Resources Module</a> - How resources work with tools</li>
-  <li><a href="/developers/src-mcp/">MCP Types</a> - Tool type definitions</li>
-  <li><a href="/developers/src-airs/">AIRS Module</a> - Client used by tools</li>
-  <li><a href="/developers/src-prompts/">Prompts Module</a> - Prompts that use these tools</li>
+  <li><a href="/developers/src/resources/">Resources Module</a> - How resources work with tools</li>
+  <li><a href="/developers/src/types/">MCP Types</a> - Tool type definitions</li>
+  <li><a href="/developers/src/airs/">AIRS Module</a> - Client used by tools</li>
+  <li><a href="/developers/src/prompts/">Prompts Module</a> - Prompts that use these tools</li>
 </ul>
 
       </article>
       
       <div class="content-footer">
         <div class="edit-page">
-          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_developers/src-tools.md">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_developers/src/tools.md">
             <i class="fas fa-edit"></i> Edit this page on GitHub
           </a>
         </div>
@@ -647,7 +656,7 @@
         <div class="pagination">
           
           
-          <a href="/developers/src-transport/" class="next">
+          <a href="/developers/src/transport/" class="next">
             Transport Module (src/transport/) <i class="fas fa-arrow-right"></i>
           </a>
           

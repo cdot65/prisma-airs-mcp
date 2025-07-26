@@ -14,14 +14,14 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Utils Module Documentation" />
 <meta property="og:description" content="Utils Module Documentation" />
-<link rel="canonical" href="http://localhost:4000/developers/src-utils/" />
-<meta property="og:url" content="http://localhost:4000/developers/src-utils/" />
+<link rel="canonical" href="http://localhost:4000/developers/src/utils/" />
+<meta property="og:url" content="http://localhost:4000/developers/src/utils/" />
 <meta property="og:site_name" content="Prisma AIRS MCP" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Utils Module (src/utils/)" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Utils Module Documentation","headline":"Utils Module (src/utils/)","url":"http://localhost:4000/developers/src-utils/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Utils Module Documentation","headline":"Utils Module (src/utils/)","url":"http://localhost:4000/developers/src/utils/"}</script>
 <!-- End Jekyll SEO tag -->
 
   
@@ -72,15 +72,15 @@
   
   <h4>Source Code Documentation</h4>
   <ul>
-    <li><a href="/developers/src-root/" >Root (src/)</a></li>
-    <li><a href="/developers/src-airs/" >AIRS Module</a></li>
-    <li><a href="/developers/src-config/" >Configuration</a></li>
-    <li><a href="/developers/src-mcp/" >MCP Types</a></li>
-    <li><a href="/developers/src-prompts/" >Prompts</a></li>
-    <li><a href="/developers/src-resources/" >Resources</a></li>
-    <li><a href="/developers/src-tools/" >Tools</a></li>
-    <li><a href="/developers/src-transport/" >Transport</a></li>
-    <li><a href="/developers/src-utils/" class="active">Utilities</a></li>
+    <li><a href="/developers/src/" >Root (src/)</a></li>
+    <li><a href="/developers/src/types/" >Types Module</a></li>
+    <li><a href="/developers/src/airs/" >AIRS Module</a></li>
+    <li><a href="/developers/src/config/" >Configuration</a></li>
+    <li><a href="/developers/src/prompts/" >Prompts</a></li>
+    <li><a href="/developers/src/resources/" >Resources</a></li>
+    <li><a href="/developers/src/tools/" >Tools</a></li>
+    <li><a href="/developers/src/transport/" >Transport</a></li>
+    <li><a href="/developers/src/utils/" class="active">Utilities</a></li>
   </ul>
   
   <h4>API</h4>
@@ -180,7 +180,7 @@
 
 <span class="c1">// Logger setup</span>
 <span class="nx">logger</span> <span class="o">=</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">createLogger</span><span class="p">({</span>
-    <span class="na">level</span><span class="p">:</span> <span class="nx">logLevel</span><span class="p">,</span>              <span class="c1">// From LOG_LEVEL env var</span>
+    <span class="na">level</span><span class="p">:</span> <span class="nx">logLevel</span><span class="p">,</span> <span class="c1">// From LOG_LEVEL env var</span>
     <span class="na">format</span><span class="p">:</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">combine</span><span class="p">(...</span><span class="nx">formats</span><span class="p">),</span>
     <span class="na">defaultMeta</span><span class="p">:</span> <span class="p">{</span>
         <span class="na">service</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">mcp</span><span class="p">.</span><span class="nx">serverName</span><span class="p">,</span>
@@ -202,13 +202,14 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">environment</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
     <span class="nx">formats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
-        <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">colorize</span><span class="p">(),</span>    <span class="c1">// Colorized output</span>
-        <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">simple</span><span class="p">()</span>        <span class="c1">// Simple format</span>
+        <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">colorize</span><span class="p">(),</span> <span class="c1">// Colorized output</span>
+        <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">simple</span><span class="p">(),</span> <span class="c1">// Simple format</span>
     <span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <p>Example output:</p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2024-01-01T12:00:00.000Z info: Server started on port 3000
 2024-01-01T12:00:01.000Z debug: Processing request {"requestId": "123"}
 2024-01-01T12:00:02.000Z error: Failed to scan content {"error": "Invalid input"}
@@ -224,6 +225,7 @@
 </code></pre></div></div>
 
 <p>Example output:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="nl">"level"</span><span class="p">:</span><span class="s2">"info"</span><span class="p">,</span><span class="nl">"message"</span><span class="p">:</span><span class="s2">"Server started on port 3000"</span><span class="p">,</span><span class="nl">"service"</span><span class="p">:</span><span class="s2">"prisma-airs-mcp"</span><span class="p">,</span><span class="nl">"version"</span><span class="p">:</span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="nl">"timestamp"</span><span class="p">:</span><span class="s2">"2024-01-01T12:00:00.000Z"</span><span class="p">}</span><span class="w">
 </span><span class="p">{</span><span class="nl">"level"</span><span class="p">:</span><span class="s2">"error"</span><span class="p">,</span><span class="nl">"message"</span><span class="p">:</span><span class="s2">"Failed to scan content"</span><span class="p">,</span><span class="nl">"error"</span><span class="p">:</span><span class="s2">"Invalid input"</span><span class="p">,</span><span class="nl">"service"</span><span class="p">:</span><span class="s2">"prisma-airs-mcp"</span><span class="p">,</span><span class="nl">"version"</span><span class="p">:</span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="nl">"timestamp"</span><span class="p">:</span><span class="s2">"2024-01-01T12:00:02.000Z"</span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -236,7 +238,7 @@
     <span class="k">new</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">transports</span><span class="p">.</span><span class="nx">Console</span><span class="p">({</span>
         <span class="na">silent</span><span class="p">:</span> <span class="nx">environment</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span><span class="p">,</span>
     <span class="p">}),</span>
-<span class="p">]</span>
+<span class="p">];</span>
 </code></pre></div></div>
 
 <h2 id="api-functions">API Functions</h2>
@@ -245,10 +247,11 @@
 
 <p>Creates and configures a Winston logger instance:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">createLogger</span><span class="p">():</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">Logger</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">createLogger</span><span class="p">():</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">Logger</span><span class="p">;</span>
 </code></pre></div></div>
 
 <p><strong>Features:</strong></p>
+
 <ul>
   <li>Singleton pattern - returns existing logger if already created</li>
   <li>Configures format based on environment</li>
@@ -258,6 +261,7 @@
 </ul>
 
 <p><strong>Usage:</strong></p>
+
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">createLogger</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./utils/logger</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nx">createLogger</span><span class="p">();</span>
@@ -268,10 +272,11 @@
 
 <p>Gets the logger instance, creating it if necessary:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">getLogger</span><span class="p">():</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">Logger</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">getLogger</span><span class="p">():</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">Logger</span><span class="p">;</span>
 </code></pre></div></div>
 
 <p><strong>Features:</strong></p>
+
 <ul>
   <li>Lazy initialization</li>
   <li>Ensures logger is always available</li>
@@ -279,6 +284,7 @@
 </ul>
 
 <p><strong>Usage:</strong></p>
+
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">getLogger</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./utils/logger</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nx">getLogger</span><span class="p">();</span>
@@ -342,8 +348,8 @@
     <span class="k">private</span> <span class="k">readonly</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nx">getLogger</span><span class="p">();</span>
 
     <span class="k">async</span> <span class="nx">processRequest</span><span class="p">(</span><span class="nx">data</span><span class="p">:</span> <span class="nx">unknown</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Processing request</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> 
-            <span class="na">dataSize</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">length</span> 
+        <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Processing request</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">dataSize</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">length</span><span class="p">,</span>
         <span class="p">});</span>
 
         <span class="k">try</span> <span class="p">{</span>
@@ -353,7 +359,7 @@
         <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Operation failed</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
                 <span class="na">error</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Unknown error</span><span class="dl">'</span><span class="p">,</span>
-                <span class="na">stack</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">stack</span> <span class="p">:</span> <span class="kc">undefined</span>
+                <span class="na">stack</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">stack</span> <span class="p">:</span> <span class="kc">undefined</span><span class="p">,</span>
             <span class="p">});</span>
             <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
         <span class="p">}</span>
@@ -368,7 +374,7 @@
     <span class="na">scanId</span><span class="p">:</span> <span class="dl">'</span><span class="s1">scan_12345</span><span class="dl">'</span><span class="p">,</span>
     <span class="na">duration</span><span class="p">:</span> <span class="mi">1500</span><span class="p">,</span>
     <span class="na">threatCount</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
-    <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">block</span><span class="dl">'</span>
+    <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">block</span><span class="dl">'</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="c1">// Log with nested objects</span>
@@ -376,7 +382,7 @@
     <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
     <span class="na">url</span><span class="p">:</span> <span class="dl">'</span><span class="s1">/scan</span><span class="dl">'</span><span class="p">,</span>
     <span class="na">headers</span><span class="p">:</span> <span class="p">{</span> <span class="dl">'</span><span class="s1">content-type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span> <span class="p">},</span>
-    <span class="na">body</span><span class="p">:</span> <span class="p">{</span> <span class="na">truncated</span><span class="p">:</span> <span class="kc">true</span> <span class="p">}</span>
+    <span class="na">body</span><span class="p">:</span> <span class="p">{</span> <span class="na">truncated</span><span class="p">:</span> <span class="kc">true</span> <span class="p">},</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
@@ -389,10 +395,10 @@
     <span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Operation failed</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
         <span class="na">error</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Unknown error</span><span class="dl">'</span><span class="p">,</span>
         <span class="na">code</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nx">APIError</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">code</span> <span class="p">:</span> <span class="kc">undefined</span><span class="p">,</span>
-        <span class="na">context</span><span class="p">:</span> <span class="p">{</span> 
+        <span class="na">context</span><span class="p">:</span> <span class="p">{</span>
             <span class="na">operation</span><span class="p">:</span> <span class="dl">'</span><span class="s1">riskyOperation</span><span class="dl">'</span><span class="p">,</span>
-            <span class="na">input</span><span class="p">:</span> <span class="nx">sanitizedInput</span> 
-        <span class="p">}</span>
+            <span class="na">input</span><span class="p">:</span> <span class="nx">sanitizedInput</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">});</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -407,7 +413,7 @@
 
     <span class="kd">constructor</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AIRSClientConfig</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">logger</span> <span class="o">=</span> <span class="nx">getLogger</span><span class="p">();</span>
-        
+
         <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Prisma AIRS client initialized</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
             <span class="na">baseUrl</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">baseUrl</span><span class="p">,</span>
             <span class="na">timeout</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">timeout</span><span class="p">,</span>
@@ -468,7 +474,7 @@
     <span class="nx">scanId</span><span class="p">,</span>
     <span class="nx">profileName</span><span class="p">,</span>
     <span class="na">error</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
-    <span class="na">duration</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="nx">startTime</span>
+    <span class="na">duration</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">-</span> <span class="nx">startTime</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="c1">// Bad - no context</span>
@@ -480,13 +486,13 @@
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Good - sanitized</span>
 <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">User login</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
     <span class="na">userId</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
-    <span class="na">email</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">(</span><span class="sr">.</span><span class="se">{2})</span><span class="sr">.*</span><span class="se">(</span><span class="sr">@.*</span><span class="se">)</span><span class="sr">/</span><span class="p">,</span> <span class="dl">'</span><span class="s1">$1***$2</span><span class="dl">'</span><span class="p">)</span>
+    <span class="na">email</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/</span><span class="se">(</span><span class="sr">.</span><span class="se">{2})</span><span class="sr">.*</span><span class="se">(</span><span class="sr">@.*</span><span class="se">)</span><span class="sr">/</span><span class="p">,</span> <span class="dl">'</span><span class="s1">$1***$2</span><span class="dl">'</span><span class="p">),</span>
 <span class="p">});</span>
 
 <span class="c1">// Bad - exposes sensitive data</span>
 <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">User login</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
     <span class="na">userId</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>
-    <span class="na">password</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">password</span>  <span class="c1">// Never log passwords!</span>
+    <span class="na">password</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">password</span><span class="p">,</span> <span class="c1">// Never log passwords!</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
@@ -494,9 +500,9 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Consistent field naming across the application</span>
 <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Operation completed</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-    <span class="na">requestId</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>      <span class="c1">// Always use 'requestId'</span>
-    <span class="na">duration</span><span class="p">:</span> <span class="nx">elapsed</span><span class="p">,</span>      <span class="c1">// Always use 'duration' for time</span>
-    <span class="na">userId</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span>        <span class="c1">// Always use 'userId'</span>
+    <span class="na">requestId</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="c1">// Always use 'requestId'</span>
+    <span class="na">duration</span><span class="p">:</span> <span class="nx">elapsed</span><span class="p">,</span> <span class="c1">// Always use 'duration' for time</span>
+    <span class="na">userId</span><span class="p">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">,</span> <span class="c1">// Always use 'userId'</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
@@ -505,9 +511,9 @@
 <ol>
   <li><strong>Log Level Filtering</strong> - Debug logs are only evaluated when LOG_LEVEL includes them</li>
   <li><strong>Lazy Evaluation</strong> - Use functions for expensive computations:
-    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">logger</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span><span class="dl">'</span><span class="s1">Large data</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">({</span>
-    <span class="na">data</span><span class="p">:</span> <span class="nx">expensiveSerializationFunction</span><span class="p">()</span>
-<span class="p">}));</span>
+    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nx">logger</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span><span class="dl">'</span><span class="s1">Large data</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">({</span>
+     <span class="na">data</span><span class="p">:</span> <span class="nx">expensiveSerializationFunction</span><span class="p">(),</span>
+ <span class="p">}));</span>
 </code></pre></div>    </div>
   </li>
   <li><strong>Test Environment</strong> - Logs are completely silent in test environment</li>
@@ -564,16 +570,16 @@
 <h2 id="next-steps">Next Steps</h2>
 
 <ul>
-  <li><a href="/developers/src-config/">Configuration Module</a> - How logger gets its configuration</li>
-  <li><a href="/developers/src-root/">Server Root</a> - Logger initialization on startup</li>
-  <li><a href="/developers/src-airs/">AIRS Module</a> - Example logger usage</li>
+  <li><a href="/developers/src/config/">Configuration Module</a> - How logger gets its configuration</li>
+  <li><a href="/developers/src/">Server Root</a> - Logger initialization on startup</li>
+  <li><a href="/developers/src/airs/">AIRS Module</a> - Example logger usage</li>
 </ul>
 
       </article>
       
       <div class="content-footer">
         <div class="edit-page">
-          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_developers/src-utils.md">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_developers/src/utils.md">
             <i class="fas fa-edit"></i> Edit this page on GitHub
           </a>
         </div>

@@ -193,24 +193,25 @@
 <p>When toxic content is detected, the API returns:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"detect-toxic-content-profile"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"injection"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"toxic_content"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1111"</span><span class="w">
+    </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"detect-toxic-content-profile"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"injection"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"toxic_content"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1111"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p><strong>Key Response Fields</strong>:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">prompt_detected.toxic_content</code>: <code class="language-plaintext highlighter-rouge">true</code> indicates toxic content was detected in the prompt</li>
   <li><code class="language-plaintext highlighter-rouge">response_detected.toxic_content</code>: Would be <code class="language-plaintext highlighter-rouge">true</code> if toxic content detected in response</li>
@@ -223,6 +224,7 @@
 <h2 id="detection-categories">Detection Categories</h2>
 
 <h3 id="violence--threats">Violence &amp; Threats</h3>
+
 <ul>
   <li>Physical violence or threats of harm</li>
   <li>Self-harm or suicide content</li>
@@ -231,6 +233,7 @@
 </ul>
 
 <h3 id="hate-speech--discrimination">Hate Speech &amp; Discrimination</h3>
+
 <ul>
   <li>Racial, ethnic, or religious discrimination</li>
   <li>Gender-based hate or harassment</li>
@@ -239,6 +242,7 @@
 </ul>
 
 <h3 id="adult--sexual-content">Adult &amp; Sexual Content</h3>
+
 <ul>
   <li>Explicit sexual content</li>
   <li>Sexual harassment</li>
@@ -247,6 +251,7 @@
 </ul>
 
 <h3 id="illegal-activities">Illegal Activities</h3>
+
 <ul>
   <li>Drug trafficking or illegal substances</li>
   <li>Financial fraud or scams</li>
@@ -257,6 +262,7 @@
 <h2 id="use-cases">Use Cases</h2>
 
 <h3 id="content-moderation">Content Moderation</h3>
+
 <ul>
   <li>Filter inappropriate user inputs</li>
   <li>Prevent generation of harmful content</li>
@@ -264,6 +270,7 @@
 </ul>
 
 <h3 id="brand-protection">Brand Protection</h3>
+
 <ul>
   <li>Ensure AI responses align with values</li>
   <li>Prevent reputational damage</li>
@@ -271,6 +278,7 @@
 </ul>
 
 <h3 id="compliance">Compliance</h3>
+
 <ul>
   <li>Meet regulatory requirements</li>
   <li>Enforce community guidelines</li>

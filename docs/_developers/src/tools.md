@@ -1,7 +1,7 @@
 ---
 layout: documentation
 title: Tools Module (src/tools/)
-permalink: /developers/src-tools/
+permalink: /developers/src/tools/
 category: developers
 ---
 
@@ -501,7 +501,7 @@ assert(resourceContent?.resource?.uri.startsWith('airs://'));
 
 ## Next Steps
 
-- [Resources Module]({{ site.baseurl }}/developers/src-resources/) - How resources work with tools
-- [MCP Types]({{ site.baseurl }}/developers/src-mcp/) - Tool type definitions
-- [AIRS Module]({{ site.baseurl }}/developers/src-airs/) - Client used by tools
-- [Prompts Module]({{ site.baseurl }}/developers/src-prompts/) - Prompts that use these tools
+- [Resources Module]({{ site.baseurl }}/developers/src/resources/) - How resources work with tools
+- [MCP Types]({{ site.baseurl }}/developers/src/types/) - Tool type definitions
+- [AIRS Module]({{ site.baseurl }}/developers/src/airs/) - Client used by tools
+- [Prompts Module]({{ site.baseurl }}/developers/src/prompts/) - Prompts that use these tools

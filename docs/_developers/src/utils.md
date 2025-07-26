@@ -1,7 +1,7 @@
 ---
 layout: documentation
 title: Utils Module (src/utils/)
-permalink: /developers/src-utils/
+permalink: /developers/src/utils/
 category: developers
 ---
 
@@ -399,6 +399,6 @@ Potential additions to the utils module:
 
 ## Next Steps
 
-- [Configuration Module]({{ site.baseurl }}/developers/src-config/) - How logger gets its configuration
-- [Server Root]({{ site.baseurl }}/developers/src-root/) - Logger initialization on startup
-- [AIRS Module]({{ site.baseurl }}/developers/src-airs/) - Example logger usage
+- [Configuration Module]({{ site.baseurl }}/developers/src/config/) - How logger gets its configuration
+- [Server Root]({{ site.baseurl }}/developers/src/) - Logger initialization on startup
+- [AIRS Module]({{ site.baseurl }}/developers/src/airs/) - Example logger usage

@@ -208,23 +208,24 @@
 <p>When a malicious URL is detected, the API returns:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dummy-profile"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-  </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"db_security"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="w">
+    </span><span class="nl">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"block"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"category"</span><span class="p">:</span><span class="w"> </span><span class="s2">"malicious"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"profile_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dummy-profile"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"prompt_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"response_detected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"db_security"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"dlp"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"url_cats"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1234"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p><strong>Key Response Fields</strong>:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">response_detected.url_cats</code>: <code class="language-plaintext highlighter-rouge">true</code> indicates malicious URL was detected</li>
   <li><code class="language-plaintext highlighter-rouge">category</code>: Set to <code class="language-plaintext highlighter-rouge">"malicious"</code> when threat URL is found</li>
@@ -237,6 +238,7 @@
 <h2 id="common-threat-patterns">Common Threat Patterns</h2>
 
 <h3 id="phishing-urls">Phishing URLs</h3>
+
 <ul>
   <li>Typosquatted domains mimicking legitimate services</li>
   <li>Fake login pages for credential harvesting</li>
@@ -244,6 +246,7 @@
 </ul>
 
 <h3 id="malware-distribution">Malware Distribution</h3>
+
 <ul>
   <li>Direct download links to executables</li>
   <li>Drive-by download sites</li>
@@ -251,6 +254,7 @@
 </ul>
 
 <h3 id="url-obfuscation">URL Obfuscation</h3>
+
 <ul>
   <li>Shortened URLs hiding malicious destinations</li>
   <li>Encoded URLs to bypass filters</li>

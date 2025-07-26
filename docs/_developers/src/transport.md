@@ -1,7 +1,7 @@
 ---
 layout: documentation
 title: Transport Module (src/transport/)
-permalink: /developers/src-transport/
+permalink: /developers/src/transport/
 category: developers
 ---
 
@@ -445,7 +445,7 @@ assert(response.body.id === 'test-1');
 
 ## Next Steps
 
-- [Server Root]({{ site.baseurl }}/developers/src-root/) - Express server setup
-- [Tools Module]({{ site.baseurl }}/developers/src-tools/) - Tool handler implementation
-- [Resources Module]({{ site.baseurl }}/developers/src-resources/) - Resource handler implementation
-- [MCP Types]({{ site.baseurl }}/developers/src-mcp/) - Protocol type definitions
+- [Server Root]({{ site.baseurl }}/developers/src/) - Express server setup
+- [Tools Module]({{ site.baseurl }}/developers/src/tools/) - Tool handler implementation
+- [Resources Module]({{ site.baseurl }}/developers/src/resources/) - Resource handler implementation
+- [MCP Types]({{ site.baseurl }}/developers/src/types/) - Protocol type definitions
