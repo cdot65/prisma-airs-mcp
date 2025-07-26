@@ -1,86 +1,101 @@
-# Prisma AIRS MCP Server
+# 🛡️ Prisma AIRS MCP Server
 
-A lightweight Model Context Protocol (MCP) server that exposes Prisma AIRS capabilities through a simple, elegant interface. Built with TypeScript and the MCP SDK.
+> Bring enterprise-grade AI security to your MCP-enabled applications
 
-## Overview
+[![Documentation](https://img.shields.io/badge/docs-cdot65.github.io-blue)](https://cdot65.github.io/prisma-airs-mcp/)
+[![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-green)](https://modelcontextprotocol.io)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)](https://www.typescriptlang.org/)
 
-This MCP server provides seamless integration with Prisma AIRS, enabling you to leverage advanced AI security capabilities within your MCP-compatible applications. The server is designed to be lightweight, efficient, and easy to deploy across various environments.
+## 🚀 What is this?
 
-## Features
+The Prisma AIRS MCP Server connects AI applications (like Claude, VS Code, and more) to Palo Alto Networks' Prisma AI Runtime Security platform. This gives your AI tools the ability to:
 
-- **Lightweight Design**: Minimal overhead with maximum functionality
-- **Multiple Deployment Options**: Docker, Docker Compose, Kubernetes, and local development
-- **TypeScript Support**: Built with TypeScript for enhanced developer experience
-- **MCP SDK Integration**: Leverages the official MCP SDK for reliable protocol compliance
-- **Production Ready**: Containerized builds optimized for production environments
+✅ **Detect security threats** in real-time  
+✅ **Block prompt injection** attempts  
+✅ **Prevent data leakage** of sensitive information  
+✅ **Scan for malicious content** before it reaches your AI  
+✅ **Enforce compliance** with security policies
 
-## Quick Start
+## 🎯 Quick Start
 
-### Docker
+Get up and running in under 2 minutes:
 
+### Option 1: Docker (Recommended)
 ```bash
-docker run -p 3000:3000 prisma-airs-mcp
+# Run with your Prisma AIRS API key
+docker run -d \
+  --name prisma-airs-mcp \
+  -p 3000:3000 \
+  -e AIRS_API_KEY="your-api-key" \
+  ghcr.io/cdot65/prisma-airs-mcp:latest
 ```
 
-### Docker Compose
-
+### Option 2: Local Development
 ```bash
-docker-compose up -d
-```
-
-### Local Development
-
-```bash
-# Install dependencies
+# Clone and install
+git clone https://github.com/cdot65/prisma-airs-mcp.git
+cd prisma-airs-mcp
 pnpm install
 
-# Start the server
-pnpm start
+# Configure (copy .env.example to .env and add your API key)
+cp .env.example .env
+
+# Run
+pnpm dev
 ```
 
-## Deployment Options
+## 🔌 Connect Your AI Tools
 
-- **🐳 Docker**: Single container deployment
-- **🔧 Docker Compose**: Multi-service orchestration
-- **☸️ Kubernetes**: Scalable cluster deployment
-- **💻 Local Development**: pnpm-based local builds
+Once running, connect your favorite MCP-compatible applications:
 
-## Documentation
+- **[Claude Desktop](https://cdot65.github.io/prisma-airs-mcp/deployment/mcp/claude-desktop/)** - AI assistant with security
+- **[VS Code](https://cdot65.github.io/prisma-airs-mcp/deployment/mcp/vscode/)** - Secure coding companion  
+- **[Claude Code](https://cdot65.github.io/prisma-airs-mcp/deployment/mcp/claude-code/)** - Web-based secure development
 
-For comprehensive implementation details, configuration options, and advanced usage patterns, please visit our official documentation:
+## 🏗️ Architecture
 
-**📚 [Official Documentation](https://cdot65.github.io/prisma-airs-mcp)**
+```
+Your AI App (Claude, VS Code, etc.)
+        ↓
+   MCP Protocol
+        ↓
+Prisma AIRS MCP Server (this project)
+        ↓
+Prisma AIRS Security API
+```
 
-The documentation includes:
+## 📚 Documentation
 
-- Detailed setup instructions
-- Configuration examples
-- API reference
-- Best practices
-- Troubleshooting guides
+**[Visit our comprehensive documentation →](https://cdot65.github.io/prisma-airs-mcp/)**
 
-## Requirements
+Key sections:
+- 🚀 [Quick Start Guide](https://cdot65.github.io/prisma-airs-mcp/deployment/quickstart/)
+- 🔧 [Configuration Reference](https://cdot65.github.io/prisma-airs-mcp/deployment/configuration/)
+- 🛡️ [Security Features](https://cdot65.github.io/prisma-airs-mcp/prisma-airs/)
+- 👩‍💻 [Developer Guide](https://cdot65.github.io/prisma-airs-mcp/developers/)
 
-- Node.js 18+ (for local development)
-- Docker (for containerized deployments)
-- pnpm (for package management)
+## 🛠️ Prerequisites
 
-## Contributing
+- **Prisma AIRS API Key** - Get yours from [Strata Cloud Manager](https://stratacloudmanager.paloaltonetworks.com)
+- **Node.js 18+** - For local development
+- **Docker** - For containerized deployment (optional)
 
-We welcome contributions! Please refer to our documentation site for contribution guidelines and development setup instructions.
+## 🤝 Contributing
 
-## License
+We love contributions! Check out our [contributing guide](CONTRIBUTING.md) to get started.
 
-[Include your license information here]
+## 📝 License
 
-## Support
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
-For support and questions, please:
+## 💬 Get Help
 
-1. Check the [official documentation](https://cdot65.github.io/prisma-airs-mcp)
-2. Open an issue in this repository
-3. Review existing discussions and issues
+- 📖 [Documentation](https://cdot65.github.io/prisma-airs-mcp/)
+- 💡 [GitHub Issues](https://github.com/cdot65/prisma-airs-mcp/issues)
+- 💬 [Discussions](https://github.com/cdot65/prisma-airs-mcp/discussions)
 
 ---
 
-**Built with ❤️ using TypeScript and the MCP SDK**
+<p align="center">
+  Built with ❤️ by the community | Powered by <a href="https://modelcontextprotocol.io">MCP</a> and <a href="https://www.typescriptlang.org/">TypeScript</a>
+</p>
