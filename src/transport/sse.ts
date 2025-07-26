@@ -1,13 +1,6 @@
 import type { Response } from 'express';
 import type { Logger } from 'winston';
-import type { JsonRpcResponse } from './http.js';
-
-export interface SSEMessage {
-    id?: string;
-    event?: string;
-    data: string;
-    retry?: number;
-}
+import type { TransportJsonRpcResponse, TransportSSEMessage } from '../types';
 
 export class SSETransport {
     private clients: Map<string, Response> = new Map();
@@ -44,7 +37,7 @@ export class SSETransport {
     /**
      * Send an SSE event to a specific client
      */
-    sendEvent(clientId: string, message: SSEMessage): boolean {
+    sendEvent(clientId: string, message: TransportSSEMessage): boolean {
         const res = this.clients.get(clientId);
         if (!res) {
             this.logger.warn('Attempted to send to disconnected client', { clientId });
@@ -92,7 +85,7 @@ export class SSETransport {
     /**
      * Send JSON-RPC response via SSE
      */
-    sendJsonRpcResponse(clientId: string, response: JsonRpcResponse): boolean {
+    sendJsonRpcResponse(clientId: string, response: TransportJsonRpcResponse): boolean {
         const messageId = String(++this.messageId);
 
         return this.sendEvent(clientId, {
@@ -121,7 +114,7 @@ export class SSETransport {
     /**
      * Broadcast a message to all connected clients
      */
-    broadcast(message: SSEMessage): void {
+    broadcast(message: TransportSSEMessage): void {
         const disconnectedClients: string[] = [];
 
         this.clients.forEach((_, clientId) => {

@@ -1,19 +1,19 @@
 /**
  * Configuration Management Module
- * 
+ *
  * This module is responsible for:
  * 1. Loading configuration values from environment variables
  * 2. Applying sensible defaults when environment variables are not set
  * 3. Validating all configuration values at runtime using Zod schemas
  * 4. Providing type-safe access to configuration throughout the application
- * 
+ *
  * The configuration is loaded once (singleton pattern) and cached for performance.
  * Invalid configurations will fail fast with detailed error messages.
- * 
+ *
  * @example
  * ```typescript
  * import { getConfig } from './config';
- * 
+ *
  * const config = getConfig();
  * console.log(config.server.port); // Type-safe access to configuration
  * ```
@@ -103,7 +103,8 @@ function parseConfig(): Config {
             logLevel: process.env.LOG_LEVEL ?? 'info',
         },
         airs: {
-            apiUrl: process.env.AIRS_API_URL ?? 'https://service.api.aisecurity.paloaltonetworks.com',
+            apiUrl:
+                process.env.AIRS_API_URL ?? 'https://service.api.aisecurity.paloaltonetworks.com',
             apiKey: process.env.AIRS_API_KEY ?? '',
             timeout: parseInt(process.env.AIRS_TIMEOUT ?? '30000', 10),
             retryAttempts: parseInt(process.env.AIRS_RETRY_ATTEMPTS ?? '3', 10),

@@ -404,7 +404,7 @@ assistants to perform security scans, retrieve results, and manage the system.</
 <span class="p">};</span>
 
 <span class="nx">server</span><span class="p">.</span><span class="nx">setRequestHandler</span><span class="p">(</span><span class="nx">CallToolRequestSchema</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">request</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="p">{</span><span class="nx">name</span><span class="p">,</span> <span class="na">arguments</span><span class="p">:</span> <span class="nx">args</span><span class="p">}</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">params</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">name</span><span class="p">,</span> <span class="na">arguments</span><span class="p">:</span> <span class="nx">args</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">params</span><span class="p">;</span>
 
     <span class="k">switch</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">case</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">:</span>
@@ -423,7 +423,7 @@ assistants to perform security scans, retrieve results, and manage the system.</
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">handleScanContent</span><span class="p">(</span><span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ToolResult</span><span class="o">&gt;</span> <span class="p">{</span>
     <span class="k">try</span> <span class="p">{</span>
         <span class="c1">// Validate input</span>
-        <span class="kd">const</span> <span class="p">{</span><span class="nx">prompt</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">profileName</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">}</span> <span class="o">=</span>
+        <span class="kd">const</span> <span class="p">{</span> <span class="nx">prompt</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">profileName</span><span class="p">,</span> <span class="nx">metadata</span> <span class="p">}</span> <span class="o">=</span>
             <span class="nx">validateScanArgs</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
 
         <span class="c1">// Check if at least one content field is provided</span>
@@ -433,7 +433,7 @@ assistants to perform security scans, retrieve results, and manage the system.</
 
         <span class="c1">// Build scan request</span>
         <span class="kd">const</span> <span class="na">scanRequest</span><span class="p">:</span> <span class="nx">ScanRequest</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span><span class="na">profile_name</span><span class="p">:</span> <span class="nx">profileName</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span><span class="p">},</span>
+            <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">profile_name</span><span class="p">:</span> <span class="nx">profileName</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span> <span class="p">},</span>
             <span class="na">contents</span><span class="p">:</span> <span class="p">[</span>
                 <span class="p">{</span>
                     <span class="na">prompt</span><span class="p">:</span> <span class="nx">prompt</span> <span class="o">||</span> <span class="kc">undefined</span><span class="p">,</span>
@@ -484,7 +484,7 @@ assistants to perform security scans, retrieve results, and manage the system.</
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">handleScanAsync</span><span class="p">(</span><span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ToolResult</span><span class="o">&gt;</span> <span class="p">{</span>
     <span class="k">try</span> <span class="p">{</span>
-        <span class="kd">const</span> <span class="p">{</span><span class="nx">contents</span><span class="p">,</span> <span class="nx">profileName</span><span class="p">,</span> <span class="nx">tr_id</span><span class="p">}</span> <span class="o">=</span> <span class="nx">args</span><span class="p">;</span>
+        <span class="kd">const</span> <span class="p">{</span> <span class="nx">contents</span><span class="p">,</span> <span class="nx">profileName</span><span class="p">,</span> <span class="nx">tr_id</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">args</span><span class="p">;</span>
 
         <span class="c1">// Validate contents array</span>
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">contents</span><span class="p">)</span> <span class="o">||</span> <span class="nx">contents</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
@@ -493,7 +493,7 @@ assistants to perform security scans, retrieve results, and manage the system.</
 
         <span class="c1">// Build request</span>
         <span class="kd">const</span> <span class="na">scanRequest</span><span class="p">:</span> <span class="nx">AsyncScanRequest</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span><span class="na">profile_name</span><span class="p">:</span> <span class="nx">profileName</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span><span class="p">},</span>
+            <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">profile_name</span><span class="p">:</span> <span class="nx">profileName</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span> <span class="p">},</span>
             <span class="na">contents</span><span class="p">:</span> <span class="nx">contents</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">validateContentItem</span><span class="p">),</span>
             <span class="na">tr_id</span><span class="p">:</span> <span class="nx">tr_id</span> <span class="o">||</span> <span class="nx">generateTransactionId</span><span class="p">(),</span>
         <span class="p">};</span>
@@ -532,7 +532,7 @@ assistants to perform security scans, retrieve results, and manage the system.</
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">handleGetScanResults</span><span class="p">(</span><span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ToolResult</span><span class="o">&gt;</span> <span class="p">{</span>
     <span class="k">try</span> <span class="p">{</span>
-        <span class="kd">const</span> <span class="p">{</span><span class="nx">scan_ids</span><span class="p">}</span> <span class="o">=</span> <span class="nx">args</span><span class="p">;</span>
+        <span class="kd">const</span> <span class="p">{</span> <span class="nx">scan_ids</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">args</span><span class="p">;</span>
 
         <span class="c1">// Validate input</span>
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">scan_ids</span><span class="p">)</span> <span class="o">||</span> <span class="nx">scan_ids</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
@@ -617,7 +617,7 @@ assistants to perform security scans, retrieve results, and manage the system.</
         <span class="p">};</span>
     <span class="p">}</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="na">scan</span><span class="p">:</span> <span class="nx">scanResult</span><span class="p">};</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="na">scan</span><span class="p">:</span> <span class="nx">scanResult</span> <span class="p">};</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -662,7 +662,7 @@ assistants to perform security scans, retrieve results, and manage the system.</
 <span class="c1">// Example: Logging middleware</span>
 <span class="nx">toolExecutor</span><span class="p">.</span><span class="nx">use</span><span class="p">({</span>
     <span class="na">before</span><span class="p">:</span> <span class="k">async</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">args</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Tool execution started</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span><span class="nx">name</span><span class="p">,</span> <span class="nx">args</span><span class="p">});</span>
+        <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Tool execution started</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">args</span> <span class="p">});</span>
         <span class="k">return</span> <span class="nx">args</span><span class="p">;</span>
     <span class="p">},</span>
     <span class="na">after</span><span class="p">:</span> <span class="k">async</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
@@ -677,7 +677,7 @@ assistants to perform security scans, retrieve results, and manage the system.</
 
 <h3 id="tool-validation">Tool Validation</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">z</span><span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">zod</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">z</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">zod</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="c1">// Define schemas for each tool</span>
 <span class="kd">const</span> <span class="nx">toolSchemas</span> <span class="o">=</span> <span class="p">{</span>
@@ -812,7 +812,7 @@ assistants to perform security scans, retrieve results, and manage the system.</
     <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should perform full scan workflow</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="c1">// Submit async scan</span>
         <span class="kd">const</span> <span class="nx">submitResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_scan_async</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-            <span class="na">contents</span><span class="p">:</span> <span class="p">[{</span><span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test 1</span><span class="dl">'</span><span class="p">},</span> <span class="p">{</span><span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test 2</span><span class="dl">'</span><span class="p">}],</span>
+            <span class="na">contents</span><span class="p">:</span> <span class="p">[{</span> <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test 1</span><span class="dl">'</span> <span class="p">},</span> <span class="p">{</span> <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test 2</span><span class="dl">'</span> <span class="p">}],</span>
         <span class="p">});</span>
 
         <span class="nx">expect</span><span class="p">(</span><span class="nx">submitResult</span><span class="p">.</span><span class="nx">isError</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>

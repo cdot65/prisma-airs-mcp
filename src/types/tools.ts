@@ -3,6 +3,8 @@
  * All types are prefixed with 'Tools' to avoid namespace conflicts
  */
 
+import type { AirsScanResponse } from './airs';
+
 // Scan content arguments
 export interface ToolsScanContentArgs {
     prompt?: string;
@@ -46,4 +48,4 @@ export interface ToolsGetThreatReportsArgs {
 // Note: ScanResponseWithDetected is just an alias to ScanResponse from AIRS
 // We'll define it here as ToolsScanResponseWithDetected for consistency
 // In the implementation, this will reference AirsScanResponse from the centralized types
-export type ToolsScanResponseWithDetected = import('./airs').AirsScanResponse;
+export type ToolsScanResponseWithDetected = AirsScanResponse;

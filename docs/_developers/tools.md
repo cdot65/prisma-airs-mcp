@@ -261,7 +261,7 @@ const scanContentTool: Tool = {
 };
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-    const {name, arguments: args} = request.params;
+    const { name, arguments: args } = request.params;
 
     switch (name) {
         case 'airs_scan_content':
@@ -281,7 +281,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function handleScanContent(args: any): Promise<ToolResult> {
     try {
         // Validate input
-        const {prompt, response, profileName, metadata} =
+        const { prompt, response, profileName, metadata } =
             validateScanArgs(args);
 
         // Check if at least one content field is provided
@@ -291,7 +291,7 @@ async function handleScanContent(args: any): Promise<ToolResult> {
 
         // Build scan request
         const scanRequest: ScanRequest = {
-            ai_profile: {profile_name: profileName || 'Prisma AIRS'},
+            ai_profile: { profile_name: profileName || 'Prisma AIRS' },
             contents: [
                 {
                     prompt: prompt || undefined,
@@ -343,7 +343,7 @@ async function handleScanContent(args: any): Promise<ToolResult> {
 ```typescript
 async function handleScanAsync(args: any): Promise<ToolResult> {
     try {
-        const {contents, profileName, tr_id} = args;
+        const { contents, profileName, tr_id } = args;
 
         // Validate contents array
         if (!Array.isArray(contents) || contents.length === 0) {
@@ -352,7 +352,7 @@ async function handleScanAsync(args: any): Promise<ToolResult> {
 
         // Build request
         const scanRequest: AsyncScanRequest = {
-            ai_profile: {profile_name: profileName || 'Prisma AIRS'},
+            ai_profile: { profile_name: profileName || 'Prisma AIRS' },
             contents: contents.map(validateContentItem),
             tr_id: tr_id || generateTransactionId(),
         };
@@ -392,7 +392,7 @@ async function handleScanAsync(args: any): Promise<ToolResult> {
 ```typescript
 async function handleGetScanResults(args: any): Promise<ToolResult> {
     try {
-        const {scan_ids} = args;
+        const { scan_ids } = args;
 
         // Validate input
         if (!Array.isArray(scan_ids) || scan_ids.length === 0) {
@@ -478,7 +478,7 @@ async function performComprehensiveAnalysis(
         };
     }
 
-    return {scan: scanResult};
+    return { scan: scanResult };
 }
 ```
 
@@ -524,7 +524,7 @@ class ToolExecutor {
 // Example: Logging middleware
 toolExecutor.use({
     before: async (name, args) => {
-        logger.info('Tool execution started', {name, args});
+        logger.info('Tool execution started', { name, args });
         return args;
     },
     after: async (name, args, result) => {
@@ -540,7 +540,7 @@ toolExecutor.use({
 ### Tool Validation
 
 ```typescript
-import {z} from 'zod';
+import { z } from 'zod';
 
 // Define schemas for each tool
 const toolSchemas = {
@@ -678,7 +678,7 @@ describe('Tool integration tests', () => {
     it('should perform full scan workflow', async () => {
         // Submit async scan
         const submitResult = await callTool('airs_scan_async', {
-            contents: [{prompt: 'Test 1'}, {prompt: 'Test 2'}],
+            contents: [{ prompt: 'Test 1' }, { prompt: 'Test 2' }],
         });
 
         expect(submitResult.isError).toBe(false);

@@ -1,53 +1,24 @@
 import type { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import type { Logger } from 'winston';
 import { v4 as uuidv4 } from 'uuid';
 import { ResourceHandler } from '../resources';
 import { ToolHandler } from '../tools';
 import { PromptHandler } from '../prompts';
 import { getConfig } from '../config';
-import { SSETransport } from './sse.js';
+import { SSETransport } from './sse';
 import type {
-    ResourcesListParams,
-    ResourcesReadParams,
-    ToolsListParams,
-    ToolsCallParams,
-    PromptsListParams,
-    PromptsGetParams,
-} from '../mcp/types.js';
-
-export interface JsonRpcRequest {
-    jsonrpc: '2.0';
-    method: string;
-    params?: unknown;
-    id: string | number | null;
-}
-
-export interface JsonRpcError {
-    code: number;
-    message: string;
-    data?: unknown;
-}
-
-export interface JsonRpcResponse {
-    jsonrpc: '2.0';
-    result?: unknown;
-    error?: JsonRpcError;
-    id: string | number | null;
-}
-
-export interface HttpTransportOptions {
-    server: Server;
-    logger: Logger;
-}
-
-export interface StreamableRequest extends Request {
-    headers: {
-        accept?: string;
-        'last-event-id'?: string;
-        'mcp-session-id'?: string;
-    } & Request['headers'];
-}
+    McpPromptsGetParams,
+    McpPromptsListParams,
+    McpResourcesListParams,
+    McpResourcesReadParams,
+    McpToolsCallParams,
+    McpToolsListParams,
+    TransportHttpOptions,
+    TransportJsonRpcRequest,
+    TransportJsonRpcResponse,
+    TransportStreamableRequest,
+} from '../types';
 
 export class HttpServerTransport {
     // @ts-expect-error - Will be used when implementing actual MCP handlers
@@ -60,7 +31,7 @@ export class HttpServerTransport {
     private sseTransport: SSETransport;
     private sessions: Map<string, { clientId: string; createdAt: Date }> = new Map();
 
-    constructor(options: HttpTransportOptions) {
+    constructor(options: TransportHttpOptions) {
         this.server = options.server;
         this.logger = options.logger;
         this.resourceHandler = new ResourceHandler();
@@ -72,7 +43,7 @@ export class HttpServerTransport {
     /**
      * Check if client accepts SSE
      */
-    private acceptsSSE(req: StreamableRequest): boolean {
+    private acceptsSSE(req: TransportStreamableRequest): boolean {
         const accept = req.headers.accept || '';
         return accept.includes('text/event-stream');
     }
@@ -80,7 +51,7 @@ export class HttpServerTransport {
     /**
      * Get or create session
      */
-    private getOrCreateSession(req: StreamableRequest): string {
+    private getOrCreateSession(req: TransportStreamableRequest): string {
         const existingSessionId = req.headers['mcp-session-id'];
 
         if (existingSessionId && this.sessions.has(existingSessionId)) {
@@ -97,7 +68,7 @@ export class HttpServerTransport {
     /**
      * Handle SSE connection for server-initiated streams
      */
-    handleSSEConnection(req: StreamableRequest, res: Response): void {
+    handleSSEConnection(req: TransportStreamableRequest, res: Response): void {
         const sessionId = this.getOrCreateSession(req);
         const session = this.sessions.get(sessionId);
 
@@ -128,9 +99,12 @@ export class HttpServerTransport {
     /**
      * Handle incoming HTTP request and route to MCP server
      */
-    async handleRequest(req: StreamableRequest, res: Response<JsonRpcResponse>): Promise<void> {
+    async handleRequest(
+        req: TransportStreamableRequest,
+        res: Response<TransportJsonRpcResponse>,
+    ): Promise<void> {
         const startTime = Date.now();
-        const { method, params, id = null } = req.body as JsonRpcRequest;
+        const { method, params, id = null } = req.body as TransportJsonRpcRequest;
 
         this.logger.debug('Handling MCP request', {
             method,
@@ -209,7 +183,7 @@ export class HttpServerTransport {
                 streaming: shouldStream && acceptsSSE,
             });
         } catch (error) {
-            const { method, id = null } = req.body as JsonRpcRequest;
+            const { method, id = null } = req.body as TransportJsonRpcRequest;
 
             this.logger.error('Error handling request', {
                 method,
@@ -278,29 +252,29 @@ export class HttpServerTransport {
 
     // Resource handlers
     private handleResourcesList(params: unknown): unknown {
-        return this.resourceHandler.listResources(params as ResourcesListParams);
+        return this.resourceHandler.listResources(params as McpResourcesListParams);
     }
 
     private async handleResourcesRead(params: unknown): Promise<unknown> {
-        return this.resourceHandler.readResource(params as ResourcesReadParams);
+        return this.resourceHandler.readResource(params as McpResourcesReadParams);
     }
 
     // Tool handlers
     private handleToolsList(params: unknown): unknown {
-        return this.toolHandler.listTools(params as ToolsListParams);
+        return this.toolHandler.listTools(params as McpToolsListParams);
     }
 
     private async handleToolsCall(params: unknown): Promise<unknown> {
-        return this.toolHandler.callTool(params as ToolsCallParams);
+        return this.toolHandler.callTool(params as McpToolsCallParams);
     }
 
     // Prompt handlers
     private handlePromptsList(params: unknown): unknown {
-        return this.promptHandler.listPrompts(params as PromptsListParams);
+        return this.promptHandler.listPrompts(params as McpPromptsListParams);
     }
 
     private handlePromptsGet(params: unknown): unknown {
-        return this.promptHandler.getPrompt(params as PromptsGetParams);
+        return this.promptHandler.getPrompt(params as McpPromptsGetParams);
     }
 
     // Server handlers

@@ -28,7 +28,7 @@ All API requests use JSON-RPC 2.0 protocol:
     "params": {
         // method-specific parameters
     },
-    "id": 1
+    "id": 1,
 }
 ```
 
@@ -37,7 +37,7 @@ All API requests use JSON-RPC 2.0 protocol:
 ### MCP Methods
 
 | Method           | Description              |
-|------------------|--------------------------|
+| ---------------- | ------------------------ |
 | `initialize`     | Initialize MCP session   |
 | `initialized`    | Confirm initialization   |
 | `resources/list` | List available resources |
@@ -50,7 +50,7 @@ All API requests use JSON-RPC 2.0 protocol:
 ### Health Endpoints
 
 | Endpoint  | Method | Description     |
-|-----------|--------|-----------------|
+| --------- | ------ | --------------- |
 | `/health` | GET    | Health check    |
 | `/ready`  | GET    | Readiness check |
 
@@ -119,11 +119,11 @@ curl -X POST http://localhost:3000 \
 
 ```jsonc
 {
-  "jsonrpc": "2.0",
-  "result": {
-    // Method-specific result
-  },
-  "id": 1
+    "jsonrpc": "2.0",
+    "result": {
+        // Method-specific result
+    },
+    "id": 1,
 }
 ```
 
@@ -131,15 +131,15 @@ curl -X POST http://localhost:3000 \
 
 ```jsonc
 {
-  "jsonrpc": "2.0",
-  "error": {
-    "code": -32602,
-    "message": "Invalid params",
-    "data": {
-      // Additional error details
-    }
-  },
-  "id": 1
+    "jsonrpc": "2.0",
+    "error": {
+        "code": -32602,
+        "message": "Invalid params",
+        "data": {
+            // Additional error details
+        },
+    },
+    "id": 1,
 }
 ```
 
@@ -180,7 +180,7 @@ eventSource.onmessage = (event) => {
 // Send request
 fetch('http://localhost:3000/sse', {
     method: 'POST',
-    headers: {'Content-Type': 'application/json'},
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
         jsonrpc: '2.0',
         method: 'tools/call',
@@ -195,7 +195,7 @@ fetch('http://localhost:3000/sse', {
 ## Error Codes
 
 | Code   | Message             | Description                      |
-|--------|---------------------|----------------------------------|
+| ------ | ------------------- | -------------------------------- |
 | -32700 | Parse error         | Invalid JSON                     |
 | -32600 | Invalid request     | Invalid JSON-RPC structure       |
 | -32601 | Method not found    | Unknown method                   |
