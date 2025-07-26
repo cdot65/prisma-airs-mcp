@@ -13,129 +13,184 @@ The Prisma AIRS MCP server is a production-ready implementation of the Model Con
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    MCP Client (Claude)                  │
+│            MCP Client (Claude, VSCode, AI App)          │
 └─────────────────────────┬───────────────────────────────┘
-                          │ JSON-RPC 2.0
+                          │ JSON-RPC 2.0 / SSE
 ┌─────────────────────────▼───────────────────────────────┐
-│                    MCP Server (HTTP)                    │
+│                 Express HTTP Server                     │
+│                    (Port 3000)                          │
 ├─────────────────────────────────────────────────────────┤
 │  ┌─────────────┐  ┌──────────────┐  ┌──────────────┐    │
 │  │  Resources  │  │    Tools     │  │   Prompts    │    │
+│  │  Handler    │  │   Handler    │  │   Handler    │    │
 │  └──────┬──────┘  └──────┬───────┘  └──────┬───────┘    │
-│         │                │                  │           │
-│  ┌──────▼────────────────▼──────────────────▼───────┐   │
-│  │              MCP Server Implementation           │   │
+│         │                │                 │            │
+│  ┌──────▼────────────────▼─────────────────▼────────┐   │
+│  │           HTTP Transport Handler                 │   │
+│  │  • JSON-RPC routing  • SSE streaming support     │   │
+│  │  • Session management • Error handling           │   │
 │  └──────────────────────┬───────────────────────────┘   │
 │                         │                               │
 │  ┌──────────────────────▼───────────────────────────┐   │
-│  │              AIRS Client Module                  │   │
-│  │  • REST API Client   • Rate Limiter              │   │
-│  │  • Response Cache    • Retry Logic               │   │
+│  │         Enhanced AIRS Client Module              │   │
+│  │  • REST API Client   • Token Bucket Rate Limiter │   │
+│  │  • LRU Cache         • Exponential Retry Logic   │   │
 │  └──────────────────────┬───────────────────────────┘   │
 └─────────────────────────┼───────────────────────────────┘
-                          │ HTTPS
+                          │ HTTPS (x-pan-token auth)
 ┌─────────────────────────▼───────────────────────────────┐
 │                  Prisma AIRS API                        │
+│                     (v1 endpoints)                      │
 └─────────────────────────────────────────────────────────┘
 ```
 
 ## Core Components
 
-### 1. MCP Server Implementation
+### 1. Express HTTP Server
 
-The server exposes Prisma AIRS security capabilities through the MCP protocol.
+The server uses Express.js to handle MCP requests via HTTP and optional SSE streaming.
 
 ```typescript
-// Server initialization with MCP capabilities
-const server = new Server({
-  name: 'prisma-airs-mcp',
-  version: '1.0.0'
-}, {
-  capabilities: {
-    resources: {},  // Scan results, cache stats, rate limits
-    tools: {},      // Security scanning operations
-    prompts: {}     // Interactive security workflows
+// Server initialization with health checks
+const app = express();
+app.use(cors());
+app.use(express.json({ limit: '10mb' }));
+
+// Main MCP endpoint - handles JSON-RPC 2.0
+app.post('/', async (req, res) => {
+  await transport.handleRequest(req, res);
+});
+
+// SSE endpoint for streaming
+app.get('/', (req, res) => {
+  if (req.headers.accept?.includes('text/event-stream')) {
+    transport.handleSSEConnection(req, res);
   }
 });
 ```
 
 ### 2. Transport Layer
 
-HTTP-based transport for Kubernetes deployment compatibility.
+Custom HTTP transport with SSE support and session management.
 
 ```typescript
-const transport = new HttpServerTransport({
-  port: 3000,
-  corsOptions: {
-    origin: '*',
-    methods: ['GET', 'POST']
+export class HttpServerTransport {
+  private sessions: Map<string, { clientId: string; createdAt: Date }>;
+  private sseTransport: SSETransport;
+  
+  async handleRequest(req: Request, res: Response): Promise<void> {
+    const { method, params, id } = req.body;
+    const result = await this.routeRequest(method, params);
+    
+    // Optional SSE streaming for long operations
+    if (this.shouldStreamResponse(method) && this.acceptsSSE(req)) {
+      // Stream via SSE
+    } else {
+      res.json({ jsonrpc: '2.0', result, id });
+    }
   }
-});
-
-await transport.listen();
+}
 ```
 
-### 3. AIRS Client
+### 3. Enhanced AIRS Client
 
-Type-safe client for Prisma AIRS API integration.
+Type-safe client with built-in caching and rate limiting.
 
 ```typescript
-interface AIRSClientConfig {
-  apiUrl: string;
-  apiKey: string;
-  timeout?: number;
-  maxRetries?: number;
-  cache?: CacheConfig;
-  rateLimit?: RateLimitConfig;
+export interface EnhancedAIRSClientConfig extends AIRSClientConfig {
+  cache?: {
+    maxSize: number;    // Max items in cache
+    ttl: number;        // Time-to-live in ms
+  };
+  rateLimiter?: {
+    tokensPerInterval: number;
+    interval: number;   // ms
+    maxBurst: number;
+  };
 }
 
-class PrismaAIRSClient {
-  async scanContent(request: ScanRequest): Promise<ScanResponse> {
-    // Implementation with retry logic and caching
+export class EnhancedPrismaAIRSClient {
+  async scanSync(request: ScanRequest): Promise<ScanResponse> {
+    await this.rateLimiter?.waitForLimit('scan');
+    
+    const cacheKey = AIRSCache.generateScanKey('sync', request);
+    const cached = this.cache?.get(cacheKey);
+    if (cached) return cached;
+    
+    const response = await this.client.scanSync(request);
+    this.cache?.set(cacheKey, response);
+    return response;
   }
 }
 ```
 
 ### 4. Resource Handlers
 
-MCP resources provide access to AIRS data.
+MCP resources provide access to AIRS data and system status.
 
 ```typescript
-server.setRequestHandler(ListResourcesRequestSchema, async () => ({
-  resources: [
-    {
-      uri: 'airs://cache-stats',
-      name: 'Cache Statistics',
-      mimeType: 'application/json'
-    },
-    {
-      uri: 'airs://rate-limit-status',
-      name: 'Rate Limit Status',
-      mimeType: 'application/json'
-    }
-  ]
-}));
+export class ResourceHandler {
+  // Static resources
+  listResources(): ResourcesListResult {
+    return {
+      resources: [
+        {
+          uri: 'airs://cache-stats/current',
+          name: 'Cache Statistics',
+          mimeType: 'application/json'
+        },
+        {
+          uri: 'airs://rate-limit-status/current',
+          name: 'Rate Limit Status',
+          mimeType: 'application/json'
+        }
+      ]
+    };
+  }
+  
+  // Dynamic resources accessed via URI
+  async readResource(params: ResourcesReadParams): Promise<ResourcesReadResult> {
+    // Handles: airs://scan-results/{scanId}
+    //          airs://threat-reports/{reportId}
+  }
+}
 ```
 
 ### 5. Tool Handlers
 
-MCP tools execute AIRS operations.
+MCP tools execute AIRS security operations.
 
 ```typescript
-const TOOLS = [
-  {
-    name: 'scan_content',
-    description: 'Scan content for security threats',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        prompt: { type: 'string' },
-        response: { type: 'string' },
-        profile_name: { type: 'string' }
-      }
-    }
+export class ToolHandler {
+  private static readonly TOOLS = {
+    SCAN_CONTENT: 'airs_scan_content',
+    SCAN_ASYNC: 'airs_scan_async',
+    GET_SCAN_RESULTS: 'airs_get_scan_results',
+    GET_THREAT_REPORTS: 'airs_get_threat_reports',
+    CLEAR_CACHE: 'airs_clear_cache',
+  };
+
+  listTools(): ToolsListResult {
+    return {
+      tools: [
+        {
+          name: 'airs_scan_content',
+          description: 'Analyze content for security threats',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              prompt: { type: 'string' },
+              response: { type: 'string' },
+              context: { type: 'string' },
+              profileName: { type: 'string' },
+              metadata: { type: 'object' }
+            }
+          }
+        }
+      ]
+    };
   }
-];
+}
 ```
 
 ## Key Features
@@ -163,10 +218,23 @@ function isScanResponse(data: unknown): data is ScanResponse {
 
 ### Error Handling
 
-Comprehensive error handling with MCP error codes:
+Comprehensive error handling with AIRS-specific and MCP error codes:
 
 ```typescript
-enum MCPErrorCode {
+// AIRS API errors
+export class AIRSAPIError extends Error {
+  constructor(
+    message: string,
+    public statusCode: number,
+    public response?: AIRSErrorResponse
+  ) {
+    super(message);
+    this.name = 'AIRSAPIError';
+  }
+}
+
+// MCP protocol errors
+export enum MCPErrorCode {
   ParseError = -32700,
   InvalidRequest = -32600,
   MethodNotFound = -32601,
@@ -174,52 +242,67 @@ enum MCPErrorCode {
   InternalError = -32603
 }
 
-class MCPError extends Error {
-  constructor(
-    public code: MCPErrorCode,
-    message: string,
-    public data?: unknown
-  ) {
-    super(message);
-  }
+// Automatic retry on rate limiting
+if (response.status === 429 && retryCount < maxRetries) {
+  const delay = calculateRetryDelay(response);
+  await sleep(delay);
+  return makeRequest(method, path, body, options, retryCount + 1);
 }
 ```
 
 ### Caching System
 
-TTL-based in-memory cache for performance:
+LRU cache with TTL and size limits:
 
 ```typescript
-class AIRSCache {
-  private cache: Map<string, CacheEntry>;
+export class AIRSCache {
+  private cache = new Map<string, CacheEntry>();
+  private accessOrder: string[] = [];
   
-  set(key: string, value: any, ttl?: number): void {
+  set<T>(key: string, value: T, ttl?: number): void {
+    // Evict least recently used if at capacity
+    if (this.cache.size >= this.maxSize && !this.cache.has(key)) {
+      const lru = this.accessOrder.shift();
+      if (lru) this.cache.delete(lru);
+    }
+    
     const expiry = Date.now() + (ttl || this.defaultTTL);
     this.cache.set(key, { value, expiry });
+    this.updateAccessOrder(key);
   }
   
-  get(key: string): any | undefined {
-    const entry = this.cache.get(key);
-    if (!entry || entry.expiry < Date.now()) {
-      this.cache.delete(key);
-      return undefined;
-    }
-    return entry.value;
+  static generateScanKey(type: string, request: ScanRequest): string {
+    const hash = crypto.createHash('sha256');
+    hash.update(JSON.stringify({ type, request }));
+    return `scan:${hash.digest('hex')}`;
   }
 }
 ```
 
 ### Rate Limiting
 
-Token bucket algorithm for API protection:
+Token bucket algorithm with configurable limits per operation:
 
 ```typescript
-class AIRSRateLimiter {
-  private buckets: Map<string, TokenBucket>;
+export class AIRSRateLimiter {
+  private buckets = new Map<string, TokenBucket>();
   
-  async checkLimit(key: string): Promise<boolean> {
-    const bucket = this.getBucket(key);
-    return bucket.consume(1);
+  async waitForLimit(operation: string): Promise<void> {
+    const bucket = this.getBucket(operation);
+    
+    while (!bucket.tryConsume(1)) {
+      const waitTime = bucket.timeUntilNextToken();
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+  }
+  
+  private getBucket(operation: string): TokenBucket {
+    const config = this.limits[operation] || this.defaultLimit;
+    return new TokenBucket(
+      config.tokensPerInterval,
+      config.interval,
+      config.maxBurst
+    );
   }
 }
 ```
@@ -285,91 +368,100 @@ const cacheStats = await mcpClient.readResource('airs://cache-stats');
 console.log('Cache statistics:', cacheStats);
 ```
 
-## Server Extension Points
+## Available MCP Operations
 
-### Custom Tools
+### Tools (5 available)
 
-```typescript
-// Define new tool
-const customTool = {
-  name: 'custom_analysis',
-  description: 'Custom security analysis',
-  inputSchema: {
-    type: 'object',
-    properties: {
-      content: { type: 'string' },
-      options: { type: 'object' }
-    }
-  },
-  handler: async (params) => {
-    // Custom implementation
-    return { result: 'analysis' };
-  }
-};
+1. **airs_scan_content** - Synchronous content scanning
+2. **airs_scan_async** - Batch asynchronous scanning
+3. **airs_get_scan_results** - Retrieve scan results by ID
+4. **airs_get_threat_reports** - Get detailed threat reports
+5. **airs_clear_cache** - Clear the response cache
 
-// Register tool
-server.addTool(customTool);
-```
+### Resources
 
-### Custom Resources
+**Static Resources:**
+- `airs://cache-stats/current` - Cache performance metrics
+- `airs://rate-limit-status/current` - Rate limiting status
 
-```typescript
-// Add dynamic resource
-server.addResourceProvider({
-  pattern: /^airs:\/\/custom\/.*/,
-  handler: async (uri) => {
-    const id = uri.split('/').pop();
-    return {
-      uri,
-      name: `Custom Resource ${id}`,
-      mimeType: 'application/json',
-      text: JSON.stringify({ id, data: 'custom' })
-    };
-  }
-});
-```
+**Dynamic Resources:**
+- `airs://scan-results/{scanId}` - Individual scan results
+- `airs://threat-reports/{reportId}` - Detailed threat reports
+
+### Prompts (4 workflows)
+
+1. **security_analysis** - Comprehensive security analysis
+2. **threat_investigation** - Detailed threat investigation
+3. **compliance_check** - Regulatory compliance checking
+4. **incident_response** - Security incident response guide
 
 ## Performance Considerations
 
-### Connection Pooling
+### Connection Management
 
-```typescript
-const httpAgent = new http.Agent({
-  keepAlive: true,
-  maxSockets: 50,
-  timeout: 30000
-});
-```
+- HTTP Keep-Alive for connection reuse
+- Configurable request timeout (default 30s)
+- Automatic retry with exponential backoff
+- Session management for SSE connections
 
 ### Request Batching
 
 ```typescript
-// Batch multiple scans
-const results = await client.callTool('scan_async', {
-  contents: items.map(item => ({
-    prompt: item.input,
-    response: item.output
-  }))
+// Batch multiple scans for efficiency
+const result = await mcpClient.callTool('airs_scan_async', {
+  requests: [
+    { reqId: 1, prompt: 'content1', profileName: 'Prisma AIRS' },
+    { reqId: 2, prompt: 'content2', profileName: 'Prisma AIRS' }
+  ]
 });
 ```
 
 ### Caching Strategy
 
-- Cache scan results for 5 minutes by default
-- Automatic cache eviction on memory pressure
-- Cache key based on content hash
+- **Default TTL**: 5 minutes for scan results
+- **Cache Size**: Configurable max items (default 1000)
+- **LRU Eviction**: Least recently used items removed first
+- **Key Generation**: SHA-256 hash of request parameters
+- **Skip Cache**: Async operations and incomplete results
 
 ## Best Practices
 
-1. **Error Handling**: Always handle MCP error responses properly
-2. **Rate Limiting**: Implement backoff strategies
-3. **Logging**: Use structured logging for debugging
-4. **Monitoring**: Track metrics for performance
-5. **Security**: Never log sensitive content
+1. **Error Handling**: Check for both MCP protocol errors and AIRS API errors
+2. **Rate Limiting**: Server implements automatic waiting - no manual backoff needed
+3. **Caching**: Use `airs_clear_cache` tool when fresh results are required
+4. **Batching**: Use async scanning for multiple items to reduce API calls
+5. **Security**: API keys are handled server-side - never exposed to clients
+6. **Monitoring**: Check health endpoint at `/health` and ready at `/ready`
+
+## Configuration
+
+Key environment variables:
+
+```bash
+# AIRS API Configuration
+AIRS_API_URL=https://api.prismacloud.io/airs
+AIRS_API_KEY=your-api-key
+AIRS_DEFAULT_PROFILE_NAME="Prisma AIRS"
+
+# Server Configuration
+PORT=3000
+NODE_ENV=production
+LOG_LEVEL=info
+
+# Cache Configuration
+CACHE_ENABLED=true
+CACHE_MAX_SIZE=1000
+CACHE_TTL=300000  # 5 minutes
+
+# Rate Limiting
+RATE_LIMIT_ENABLED=true
+RATE_LIMIT_SCAN_TOKENS=10
+RATE_LIMIT_SCAN_INTERVAL=60000  # 1 minute
+```
 
 ## Next Steps
 
-- [AIRS Integration]({{ site.baseurl }}/developers/client) - How the server integrates with AIRS
-- [MCP Resources]({{ site.baseurl }}/developers/resources) - Available server resources
-- [MCP Tools]({{ site.baseurl }}/developers/tools) - Security scanning tools
-- [MCP Prompts]({{ site.baseurl }}/developers/prompts) - Interactive workflows
+- [AIRS Client Integration]({{ site.baseurl }}/developers/client) - Deep dive into AIRS API client
+- [MCP Resources]({{ site.baseurl }}/developers/resources) - Working with server resources
+- [MCP Tools]({{ site.baseurl }}/developers/tools) - Available security scanning tools
+- [API Reference]({{ site.baseurl }}/developers/api) - Complete API documentation
