@@ -52,6 +52,9 @@
 <loc>http://localhost:4000/developers/resources/</loc>
 </url>
 <url>
+<loc>http://localhost:4000/developers/src-airs/</loc>
+</url>
+<url>
 <loc>http://localhost:4000/developers/src-root/</loc>
 </url>
 <url>
