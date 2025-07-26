@@ -104,6 +104,7 @@ k8s/
 ### Overview
 
 The deployment uses Traefik IngressRoute for:
+
 - Path-based routing (`/prisma-airs` → service)
 - Automatic path stripping
 - Security headers
@@ -116,27 +117,29 @@ The deployment uses Traefik IngressRoute for:
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: prisma-airs-mcp-route
+    name: prisma-airs-mcp-route
 spec:
-  routes:
-    - match: Host(`your-domain.com`) && PathPrefix(`/prisma-airs`)
-      kind: Rule
-      services:
-        - name: prisma-airs-mcp
-          port: 3000
-      middlewares:
-        - name: strip-prisma-airs-prefix
-        - name: security-headers
+    routes:
+        - match: Host(`your-domain.com`) && PathPrefix(`/prisma-airs`)
+          kind: Rule
+          services:
+              - name: prisma-airs-mcp
+                port: 3000
+          middlewares:
+              - name: strip-prisma-airs-prefix
+              - name: security-headers
 ```
 
 ### Path Routing
 
 The IngressRoute configuration:
+
 1. Matches requests to `/prisma-airs/*`
 2. Strips the `/prisma-airs` prefix
 3. Forwards to the MCP service on port 3000
 
 Example routing:
+
 - `https://your-domain.com/prisma-airs` → `http://service:3000/`
 - `https://your-domain.com/prisma-airs/health` → `http://service:3000/health`
 
@@ -233,6 +236,7 @@ Edit `k8s/overlays/production/ingressroute-patch.yaml`:
 ```
 
 Apply changes:
+
 ```bash
 kubectl apply -k k8s/overlays/production
 ```
@@ -243,12 +247,12 @@ Customize in `k8s/overlays/production/deployment-patch.yaml`:
 
 ```yaml
 resources:
-  limits:
-    cpu: "2"
-    memory: "1Gi"
-  requests:
-    cpu: "500m"
-    memory: "256Mi"
+    limits:
+        cpu: '2'
+        memory: '1Gi'
+    requests:
+        cpu: '500m'
+        memory: '256Mi'
 ```
 
 ### Scaling
@@ -300,6 +304,7 @@ kubectl rollout undo deployment/prisma-airs-mcp -n prisma-airs-mcp-server --to-r
 ### Health Checks
 
 The deployment includes:
+
 - **Liveness Probe**: Restarts unhealthy pods
 - **Readiness Probe**: Controls traffic routing
 - **Startup Probe**: Allows slow startup
@@ -332,6 +337,7 @@ kubectl describe pod prisma-airs-mcp-xxxxx -n prisma-airs-mcp-server
 ### Network Policies
 
 The deployment includes NetworkPolicy for:
+
 - Ingress only from Traefik
 - Egress to AIRS API endpoints
 - DNS resolution
@@ -340,17 +346,18 @@ The deployment includes NetworkPolicy for:
 
 ```yaml
 securityContext:
-  runAsNonRoot: true
-  runAsUser: 1000
-  fsGroup: 1000
-  capabilities:
-    drop:
-      - ALL
+    runAsNonRoot: true
+    runAsUser: 1000
+    fsGroup: 1000
+    capabilities:
+        drop:
+            - ALL
 ```
 
 ### Secret Management
 
 For production, consider:
+
 - Sealed Secrets
 - External Secrets Operator
 - HashiCorp Vault
@@ -361,6 +368,7 @@ For production, consider:
 ### Common Issues
 
 **Pods Not Starting**
+
 ```bash
 # Check pod events
 kubectl describe pod prisma-airs-mcp-xxxxx -n prisma-airs-mcp-server
@@ -370,6 +378,7 @@ kubectl logs prisma-airs-mcp-xxxxx -n prisma-airs-mcp-server
 ```
 
 **IngressRoute Not Working**
+
 ```bash
 # Check IngressRoute status
 kubectl get ingressroute -n prisma-airs-mcp-server
@@ -382,6 +391,7 @@ kubectl get middleware -n prisma-airs-mcp-server
 ```
 
 **Secret Issues**
+
 ```bash
 # Verify secret exists
 kubectl get secret prisma-airs-secret -n prisma-airs-mcp-server
@@ -393,11 +403,13 @@ kubectl get secret prisma-airs-secret -n prisma-airs-mcp-server -o yaml
 ### Debugging
 
 **Access Pod Shell**
+
 ```bash
 kubectl exec -it prisma-airs-mcp-xxxxx -n prisma-airs-mcp-server -- sh
 ```
 
 **Port Forwarding**
+
 ```bash
 # Forward to local port
 kubectl port-forward -n prisma-airs-mcp-server svc/prisma-airs-mcp 3000:3000
@@ -407,6 +419,7 @@ curl http://localhost:3000/health
 ```
 
 **Check DNS Resolution**
+
 ```bash
 # From within pod
 kubectl exec -it prisma-airs-mcp-xxxxx -n prisma-airs-mcp-server -- nslookup service.api.aisecurity.paloaltonetworks.com
@@ -426,19 +439,19 @@ kubectl exec -it prisma-airs-mcp-xxxxx -n prisma-airs-mcp-server -- nslookup ser
 #### Optimization Strategies
 
 1. **Intelligent Caching**
-   - In-memory cache with 5-minute TTL
-   - Cache hit rate >80% for repeated scans
-   - Automatic cache invalidation
+    - In-memory cache with 5-minute TTL
+    - Cache hit rate >80% for repeated scans
+    - Automatic cache invalidation
 
 2. **Connection Pooling**
-   - Reuse HTTPS connections to AIRS API
-   - Configurable pool size and timeout
-   - Automatic retry with exponential backoff
+    - Reuse HTTPS connections to AIRS API
+    - Configurable pool size and timeout
+    - Automatic retry with exponential backoff
 
 3. **Resource Optimization**
-   - CPU: 0.5-2 cores per pod
-   - Memory: 512MB-2GB per pod
-   - Efficient memory management
+    - CPU: 0.5-2 cores per pod
+    - Memory: 512MB-2GB per pod
+    - Efficient memory management
 
 ### Security & Compliance
 

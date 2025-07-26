@@ -197,6 +197,7 @@
 </span></code></pre></div></div>
 
 <p>Replace <code class="language-plaintext highlighter-rouge">YOUR_PRISMA_AIRS_URL</code> with your actual Prisma AIRS endpoint:</p>
+
 <ul>
   <li><strong>For Docker deployments</strong>: <code class="language-plaintext highlighter-rouge">http://localhost:3000/prisma-airs</code></li>
   <li><strong>For production deployments</strong>: Your custom URL (e.g., <code class="language-plaintext highlighter-rouge">https://airs.yourdomain.com/prisma-airs</code>)</li>
@@ -291,15 +292,18 @@
 <h3 id="server-not-connecting">Server Not Connecting</h3>
 
 <ol>
-  <li>Verify the Prisma AIRS server is running:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># For Docker</span>
-docker ps | <span class="nb">grep </span>prisma-airs
-   
-<span class="c"># Check if the server is accessible</span>
-curl http://localhost:3000/health
+  <li>
+    <p>Verify the Prisma AIRS server is running:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># For Docker</span>
+ docker ps | <span class="nb">grep </span>prisma-airs
+
+ <span class="c"># Check if the server is accessible</span>
+ curl http://localhost:3000/health
 </code></pre></div>    </div>
   </li>
-  <li>Check the server logs:
+  <li>
+    <p>Check the server logs:</p>
     <ul>
       <li>In VS Code: Right-click the server in Extensions view → Show Output</li>
       <li>In Docker: <code class="language-plaintext highlighter-rouge">docker logs prisma-airs</code></li>

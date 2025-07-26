@@ -32,7 +32,7 @@ const { environment, logLevel } = config.server;
 
 // Logger setup
 logger = winston.createLogger({
-    level: logLevel,              // From LOG_LEVEL env var
+    level: logLevel, // From LOG_LEVEL env var
     format: winston.format.combine(...formats),
     defaultMeta: {
         service: config.mcp.serverName,
@@ -55,13 +55,14 @@ In development, logs are formatted for human readability:
 ```typescript
 if (environment === 'development') {
     formats.push(
-        winston.format.colorize(),    // Colorized output
-        winston.format.simple()        // Simple format
+        winston.format.colorize(), // Colorized output
+        winston.format.simple(), // Simple format
     );
 }
 ```
 
 Example output:
+
 ```
 2024-01-01T12:00:00.000Z info: Server started on port 3000
 2024-01-01T12:00:01.000Z debug: Processing request {"requestId": "123"}
@@ -79,6 +80,7 @@ else {
 ```
 
 Example output:
+
 ```json
 {"level":"info","message":"Server started on port 3000","service":"prisma-airs-mcp","version":"1.0.0","timestamp":"2024-01-01T12:00:00.000Z"}
 {"level":"error","message":"Failed to scan content","error":"Invalid input","service":"prisma-airs-mcp","version":"1.0.0","timestamp":"2024-01-01T12:00:02.000Z"}
@@ -93,7 +95,7 @@ transports: [
     new winston.transports.Console({
         silent: environment === 'test',
     }),
-]
+];
 ```
 
 ## API Functions
@@ -103,10 +105,11 @@ transports: [
 Creates and configures a Winston logger instance:
 
 ```typescript
-export function createLogger(): winston.Logger
+export function createLogger(): winston.Logger;
 ```
 
 **Features:**
+
 - Singleton pattern - returns existing logger if already created
 - Configures format based on environment
 - Sets log level from configuration
@@ -114,6 +117,7 @@ export function createLogger(): winston.Logger
 - Includes timestamp and error stack traces
 
 **Usage:**
+
 ```typescript
 import { createLogger } from './utils/logger';
 
@@ -126,15 +130,17 @@ logger.info('Application started');
 Gets the logger instance, creating it if necessary:
 
 ```typescript
-export function getLogger(): winston.Logger
+export function getLogger(): winston.Logger;
 ```
 
 **Features:**
+
 - Lazy initialization
 - Ensures logger is always available
 - Most commonly used function
 
 **Usage:**
+
 ```typescript
 import { getLogger } from './utils/logger';
 
@@ -147,12 +153,12 @@ logger.error('Operation failed', { error: error.message });
 
 The logger supports standard Winston log levels, configured via the `LOG_LEVEL` environment variable:
 
-| Level | Usage | Example |
-|-------|-------|---------|
+| Level   | Usage                                | Example                                      |
+| ------- | ------------------------------------ | -------------------------------------------- |
 | `error` | Error conditions that need attention | `logger.error('Database connection failed')` |
-| `warn` | Warning conditions | `logger.warn('Rate limit approaching')` |
-| `info` | Informational messages | `logger.info('Server started')` |
-| `debug` | Debug information | `logger.debug('Request details', { body })` |
+| `warn`  | Warning conditions                   | `logger.warn('Rate limit approaching')`      |
+| `info`  | Informational messages               | `logger.info('Server started')`              |
+| `debug` | Debug information                    | `logger.debug('Request details', { body })`  |
 
 ## Default Metadata
 
@@ -176,8 +182,8 @@ class ExampleService {
     private readonly logger = getLogger();
 
     async processRequest(data: unknown) {
-        this.logger.info('Processing request', { 
-            dataSize: JSON.stringify(data).length 
+        this.logger.info('Processing request', {
+            dataSize: JSON.stringify(data).length,
         });
 
         try {
@@ -187,7 +193,7 @@ class ExampleService {
         } catch (error) {
             this.logger.error('Operation failed', {
                 error: error instanceof Error ? error.message : 'Unknown error',
-                stack: error instanceof Error ? error.stack : undefined
+                stack: error instanceof Error ? error.stack : undefined,
             });
             throw error;
         }
@@ -203,7 +209,7 @@ logger.info('Scan completed', {
     scanId: 'scan_12345',
     duration: 1500,
     threatCount: 3,
-    action: 'block'
+    action: 'block',
 });
 
 // Log with nested objects
@@ -211,7 +217,7 @@ logger.debug('API request', {
     method: 'POST',
     url: '/scan',
     headers: { 'content-type': 'application/json' },
-    body: { truncated: true }
+    body: { truncated: true },
 });
 ```
 
@@ -225,10 +231,10 @@ try {
     logger.error('Operation failed', {
         error: error instanceof Error ? error.message : 'Unknown error',
         code: error instanceof APIError ? error.code : undefined,
-        context: { 
+        context: {
             operation: 'riskyOperation',
-            input: sanitizedInput 
-        }
+            input: sanitizedInput,
+        },
     });
 }
 ```
@@ -244,7 +250,7 @@ export class PrismaAIRSClient {
 
     constructor(config: AIRSClientConfig) {
         this.logger = getLogger();
-        
+
         this.logger.info('Prisma AIRS client initialized', {
             baseUrl: this.baseUrl,
             timeout: this.config.timeout,
@@ -308,7 +314,7 @@ logger.error('Scan failed', {
     scanId,
     profileName,
     error: error.message,
-    duration: Date.now() - startTime
+    duration: Date.now() - startTime,
 });
 
 // Bad - no context
@@ -321,13 +327,13 @@ logger.error('Scan failed');
 // Good - sanitized
 logger.info('User login', {
     userId: user.id,
-    email: user.email.replace(/(.{2}).*(@.*)/, '$1***$2')
+    email: user.email.replace(/(.{2}).*(@.*)/, '$1***$2'),
 });
 
 // Bad - exposes sensitive data
 logger.info('User login', {
     userId: user.id,
-    password: user.password  // Never log passwords!
+    password: user.password, // Never log passwords!
 });
 ```
 
@@ -336,9 +342,9 @@ logger.info('User login', {
 ```typescript
 // Consistent field naming across the application
 logger.info('Operation completed', {
-    requestId: req.id,      // Always use 'requestId'
-    duration: elapsed,      // Always use 'duration' for time
-    userId: user.id,        // Always use 'userId'
+    requestId: req.id, // Always use 'requestId'
+    duration: elapsed, // Always use 'duration' for time
+    userId: user.id, // Always use 'userId'
 });
 ```
 
@@ -346,11 +352,11 @@ logger.info('Operation completed', {
 
 1. **Log Level Filtering** - Debug logs are only evaluated when LOG_LEVEL includes them
 2. **Lazy Evaluation** - Use functions for expensive computations:
-   ```typescript
-   logger.debug('Large data', () => ({
-       data: expensiveSerializationFunction()
-   }));
-   ```
+    ```typescript
+    logger.debug('Large data', () => ({
+        data: expensiveSerializationFunction(),
+    }));
+    ```
 3. **Test Environment** - Logs are completely silent in test environment
 
 ## Troubleshooting
@@ -358,18 +364,18 @@ logger.info('Operation completed', {
 ### Common Issues
 
 1. **No Log Output**
-   - Check `LOG_LEVEL` environment variable
-   - Verify `NODE_ENV` is set correctly
-   - Ensure logger is initialized
+    - Check `LOG_LEVEL` environment variable
+    - Verify `NODE_ENV` is set correctly
+    - Ensure logger is initialized
 
 2. **Wrong Format**
-   - Development uses colorized simple format
-   - Production uses JSON format
-   - Check `NODE_ENV` setting
+    - Development uses colorized simple format
+    - Production uses JSON format
+    - Check `NODE_ENV` setting
 
 3. **Missing Metadata**
-   - Default metadata comes from config
-   - Ensure config is loaded before logger
+    - Default metadata comes from config
+    - Ensure config is loaded before logger
 
 ### Debug Logger Issues
 

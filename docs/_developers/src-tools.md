@@ -27,12 +27,13 @@ The tools module consists of two files:
 
 ```typescript
 interface ScanContentArgs {
-    prompt?: string;          // The prompt content to scan
-    response?: string;        // The response content to scan
-    context?: string;         // Additional context for the scan
-    profileName?: string;     // Security profile name (defaults to "Prisma AIRS")
-    profileId?: string;       // Security profile ID
-    metadata?: {              // Additional metadata
+    prompt?: string; // The prompt content to scan
+    response?: string; // The response content to scan
+    context?: string; // Additional context for the scan
+    profileName?: string; // Security profile name (defaults to "Prisma AIRS")
+    profileId?: string; // Security profile ID
+    metadata?: {
+        // Additional metadata
         appName?: string;
         appUser?: string;
         aiModel?: string;
@@ -95,12 +96,12 @@ interface ScanContentArgs {
 ```typescript
 interface ScanAsyncArgs {
     requests: Array<{
-        reqId: number;           // Unique identifier (required)
-        prompt?: string;         // Prompt to scan
-        response?: string;       // Response to scan
-        context?: string;        // Additional context
-        profileName?: string;    // Security profile name
-        profileId?: string;      // Security profile ID
+        reqId: number; // Unique identifier (required)
+        prompt?: string; // Prompt to scan
+        response?: string; // Response to scan
+        context?: string; // Additional context
+        profileName?: string; // Security profile name
+        profileId?: string; // Security profile ID
     }>;
 }
 ```
@@ -153,7 +154,7 @@ interface ScanAsyncArgs {
 
 ```typescript
 interface GetScanResultsArgs {
-    scanIds: string[];    // Array of scan IDs (max 5)
+    scanIds: string[]; // Array of scan IDs (max 5)
 }
 ```
 
@@ -206,7 +207,7 @@ interface GetScanResultsArgs {
 
 ```typescript
 interface GetThreatReportsArgs {
-    reportIds: string[];    // Array of report IDs (max 5)
+    reportIds: string[]; // Array of report IDs (max 5)
 }
 ```
 
@@ -285,10 +286,10 @@ export class ToolHandler {
     } as const;
 
     // List available tools
-    listTools(params: ToolsListParams): ToolsListResult
+    listTools(params: ToolsListParams): ToolsListResult;
 
     // Execute a tool
-    async callTool(params: ToolsCallParams): Promise<ToolsCallResult>
+    async callTool(params: ToolsCallParams): Promise<ToolsCallResult>;
 }
 ```
 
@@ -323,17 +324,17 @@ The module automatically summarizes detected threats:
 ```typescript
 private summarizeThreats(result: ScanResponseWithDetected): string {
     const threats: string[] = [];
-    
+
     // Check prompt threats
     if (result.prompt_detected?.injection) threats.push('prompt_injection');
     if (result.prompt_detected?.dlp) threats.push('prompt_dlp');
     // ... other threat types
-    
+
     // Check response threats
     if (result.response_detected?.malicious_code) threats.push('response_malicious_code');
     if (result.response_detected?.ungrounded) threats.push('response_ungrounded');
     // ... other threat types
-    
+
     return threats.join(', ') || 'unknown threats';
 }
 ```
@@ -362,24 +363,27 @@ try {
 ### Common Error Scenarios
 
 1. **Missing Required Arguments**
-   ```
-   At least one of prompt, response, or context is required
-   ```
+
+    ```
+    At least one of prompt, response, or context is required
+    ```
 
 2. **Invalid Array Arguments**
-   ```
-   scanIds must be an array
-   ```
+
+    ```
+    scanIds must be an array
+    ```
 
 3. **API Errors**
-   ```
-   API Error (401): Invalid API key
-   ```
+
+    ```
+    API Error (401): Invalid API key
+    ```
 
 4. **Rate Limiting**
-   ```
-   API Error (429): Too many requests
-   ```
+    ```
+    API Error (429): Too many requests
+    ```
 
 ## Integration with Resources
 
@@ -393,12 +397,13 @@ contents.push({
         'scan-result',
         result.scan_id,
         'Scan Result Details',
-        result
-    )
+        result,
+    ),
 });
 ```
 
 This allows AI models to:
+
 1. Get summary information immediately
 2. Access detailed results through resource URIs
 3. Navigate between related data
@@ -456,7 +461,7 @@ assert(tools.tools[0].name === 'airs_scan_content');
 // Test tool execution
 const result = await handler.callTool({
     name: 'airs_scan_content',
-    arguments: { prompt: 'test content' }
+    arguments: { prompt: 'test content' },
 });
 assert(result.content.length > 0);
 assert(!result.isError);
@@ -471,12 +476,12 @@ const result = await handler.callTool({
     name: 'airs_scan_content',
     arguments: {
         prompt: 'SQL injection test',
-        profileName: 'Test Profile'
-    }
+        profileName: 'Test Profile',
+    },
 });
 
 // Verify resource creation
-const resourceContent = result.content.find(c => c.type === 'resource');
+const resourceContent = result.content.find((c) => c.type === 'resource');
 assert(resourceContent?.resource?.uri.startsWith('airs://'));
 ```
 

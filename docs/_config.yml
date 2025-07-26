@@ -9,64 +9,64 @@ url: "https://cdot65.github.io"
 markdown: kramdown
 highlighter: rouge
 kramdown:
-  input: GFM
-  syntax_highlighter_opts:
-    css_class: 'highlight'
-    span:
-      line_numbers: false
-    block:
-      line_numbers: false
+    input: GFM
+    syntax_highlighter_opts:
+        css_class: "highlight"
+        span:
+            line_numbers: false
+        block:
+            line_numbers: false
 
 # Collections
 collections:
-  developers:
-    output: true
-    permalink: /developers/:path/
-  deployment:
-    output: true
-    permalink: /deployment/:path/
-  prisma-airs:
-    output: true
-    permalink: /prisma-airs/:path/
-  enterprise:
-    output: true
-    permalink: /enterprise/:path/
-  api:
-    output: true
-    permalink: /api/:path/
+    developers:
+        output: true
+        permalink: /developers/:path/
+    deployment:
+        output: true
+        permalink: /deployment/:path/
+    prisma-airs:
+        output: true
+        permalink: /prisma-airs/:path/
+    enterprise:
+        output: true
+        permalink: /enterprise/:path/
+    api:
+        output: true
+        permalink: /api/:path/
 
 # Default layouts
 defaults:
-  - scope:
-      path: ""
-      type: "developers"
-    values:
-      layout: "documentation"
-      category: "developers"
-  - scope:
-      path: ""
-      type: "deployment"
-    values:
-      layout: "documentation"
-      category: "deployment"
-  - scope:
-      path: ""
-      type: "prisma-airs"
-    values:
-      layout: "documentation"
-      category: "prisma-airs"
-  - scope:
-      path: ""
-      type: "enterprise"
-    values:
-      layout: "documentation"
-      category: "enterprise"
-  - scope:
-      path: ""
-      type: "api"
-    values:
-      layout: "api"
-      category: "api"
+    - scope:
+          path: ""
+          type: "developers"
+      values:
+          layout: "documentation"
+          category: "developers"
+    - scope:
+          path: ""
+          type: "deployment"
+      values:
+          layout: "documentation"
+          category: "deployment"
+    - scope:
+          path: ""
+          type: "prisma-airs"
+      values:
+          layout: "documentation"
+          category: "prisma-airs"
+    - scope:
+          path: ""
+          type: "enterprise"
+      values:
+          layout: "documentation"
+          category: "enterprise"
+    - scope:
+          path: ""
+          type: "api"
+      values:
+          layout: "api"
+          category: "api"
 
 # Site configuration
 repository: cdot65/prisma-airs-mcp
@@ -76,14 +76,14 @@ github_repo: prisma-airs-mcp
 
 # Plugins
 plugins:
-  - jekyll-feed
-  - jekyll-sitemap
-  - jekyll-seo-tag
+    - jekyll-feed
+    - jekyll-sitemap
+    - jekyll-seo-tag
 
 # Exclude from build
 exclude:
-  - Gemfile
-  - Gemfile.lock
-  - README.md
-  - .gitignore
-  - vendor
+    - Gemfile
+    - Gemfile.lock
+    - README.md
+    - .gitignore
+    - vendor

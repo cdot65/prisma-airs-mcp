@@ -27,41 +27,41 @@ The configuration module consists of a single file that handles:
 export type Config = {
     // Server configuration
     server: {
-        port: number;                    // Server port (1-65535)
+        port: number; // Server port (1-65535)
         environment: 'development' | 'production' | 'test';
         logLevel: 'error' | 'warn' | 'info' | 'debug';
     };
 
     // Prisma AIRS configuration
     airs: {
-        apiUrl: string;                  // Valid URL required
-        apiKey: string;                  // Required, non-empty
-        timeout: number;                 // Min 1000ms, default 30000ms
-        retryAttempts: number;           // Min 0, default 3
-        retryDelay: number;              // Min 100ms, default 1000ms
-        defaultProfileId?: string;       // Optional
-        defaultProfileName?: string;     // Optional
+        apiUrl: string; // Valid URL required
+        apiKey: string; // Required, non-empty
+        timeout: number; // Min 1000ms, default 30000ms
+        retryAttempts: number; // Min 0, default 3
+        retryDelay: number; // Min 100ms, default 1000ms
+        defaultProfileId?: string; // Optional
+        defaultProfileName?: string; // Optional
     };
 
     // Cache configuration
     cache: {
-        ttlSeconds: number;              // Min 0, default 300
-        maxSize: number;                 // Min 0, default 1000
-        enabled: boolean;                // Default true
+        ttlSeconds: number; // Min 0, default 300
+        maxSize: number; // Min 0, default 1000
+        enabled: boolean; // Default true
     };
 
     // Rate limiting configuration
     rateLimit: {
-        maxRequests: number;             // Min 1, default 100
-        windowMs: number;                // Min 1000ms, default 60000ms
-        enabled: boolean;                // Default true
+        maxRequests: number; // Min 1, default 100
+        windowMs: number; // Min 1000ms, default 60000ms
+        enabled: boolean; // Default true
     };
 
     // MCP configuration
     mcp: {
-        serverName: string;              // Default 'prisma-airs-mcp'
-        serverVersion: string;           // Default from version.json or '1.0.0'
-        protocolVersion: string;         // Default '2024-11-05'
+        serverName: string; // Default 'prisma-airs-mcp'
+        serverVersion: string; // Default from version.json or '1.0.0'
+        protocolVersion: string; // Default '2024-11-05'
     };
 };
 ```
@@ -156,7 +156,7 @@ The module automatically detects the server version from `version.json`:
 let versionFromFile = '1.0.0';
 try {
     const versionJson = JSON.parse(
-        readFileSync(join(process.cwd(), 'version.json'), 'utf-8')
+        readFileSync(join(process.cwd(), 'version.json'), 'utf-8'),
     ) as { version: string };
     versionFromFile = versionJson.version;
 } catch {
@@ -196,7 +196,7 @@ export function getConfig(): Config {
             if (error instanceof z.ZodError) {
                 console.error('Configuration validation failed:', error.issues);
                 throw new Error(
-                    `Invalid configuration: ${error.issues.map((e) => e.message).join(', ')}`
+                    `Invalid configuration: ${error.issues.map((e) => e.message).join(', ')}`,
                 );
             }
             throw error;
@@ -230,7 +230,7 @@ import { getConfig } from '../config';
 
 export function getAIRSClient() {
     const config = getConfig();
-    
+
     return new EnhancedPrismaAIRSClient({
         apiUrl: config.airs.apiUrl,
         apiKey: config.airs.apiKey,
@@ -266,7 +266,7 @@ apiUrl: z.string().refine((val) => {
     } catch {
         return false;
     }
-}, 'Invalid URL')
+}, 'Invalid URL');
 ```
 
 ### Numeric Ranges
@@ -285,7 +285,7 @@ All numeric values have minimum (and sometimes maximum) constraints:
 Boolean environment variables use negative checking:
 
 ```typescript
-enabled: process.env.CACHE_ENABLED !== 'false'
+enabled: process.env.CACHE_ENABLED !== 'false';
 ```
 
 This means any value other than 'false' (including undefined) is treated as true.
@@ -344,16 +344,16 @@ RATE_LIMIT_ENABLED=false
 ### Common Issues
 
 1. **Invalid URL Error**
-   - Ensure AIRS_API_URL includes protocol (https://)
-   - Check for trailing slashes (they're automatically removed)
+    - Ensure AIRS_API_URL includes protocol (https://)
+    - Check for trailing slashes (they're automatically removed)
 
 2. **Missing Required Fields**
-   - AIRS_API_URL and AIRS_API_KEY are required
-   - Set them in environment or .env file
+    - AIRS_API_URL and AIRS_API_KEY are required
+    - Set them in environment or .env file
 
 3. **Type Conversion Errors**
-   - Ensure numeric values are valid integers
-   - Check for typos in boolean values
+    - Ensure numeric values are valid integers
+    - Check for typos in boolean values
 
 ### Debug Configuration
 

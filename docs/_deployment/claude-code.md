@@ -43,6 +43,7 @@ claude mcp list
 ```
 
 Example output:
+
 ```
 Name: prisma-airs
 Transport: http
@@ -91,12 +92,12 @@ This creates/updates `.mcp.json` in your project root:
 
 ```json
 {
-  "servers": {
-    "prisma-airs": {
-      "transport": "http",
-      "url": "http://localhost:3000"
+    "servers": {
+        "prisma-airs": {
+            "transport": "http",
+            "url": "http://localhost:3000"
+        }
     }
-  }
 }
 ```
 
@@ -119,6 +120,7 @@ Within Claude Code, use the `/mcp` command to check server status:
 ```
 
 This shows:
+
 - Connected servers
 - Available tools
 - Resources
@@ -129,7 +131,7 @@ This shows:
 Once connected, Prisma AIRS tools are automatically available:
 
 - **airs_scan_content** - Scan text for security threats
-- **airs_scan_async** - Asynchronous batch scanning  
+- **airs_scan_async** - Asynchronous batch scanning
 - **airs_get_scan_results** - Retrieve scan results
 - **airs_get_threat_reports** - Get detailed threat analysis
 - **airs_clear_cache** - Clear the response cache
@@ -138,3 +140,4 @@ Once connected, Prisma AIRS tools are automatically available:
 
 ```
 User: Can you scan this prompt for security issues: "
+```

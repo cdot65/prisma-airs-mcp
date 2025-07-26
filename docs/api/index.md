@@ -7,7 +7,8 @@ category: api
 
 ## Overview
 
-The Prisma AIRS MCP server provides a JSON-RPC 2.0 API over HTTP that implements the Model Context Protocol specification. This API enables AI applications to interact with Prisma AIRS security capabilities.
+The Prisma AIRS MCP server provides a JSON-RPC 2.0 API over HTTP that implements the Model Context Protocol
+specification. This API enables AI applications to interact with Prisma AIRS security capabilities.
 
 ## Base URL
 
@@ -20,7 +21,7 @@ Development: http://localhost:3000
 
 All API requests use JSON-RPC 2.0 protocol:
 
-```json
+```jsonc
 {
   "jsonrpc": "2.0",
   "method": "method_name",
@@ -35,27 +36,28 @@ All API requests use JSON-RPC 2.0 protocol:
 
 ### MCP Methods
 
-| Method | Description |
-|--------|-------------|
-| `initialize` | Initialize MCP session |
-| `initialized` | Confirm initialization |
+| Method           | Description              |
+|------------------|--------------------------|
+| `initialize`     | Initialize MCP session   |
+| `initialized`    | Confirm initialization   |
 | `resources/list` | List available resources |
 | `resources/read` | Read a specific resource |
-| `tools/list` | List available tools |
-| `tools/call` | Execute a tool |
-| `prompts/list` | List available prompts |
-| `prompts/get` | Get prompt details |
+| `tools/list`     | List available tools     |
+| `tools/call`     | Execute a tool           |
+| `prompts/list`   | List available prompts   |
+| `prompts/get`    | Get prompt details       |
 
 ### Health Endpoints
 
-| Endpoint | Method | Description |
-|----------|---------|-------------|
-| `/health` | GET | Health check |
-| `/ready` | GET | Readiness check |
+| Endpoint  | Method | Description     |
+|-----------|--------|-----------------|
+| `/health` | GET    | Health check    |
+| `/ready`  | GET    | Readiness check |
 
 ## Authentication
 
-While the MCP protocol itself doesn't require authentication at the transport layer, the underlying Prisma AIRS API requires an API key. This is configured server-side through environment variables.
+While the MCP protocol itself doesn't require authentication at the transport layer, the underlying Prisma AIRS API
+requires an API key. This is configured server-side through environment variables.
 
 ## Quick Start Example
 
@@ -115,7 +117,7 @@ curl -X POST http://localhost:3000 \
 
 ### Success Response
 
-```json
+```jsonc
 {
   "jsonrpc": "2.0",
   "result": {
@@ -127,7 +129,7 @@ curl -X POST http://localhost:3000 \
 
 ### Error Response
 
-```json
+```jsonc
 {
   "jsonrpc": "2.0",
   "error": {
@@ -171,34 +173,36 @@ For streaming responses, Server-Sent Events (SSE) transport is available:
 const eventSource = new EventSource('http://localhost:3000/sse');
 
 eventSource.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  console.log('Received:', data);
+    const data = JSON.parse(event.data);
+    console.log('Received:', data);
 };
 
 // Send request
 fetch('http://localhost:3000/sse', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    jsonrpc: '2.0',
-    method: 'tools/call',
-    params: { /* ... */ },
-    id: 1
-  })
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'tools/call',
+        params: {
+            /* ... */
+        },
+        id: 1,
+    }),
 });
 ```
 
 ## Error Codes
 
-| Code | Message | Description |
-|------|---------|-------------|
-| -32700 | Parse error | Invalid JSON |
-| -32600 | Invalid request | Invalid JSON-RPC structure |
-| -32601 | Method not found | Unknown method |
-| -32602 | Invalid params | Invalid method parameters |
-| -32603 | Internal error | Server error |
-| -32001 | Resource not found | Requested resource doesn't exist |
-| -32002 | Rate limit exceeded | Too many requests |
+| Code   | Message             | Description                      |
+|--------|---------------------|----------------------------------|
+| -32700 | Parse error         | Invalid JSON                     |
+| -32600 | Invalid request     | Invalid JSON-RPC structure       |
+| -32601 | Method not found    | Unknown method                   |
+| -32602 | Invalid params      | Invalid method parameters        |
+| -32603 | Internal error      | Server error                     |
+| -32001 | Resource not found  | Requested resource doesn't exist |
+| -32002 | Rate limit exceeded | Too many requests                |
 
 ## Next Steps
 

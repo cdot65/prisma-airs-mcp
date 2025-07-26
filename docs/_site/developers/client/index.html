@@ -162,17 +162,17 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// AIRS client within the MCP server</span>
 <span class="kd">class</span> <span class="nx">PrismaAIRSClient</span> <span class="p">{</span>
-  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">config</span><span class="p">:</span> <span class="nx">AIRSConfig</span><span class="p">;</span>
-  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">httpClient</span><span class="p">:</span> <span class="nx">AxiosInstance</span><span class="p">;</span>
-  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">cache</span><span class="p">:</span> <span class="nx">AIRSCache</span><span class="p">;</span>
-  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">rateLimiter</span><span class="p">:</span> <span class="nx">AIRSRateLimiter</span><span class="p">;</span>
-  
-  <span class="kd">constructor</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AIRSConfig</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="nx">validateConfig</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">httpClient</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">createHttpClient</span><span class="p">();</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">cache</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AIRSCache</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">cache</span><span class="p">);</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">rateLimiter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AIRSRateLimiter</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">rateLimit</span><span class="p">);</span>
-  <span class="p">}</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">config</span><span class="p">:</span> <span class="nx">AIRSConfig</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">httpClient</span><span class="p">:</span> <span class="nx">AxiosInstance</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">cache</span><span class="p">:</span> <span class="nx">AIRSCache</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">rateLimiter</span><span class="p">:</span> <span class="nx">AIRSRateLimiter</span><span class="p">;</span>
+
+    <span class="kd">constructor</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AIRSConfig</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">config</span> <span class="o">=</span> <span class="nx">validateConfig</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">httpClient</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">createHttpClient</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">cache</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AIRSCache</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">cache</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">rateLimiter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AIRSRateLimiter</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">rateLimit</span><span class="p">);</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -181,42 +181,42 @@
 <h3 id="client-configuration-options">Client Configuration Options</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">AIRSConfig</span> <span class="p">{</span>
-  <span class="c1">// Required</span>
-  <span class="nl">apiUrl</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-  <span class="nl">apiKey</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-  
-  <span class="c1">// Optional with defaults</span>
-  <span class="nl">timeout</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>              <span class="c1">// Default: 30000ms</span>
-  <span class="nl">maxRetries</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>           <span class="c1">// Default: 3</span>
-  <span class="nl">retryDelay</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>           <span class="c1">// Default: 1000ms</span>
-  
-  <span class="c1">// Sub-configurations</span>
-  <span class="nl">cache</span><span class="p">?:</span> <span class="nx">CacheConfig</span><span class="p">;</span>
-  <span class="nl">rateLimit</span><span class="p">?:</span> <span class="nx">RateLimitConfig</span><span class="p">;</span>
-  
-  <span class="c1">// Advanced options</span>
-  <span class="nl">httpAgent</span><span class="p">?:</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Agent</span><span class="p">;</span>
-  <span class="nl">httpsAgent</span><span class="p">?:</span> <span class="nx">https</span><span class="p">.</span><span class="nx">Agent</span><span class="p">;</span>
-  <span class="nl">proxy</span><span class="p">?:</span> <span class="nx">ProxyConfig</span><span class="p">;</span>
+    <span class="c1">// Required</span>
+    <span class="nl">apiUrl</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">apiKey</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+
+    <span class="c1">// Optional with defaults</span>
+    <span class="nl">timeout</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span> <span class="c1">// Default: 30000ms</span>
+    <span class="nl">maxRetries</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span> <span class="c1">// Default: 3</span>
+    <span class="nl">retryDelay</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span> <span class="c1">// Default: 1000ms</span>
+
+    <span class="c1">// Sub-configurations</span>
+    <span class="nl">cache</span><span class="p">?:</span> <span class="nx">CacheConfig</span><span class="p">;</span>
+    <span class="nl">rateLimit</span><span class="p">?:</span> <span class="nx">RateLimitConfig</span><span class="p">;</span>
+
+    <span class="c1">// Advanced options</span>
+    <span class="nl">httpAgent</span><span class="p">?:</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Agent</span><span class="p">;</span>
+    <span class="nl">httpsAgent</span><span class="p">?:</span> <span class="nx">https</span><span class="p">.</span><span class="nx">Agent</span><span class="p">;</span>
+    <span class="nl">proxy</span><span class="p">?:</span> <span class="nx">ProxyConfig</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h3 id="example-configuration">Example Configuration</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PrismaAIRSClient</span><span class="p">({</span>
-  <span class="na">apiUrl</span><span class="p">:</span> <span class="dl">'</span><span class="s1">https://service.api.aisecurity.paloaltonetworks.com</span><span class="dl">'</span><span class="p">,</span>
-  <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_API_KEY</span><span class="o">!</span><span class="p">,</span>
-  <span class="na">timeout</span><span class="p">:</span> <span class="mi">60000</span><span class="p">,</span>
-  <span class="na">maxRetries</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-  <span class="na">cache</span><span class="p">:</span> <span class="p">{</span>
-    <span class="na">enabled</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-    <span class="na">ttl</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
-    <span class="na">maxSize</span><span class="p">:</span> <span class="mi">1000</span>
-  <span class="p">},</span>
-  <span class="na">rateLimit</span><span class="p">:</span> <span class="p">{</span>
-    <span class="na">maxRequests</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
-    <span class="na">windowMs</span><span class="p">:</span> <span class="mi">60000</span>
-  <span class="p">}</span>
+    <span class="na">apiUrl</span><span class="p">:</span> <span class="dl">'</span><span class="s1">https://service.api.aisecurity.paloaltonetworks.com</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_API_KEY</span><span class="o">!</span><span class="p">,</span>
+    <span class="na">timeout</span><span class="p">:</span> <span class="mi">60000</span><span class="p">,</span>
+    <span class="na">maxRetries</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+    <span class="na">cache</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">enabled</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="na">ttl</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+        <span class="na">maxSize</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="na">rateLimit</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">maxRequests</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="na">windowMs</span><span class="p">:</span> <span class="mi">60000</span><span class="p">,</span>
+    <span class="p">},</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
@@ -227,22 +227,22 @@
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="nx">scanContent</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">ScanRequest</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ScanResponse</span><span class="o">&gt;</span> <span class="p">{</span>
   <span class="c1">// Check rate limit</span>
   <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">rateLimiter</span><span class="p">.</span><span class="nx">checkLimit</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan</span><span class="dl">'</span><span class="p">);</span>
-  
+
   <span class="c1">// Check cache</span>
   <span class="kd">const</span> <span class="nx">cacheKey</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCacheKey</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
   <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nx">cached</span><span class="p">;</span>
   <span class="p">}</span>
-  
+
   <span class="c1">// Make API request with retry logic</span>
   <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">retryableRequest</span><span class="p">(</span>
     <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">httpClient</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/v1/scan/sync/request</span><span class="dl">'</span><span class="p">,</span> <span class="nx">request</span><span class="p">)</span>
   <span class="p">);</span>
-  
+
   <span class="c1">// Cache successful response</span>
   <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">,</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">cache</span><span class="p">?.</span><span class="nx">ttl</span><span class="p">);</span>
-  
+
   <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -251,11 +251,11 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="nx">scanAsync</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">AsyncScanRequest</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AsyncScanResponse</span><span class="o">&gt;</span> <span class="p">{</span>
   <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">rateLimiter</span><span class="p">.</span><span class="nx">checkLimit</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_async</span><span class="dl">'</span><span class="p">);</span>
-  
+
   <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">retryableRequest</span><span class="p">(</span>
     <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">httpClient</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/v1/scan/async/request</span><span class="dl">'</span><span class="p">,</span> <span class="nx">request</span><span class="p">)</span>
   <span class="p">);</span>
-  
+
   <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
 <span class="p">}</span>
 
@@ -264,13 +264,13 @@
   <span class="k">if</span> <span class="p">(</span><span class="nx">scanIds</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Maximum 5 scan IDs allowed per request</span><span class="dl">'</span><span class="p">);</span>
   <span class="p">}</span>
-  
+
   <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">retryableRequest</span><span class="p">(</span>
     <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">httpClient</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/v1/scan/results</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
       <span class="na">params</span><span class="p">:</span> <span class="p">{</span> <span class="na">scan_ids</span><span class="p">:</span> <span class="nx">scanIds</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">,</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
     <span class="p">})</span>
   <span class="p">);</span>
-  
+
   <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -281,13 +281,13 @@
   <span class="k">if</span> <span class="p">(</span><span class="nx">reportIds</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Maximum 5 report IDs allowed per request</span><span class="dl">'</span><span class="p">);</span>
   <span class="p">}</span>
-  
+
   <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">retryableRequest</span><span class="p">(</span>
     <span class="p">()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">httpClient</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/v1/scan/reports</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
       <span class="na">params</span><span class="p">:</span> <span class="p">{</span> <span class="na">report_ids</span><span class="p">:</span> <span class="nx">reportIds</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">,</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
     <span class="p">})</span>
   <span class="p">);</span>
-  
+
   <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -303,33 +303,33 @@
   <span class="nx">retries</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">maxRetries</span>
 <span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span> <span class="p">{</span>
   <span class="kd">let</span> <span class="na">lastError</span><span class="p">:</span> <span class="nb">Error</span><span class="p">;</span>
-  
+
   <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="nx">retries</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">try</span> <span class="p">{</span>
       <span class="k">return</span> <span class="k">await</span> <span class="nx">requestFn</span><span class="p">();</span>
     <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
       <span class="nx">lastError</span> <span class="o">=</span> <span class="nx">error</span> <span class="k">as</span> <span class="nb">Error</span><span class="p">;</span>
-      
+
       <span class="c1">// Don't retry on client errors (4xx)</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">axios</span><span class="p">.</span><span class="nx">isAxiosError</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="o">&amp;&amp;</span> 
-          <span class="nx">error</span><span class="p">.</span><span class="nx">response</span><span class="p">?.</span><span class="nx">status</span> <span class="o">&gt;=</span> <span class="mi">400</span> <span class="o">&amp;&amp;</span> 
+      <span class="k">if</span> <span class="p">(</span><span class="nx">axios</span><span class="p">.</span><span class="nx">isAxiosError</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+          <span class="nx">error</span><span class="p">.</span><span class="nx">response</span><span class="p">?.</span><span class="nx">status</span> <span class="o">&gt;=</span> <span class="mi">400</span> <span class="o">&amp;&amp;</span>
           <span class="nx">error</span><span class="p">.</span><span class="nx">response</span><span class="p">?.</span><span class="nx">status</span> <span class="o">&lt;</span> <span class="mi">500</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
       <span class="p">}</span>
-      
+
       <span class="c1">// Calculate delay with exponential backoff and jitter</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">retries</span><span class="p">)</span> <span class="p">{</span>
         <span class="kd">const</span> <span class="nx">delay</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">retryDelay</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="o">+</span> 
+          <span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">retryDelay</span> <span class="o">*</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="o">+</span>
           <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
           <span class="mi">30000</span> <span class="c1">// Max 30 seconds</span>
         <span class="p">);</span>
-        
+
         <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">delay</span><span class="p">(</span><span class="nx">delay</span><span class="p">);</span>
       <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span>
-  
+
   <span class="k">throw</span> <span class="nx">lastError</span><span class="o">!</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -345,20 +345,20 @@
       <span class="dl">'</span><span class="s1">x-pan-token</span><span class="dl">'</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">apiKey</span>
     <span class="p">}</span>
   <span class="p">});</span>
-  
+
   <span class="c1">// Request interceptor</span>
   <span class="nx">client</span><span class="p">.</span><span class="nx">interceptors</span><span class="p">.</span><span class="nx">request</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span>
     <span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
       <span class="c1">// Add request ID for tracing</span>
       <span class="nx">config</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="dl">'</span><span class="s1">X-Request-ID</span><span class="dl">'</span><span class="p">]</span> <span class="o">=</span> <span class="nx">generateRequestId</span><span class="p">();</span>
-      
+
       <span class="c1">// Log request (without sensitive data)</span>
       <span class="nx">logger</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span><span class="dl">'</span><span class="s1">AIRS API Request</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
         <span class="na">method</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">method</span><span class="p">,</span>
         <span class="na">url</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">url</span><span class="p">,</span>
         <span class="na">requestId</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="dl">'</span><span class="s1">X-Request-ID</span><span class="dl">'</span><span class="p">]</span>
       <span class="p">});</span>
-      
+
       <span class="k">return</span> <span class="nx">config</span><span class="p">;</span>
     <span class="p">},</span>
     <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
@@ -366,7 +366,7 @@
       <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">);</span>
-  
+
   <span class="c1">// Response interceptor</span>
   <span class="nx">client</span><span class="p">.</span><span class="nx">interceptors</span><span class="p">.</span><span class="nx">response</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span>
     <span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
@@ -387,7 +387,7 @@
       <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
     <span class="p">}</span>
   <span class="p">);</span>
-  
+
   <span class="k">return</span> <span class="nx">client</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -396,19 +396,19 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Optimized HTTP agent configuration</span>
 <span class="kd">const</span> <span class="nx">httpsAgent</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">https</span><span class="p">.</span><span class="nx">Agent</span><span class="p">({</span>
-  <span class="na">keepAlive</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-  <span class="na">keepAliveMsecs</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
-  <span class="na">maxSockets</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
-  <span class="na">maxFreeSockets</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-  <span class="na">timeout</span><span class="p">:</span> <span class="mi">60000</span><span class="p">,</span>
-  <span class="na">freeSocketTimeout</span><span class="p">:</span> <span class="mi">30000</span><span class="p">,</span>
-  <span class="na">scheduling</span><span class="p">:</span> <span class="dl">'</span><span class="s1">lifo</span><span class="dl">'</span>
+    <span class="na">keepAlive</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="na">keepAliveMsecs</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+    <span class="na">maxSockets</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="na">maxFreeSockets</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="na">timeout</span><span class="p">:</span> <span class="mi">60000</span><span class="p">,</span>
+    <span class="na">freeSocketTimeout</span><span class="p">:</span> <span class="mi">30000</span><span class="p">,</span>
+    <span class="na">scheduling</span><span class="p">:</span> <span class="dl">'</span><span class="s1">lifo</span><span class="dl">'</span><span class="p">,</span>
 <span class="p">});</span>
 
 <span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PrismaAIRSClient</span><span class="p">({</span>
-  <span class="na">apiUrl</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">,</span>
-  <span class="na">apiKey</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">,</span>
-  <span class="nx">httpsAgent</span>
+    <span class="na">apiUrl</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">,</span>
+    <span class="na">apiKey</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">,</span>
+    <span class="nx">httpsAgent</span><span class="p">,</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
@@ -417,63 +417,63 @@
 <h3 id="error-types">Error Types</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">enum</span> <span class="nx">AIRSErrorCode</span> <span class="p">{</span>
-  <span class="c1">// Client errors</span>
-  <span class="nx">INVALID_REQUEST</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">INVALID_REQUEST</span><span class="dl">'</span><span class="p">,</span>
-  <span class="nx">AUTHENTICATION_FAILED</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">AUTHENTICATION_FAILED</span><span class="dl">'</span><span class="p">,</span>
-  <span class="nx">FORBIDDEN</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">FORBIDDEN</span><span class="dl">'</span><span class="p">,</span>
-  <span class="nx">NOT_FOUND</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">NOT_FOUND</span><span class="dl">'</span><span class="p">,</span>
-  <span class="nx">RATE_LIMITED</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">RATE_LIMITED</span><span class="dl">'</span><span class="p">,</span>
-  
-  <span class="c1">// Server errors</span>
-  <span class="nx">INTERNAL_ERROR</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">INTERNAL_ERROR</span><span class="dl">'</span><span class="p">,</span>
-  <span class="nx">SERVICE_UNAVAILABLE</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">SERVICE_UNAVAILABLE</span><span class="dl">'</span><span class="p">,</span>
-  
-  <span class="c1">// Network errors</span>
-  <span class="nx">TIMEOUT</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">TIMEOUT</span><span class="dl">'</span><span class="p">,</span>
-  <span class="nx">NETWORK_ERROR</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">NETWORK_ERROR</span><span class="dl">'</span>
+    <span class="c1">// Client errors</span>
+    <span class="nx">INVALID_REQUEST</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">INVALID_REQUEST</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">AUTHENTICATION_FAILED</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">AUTHENTICATION_FAILED</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">FORBIDDEN</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">FORBIDDEN</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">NOT_FOUND</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">NOT_FOUND</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">RATE_LIMITED</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">RATE_LIMITED</span><span class="dl">'</span><span class="p">,</span>
+
+    <span class="c1">// Server errors</span>
+    <span class="nx">INTERNAL_ERROR</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">INTERNAL_ERROR</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">SERVICE_UNAVAILABLE</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">SERVICE_UNAVAILABLE</span><span class="dl">'</span><span class="p">,</span>
+
+    <span class="c1">// Network errors</span>
+    <span class="nx">TIMEOUT</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">TIMEOUT</span><span class="dl">'</span><span class="p">,</span>
+    <span class="nx">NETWORK_ERROR</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">NETWORK_ERROR</span><span class="dl">'</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="kd">class</span> <span class="nx">AIRSError</span> <span class="kd">extends</span> <span class="nb">Error</span> <span class="p">{</span>
-  <span class="kd">constructor</span><span class="p">(</span>
-    <span class="k">public</span> <span class="nx">code</span><span class="p">:</span> <span class="nx">AIRSErrorCode</span><span class="p">,</span>
-    <span class="nx">message</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
-    <span class="k">public</span> <span class="nx">statusCode</span><span class="p">?:</span> <span class="kr">number</span><span class="p">,</span>
-    <span class="k">public</span> <span class="nx">details</span><span class="p">?:</span> <span class="nx">unknown</span>
-  <span class="p">)</span> <span class="p">{</span>
-    <span class="k">super</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">AIRSError</span><span class="dl">'</span><span class="p">;</span>
-  <span class="p">}</span>
+    <span class="kd">constructor</span><span class="p">(</span>
+        <span class="k">public</span> <span class="nx">code</span><span class="p">:</span> <span class="nx">AIRSErrorCode</span><span class="p">,</span>
+        <span class="nx">message</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+        <span class="k">public</span> <span class="nx">statusCode</span><span class="p">?:</span> <span class="kr">number</span><span class="p">,</span>
+        <span class="k">public</span> <span class="nx">details</span><span class="p">?:</span> <span class="nx">unknown</span><span class="p">,</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">AIRSError</span><span class="dl">'</span><span class="p">;</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h3 id="error-handling-example">Error Handling Example</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">scanContent</span><span class="p">({</span>
-    <span class="na">contents</span><span class="p">:</span> <span class="p">[{</span> <span class="na">prompt</span><span class="p">:</span> <span class="nx">userInput</span> <span class="p">}],</span>
-    <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">profile_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span> <span class="p">}</span>
-  <span class="p">});</span>
+    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">scanContent</span><span class="p">({</span>
+        <span class="na">contents</span><span class="p">:</span> <span class="p">[{</span> <span class="na">prompt</span><span class="p">:</span> <span class="nx">userInput</span> <span class="p">}],</span>
+        <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">profile_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="p">});</span>
 <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nx">AIRSError</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">switch</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">case</span> <span class="nx">AIRSErrorCode</span><span class="p">.</span><span class="nx">RATE_LIMITED</span><span class="p">:</span>
-        <span class="c1">// Handle rate limiting</span>
-        <span class="k">await</span> <span class="nx">delay</span><span class="p">(</span><span class="mi">60000</span><span class="p">);</span>
-        <span class="k">break</span><span class="p">;</span>
-        
-      <span class="k">case</span> <span class="nx">AIRSErrorCode</span><span class="p">.</span><span class="nx">AUTHENTICATION_FAILED</span><span class="p">:</span>
-        <span class="c1">// Handle auth failure</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Invalid API key</span><span class="dl">'</span><span class="p">);</span>
-        
-      <span class="k">case</span> <span class="nx">AIRSErrorCode</span><span class="p">.</span><span class="nx">TIMEOUT</span><span class="p">:</span>
-        <span class="c1">// Retry with longer timeout</span>
-        <span class="k">break</span><span class="p">;</span>
-        
-      <span class="nl">default</span><span class="p">:</span>
-        <span class="c1">// Log and handle generic error</span>
-        <span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">AIRS API error</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nx">AIRSError</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">AIRSErrorCode</span><span class="p">.</span><span class="nx">RATE_LIMITED</span><span class="p">:</span>
+                <span class="c1">// Handle rate limiting</span>
+                <span class="k">await</span> <span class="nx">delay</span><span class="p">(</span><span class="mi">60000</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+
+            <span class="k">case</span> <span class="nx">AIRSErrorCode</span><span class="p">.</span><span class="nx">AUTHENTICATION_FAILED</span><span class="p">:</span>
+                <span class="c1">// Handle auth failure</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Invalid API key</span><span class="dl">'</span><span class="p">);</span>
+
+            <span class="k">case</span> <span class="nx">AIRSErrorCode</span><span class="p">.</span><span class="nx">TIMEOUT</span><span class="p">:</span>
+                <span class="c1">// Retry with longer timeout</span>
+                <span class="k">break</span><span class="p">;</span>
+
+            <span class="nl">default</span><span class="p">:</span>
+                <span class="c1">// Log and handle generic error</span>
+                <span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">AIRS API error</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+        <span class="p">}</span>
     <span class="p">}</span>
-  <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -482,40 +482,40 @@
 <h3 id="request-batching">Request Batching</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">BatchingClient</span> <span class="kd">extends</span> <span class="nx">PrismaAIRSClient</span> <span class="p">{</span>
-  <span class="k">private</span> <span class="nx">batchQueue</span><span class="p">:</span> <span class="nx">ScanRequest</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
-  <span class="k">private</span> <span class="nx">batchTimer</span><span class="p">?:</span> <span class="nx">NodeJS</span><span class="p">.</span><span class="nx">Timeout</span><span class="p">;</span>
-  
-  <span class="k">async</span> <span class="nx">scanContentBatched</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">ScanRequest</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ScanResponse</span><span class="o">&gt;</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">batchQueue</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
-        <span class="p">...</span><span class="nx">request</span><span class="p">,</span>
-        <span class="na">_resolve</span><span class="p">:</span> <span class="nx">resolve</span><span class="p">,</span>
-        <span class="na">_reject</span><span class="p">:</span> <span class="nx">reject</span>
-      <span class="p">});</span>
-      
-      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">batchTimer</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">batchTimer</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">processBatch</span><span class="p">(),</span> <span class="mi">100</span><span class="p">);</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-  <span class="p">}</span>
-  
-  <span class="k">private</span> <span class="k">async</span> <span class="nx">processBatch</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">batch</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">batchQueue</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// Max 10 per batch</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">batchTimer</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
-    
-    <span class="k">try</span> <span class="p">{</span>
-      <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">scanAsync</span><span class="p">({</span>
-        <span class="na">contents</span><span class="p">:</span> <span class="nx">batch</span><span class="p">.</span><span class="nx">flatMap</span><span class="p">(</span><span class="nx">r</span> <span class="o">=&gt;</span> <span class="nx">r</span><span class="p">.</span><span class="nx">contents</span><span class="p">)</span>
-      <span class="p">});</span>
-      
-      <span class="c1">// Distribute results back to callers</span>
-      <span class="nx">batch</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">request</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="nx">request</span><span class="p">.</span><span class="nx">_resolve</span><span class="p">(</span><span class="nx">results</span><span class="p">[</span><span class="nx">index</span><span class="p">]);</span>
-      <span class="p">});</span>
-    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">batch</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">request</span> <span class="o">=&gt;</span> <span class="nx">request</span><span class="p">.</span><span class="nx">_reject</span><span class="p">(</span><span class="nx">error</span><span class="p">));</span>
+    <span class="k">private</span> <span class="nx">batchQueue</span><span class="p">:</span> <span class="nx">ScanRequest</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">private</span> <span class="nx">batchTimer</span><span class="p">?:</span> <span class="nx">NodeJS</span><span class="p">.</span><span class="nx">Timeout</span><span class="p">;</span>
+
+    <span class="k">async</span> <span class="nx">scanContentBatched</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">ScanRequest</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ScanResponse</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">batchQueue</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
+                <span class="p">...</span><span class="nx">request</span><span class="p">,</span>
+                <span class="na">_resolve</span><span class="p">:</span> <span class="nx">resolve</span><span class="p">,</span>
+                <span class="na">_reject</span><span class="p">:</span> <span class="nx">reject</span><span class="p">,</span>
+            <span class="p">});</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">batchTimer</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">batchTimer</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">processBatch</span><span class="p">(),</span> <span class="mi">100</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
     <span class="p">}</span>
-  <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">async</span> <span class="nx">processBatch</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">batch</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">batchQueue</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// Max 10 per batch</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">batchTimer</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">scanAsync</span><span class="p">({</span>
+                <span class="na">contents</span><span class="p">:</span> <span class="nx">batch</span><span class="p">.</span><span class="nx">flatMap</span><span class="p">((</span><span class="nx">r</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">r</span><span class="p">.</span><span class="nx">contents</span><span class="p">),</span>
+            <span class="p">});</span>
+
+            <span class="c1">// Distribute results back to callers</span>
+            <span class="nx">batch</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">request</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+                <span class="nx">request</span><span class="p">.</span><span class="nx">_resolve</span><span class="p">(</span><span class="nx">results</span><span class="p">[</span><span class="nx">index</span><span class="p">]);</span>
+            <span class="p">});</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">batch</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">request</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">request</span><span class="p">.</span><span class="nx">_reject</span><span class="p">(</span><span class="nx">error</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -527,7 +527,7 @@
     <span class="na">contents</span><span class="p">:</span> <span class="nx">request</span><span class="p">.</span><span class="nx">contents</span><span class="p">,</span>
     <span class="na">profile</span><span class="p">:</span> <span class="nx">request</span><span class="p">.</span><span class="nx">ai_profile</span><span class="p">.</span><span class="nx">profile_name</span> <span class="o">||</span> <span class="nx">request</span><span class="p">.</span><span class="nx">ai_profile</span><span class="p">.</span><span class="nx">profile_id</span>
   <span class="p">});</span>
-  
+
   <span class="k">return</span> <span class="nx">crypto</span>
     <span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="dl">'</span><span class="s1">sha256</span><span class="dl">'</span><span class="p">)</span>
     <span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">content</span><span class="p">)</span>
@@ -538,14 +538,14 @@
 <span class="kd">class</span> <span class="nx">AIRSCache</span> <span class="p">{</span>
   <span class="k">private</span> <span class="nx">cache</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">CacheEntry</span><span class="o">&gt;</span><span class="p">();</span>
   <span class="k">private</span> <span class="nx">accessOrder</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
-  
+
   <span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">value</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">ttl</span><span class="p">?:</span> <span class="kr">number</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
     <span class="c1">// Evict oldest entries if at capacity</span>
     <span class="k">while</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">size</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">maxSize</span><span class="p">)</span> <span class="p">{</span>
       <span class="kd">const</span> <span class="nx">oldest</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">accessOrder</span><span class="p">.</span><span class="nx">shift</span><span class="p">();</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">oldest</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="nx">oldest</span><span class="p">);</span>
     <span class="p">}</span>
-    
+
     <span class="kd">const</span> <span class="nx">expiry</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="nx">ttl</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">defaultTTL</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">;</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="p">{</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">expiry</span> <span class="p">});</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">accessOrder</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
@@ -558,49 +558,49 @@
 <h3 id="mock-client-for-testing">Mock Client for Testing</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="nx">MockAIRSClient</span> <span class="kd">extends</span> <span class="nx">PrismaAIRSClient</span> <span class="p">{</span>
-  <span class="k">private</span> <span class="nx">mockResponses</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">any</span><span class="o">&gt;</span><span class="p">();</span>
-  
-  <span class="nx">setMockResponse</span><span class="p">(</span><span class="nx">method</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">response</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">mockResponses</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">method</span><span class="p">,</span> <span class="nx">response</span><span class="p">);</span>
-  <span class="p">}</span>
-  
-  <span class="k">async</span> <span class="nx">scanContent</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">ScanRequest</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ScanResponse</span><span class="o">&gt;</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">mock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">mockResponses</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">scanContent</span><span class="dl">'</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">mock</span><span class="p">)</span> <span class="k">return</span> <span class="nx">mock</span><span class="p">;</span>
-    
-    <span class="c1">// Default mock response</span>
-    <span class="k">return</span> <span class="p">{</span>
-      <span class="na">scan_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">mock-scan-123</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">report_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">mock-report-123</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">category</span><span class="p">:</span> <span class="dl">'</span><span class="s1">benign</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">allow</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">profile_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test Profile</span><span class="dl">'</span>
-    <span class="p">};</span>
-  <span class="p">}</span>
+    <span class="k">private</span> <span class="nx">mockResponses</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">any</span><span class="o">&gt;</span><span class="p">();</span>
+
+    <span class="nx">setMockResponse</span><span class="p">(</span><span class="nx">method</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">response</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">mockResponses</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">method</span><span class="p">,</span> <span class="nx">response</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">async</span> <span class="nx">scanContent</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">ScanRequest</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ScanResponse</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">mock</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">mockResponses</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">scanContent</span><span class="dl">'</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">mock</span><span class="p">)</span> <span class="k">return</span> <span class="nx">mock</span><span class="p">;</span>
+
+        <span class="c1">// Default mock response</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">scan_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">mock-scan-123</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">report_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">mock-report-123</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">category</span><span class="p">:</span> <span class="dl">'</span><span class="s1">benign</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">allow</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">profile_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test Profile</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h3 id="integration-testing">Integration Testing</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">PrismaAIRSClient Integration</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">let</span> <span class="na">client</span><span class="p">:</span> <span class="nx">PrismaAIRSClient</span><span class="p">;</span>
-  
-  <span class="nx">beforeAll</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PrismaAIRSClient</span><span class="p">({</span>
-      <span class="na">apiUrl</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">TEST_API_URL</span><span class="o">!</span><span class="p">,</span>
-      <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">TEST_API_KEY</span><span class="o">!</span>
+    <span class="kd">let</span> <span class="na">client</span><span class="p">:</span> <span class="nx">PrismaAIRSClient</span><span class="p">;</span>
+
+    <span class="nx">beforeAll</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PrismaAIRSClient</span><span class="p">({</span>
+            <span class="na">apiUrl</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">TEST_API_URL</span><span class="o">!</span><span class="p">,</span>
+            <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">TEST_API_KEY</span><span class="o">!</span><span class="p">,</span>
+        <span class="p">});</span>
     <span class="p">});</span>
-  <span class="p">});</span>
-  
-  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should scan content successfully</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">scanContent</span><span class="p">({</span>
-      <span class="na">contents</span><span class="p">:</span> <span class="p">[{</span> <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test content</span><span class="dl">'</span> <span class="p">}],</span>
-      <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">profile_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test Profile</span><span class="dl">'</span> <span class="p">}</span>
+
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should scan content successfully</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">scanContent</span><span class="p">({</span>
+            <span class="na">contents</span><span class="p">:</span> <span class="p">[{</span> <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test content</span><span class="dl">'</span> <span class="p">}],</span>
+            <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">profile_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test Profile</span><span class="dl">'</span> <span class="p">},</span>
+        <span class="p">});</span>
+
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">).</span><span class="nx">toHaveProperty</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_id</span><span class="dl">'</span><span class="p">);</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">category</span><span class="p">).</span><span class="nx">toMatch</span><span class="p">(</span><span class="sr">/benign|malicious/</span><span class="p">);</span>
     <span class="p">});</span>
-    
-    <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">).</span><span class="nx">toHaveProperty</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_id</span><span class="dl">'</span><span class="p">);</span>
-    <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">category</span><span class="p">).</span><span class="nx">toMatch</span><span class="p">(</span><span class="sr">/benign|malicious/</span><span class="p">);</span>
-  <span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div></div>
 

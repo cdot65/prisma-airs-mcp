@@ -168,10 +168,12 @@
 <h3 id="location-of-configuration-file">Location of Configuration File</h3>
 
 <p><strong>macOS:</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~/Library/Application Support/Claude/claude_desktop_config.json
 </code></pre></div></div>
 
 <p><strong>Windows:</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>%APPDATA%<span class="se">\C</span>laude<span class="se">\c</span>laude_desktop_config.json
 </code></pre></div></div>
 
@@ -180,15 +182,12 @@
 <p>For a local Prisma AIRS MCP server:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"http://localhost:3000"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
+    </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w"> </span><span class="s2">"http://localhost:3000"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -197,15 +196,12 @@
 <p>For a deployed Prisma AIRS MCP server:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"https://your-server.com/prisma-airs"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
+    </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w"> </span><span class="s2">"https://your-server.com/prisma-airs"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -214,6 +210,7 @@
 <h3 id="1-edit-configuration">1. Edit Configuration</h3>
 
 <p><strong>macOS:</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Open configuration in your editor</span>
 nano ~/Library/Application<span class="se">\ </span>Support/Claude/claude_desktop_config.json
 
@@ -222,6 +219,7 @@ open <span class="nt">-e</span> ~/Library/Application<span class="se">\ </span>S
 </code></pre></div></div>
 
 <p><strong>Windows:</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Open configuration in Notepad</span>
 notepad %APPDATA%<span class="se">\C</span>laude<span class="se">\c</span>laude_desktop_config.json
 </code></pre></div></div>
@@ -231,15 +229,12 @@ notepad %APPDATA%<span class="se">\C</span>laude<span class="se">\c</span>laude_
 <p>Add the Prisma AIRS configuration to your <code class="language-plaintext highlighter-rouge">claude_desktop_config.json</code>:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"http://localhost:3000"</span><span class="w">
-      </span><span class="p">]</span><span class="w">
+    </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w"> </span><span class="s2">"http://localhost:3000"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -264,6 +259,7 @@ notepad %APPDATA%<span class="se">\C</span>laude<span class="se">\c</span>laude_
 </code></pre></div></div>
 
 <p>Claude should list the Prisma AIRS tools:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">airs_scan_content</code></li>
   <li><code class="language-plaintext highlighter-rouge">airs_scan_async</code></li>
@@ -279,12 +275,13 @@ notepad %APPDATA%<span class="se">\C</span>laude<span class="se">\c</span>laude_
 <p>The configuration above uses <code class="language-plaintext highlighter-rouge">npx</code> which downloads and runs <code class="language-plaintext highlighter-rouge">mcp-remote</code> on demand:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w"> </span><span class="s2">"http://localhost:3000"</span><span class="p">]</span><span class="w">
+    </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w"> </span><span class="s2">"http://localhost:3000"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p><strong>Pros:</strong></p>
+
 <ul>
   <li>No installation required</li>
   <li>Always uses the latest version</li>
@@ -292,6 +289,7 @@ notepad %APPDATA%<span class="se">\C</span>laude<span class="se">\c</span>laude_
 </ul>
 
 <p><strong>Cons:</strong></p>
+
 <ul>
   <li>Slightly slower startup (downloads package if not cached)</li>
   <li>Requires internet connection on first use</li>
@@ -311,8 +309,8 @@ mcp-remote <span class="nt">--version</span>
 <p>Then update your configuration:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"http://localhost:3000"</span><span class="p">]</span><span class="w">
+    </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"http://localhost:3000"</span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -321,16 +319,21 @@ mcp-remote <span class="nt">--version</span>
 <h3 id="tools-not-appearing">Tools Not Appearing</h3>
 
 <ol>
-  <li><strong>Check JSON Syntax</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Validate JSON syntax</span>
-python <span class="nt">-m</span> json.tool ~/Library/Application<span class="se">\ </span>Support/Claude/claude_desktop_config.json
+  <li>
+    <p><strong>Check JSON Syntax</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Validate JSON syntax</span>
+ python <span class="nt">-m</span> json.tool ~/Library/Application<span class="se">\ </span>Support/Claude/claude_desktop_config.json
 </code></pre></div>    </div>
   </li>
-  <li><strong>Verify Server is Running</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:3000/health
+  <li>
+    <p><strong>Verify Server is Running</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> curl http://localhost:3000/health
 </code></pre></div>    </div>
   </li>
-  <li><strong>Check for Errors</strong>
+  <li>
+    <p><strong>Check for Errors</strong></p>
     <ul>
       <li>Look for error messages in Claude Desktop</li>
       <li>Enable debug logging in the configuration</li>
@@ -360,19 +363,16 @@ python <span class="nt">-m</span> json.tool ~/Library/Application<span class="se
 <p>Enable detailed logging:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"http://localhost:3000"</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="nl">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"DEBUG"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mcp:*"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"LOG_LEVEL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debug"</span><span class="w">
-      </span><span class="p">}</span><span class="w">
+    </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"mcp-remote"</span><span class="p">,</span><span class="w"> </span><span class="s2">"http://localhost:3000"</span><span class="p">],</span><span class="w">
+            </span><span class="nl">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"DEBUG"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mcp:*"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"LOG_LEVEL"</span><span class="p">:</span><span class="w"> </span><span class="s2">"debug"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
     </span><span class="p">}</span><span class="w">
-  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 

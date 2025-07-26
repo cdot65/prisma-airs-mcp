@@ -31,18 +31,18 @@ Resources represent external data sources that can be accessed through the MCP s
 
 ```typescript
 export interface Resource {
-    uri: string;              // Unique resource identifier
-    name: string;             // Human-readable name
-    description?: string;     // Optional description
-    mimeType?: string;        // Content type
-    size?: number;            // Size in bytes
+    uri: string; // Unique resource identifier
+    name: string; // Human-readable name
+    description?: string; // Optional description
+    mimeType?: string; // Content type
+    size?: number; // Size in bytes
 }
 
 export interface ResourceTemplate {
-    uriTemplate: string;      // URI template with placeholders
-    name: string;             // Template name
-    description?: string;     // Template description
-    mimeType?: string;        // Expected content type
+    uriTemplate: string; // URI template with placeholders
+    name: string; // Template name
+    description?: string; // Template description
+    mimeType?: string; // Expected content type
 }
 ```
 
@@ -51,17 +51,17 @@ export interface ResourceTemplate {
 ```typescript
 // List resources with pagination
 export interface ResourcesListParams {
-    cursor?: string;          // Pagination cursor
+    cursor?: string; // Pagination cursor
 }
 
 export interface ResourcesListResult {
-    resources: Resource[];    // List of resources
-    nextCursor?: string;      // Next page cursor
+    resources: Resource[]; // List of resources
+    nextCursor?: string; // Next page cursor
 }
 
 // Read resource content
 export interface ResourcesReadParams {
-    uri: string;              // Resource URI to read
+    uri: string; // Resource URI to read
 }
 
 export interface ResourcesReadResult {
@@ -69,10 +69,10 @@ export interface ResourcesReadResult {
 }
 
 export interface ResourceContent {
-    uri: string;              // Content URI
-    mimeType?: string;        // Content MIME type
-    text?: string;            // Text content
-    blob?: string;            // Base64 encoded binary
+    uri: string; // Content URI
+    mimeType?: string; // Content MIME type
+    text?: string; // Text content
+    blob?: string; // Base64 encoded binary
 }
 ```
 
@@ -84,22 +84,25 @@ Tools represent callable functions that the MCP server provides to AI models.
 
 ```typescript
 export interface Tool {
-    name: string;             // Unique tool identifier
-    title?: string;           // Display title
-    description?: string;     // Tool description
-    inputSchema: {            // JSON Schema for input
+    name: string; // Unique tool identifier
+    title?: string; // Display title
+    description?: string; // Tool description
+    inputSchema: {
+        // JSON Schema for input
         type: 'object';
         properties?: Record<string, unknown>;
         required?: string[];
         additionalProperties?: boolean;
     };
-    outputSchema?: {          // JSON Schema for output
+    outputSchema?: {
+        // JSON Schema for output
         type: 'object';
         properties?: Record<string, unknown>;
         required?: string[];
         additionalProperties?: boolean;
     };
-    annotations?: {           // UI hints
+    annotations?: {
+        // UI hints
         title?: string;
         readOnlyHint?: boolean;
         progressHint?: boolean;
@@ -122,21 +125,22 @@ export interface ToolsListResult {
 
 // Execute a tool
 export interface ToolsCallParams {
-    name: string;                        // Tool name
+    name: string; // Tool name
     arguments?: Record<string, unknown>; // Tool arguments
 }
 
 export interface ToolsCallResult {
-    content: ToolResultContent[];        // Result content
-    isError?: boolean;                   // Error indicator
+    content: ToolResultContent[]; // Result content
+    isError?: boolean; // Error indicator
 }
 
 export interface ToolResultContent {
     type: 'text' | 'image' | 'resource'; // Content type
-    text?: string;                       // Text content
-    data?: string;                       // Base64 for images
-    mimeType?: string;                   // Content MIME type
-    resource?: {                         // Resource reference
+    text?: string; // Text content
+    data?: string; // Base64 for images
+    mimeType?: string; // Content MIME type
+    resource?: {
+        // Resource reference
         uri: string;
         title?: string;
         mimeType?: string;
@@ -154,16 +158,16 @@ Prompts are pre-defined conversation templates that can be filled with arguments
 
 ```typescript
 export interface Prompt {
-    name: string;                 // Unique prompt identifier
-    title?: string;               // Display title
-    description?: string;         // Prompt description
+    name: string; // Unique prompt identifier
+    title?: string; // Display title
+    description?: string; // Prompt description
     arguments?: PromptArgument[]; // Template arguments
 }
 
 export interface PromptArgument {
-    name: string;                 // Argument name
-    description?: string;         // Argument description
-    required?: boolean;           // Is required?
+    name: string; // Argument name
+    description?: string; // Argument description
+    required?: boolean; // Is required?
 }
 ```
 
@@ -182,25 +186,26 @@ export interface PromptsListResult {
 
 // Get prompt with filled arguments
 export interface PromptsGetParams {
-    name: string;                         // Prompt name
-    arguments?: Record<string, string>;   // Argument values
+    name: string; // Prompt name
+    arguments?: Record<string, string>; // Argument values
 }
 
 export interface PromptsGetResult {
-    messages: PromptMessage[];            // Conversation messages
+    messages: PromptMessage[]; // Conversation messages
 }
 
 export interface PromptMessage {
-    role: 'user' | 'assistant';           // Message role
-    content: PromptContent;               // Message content
+    role: 'user' | 'assistant'; // Message role
+    content: PromptContent; // Message content
 }
 
 export interface PromptContent {
-    type: 'text' | 'image' | 'resource';  // Content type
-    text?: string;                        // Text content
-    data?: string;                        // Base64 data
-    mimeType?: string;                    // Content MIME type
-    resource?: {                          // Resource reference
+    type: 'text' | 'image' | 'resource'; // Content type
+    text?: string; // Text content
+    data?: string; // Base64 data
+    mimeType?: string; // Content MIME type
+    resource?: {
+        // Resource reference
         uri: string;
         title?: string;
         mimeType?: string;
@@ -216,20 +221,20 @@ Types used during MCP server/client handshake.
 
 ```typescript
 export interface InitializeParams {
-    protocolVersion: string;      // MCP protocol version
+    protocolVersion: string; // MCP protocol version
     capabilities: ClientCapabilities;
     clientInfo: {
-        name: string;             // Client name
-        version?: string;         // Client version
+        name: string; // Client name
+        version?: string; // Client version
     };
 }
 
 export interface InitializeResult {
-    protocolVersion: string;      // Server protocol version
+    protocolVersion: string; // Server protocol version
     capabilities: ServerCapabilities;
     serverInfo: {
-        name: string;             // Server name
-        version?: string;         // Server version
+        name: string; // Server name
+        version?: string; // Server version
     };
 }
 ```
@@ -242,14 +247,14 @@ Define what features clients and servers support.
 export interface ClientCapabilities {
     experimental?: Record<string, unknown>;
     resources?: {
-        subscribe?: boolean;      // Can subscribe to changes
-        listChanged?: boolean;    // Supports list change notifications
+        subscribe?: boolean; // Can subscribe to changes
+        listChanged?: boolean; // Supports list change notifications
     };
     tools?: {
-        listChanged?: boolean;    // Supports tool list changes
+        listChanged?: boolean; // Supports tool list changes
     };
     prompts?: {
-        listChanged?: boolean;    // Supports prompt list changes
+        listChanged?: boolean; // Supports prompt list changes
     };
 }
 
@@ -285,17 +290,17 @@ Standard error handling for MCP protocol.
 
 ```typescript
 export interface MCPError {
-    code: number;         // Error code
-    message: string;      // Error message
-    data?: unknown;       // Additional error data
+    code: number; // Error code
+    message: string; // Error message
+    data?: unknown; // Additional error data
 }
 
 export enum MCPErrorCode {
-    ParseError = -32700,      // Invalid JSON
-    InvalidRequest = -32600,  // Invalid request structure
-    MethodNotFound = -32601,  // Unknown method
-    InvalidParams = -32602,   // Invalid method parameters
-    InternalError = -32603,   // Internal server error
+    ParseError = -32700, // Invalid JSON
+    InvalidRequest = -32600, // Invalid request structure
+    MethodNotFound = -32601, // Unknown method
+    InvalidParams = -32602, // Invalid method parameters
+    InternalError = -32603, // Internal server error
 }
 ```
 
@@ -315,19 +320,19 @@ const scanTool: Tool = {
         properties: {
             content: {
                 type: 'string',
-                description: 'Content to scan'
+                description: 'Content to scan',
             },
             profile: {
                 type: 'string',
-                description: 'Security profile name'
-            }
+                description: 'Security profile name',
+            },
         },
         required: ['content'],
-        additionalProperties: false
+        additionalProperties: false,
     },
     annotations: {
-        progressHint: true  // Shows progress during execution
-    }
+        progressHint: true, // Shows progress during execution
+    },
 };
 ```
 
@@ -341,14 +346,14 @@ const scanReport: Resource = {
     uri: 'scan://report/12345',
     name: 'Scan Report #12345',
     description: 'Security scan results',
-    mimeType: 'application/json'
+    mimeType: 'application/json',
 };
 
 // Return resource content
 const content: ResourceContent = {
     uri: scanReport.uri,
     mimeType: 'application/json',
-    text: JSON.stringify(scanResults)
+    text: JSON.stringify(scanResults),
 };
 ```
 
@@ -365,14 +370,14 @@ const analyzePrompt: Prompt = {
         {
             name: 'content',
             description: 'Content to analyze',
-            required: true
+            required: true,
         },
         {
             name: 'context',
             description: 'Additional context',
-            required: false
-        }
-    ]
+            required: false,
+        },
+    ],
 };
 
 // Generate prompt messages
@@ -381,9 +386,9 @@ const messages: PromptMessage[] = [
         role: 'user',
         content: {
             type: 'text',
-            text: `Analyze this content for security threats: ${args.content}`
-        }
-    }
+            text: `Analyze this content for security threats: ${args.content}`,
+        },
+    },
 ];
 ```
 
@@ -398,8 +403,8 @@ const error: MCPError = {
     message: 'Missing required parameter: content',
     data: {
         param: 'content',
-        reason: 'required'
-    }
+        reason: 'required',
+    },
 };
 ```
 
@@ -454,10 +459,10 @@ const toolSchema: Tool['inputSchema'] = {
     type: 'object',
     properties: {
         query: { type: 'string' },
-        limit: { type: 'number', minimum: 1, maximum: 100 }
+        limit: { type: 'number', minimum: 1, maximum: 100 },
     },
     required: ['query'],
-    additionalProperties: false
+    additionalProperties: false,
 };
 ```
 
@@ -467,7 +472,7 @@ const toolSchema: Tool['inputSchema'] = {
 function createError(
     code: MCPErrorCode,
     message: string,
-    data?: unknown
+    data?: unknown,
 ): MCPError {
     return { code, message, data };
 }

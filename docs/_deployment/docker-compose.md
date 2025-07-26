@@ -48,10 +48,10 @@ docker compose --profile dev up -d
 
 The project uses Docker Compose profiles to separate environments:
 
-| Profile | Purpose | Features | Use Case |
-|---------|---------|----------|----------|
-| `dev` | Development | Hot reloading, debug logs, source mounting | Local development |
-| `prod` | Production | Optimized build, resource limits, health checks | Production deployment |
+| Profile | Purpose     | Features                                        | Use Case              |
+| ------- | ----------- | ----------------------------------------------- | --------------------- |
+| `dev`   | Development | Hot reloading, debug logs, source mounting      | Local development     |
+| `prod`  | Production  | Optimized build, resource limits, health checks | Production deployment |
 
 > **Note**: Only one profile can run at a time as both use port 3000.
 
@@ -84,27 +84,27 @@ docker compose --profile dev exec dev sh
 
 ```yaml
 services:
-  dev:
-    profiles:
-      - dev
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.dev
-    image: ghcr.io/cdot65/prisma-airs-mcp:dev-local
-    container_name: prisma-airs-mcp-dev
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./src:/app/src:ro
-      - ./package.json:/app/package.json:ro
-      - ./tsconfig.json:/app/tsconfig.json:ro
-      - node_modules:/app/node_modules
-    environment:
-      - NODE_ENV=development
-      - LOG_LEVEL=debug
-    env_file:
-      - .env
-    restart: unless-stopped
+    dev:
+        profiles:
+            - dev
+        build:
+            context: .
+            dockerfile: docker/Dockerfile.dev
+        image: ghcr.io/cdot65/prisma-airs-mcp:dev-local
+        container_name: prisma-airs-mcp-dev
+        ports:
+            - '3000:3000'
+        volumes:
+            - ./src:/app/src:ro
+            - ./package.json:/app/package.json:ro
+            - ./tsconfig.json:/app/tsconfig.json:ro
+            - node_modules:/app/node_modules
+        environment:
+            - NODE_ENV=development
+            - LOG_LEVEL=debug
+        env_file:
+            - .env
+        restart: unless-stopped
 ```
 
 ## Production Profile
@@ -137,37 +137,43 @@ docker compose ps
 
 ```yaml
 services:
-  prod:
-    profiles:
-      - prod
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-      target: production
-    image: ghcr.io/cdot65/prisma-airs-mcp:latest
-    container_name: prisma-airs-mcp-prod
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - LOG_LEVEL=info
-    env_file:
-      - .env
-    healthcheck:
-      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); });"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-      start_period: 10s
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: "1"
-          memory: 512M
-        reservations:
-          cpus: "0.25"
-          memory: 128M
+    prod:
+        profiles:
+            - prod
+        build:
+            context: .
+            dockerfile: docker/Dockerfile
+            target: production
+        image: ghcr.io/cdot65/prisma-airs-mcp:latest
+        container_name: prisma-airs-mcp-prod
+        ports:
+            - '3000:3000'
+        environment:
+            - NODE_ENV=production
+            - LOG_LEVEL=info
+        env_file:
+            - .env
+        healthcheck:
+            test:
+                [
+                    'CMD',
+                    'node',
+                    '-e',
+                    "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); });",
+                ]
+            interval: 30s
+            timeout: 3s
+            retries: 3
+            start_period: 10s
+        restart: unless-stopped
+        deploy:
+            resources:
+                limits:
+                    cpus: '1'
+                    memory: 512M
+                reservations:
+                    cpus: '0.25'
+                    memory: 128M
 ```
 
 ## Common Commands
@@ -279,17 +285,19 @@ RATE_LIMIT_WINDOW_MS=60000
 Create environment-specific overrides:
 
 **docker-compose.dev.yml**:
+
 ```yaml
 services:
-  dev:
-    environment:
-      - LOG_LEVEL=debug
-      - CACHE_TTL_SECONDS=60
-    ports:
-      - "3001:3000"
+    dev:
+        environment:
+            - LOG_LEVEL=debug
+            - CACHE_TTL_SECONDS=60
+        ports:
+            - '3001:3000'
 ```
 
 Use with:
+
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.dev.yml --profile dev up
 ```
@@ -299,21 +307,22 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml --profile dev up
 For production, use Docker secrets:
 
 **docker-compose.prod.yml**:
+
 ```yaml
 services:
-  prod:
-    secrets:
-      - airs_api_key
-      - airs_profile_name
-    environment:
-      - AIRS_API_KEY_FILE=/run/secrets/airs_api_key
-      - AIRS_PROFILE_NAME_FILE=/run/secrets/airs_profile_name
+    prod:
+        secrets:
+            - airs_api_key
+            - airs_profile_name
+        environment:
+            - AIRS_API_KEY_FILE=/run/secrets/airs_api_key
+            - AIRS_PROFILE_NAME_FILE=/run/secrets/airs_profile_name
 
 secrets:
-  airs_api_key:
-    external: true
-  airs_profile_name:
-    external: true
+    airs_api_key:
+        external: true
+    airs_profile_name:
+        external: true
 ```
 
 ## Advanced Configuration
@@ -322,61 +331,65 @@ secrets:
 
 ```yaml
 services:
-  prod:
-    networks:
-      - prisma-network
+    prod:
+        networks:
+            - prisma-network
 
 networks:
-  prisma-network:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
+    prisma-network:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.20.0.0/16
 ```
 
 ### Volume Management
 
 ```yaml
 services:
-  dev:
-    volumes:
-      - ./src:/app/src:ro
-      - node_modules:/app/node_modules
-      - logs:/app/logs
+    dev:
+        volumes:
+            - ./src:/app/src:ro
+            - node_modules:/app/node_modules
+            - logs:/app/logs
 
 volumes:
-  node_modules:
-  logs:
-    driver: local
+    node_modules:
+    logs:
+        driver: local
 ```
 
 ### Health Check Customization
 
 ```yaml
 services:
-  prod:
-    healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-      start_period: 10s
-      disable: false
+    prod:
+        healthcheck:
+            test:
+                [
+                    'CMD-SHELL',
+                    'wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1',
+                ]
+            interval: 30s
+            timeout: 3s
+            retries: 3
+            start_period: 10s
+            disable: false
 ```
 
 ### Resource Limits
 
 ```yaml
 services:
-  prod:
-    deploy:
-      resources:
-        limits:
-          cpus: "2"
-          memory: 1G
-        reservations:
-          cpus: "0.5"
-          memory: 256M
+    prod:
+        deploy:
+            resources:
+                limits:
+                    cpus: '2'
+                    memory: 1G
+                reservations:
+                    cpus: '0.5'
+                    memory: 256M
 ```
 
 ## Scaling
@@ -397,20 +410,20 @@ Add a load balancer service:
 
 ```yaml
 services:
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - prod
+    nginx:
+        image: nginx:alpine
+        ports:
+            - '80:80'
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf:ro
+        depends_on:
+            - prod
 
-  prod:
-    # Remove ports mapping
-    # Remove container_name for scaling
-    deploy:
-      replicas: 3
+    prod:
+        # Remove ports mapping
+        # Remove container_name for scaling
+        deploy:
+            replicas: 3
 ```
 
 ## Troubleshooting
@@ -479,30 +492,31 @@ deploy:
 ## Best Practices
 
 1. **Environment Separation**
-   - Never use dev profile in production
-   - Keep separate .env files for each environment
-   - Use override files for environment-specific settings
+    - Never use dev profile in production
+    - Keep separate .env files for each environment
+    - Use override files for environment-specific settings
 
 2. **Security**
-   - Store secrets in Docker secrets or external vaults
-   - Use read-only volumes where possible
-   - Regularly update base images
+    - Store secrets in Docker secrets or external vaults
+    - Use read-only volumes where possible
+    - Regularly update base images
 
 3. **Performance**
-   - Set appropriate resource limits
-   - Use health checks for automatic recovery
-   - Monitor container metrics
+    - Set appropriate resource limits
+    - Use health checks for automatic recovery
+    - Monitor container metrics
 
 4. **Maintenance**
-   - Tag images with versions
-   - Keep compose files in version control
-   - Document custom configurations
+    - Tag images with versions
+    - Keep compose files in version control
+    - Document custom configurations
 
 ## Migration from Docker Run
 
 Converting from `docker run` to Docker Compose:
 
 **From:**
+
 ```bash
 docker run -d \
   --name prisma-airs-mcp \
@@ -513,16 +527,17 @@ docker run -d \
 ```
 
 **To docker-compose.yml:**
+
 ```yaml
 services:
-  app:
-    image: ghcr.io/cdot65/prisma-airs-mcp:latest
-    container_name: prisma-airs-mcp
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    restart: unless-stopped
+    app:
+        image: ghcr.io/cdot65/prisma-airs-mcp:latest
+        container_name: prisma-airs-mcp
+        ports:
+            - '3000:3000'
+        env_file:
+            - .env
+        restart: unless-stopped
 ```
 
 ## Next Steps

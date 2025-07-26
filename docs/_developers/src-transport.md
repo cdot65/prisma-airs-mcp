@@ -38,13 +38,16 @@ export class HttpServerTransport {
     private sessions: Map<string, { clientId: string; createdAt: Date }>;
 
     // Handle incoming JSON-RPC requests
-    async handleRequest(req: StreamableRequest, res: Response): Promise<void>
+    async handleRequest(req: StreamableRequest, res: Response): Promise<void>;
 
     // Handle SSE connections for streaming
-    handleSSEConnection(req: StreamableRequest, res: Response): void
+    handleSSEConnection(req: StreamableRequest, res: Response): void;
 
     // Route requests to appropriate handlers
-    private async routeRequest(method: string, params: unknown): Promise<unknown>
+    private async routeRequest(
+        method: string,
+        params: unknown,
+    ): Promise<unknown>;
 }
 ```
 
@@ -83,19 +86,23 @@ export interface JsonRpcError {
 The transport routes the following MCP methods:
 
 #### Resource Methods
+
 - `resources/list` - List available resources
 - `resources/read` - Read resource content
 - `resources/templates/list` - List resource URI templates
 
 #### Tool Methods
+
 - `tools/list` - List available tools
 - `tools/call` - Execute a tool
 
 #### Prompt Methods
+
 - `prompts/list` - List available prompts
 - `prompts/get` - Get prompt with arguments
 
 #### Server Methods
+
 - `initialize` - Initialize MCP connection
 - `ping` - Health check
 - `notifications/initialized` - Client initialized notification
@@ -108,15 +115,15 @@ Sessions enable streaming responses via SSE:
 ```typescript
 private getOrCreateSession(req: StreamableRequest): string {
     const existingSessionId = req.headers['mcp-session-id'];
-    
+
     if (existingSessionId && this.sessions.has(existingSessionId)) {
         return existingSessionId;
     }
-    
+
     const sessionId = uuidv4();
     const clientId = uuidv4();
     this.sessions.set(sessionId, { clientId, createdAt: new Date() });
-    
+
     return sessionId;
 }
 ```
@@ -178,19 +185,23 @@ export class SSETransport {
     private messageId = 0;
 
     // Initialize SSE connection
-    initializeSSE(res: Response, clientId: string): void
+    initializeSSE(res: Response, clientId: string): void;
 
     // Send SSE event
-    sendEvent(clientId: string, message: SSEMessage): boolean
+    sendEvent(clientId: string, message: SSEMessage): boolean;
 
     // Send JSON-RPC response via SSE
-    sendJsonRpcResponse(clientId: string, response: JsonRpcResponse): boolean
+    sendJsonRpcResponse(clientId: string, response: JsonRpcResponse): boolean;
 
     // Send server notification
-    sendNotification(clientId: string, method: string, params?: unknown): boolean
+    sendNotification(
+        clientId: string,
+        method: string,
+        params?: unknown,
+    ): boolean;
 
     // Broadcast to all clients
-    broadcast(message: SSEMessage): void
+    broadcast(message: SSEMessage): void;
 }
 ```
 
@@ -198,10 +209,10 @@ export class SSETransport {
 
 ```typescript
 export interface SSEMessage {
-    id?: string;         // Message ID for reconnection
-    event?: string;      // Event type
-    data: string;        // Message data (JSON string)
-    retry?: number;      // Reconnection retry interval
+    id?: string; // Message ID for reconnection
+    event?: string; // Event type
+    data: string; // Message data (JSON string)
+    retry?: number; // Reconnection retry interval
 }
 ```
 
@@ -356,7 +367,7 @@ private shouldStreamResponse(method: string, result: unknown): boolean {
         'tools/call',      // Long-running operations
         'resources/read',  // Large resources
     ];
-    
+
     return streamableMethods.includes(method);
 }
 ```
@@ -371,13 +382,13 @@ private shouldStreamResponse(method: string, result: unknown): boolean {
 
 Standard JSON-RPC 2.0 error codes:
 
-| Code | Message | Description |
-|------|---------|-------------|
-| -32700 | Parse error | Invalid JSON |
-| -32600 | Invalid Request | Invalid request structure |
-| -32601 | Method not found | Unknown method |
-| -32602 | Invalid params | Invalid method parameters |
-| -32603 | Internal error | Server error |
+| Code   | Message          | Description               |
+| ------ | ---------------- | ------------------------- |
+| -32700 | Parse error      | Invalid JSON              |
+| -32600 | Invalid Request  | Invalid request structure |
+| -32601 | Method not found | Unknown method            |
+| -32602 | Invalid params   | Invalid method parameters |
+| -32603 | Internal error   | Server error              |
 
 ## Testing
 
@@ -394,13 +405,11 @@ assert(result.tools.length > 0);
 
 ```typescript
 // Test full request flow
-const response = await request(app)
-    .post('/messages')
-    .send({
-        jsonrpc: '2.0',
-        method: 'ping',
-        id: 'test-1'
-    });
+const response = await request(app).post('/messages').send({
+    jsonrpc: '2.0',
+    method: 'ping',
+    id: 'test-1',
+});
 
 assert(response.body.jsonrpc === '2.0');
 assert(response.body.id === 'test-1');
@@ -411,19 +420,19 @@ assert(response.body.id === 'test-1');
 ### Common Issues
 
 1. **SSE Connection Drops**
-   - Check proxy/load balancer timeout settings
-   - Ensure X-Accel-Buffering header is set
-   - Implement heartbeat/keepalive
+    - Check proxy/load balancer timeout settings
+    - Ensure X-Accel-Buffering header is set
+    - Implement heartbeat/keepalive
 
 2. **Session Not Found**
-   - Sessions are in-memory only
-   - Check Mcp-Session-Id header
-   - Verify session creation logic
+    - Sessions are in-memory only
+    - Check Mcp-Session-Id header
+    - Verify session creation logic
 
 3. **Method Not Found**
-   - Verify method name spelling
-   - Check handler registration
-   - Review routeRequest switch statement
+    - Verify method name spelling
+    - Check handler registration
+    - Review routeRequest switch statement
 
 ## Best Practices
 

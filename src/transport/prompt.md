@@ -6,6 +6,7 @@ You are a knowledgeable Prompt Engineering expert who happens to creating perfec
 You are a technical documentation specialist creating a GitHub Pages site. Please analyze our project comprehensively:
 
 **Primary Analysis:**
+
 1. Review `.claude/instructions/CLAUDE.md` for project guidelines
 2. Examine `.claude/plans/PLAN.md` for development roadmap
 3. Study `PRD.md` for product requirements and vision
@@ -13,6 +14,7 @@ You are a technical documentation specialist creating a GitHub Pages site. Pleas
 5. Review `.claude/conventions/typescript-style-guide.md` for coding standards
 
 **Documentation Generation:**
+
 - Create a modern GitHub Pages site using Jekyll/Hugo
 - Generate API documentation from `src/` code comments and `.claude/context/prisma-airs-api/`
 - Build interactive code examples from `examples/` directory
@@ -21,6 +23,7 @@ You are a technical documentation specialist creating a GitHub Pages site. Pleas
 - Generate changelog from `CHANGELOG.md` with proper formatting
 
 **Site Structure:**
+
 - Home page with project overview from README.md
 - API reference from OpenAPI schema in `.claude/context/prisma-airs-api/openapi-schema.yaml`
 - Code examples and tutorials
@@ -34,6 +37,7 @@ Please maintain consistency with `.claude/conventions/` and reference all contex
 You are creating comprehensive GitHub Pages documentation for our API project. Follow this systematic approach:
 
 **Context Gathering:**
+
 1. Parse `.claude/context/prisma-airs-api/openapi-schema.yaml` for complete API specification
 2. Study `.claude/context/prisma-airs-api/usecases.md` for implementation examples
 3. Review `.claude/context/prisma-airs-api/errorcodes.md` for error handling documentation
@@ -41,6 +45,7 @@ You are creating comprehensive GitHub Pages documentation for our API project. F
 5. Check `.claude/context/TASKS.md` for current development status
 
 **GitHub Pages Site Creation:**
+
 - Generate interactive API documentation with code examples
 - Create SDK/client library documentation based on `src/` analysis
 - Build troubleshooting guides using error codes documentation
@@ -49,6 +54,7 @@ You are creating comprehensive GitHub Pages documentation for our API project. F
 - Create testing documentation based on `tests/` directory structure
 
 **Integration Requirements:**
+
 - Ensure all examples work with current codebase in `src/`
 - Reference TypeScript conventions from `.claude/conventions/typescript-style-guide.md`
 - Include MCP documentation context from `.claude/documentation/mcp-full-documentation.txt`
@@ -58,6 +64,7 @@ You are creating comprehensive GitHub Pages documentation for our API project. F
 You are a developer experience engineer creating an exceptional GitHub Pages site. Please systematically:
 
 **Project Understanding:**
+
 1. Review `.claude/context/SESSION-SUMMARY-2025-07-16.md` for recent development context
 2. Analyze `src/` directory architecture and identify key components
 3. Study `.claude/conventions/linting-setup.md` for development workflow
@@ -65,6 +72,7 @@ You are a developer experience engineer creating an exceptional GitHub Pages sit
 5. Examine `docs/` directory for existing documentation assets
 
 **Site Development:**
+
 - Create a searchable, responsive documentation site
 - Generate code navigation from `src/` with syntax highlighting
 - Build interactive examples using `examples/` directory content
@@ -73,6 +81,7 @@ You are a developer experience engineer creating an exceptional GitHub Pages sit
 - Add deployment documentation for K8s manifests
 
 **Quality Assurance:**
+
 - Ensure all links work and code examples execute
 - Validate against `.claude/conventions/` standards
 - Cross-reference with PRD.md requirements
@@ -85,6 +94,7 @@ Reference all `.claude/` subdirectories appropriately and maintain consistency w
 You are building a community-driven GitHub Pages site for our open-source project. Please:
 
 **Comprehensive Analysis:**
+
 1. Extract project mission from `README.md` and `PRD.md`
 2. Map out `src/` architecture for technical contributors
 3. Review `.claude/plans/PLAN.md` for roadmap integration
@@ -92,6 +102,7 @@ You are building a community-driven GitHub Pages site for our open-source projec
 5. Analyze `CONTRIBUTING.md` for community guidelines
 
 **Site Architecture:**
+
 - Create contributor onboarding flow using setup documentation
 - Build interactive tutorials from `examples/` and `src/` code
 - Generate API playground using OpenAPI schema from `.claude/context/`
@@ -100,6 +111,7 @@ You are building a community-driven GitHub Pages site for our open-source projec
 - Add project governance and security policies from respective files
 
 **Technical Integration:**
+
 - Implement search functionality across all documentation
 - Create automated code example validation
 - Include Docker and K8s deployment guides
@@ -108,11 +120,11 @@ You are building a community-driven GitHub Pages site for our open-source projec
 
 Ensure all content reflects current project state and maintains consistency with `.claude/conventions/` standards.
 
-
 ✅ 5. Enterprise-Grade Documentation Suite
 You are an enterprise documentation architect. Create a professional GitHub Pages site by:
 
 **Strategic Analysis:**
+
 1. Review `PRD.md` for business requirements and target audience
 2. Analyze `src/` codebase for enterprise features and patterns
 3. Study `.claude/context/prisma-airs-api/` for security and compliance documentation
@@ -120,6 +132,7 @@ You are an enterprise documentation architect. Create a professional GitHub Page
 5. Examine `version.json` and `CHANGELOG.md` for release management
 
 **Documentation Architecture:**
+
 - Create role-based documentation (developers, architects, operators)
 - Generate comprehensive API documentation with authentication flows
 - Build deployment guides for production environments using K8s manifests
@@ -128,6 +141,7 @@ You are an enterprise documentation architect. Create a professional GitHub Page
 - Add troubleshooting runbooks based on error codes and logs
 
 **Professional Features:**
+
 - Implement PDF export functionality
 - Create interactive API explorer
 - Include version-controlled documentation matching codebase
@@ -137,7 +151,6 @@ You are an enterprise documentation architect. Create a professional GitHub Page
 Maintain enterprise standards while leveraging all project context from `.claude/` directories and ensuring alignment with TypeScript conventions and linting standards.
 
 ## Five bad examples:
-
 
 ❌ 1. Vague and Generic Request
 Create a GitHub Pages site for my project. Make it look nice and include all the important stuff. Check the code and make documentation.
@@ -149,7 +162,6 @@ No specific guidance on what to analyze
 Ignores existing documentation and context files
 Too vague about requirements and scope
 
-
 ❌ 2. Overly Complex and Confusing
 You need to create a GitHub Pages site but first analyze every single file in the entire repository including node_modules and dist and then create 47 different types of documentation pages and also build a custom CMS system and integrate it with 12 different APIs and make sure to include blockchain functionality and AI chatbots and also create mobile apps and desktop applications while ensuring the site works on Internet Explorer 6 and also include a dating app feature and cryptocurrency wallet integration.
 
@@ -160,7 +172,6 @@ Includes irrelevant requirements (blockchain, dating app)
 Doesn't prioritize the important project context
 Ignores the actual project structure and needs
 
-
 ❌ 3. Ignores Existing Project Structure
 Build a generic documentation site. Don't worry about the existing files, just create something from scratch. Make up some API documentation and add some random code examples.
 Why this is bad:
@@ -169,8 +180,6 @@ Explicitly ignores existing project context
 Doesn't leverage the .claude/ directory structure
 Asks to "make up" documentation instead of using real project info
 Disregards actual source code in src/
-
-
 
 ❌ 4. Only Focuses on One Aspect
 Just look at the src/ directory and create API docs. Nothing else needed.
@@ -181,7 +190,6 @@ Too narrow in scope
 Ignores valuable context in .claude/ directories
 Doesn't consider other important project files
 Misses opportunity for comprehensive documentation
-
 
 ❌ 5. Inconsistent and Contradictory Instructions
 Create documentation but don't look at the documentation folder. Use the source code but ignore the conventions. Make it professional but keep it casual. Include everything but keep it minimal. Follow the TypeScript guide but use JavaScript examples. Reference the API schema but don't include API documentation.
@@ -210,6 +218,3 @@ Bad Examples:
 ❌ Contain contradictory or confusing instructions
 ❌ Focus on irrelevant features or miss important aspects
 ❌ Don't consider the actual project needs and structure
-
-
-

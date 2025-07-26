@@ -58,14 +58,14 @@ app.use(express.json({ limit: '10mb' }));
 
 // Main MCP endpoint - handles JSON-RPC 2.0
 app.post('/', async (req, res) => {
-  await transport.handleRequest(req, res);
+    await transport.handleRequest(req, res);
 });
 
 // SSE endpoint for streaming
 app.get('/', (req, res) => {
-  if (req.headers.accept?.includes('text/event-stream')) {
-    transport.handleSSEConnection(req, res);
-  }
+    if (req.headers.accept?.includes('text/event-stream')) {
+        transport.handleSSEConnection(req, res);
+    }
 });
 ```
 
@@ -75,20 +75,20 @@ Custom HTTP transport with SSE support and session management.
 
 ```typescript
 export class HttpServerTransport {
-  private sessions: Map<string, { clientId: string; createdAt: Date }>;
-  private sseTransport: SSETransport;
-  
-  async handleRequest(req: Request, res: Response): Promise<void> {
-    const { method, params, id } = req.body;
-    const result = await this.routeRequest(method, params);
-    
-    // Optional SSE streaming for long operations
-    if (this.shouldStreamResponse(method) && this.acceptsSSE(req)) {
-      // Stream via SSE
-    } else {
-      res.json({ jsonrpc: '2.0', result, id });
+    private sessions: Map<string, { clientId: string; createdAt: Date }>;
+    private sseTransport: SSETransport;
+
+    async handleRequest(req: Request, res: Response): Promise<void> {
+        const { method, params, id } = req.body;
+        const result = await this.routeRequest(method, params);
+
+        // Optional SSE streaming for long operations
+        if (this.shouldStreamResponse(method) && this.acceptsSSE(req)) {
+            // Stream via SSE
+        } else {
+            res.json({ jsonrpc: '2.0', result, id });
+        }
     }
-  }
 }
 ```
 
@@ -98,29 +98,29 @@ Type-safe client with built-in caching and rate limiting.
 
 ```typescript
 export interface EnhancedAIRSClientConfig extends AIRSClientConfig {
-  cache?: {
-    maxSize: number;    // Max items in cache
-    ttl: number;        // Time-to-live in ms
-  };
-  rateLimiter?: {
-    tokensPerInterval: number;
-    interval: number;   // ms
-    maxBurst: number;
-  };
+    cache?: {
+        maxSize: number; // Max items in cache
+        ttl: number; // Time-to-live in ms
+    };
+    rateLimiter?: {
+        tokensPerInterval: number;
+        interval: number; // ms
+        maxBurst: number;
+    };
 }
 
 export class EnhancedPrismaAIRSClient {
-  async scanSync(request: ScanRequest): Promise<ScanResponse> {
-    await this.rateLimiter?.waitForLimit('scan');
-    
-    const cacheKey = AIRSCache.generateScanKey('sync', request);
-    const cached = this.cache?.get(cacheKey);
-    if (cached) return cached;
-    
-    const response = await this.client.scanSync(request);
-    this.cache?.set(cacheKey, response);
-    return response;
-  }
+    async scanSync(request: ScanRequest): Promise<ScanResponse> {
+        await this.rateLimiter?.waitForLimit('scan');
+
+        const cacheKey = AIRSCache.generateScanKey('sync', request);
+        const cached = this.cache?.get(cacheKey);
+        if (cached) return cached;
+
+        const response = await this.client.scanSync(request);
+        this.cache?.set(cacheKey, response);
+        return response;
+    }
 }
 ```
 
@@ -130,29 +130,31 @@ MCP resources provide access to AIRS data and system status.
 
 ```typescript
 export class ResourceHandler {
-  // Static resources
-  listResources(): ResourcesListResult {
-    return {
-      resources: [
-        {
-          uri: 'airs://cache-stats/current',
-          name: 'Cache Statistics',
-          mimeType: 'application/json'
-        },
-        {
-          uri: 'airs://rate-limit-status/current',
-          name: 'Rate Limit Status',
-          mimeType: 'application/json'
-        }
-      ]
-    };
-  }
-  
-  // Dynamic resources accessed via URI
-  async readResource(params: ResourcesReadParams): Promise<ResourcesReadResult> {
-    // Handles: airs://scan-results/{scanId}
-    //          airs://threat-reports/{reportId}
-  }
+    // Static resources
+    listResources(): ResourcesListResult {
+        return {
+            resources: [
+                {
+                    uri: 'airs://cache-stats/current',
+                    name: 'Cache Statistics',
+                    mimeType: 'application/json',
+                },
+                {
+                    uri: 'airs://rate-limit-status/current',
+                    name: 'Rate Limit Status',
+                    mimeType: 'application/json',
+                },
+            ],
+        };
+    }
+
+    // Dynamic resources accessed via URI
+    async readResource(
+        params: ResourcesReadParams,
+    ): Promise<ResourcesReadResult> {
+        // Handles: airs://scan-results/{scanId}
+        //          airs://threat-reports/{reportId}
+    }
 }
 ```
 
@@ -162,34 +164,34 @@ MCP tools execute AIRS security operations.
 
 ```typescript
 export class ToolHandler {
-  private static readonly TOOLS = {
-    SCAN_CONTENT: 'airs_scan_content',
-    SCAN_ASYNC: 'airs_scan_async',
-    GET_SCAN_RESULTS: 'airs_get_scan_results',
-    GET_THREAT_REPORTS: 'airs_get_threat_reports',
-    CLEAR_CACHE: 'airs_clear_cache',
-  };
-
-  listTools(): ToolsListResult {
-    return {
-      tools: [
-        {
-          name: 'airs_scan_content',
-          description: 'Analyze content for security threats',
-          inputSchema: {
-            type: 'object',
-            properties: {
-              prompt: { type: 'string' },
-              response: { type: 'string' },
-              context: { type: 'string' },
-              profileName: { type: 'string' },
-              metadata: { type: 'object' }
-            }
-          }
-        }
-      ]
+    private static readonly TOOLS = {
+        SCAN_CONTENT: 'airs_scan_content',
+        SCAN_ASYNC: 'airs_scan_async',
+        GET_SCAN_RESULTS: 'airs_get_scan_results',
+        GET_THREAT_REPORTS: 'airs_get_threat_reports',
+        CLEAR_CACHE: 'airs_clear_cache',
     };
-  }
+
+    listTools(): ToolsListResult {
+        return {
+            tools: [
+                {
+                    name: 'airs_scan_content',
+                    description: 'Analyze content for security threats',
+                    inputSchema: {
+                        type: 'object',
+                        properties: {
+                            prompt: { type: 'string' },
+                            response: { type: 'string' },
+                            context: { type: 'string' },
+                            profileName: { type: 'string' },
+                            metadata: { type: 'object' },
+                        },
+                    },
+                },
+            ],
+        };
+    }
 }
 ```
 
@@ -202,17 +204,15 @@ All components use TypeScript with strict mode:
 ```typescript
 // Strongly typed interfaces
 interface ScanRequest {
-  tr_id?: string;
-  ai_profile: AiProfile;
-  metadata?: Metadata;
-  contents: ContentItem[];
+    tr_id?: string;
+    ai_profile: AiProfile;
+    metadata?: Metadata;
+    contents: ContentItem[];
 }
 
 // Type guards for runtime validation
 function isScanResponse(data: unknown): data is ScanResponse {
-  return typeof data === 'object' && 
-         data !== null && 
-         'scan_id' in data;
+    return typeof data === 'object' && data !== null && 'scan_id' in data;
 }
 ```
 
@@ -223,30 +223,30 @@ Comprehensive error handling with AIRS-specific and MCP error codes:
 ```typescript
 // AIRS API errors
 export class AIRSAPIError extends Error {
-  constructor(
-    message: string,
-    public statusCode: number,
-    public response?: AIRSErrorResponse
-  ) {
-    super(message);
-    this.name = 'AIRSAPIError';
-  }
+    constructor(
+        message: string,
+        public statusCode: number,
+        public response?: AIRSErrorResponse,
+    ) {
+        super(message);
+        this.name = 'AIRSAPIError';
+    }
 }
 
 // MCP protocol errors
 export enum MCPErrorCode {
-  ParseError = -32700,
-  InvalidRequest = -32600,
-  MethodNotFound = -32601,
-  InvalidParams = -32602,
-  InternalError = -32603
+    ParseError = -32700,
+    InvalidRequest = -32600,
+    MethodNotFound = -32601,
+    InvalidParams = -32602,
+    InternalError = -32603,
 }
 
 // Automatic retry on rate limiting
 if (response.status === 429 && retryCount < maxRetries) {
-  const delay = calculateRetryDelay(response);
-  await sleep(delay);
-  return makeRequest(method, path, body, options, retryCount + 1);
+    const delay = calculateRetryDelay(response);
+    await sleep(delay);
+    return makeRequest(method, path, body, options, retryCount + 1);
 }
 ```
 
@@ -256,26 +256,26 @@ LRU cache with TTL and size limits:
 
 ```typescript
 export class AIRSCache {
-  private cache = new Map<string, CacheEntry>();
-  private accessOrder: string[] = [];
-  
-  set<T>(key: string, value: T, ttl?: number): void {
-    // Evict least recently used if at capacity
-    if (this.cache.size >= this.maxSize && !this.cache.has(key)) {
-      const lru = this.accessOrder.shift();
-      if (lru) this.cache.delete(lru);
+    private cache = new Map<string, CacheEntry>();
+    private accessOrder: string[] = [];
+
+    set<T>(key: string, value: T, ttl?: number): void {
+        // Evict least recently used if at capacity
+        if (this.cache.size >= this.maxSize && !this.cache.has(key)) {
+            const lru = this.accessOrder.shift();
+            if (lru) this.cache.delete(lru);
+        }
+
+        const expiry = Date.now() + (ttl || this.defaultTTL);
+        this.cache.set(key, { value, expiry });
+        this.updateAccessOrder(key);
     }
-    
-    const expiry = Date.now() + (ttl || this.defaultTTL);
-    this.cache.set(key, { value, expiry });
-    this.updateAccessOrder(key);
-  }
-  
-  static generateScanKey(type: string, request: ScanRequest): string {
-    const hash = crypto.createHash('sha256');
-    hash.update(JSON.stringify({ type, request }));
-    return `scan:${hash.digest('hex')}`;
-  }
+
+    static generateScanKey(type: string, request: ScanRequest): string {
+        const hash = crypto.createHash('sha256');
+        hash.update(JSON.stringify({ type, request }));
+        return `scan:${hash.digest('hex')}`;
+    }
 }
 ```
 
@@ -285,25 +285,25 @@ Token bucket algorithm with configurable limits per operation:
 
 ```typescript
 export class AIRSRateLimiter {
-  private buckets = new Map<string, TokenBucket>();
-  
-  async waitForLimit(operation: string): Promise<void> {
-    const bucket = this.getBucket(operation);
-    
-    while (!bucket.tryConsume(1)) {
-      const waitTime = bucket.timeUntilNextToken();
-      await new Promise(resolve => setTimeout(resolve, waitTime));
+    private buckets = new Map<string, TokenBucket>();
+
+    async waitForLimit(operation: string): Promise<void> {
+        const bucket = this.getBucket(operation);
+
+        while (!bucket.tryConsume(1)) {
+            const waitTime = bucket.timeUntilNextToken();
+            await new Promise((resolve) => setTimeout(resolve, waitTime));
+        }
     }
-  }
-  
-  private getBucket(operation: string): TokenBucket {
-    const config = this.limits[operation] || this.defaultLimit;
-    return new TokenBucket(
-      config.tokensPerInterval,
-      config.interval,
-      config.maxBurst
-    );
-  }
+
+    private getBucket(operation: string): TokenBucket {
+        const config = this.limits[operation] || this.defaultLimit;
+        return new TokenBucket(
+            config.tokensPerInterval,
+            config.interval,
+            config.maxBurst,
+        );
+    }
 }
 ```
 
@@ -314,23 +314,23 @@ export class AIRSRateLimiter {
 ```typescript
 // Example MCP request to the server
 const request = {
-  jsonrpc: "2.0",
-  method: "tools/call",
-  params: {
-    name: "airs_scan_content",
-    arguments: {
-      prompt: "User input to scan",
-      profileName: "Prisma AIRS"
-    }
-  },
-  id: 1
+    jsonrpc: '2.0',
+    method: 'tools/call',
+    params: {
+        name: 'airs_scan_content',
+        arguments: {
+            prompt: 'User input to scan',
+            profileName: 'Prisma AIRS',
+        },
+    },
+    id: 1,
 };
 
 // Send via HTTP POST to server endpoint
 const response = await fetch('http://localhost:3000', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(request)
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request),
 });
 ```
 
@@ -339,21 +339,21 @@ const response = await fetch('http://localhost:3000', {
 ```typescript
 // With any MCP-compatible client
 try {
-  const result = await mcpClient.callTool('airs_scan_content', {
-    prompt: userInput,
-    response: aiResponse,
-    profileName: 'Prisma AIRS'
-  });
-  
-  // Check response content
-  const scanResult = result.content[0].text;
-  if (scanResult.includes('malicious')) {
-    // Handle threat detection
-  }
+    const result = await mcpClient.callTool('airs_scan_content', {
+        prompt: userInput,
+        response: aiResponse,
+        profileName: 'Prisma AIRS',
+    });
+
+    // Check response content
+    const scanResult = result.content[0].text;
+    if (scanResult.includes('malicious')) {
+        // Handle threat detection
+    }
 } catch (error) {
-  if (error.code === -32603) {
-    // Server error - check logs
-  }
+    if (error.code === -32603) {
+        // Server error - check logs
+    }
 }
 ```
 
@@ -381,10 +381,12 @@ console.log('Cache statistics:', cacheStats);
 ### Resources
 
 **Static Resources:**
+
 - `airs://cache-stats/current` - Cache performance metrics
 - `airs://rate-limit-status/current` - Rate limiting status
 
 **Dynamic Resources:**
+
 - `airs://scan-results/{scanId}` - Individual scan results
 - `airs://threat-reports/{reportId}` - Detailed threat reports
 
@@ -409,10 +411,10 @@ console.log('Cache statistics:', cacheStats);
 ```typescript
 // Batch multiple scans for efficiency
 const result = await mcpClient.callTool('airs_scan_async', {
-  requests: [
-    { reqId: 1, prompt: 'content1', profileName: 'Prisma AIRS' },
-    { reqId: 2, prompt: 'content2', profileName: 'Prisma AIRS' }
-  ]
+    requests: [
+        { reqId: 1, prompt: 'content1', profileName: 'Prisma AIRS' },
+        { reqId: 2, prompt: 'content2', profileName: 'Prisma AIRS' },
+    ],
 });
 ```
 

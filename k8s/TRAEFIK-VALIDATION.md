@@ -30,9 +30,9 @@ Your DNS is correctly configured to point `airs.cdot.io` to the Traefik LoadBala
 3. Traefik terminates TLS using wildcard certificate
 4. Traefik matches the IngressRoute rule for host `airs.cdot.io` and path `/prisma-airs`
 5. Traefik applies middlewares:
-   - Strips `/prisma-airs` prefix
-   - Adds security headers
-   - Applies rate limiting (production only)
+    - Strips `/prisma-airs` prefix
+    - Adds security headers
+    - Applies rate limiting (production only)
 6. Traefik forwards request to `prisma-airs-mcp` service on port 80
 7. Service routes to MCP pod on port 3000
 
@@ -42,31 +42,31 @@ Your DNS is correctly configured to point `airs.cdot.io` to the Traefik LoadBala
 
 ```yaml
 spec:
-  entryPoints:
-    - websecure # Port 443
-  routes:
-    - match: Host(`airs.cdot.io`) && PathPrefix(`/prisma-airs`)
-      services:
-        - name: prisma-airs-mcp
-          port: 80
-      middlewares:
-        - name: prisma-airs-mcp-stripprefix # Removes /prisma-airs
-        - name: prisma-airs-mcp-headers # Security headers
-  tls:
-    secretName: wildcard-cdot-io-tls # Your wildcard cert
+    entryPoints:
+        - websecure # Port 443
+    routes:
+        - match: Host(`airs.cdot.io`) && PathPrefix(`/prisma-airs`)
+          services:
+              - name: prisma-airs-mcp
+                port: 80
+          middlewares:
+              - name: prisma-airs-mcp-stripprefix # Removes /prisma-airs
+              - name: prisma-airs-mcp-headers # Security headers
+    tls:
+        secretName: wildcard-cdot-io-tls # Your wildcard cert
 ```
 
 ### Service Configuration
 
 ```yaml
 spec:
-  type: ClusterIP
-  selector:
-    app: prisma-airs-mcp
-  ports:
-    - name: http
-      port: 80 # Service port
-      targetPort: http # Maps to container port 3000
+    type: ClusterIP
+    selector:
+        app: prisma-airs-mcp
+    ports:
+        - name: http
+          port: 80 # Service port
+          targetPort: http # Maps to container port 3000
 ```
 
 ## Testing Commands

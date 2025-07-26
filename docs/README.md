@@ -21,11 +21,13 @@ docs/
 ## Local Development
 
 1. Install Jekyll and dependencies:
+
 ```bash
 bundle install
 ```
 
 2. Run the development server:
+
 ```bash
 bundle exec jekyll serve --baseurl ""
 ```
@@ -39,19 +41,20 @@ The site automatically builds and deploys to GitHub Pages through GitHub Actions
 ### Automated CI/CD Process
 
 1. **Pull Request**: When you create a PR that modifies the `docs/` directory:
-   - Jekyll site is built and tested
-   - HTML is validated
-   - Broken links are checked
-   - Build status is commented on the PR
+    - Jekyll site is built and tested
+    - HTML is validated
+    - Broken links are checked
+    - Build status is commented on the PR
 
 2. **Merge to Main**: When the PR is merged:
-   - Production site is built
-   - Automatically deployed to GitHub Pages
-   - Available at: https://cdot65.github.io/prisma-airs-mcp/
+    - Production site is built
+    - Automatically deployed to GitHub Pages
+    - Available at: https://cdot65.github.io/prisma-airs-mcp/
 
 ### Manual Build
 
 To build the site locally:
+
 ```bash
 bundle exec jekyll build
 ```
@@ -99,10 +102,11 @@ To enable GitHub Pages for this repository:
 
 1. Go to https://github.com/cdot65/prisma-airs-mcp/settings/pages
 2. Under "Build and deployment", select:
-   - Source: **GitHub Actions**
+    - Source: **GitHub Actions**
 3. Save the settings
 
 The GitHub Actions workflow will automatically:
+
 - Build the Jekyll site when changes are pushed to main
 - Deploy to https://cdot65.github.io/prisma-airs-mcp/
 - Run tests on pull requests before merging

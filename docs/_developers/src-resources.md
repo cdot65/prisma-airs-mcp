@@ -26,12 +26,12 @@ All resources follow the URI pattern: `airs://{type}/{id}`
 
 ### Resource Types
 
-| Type | URI Pattern | Description |
-|------|-------------|-------------|
-| `scan-results` | `airs://scan-results/{scanId}` | Individual scan results |
-| `threat-reports` | `airs://threat-reports/{reportId}` | Detailed threat reports |
-| `cache-stats` | `airs://cache-stats/current` | Current cache statistics |
-| `rate-limit-status` | `airs://rate-limit-status/current` | Rate limiting status |
+| Type                | URI Pattern                        | Description              |
+| ------------------- | ---------------------------------- | ------------------------ |
+| `scan-results`      | `airs://scan-results/{scanId}`     | Individual scan results  |
+| `threat-reports`    | `airs://threat-reports/{reportId}` | Detailed threat reports  |
+| `cache-stats`       | `airs://cache-stats/current`       | Current cache statistics |
+| `rate-limit-status` | `airs://rate-limit-status/current` | Rate limiting status     |
 
 ## Available Resources
 
@@ -102,9 +102,9 @@ All resources follow the URI pattern: `airs://{type}/{id}`
 
 ```json
 {
-    "size": 1048576,          // Current cache size in bytes
-    "count": 42,              // Number of cached entries
-    "enabled": true,          // Cache enabled status
+    "size": 1048576, // Current cache size in bytes
+    "count": 42, // Number of cached entries
+    "enabled": true, // Cache enabled status
     "timestamp": "2024-01-01T12:00:00Z"
 }
 ```
@@ -119,8 +119,8 @@ All resources follow the URI pattern: `airs://{type}/{id}`
 
 ```json
 {
-    "bucketCount": 3,         // Active rate limit buckets
-    "enabled": true,          // Rate limiting enabled
+    "bucketCount": 3, // Active rate limit buckets
+    "enabled": true, // Rate limiting enabled
     "timestamp": "2024-01-01T12:00:00Z"
 }
 ```
@@ -140,18 +140,20 @@ export class ResourceHandler {
     } as const;
 
     // List available static resources
-    listResources(params: ResourcesListParams): ResourcesListResult
+    listResources(params: ResourcesListParams): ResourcesListResult;
 
     // Read a specific resource by URI
-    async readResource(params: ResourcesReadParams): Promise<ResourcesReadResult>
+    async readResource(
+        params: ResourcesReadParams,
+    ): Promise<ResourcesReadResult>;
 
     // Create resource reference for tool results
     static createResourceReference(
         type: string,
         id: string,
         title: string,
-        data?: unknown
-    ): ResourceContent
+        data?: unknown,
+    ): ResourceContent;
 }
 ```
 
@@ -160,11 +162,11 @@ export class ResourceHandler {
 ```typescript
 private parseResourceUri(uri: string): { type: string; id: string } | null {
     const match = uri.match(/^airs:\/\/([^/]+)\/(.+)$/);
-    
+
     if (!match) {
         return null;
     }
-    
+
     return {
         type: match[1] || '',
         id: match[2] || '',
@@ -184,7 +186,7 @@ const handler = new ResourceHandler();
 // List available static resources
 const { resources } = handler.listResources({});
 
-resources.forEach(resource => {
+resources.forEach((resource) => {
     console.log(`${resource.uri}: ${resource.name}`);
     console.log(`  ${resource.description}`);
 });
@@ -195,7 +197,7 @@ resources.forEach(resource => {
 ```typescript
 // Read scan result by ID
 const scanResult = await handler.readResource({
-    uri: 'airs://scan-results/scan_12345'
+    uri: 'airs://scan-results/scan_12345',
 });
 
 const data = JSON.parse(scanResult.contents[0].text!);
@@ -208,7 +210,7 @@ console.log(`Category: ${data.result?.category}`);
 ```typescript
 // Get cache statistics
 const cacheStats = await handler.readResource({
-    uri: 'airs://cache-stats/current'
+    uri: 'airs://cache-stats/current',
 });
 
 const stats = JSON.parse(cacheStats.contents[0].text!);
@@ -217,7 +219,7 @@ console.log(`Cache size: ${stats.size} bytes`);
 
 // Get rate limit status
 const rateLimitStatus = await handler.readResource({
-    uri: 'airs://rate-limit-status/current'
+    uri: 'airs://rate-limit-status/current',
 });
 ```
 
@@ -235,7 +237,7 @@ const resourceRef = ResourceHandler.createResourceReference(
     'scan-results',
     scanResult.scan_id,
     `Scan Result ${scanResult.scan_id}`,
-    scanResult
+    scanResult,
 );
 
 // Include in tool result
@@ -243,13 +245,13 @@ return {
     content: [
         {
             type: 'text',
-            text: 'Scan completed successfully'
+            text: 'Scan completed successfully',
         },
         {
             type: 'resource',
-            resource: resourceRef
-        }
-    ]
+            resource: resourceRef,
+        },
+    ],
 };
 ```
 
@@ -263,17 +265,17 @@ const toolResult: ToolsCallResult = {
     content: [
         {
             type: 'text',
-            text: `Found ${threats.length} threats`
+            text: `Found ${threats.length} threats`,
         },
         {
             type: 'resource',
             resource: {
                 uri: `airs://threat-reports/${reportId}`,
                 mimeType: 'application/json',
-                text: JSON.stringify(threatReport, null, 2)
-            }
-        }
-    ]
+                text: JSON.stringify(threatReport, null, 2),
+            },
+        },
+    ],
 };
 ```
 

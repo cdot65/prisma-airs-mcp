@@ -12,7 +12,6 @@ order: 8
 - Access to [GitHub Copilot](https://github.com/features/copilot)
 - Prisma AIRS MCP server running (either via Docker or from source)
 
-
 ## Enable MCP Support in VS Code
 
 > **Note**: MCP support in VS Code is generally available starting from VS Code 1.102, but can be disabled by your organization.
@@ -48,6 +47,7 @@ Create a `.vscode/mcp.json` file in your workspace to configure the Prisma AIRS 
 ```
 
 Replace `YOUR_PRISMA_AIRS_URL` with your actual Prisma AIRS endpoint:
+
 - **For Docker deployments**: `http://localhost:3000/prisma-airs`
 - **For production deployments**: Your custom URL (e.g., `https://airs.yourdomain.com/prisma-airs`)
 
@@ -82,7 +82,6 @@ To configure the Prisma AIRS MCP server for all your workspaces:
 }
 ```
 
-
 ## Using Prisma AIRS Tools in Agent Mode
 
 Once you've added the Prisma AIRS MCP server, you can use its security tools in agent mode:
@@ -91,11 +90,11 @@ Once you've added the Prisma AIRS MCP server, you can use its security tools in 
 2. Select **Agent mode** from the dropdown
 3. Select the **Tools** button to view available Prisma AIRS tools
 4. Select the security tools you want to use:
-   - Prompt injection detection
-   - Malicious URL detection
-   - Sensitive data loss prevention
-   - Database security attack detection
-   - And more
+    - Prompt injection detection
+    - Malicious URL detection
+    - Sensitive data loss prevention
+    - Database security attack detection
+    - And more
 
 ### Example Usage
 
@@ -127,18 +126,18 @@ Right-click on the Prisma AIRS server or select the gear icon to:
 ### Server Not Connecting
 
 1. Verify the Prisma AIRS server is running:
-   ```bash
-   # For Docker
-   docker ps | grep prisma-airs
-   
-   # Check if the server is accessible
-   curl http://localhost:3000/health
-   ```
+
+    ```bash
+    # For Docker
+    docker ps | grep prisma-airs
+
+    # Check if the server is accessible
+    curl http://localhost:3000/health
+    ```
 
 2. Check the server logs:
-   - In VS Code: Right-click the server in Extensions view → Show Output
-   - In Docker: `docker logs prisma-airs`
-
+    - In VS Code: Right-click the server in Extensions view → Show Output
+    - In Docker: `docker logs prisma-airs`
 
 ### Error: "Cannot have more than 128 tools per request"
 
@@ -147,7 +146,6 @@ If you have many MCP servers installed:
 1. Open the Tools picker in Chat view
 2. Deselect unused tools or entire servers
 3. Keep only the Prisma AIRS tools you need active
-
 
 ## Next Steps
 

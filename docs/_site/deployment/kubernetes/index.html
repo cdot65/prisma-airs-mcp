@@ -248,6 +248,7 @@ curl http://localhost:3000/health
 <h3 id="overview-1">Overview</h3>
 
 <p>The deployment uses Traefik IngressRoute for:</p>
+
 <ul>
   <li>Path-based routing (<code class="language-plaintext highlighter-rouge">/prisma-airs</code> → service)</li>
   <li>Automatic path stripping</li>
@@ -261,22 +262,23 @@ curl http://localhost:3000/health
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">traefik.io/v1alpha1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">IngressRoute</span>
 <span class="na">metadata</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp-route</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp-route</span>
 <span class="na">spec</span><span class="pi">:</span>
-  <span class="na">routes</span><span class="pi">:</span>
-    <span class="pi">-</span> <span class="na">match</span><span class="pi">:</span> <span class="s">Host(`your-domain.com`) &amp;&amp; PathPrefix(`/prisma-airs`)</span>
-      <span class="na">kind</span><span class="pi">:</span> <span class="s">Rule</span>
-      <span class="na">services</span><span class="pi">:</span>
-        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp</span>
-          <span class="na">port</span><span class="pi">:</span> <span class="m">3000</span>
-      <span class="na">middlewares</span><span class="pi">:</span>
-        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">strip-prisma-airs-prefix</span>
-        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">security-headers</span>
+    <span class="na">routes</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">match</span><span class="pi">:</span> <span class="s">Host(`your-domain.com`) &amp;&amp; PathPrefix(`/prisma-airs`)</span>
+          <span class="na">kind</span><span class="pi">:</span> <span class="s">Rule</span>
+          <span class="na">services</span><span class="pi">:</span>
+              <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp</span>
+                <span class="na">port</span><span class="pi">:</span> <span class="m">3000</span>
+          <span class="na">middlewares</span><span class="pi">:</span>
+              <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">strip-prisma-airs-prefix</span>
+              <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">security-headers</span>
 </code></pre></div></div>
 
 <h3 id="path-routing">Path Routing</h3>
 
 <p>The IngressRoute configuration:</p>
+
 <ol>
   <li>Matches requests to <code class="language-plaintext highlighter-rouge">/prisma-airs/*</code></li>
   <li>Strips the <code class="language-plaintext highlighter-rouge">/prisma-airs</code> prefix</li>
@@ -284,6 +286,7 @@ curl http://localhost:3000/health
 </ol>
 
 <p>Example routing:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">https://your-domain.com/prisma-airs</code> → <code class="language-plaintext highlighter-rouge">http://service:3000/</code></li>
   <li><code class="language-plaintext highlighter-rouge">https://your-domain.com/prisma-airs/health</code> → <code class="language-plaintext highlighter-rouge">http://service:3000/health</code></li>
@@ -378,6 +381,7 @@ kubectl get secret wildcard-cert <span class="nt">-n</span> source-namespace <sp
 </code></pre></div></div>
 
 <p>Apply changes:</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-k</span> k8s/overlays/production
 </code></pre></div></div>
 
@@ -386,12 +390,12 @@ kubectl get secret wildcard-cert <span class="nt">-n</span> source-namespace <sp
 <p>Customize in <code class="language-plaintext highlighter-rouge">k8s/overlays/production/deployment-patch.yaml</code>:</p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">resources</span><span class="pi">:</span>
-  <span class="na">limits</span><span class="pi">:</span>
-    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2"</span>
-    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1Gi"</span>
-  <span class="na">requests</span><span class="pi">:</span>
-    <span class="na">cpu</span><span class="pi">:</span> <span class="s2">"</span><span class="s">500m"</span>
-    <span class="na">memory</span><span class="pi">:</span> <span class="s2">"</span><span class="s">256Mi"</span>
+    <span class="na">limits</span><span class="pi">:</span>
+        <span class="na">cpu</span><span class="pi">:</span> <span class="s1">'</span><span class="s">2'</span>
+        <span class="na">memory</span><span class="pi">:</span> <span class="s1">'</span><span class="s">1Gi'</span>
+    <span class="na">requests</span><span class="pi">:</span>
+        <span class="na">cpu</span><span class="pi">:</span> <span class="s1">'</span><span class="s">500m'</span>
+        <span class="na">memory</span><span class="pi">:</span> <span class="s1">'</span><span class="s">256Mi'</span>
 </code></pre></div></div>
 
 <h3 id="scaling">Scaling</h3>
@@ -440,6 +444,7 @@ kubectl rollout undo deployment/prisma-airs-mcp <span class="nt">-n</span> prism
 <h3 id="health-checks">Health Checks</h3>
 
 <p>The deployment includes:</p>
+
 <ul>
   <li><strong>Liveness Probe</strong>: Restarts unhealthy pods</li>
   <li><strong>Readiness Probe</strong>: Controls traffic routing</li>
@@ -472,6 +477,7 @@ kubectl describe pod prisma-airs-mcp-xxxxx <span class="nt">-n</span> prisma-air
 <h3 id="network-policies">Network Policies</h3>
 
 <p>The deployment includes NetworkPolicy for:</p>
+
 <ul>
   <li>Ingress only from Traefik</li>
   <li>Egress to AIRS API endpoints</li>
@@ -481,17 +487,18 @@ kubectl describe pod prisma-airs-mcp-xxxxx <span class="nt">-n</span> prisma-air
 <h3 id="pod-security">Pod Security</h3>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">securityContext</span><span class="pi">:</span>
-  <span class="na">runAsNonRoot</span><span class="pi">:</span> <span class="no">true</span>
-  <span class="na">runAsUser</span><span class="pi">:</span> <span class="m">1000</span>
-  <span class="na">fsGroup</span><span class="pi">:</span> <span class="m">1000</span>
-  <span class="na">capabilities</span><span class="pi">:</span>
-    <span class="na">drop</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">ALL</span>
+    <span class="na">runAsNonRoot</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">runAsUser</span><span class="pi">:</span> <span class="m">1000</span>
+    <span class="na">fsGroup</span><span class="pi">:</span> <span class="m">1000</span>
+    <span class="na">capabilities</span><span class="pi">:</span>
+        <span class="na">drop</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">ALL</span>
 </code></pre></div></div>
 
 <h3 id="secret-management">Secret Management</h3>
 
 <p>For production, consider:</p>
+
 <ul>
   <li>Sealed Secrets</li>
   <li>External Secrets Operator</li>
@@ -504,6 +511,7 @@ kubectl describe pod prisma-airs-mcp-xxxxx <span class="nt">-n</span> prisma-air
 <h3 id="common-issues">Common Issues</h3>
 
 <p><strong>Pods Not Starting</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check pod events</span>
 kubectl describe pod prisma-airs-mcp-xxxxx <span class="nt">-n</span> prisma-airs-mcp-server
 
@@ -512,6 +520,7 @@ kubectl logs prisma-airs-mcp-xxxxx <span class="nt">-n</span> prisma-airs-mcp-se
 </code></pre></div></div>
 
 <p><strong>IngressRoute Not Working</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check IngressRoute status</span>
 kubectl get ingressroute <span class="nt">-n</span> prisma-airs-mcp-server
 
@@ -523,6 +532,7 @@ kubectl get middleware <span class="nt">-n</span> prisma-airs-mcp-server
 </code></pre></div></div>
 
 <p><strong>Secret Issues</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Verify secret exists</span>
 kubectl get secret prisma-airs-secret <span class="nt">-n</span> prisma-airs-mcp-server
 
@@ -533,10 +543,12 @@ kubectl get secret prisma-airs-secret <span class="nt">-n</span> prisma-airs-mcp
 <h3 id="debugging">Debugging</h3>
 
 <p><strong>Access Pod Shell</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nb">exec</span> <span class="nt">-it</span> prisma-airs-mcp-xxxxx <span class="nt">-n</span> prisma-airs-mcp-server <span class="nt">--</span> sh
 </code></pre></div></div>
 
 <p><strong>Port Forwarding</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Forward to local port</span>
 kubectl port-forward <span class="nt">-n</span> prisma-airs-mcp-server svc/prisma-airs-mcp 3000:3000
 
@@ -545,6 +557,7 @@ curl http://localhost:3000/health
 </code></pre></div></div>
 
 <p><strong>Check DNS Resolution</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># From within pod</span>
 kubectl <span class="nb">exec</span> <span class="nt">-it</span> prisma-airs-mcp-xxxxx <span class="nt">-n</span> prisma-airs-mcp-server <span class="nt">--</span> nslookup service.api.aisecurity.paloaltonetworks.com
 </code></pre></div></div>

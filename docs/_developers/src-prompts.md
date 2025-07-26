@@ -28,15 +28,16 @@ The prompts module consists of a single file (`index.ts`) that implements:
 
 #### Arguments
 
-| Name | Description | Required |
-|------|-------------|----------|
-| `content` | The content to analyze (prompt, response, or both) | Yes |
-| `context` | Additional context about the content source | No |
-| `severity_threshold` | Minimum severity level to report (low, medium, high) | No |
+| Name                 | Description                                          | Required |
+| -------------------- | ---------------------------------------------------- | -------- |
+| `content`            | The content to analyze (prompt, response, or both)   | Yes      |
+| `context`            | Additional context about the content source          | No       |
+| `severity_threshold` | Minimum severity level to report (low, medium, high) | No       |
 
 #### Generated Workflow
 
 The prompt guides through:
+
 1. Scanning content using AIRS tools
 2. Reporting threats above severity threshold
 3. Providing specific examples for each threat
@@ -50,14 +51,15 @@ The prompt guides through:
 
 #### Arguments
 
-| Name | Description | Required |
-|------|-------------|----------|
-| `scan_id` | The scan ID to investigate | Yes |
-| `focus_area` | Specific threat type to focus on (e.g., injection, dlp, toxic_content) | No |
+| Name         | Description                                                            | Required |
+| ------------ | ---------------------------------------------------------------------- | -------- |
+| `scan_id`    | The scan ID to investigate                                             | Yes      |
+| `focus_area` | Specific threat type to focus on (e.g., injection, dlp, toxic_content) | No       |
 
 #### Generated Workflow
 
 The prompt includes:
+
 1. Retrieving scan details using AIRS tools
 2. Analyzing each detected threat
 3. Assessing potential impact and attack vectors
@@ -72,15 +74,16 @@ The prompt includes:
 
 #### Arguments
 
-| Name | Description | Required |
-|------|-------------|----------|
-| `content` | The content to check for compliance | Yes |
-| `regulations` | Comma-separated list of regulations (e.g., GDPR, HIPAA, PCI) | No |
-| `profile_name` | Security profile to use for compliance checking | No |
+| Name           | Description                                                  | Required |
+| -------------- | ------------------------------------------------------------ | -------- |
+| `content`      | The content to check for compliance                          | Yes      |
+| `regulations`  | Comma-separated list of regulations (e.g., GDPR, HIPAA, PCI) | No       |
+| `profile_name` | Security profile to use for compliance checking              | No       |
 
 #### Generated Workflow
 
 The prompt covers:
+
 1. Scanning for regulatory violations
 2. Identifying PII, PHI, and PCI data
 3. Mapping findings to specific regulations
@@ -95,31 +98,32 @@ The prompt covers:
 
 #### Arguments
 
-| Name | Description | Required |
-|------|-------------|----------|
-| `incident_type` | Type of incident (e.g., data_leak, injection_attempt, malicious_code) | Yes |
-| `report_id` | Threat report ID if available | No |
-| `urgency` | Incident urgency level (low, medium, high, critical) | No |
+| Name            | Description                                                           | Required |
+| --------------- | --------------------------------------------------------------------- | -------- |
+| `incident_type` | Type of incident (e.g., data_leak, injection_attempt, malicious_code) | Yes      |
+| `report_id`     | Threat report ID if available                                         | No       |
+| `urgency`       | Incident urgency level (low, medium, high, critical)                  | No       |
 
 #### Generated Workflow
 
 The prompt provides phased response:
+
 1. **Immediate Actions** (0-15 minutes)
-   - Containment steps
-   - Evidence preservation
-   - Initial assessment
+    - Containment steps
+    - Evidence preservation
+    - Initial assessment
 2. **Investigation** (15-60 minutes)
-   - Scope and impact analysis
-   - Attack vector identification
+    - Scope and impact analysis
+    - Attack vector identification
 3. **Mitigation** (1-4 hours)
-   - Threat elimination
-   - Vulnerability patching
+    - Threat elimination
+    - Vulnerability patching
 4. **Recovery** (4-24 hours)
-   - Normal operations restoration
-   - Security posture verification
+    - Normal operations restoration
+    - Security posture verification
 5. **Lessons Learned**
-   - Root cause analysis
-   - Process improvements
+    - Root cause analysis
+    - Process improvements
 
 ## Implementation Details
 
@@ -136,16 +140,17 @@ export class PromptHandler {
     } as const;
 
     // List all available prompts
-    listPrompts(params: PromptsListParams): PromptsListResult
+    listPrompts(params: PromptsListParams): PromptsListResult;
 
     // Get a specific prompt with arguments
-    getPrompt(params: PromptsGetParams): PromptsGetResult
+    getPrompt(params: PromptsGetParams): PromptsGetResult;
 }
 ```
 
 ### Prompt Structure
 
 Each prompt returns a conversation with:
+
 - User message containing the structured workflow
 - Assistant message acknowledging the task
 - Detailed instructions and requirements
@@ -163,10 +168,12 @@ const handler = new PromptHandler();
 // List all available prompts
 const { prompts } = handler.listPrompts({});
 
-prompts.forEach(prompt => {
+prompts.forEach((prompt) => {
     console.log(`${prompt.name}: ${prompt.title}`);
-    prompt.arguments?.forEach(arg => {
-        console.log(`  - ${arg.name} (${arg.required ? 'required' : 'optional'})`);
+    prompt.arguments?.forEach((arg) => {
+        console.log(
+            `  - ${arg.name} (${arg.required ? 'required' : 'optional'})`,
+        );
     });
 });
 ```
@@ -180,12 +187,12 @@ const result = handler.getPrompt({
     arguments: {
         content: 'User input containing potential SQL injection',
         context: 'Form submission from public website',
-        severity_threshold: 'medium'
-    }
+        severity_threshold: 'medium',
+    },
 });
 
 // Result contains structured messages
-result.messages.forEach(msg => {
+result.messages.forEach((msg) => {
     console.log(`${msg.role}: ${msg.content.text}`);
 });
 ```
@@ -199,8 +206,8 @@ const incident = handler.getPrompt({
     arguments: {
         incident_type: 'data_leak',
         report_id: 'rpt_12345',
-        urgency: 'critical'
-    }
+        urgency: 'critical',
+    },
 });
 
 // Messages guide through phased response
@@ -230,7 +237,7 @@ server.setRequestHandler(PromptsGetMethod, handler.getPrompt.bind(handler));
 const prompts = await client.listPrompts();
 const workflow = await client.getPrompt({
     name: 'security_analysis',
-    arguments: { content: 'suspicious content' }
+    arguments: { content: 'suspicious content' },
 });
 ```
 
@@ -309,8 +316,8 @@ getPrompt(params: PromptsGetParams): PromptsGetResult {
 const testPrompt = handler.getPrompt({
     name: 'security_analysis',
     arguments: {
-        content: 'test content'
-    }
+        content: 'test content',
+    },
 });
 
 // Verify structure

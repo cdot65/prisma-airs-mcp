@@ -156,7 +156,8 @@
       <article class="content">
         <h2 id="overview">Overview</h2>
 
-<p>MCP Tools are the primary way to execute operations in Prisma AIRS. They provide a structured interface for AI assistants to perform security scans, retrieve results, and manage the system.</p>
+<p>MCP Tools are the primary way to execute operations in Prisma AIRS. They provide a structured interface for AI
+assistants to perform security scans, retrieve results, and manage the system.</p>
 
 <h2 id="available-tools">Available Tools</h2>
 
@@ -165,34 +166,59 @@
 <p>Performs synchronous security scanning with immediate results.</p>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-  <span class="nl">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_scan_content</span><span class="dl">"</span><span class="p">,</span>
-  <span class="nx">description</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Scan text content for security threats</span><span class="dl">"</span><span class="p">,</span>
-  <span class="nx">inputSchema</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
-    <span class="nx">properties</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nl">prompt</span><span class="p">:</span> <span class="p">{</span>
-        <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span>
-        <span class="na">description</span><span class="p">:</span> <span class="dl">"</span><span class="s2">The prompt text to scan</span><span class="dl">"</span>
-      <span class="p">},</span>
-      <span class="nx">response</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span> 
-        <span class="nx">description</span><span class="p">:</span> <span class="dl">"</span><span class="s2">The AI response text to scan</span><span class="dl">"</span>
-      <span class="p">},</span>
-      <span class="nx">profileName</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span>
-        <span class="nx">description</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Security profile to use</span><span class="dl">"</span><span class="p">,</span>
-        <span class="k">default</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Prisma AIRS</span><span class="dl">"</span>
-      <span class="p">},</span>
-      <span class="nx">metadata</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nl">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_scan_content</span><span class="dl">"</span><span class="p">,</span>
+        <span class="nx">description</span>
+<span class="p">:</span>
+    <span class="dl">"</span><span class="s2">Scan text content for security threats</span><span class="dl">"</span><span class="p">,</span>
+        <span class="nx">inputSchema</span>
+<span class="p">:</span>
+    <span class="p">{</span>
         <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
-        <span class="nx">description</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Additional metadata</span><span class="dl">"</span><span class="p">,</span>
-        <span class="nx">properties</span><span class="p">:</span> <span class="p">{</span>
-          <span class="nl">app_name</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span> <span class="p">},</span>
-          <span class="nx">user_id</span><span class="p">:</span> <span class="p">{</span> <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span> <span class="p">}</span>
+            <span class="nx">properties</span>
+    <span class="p">:</span>
+        <span class="p">{</span>
+            <span class="nl">prompt</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span>
+                    <span class="na">description</span>
+            <span class="p">:</span>
+                <span class="dl">"</span><span class="s2">The prompt text to scan</span><span class="dl">"</span>
+            <span class="p">}</span>
+        <span class="p">,</span>
+            <span class="nx">response</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span>
+                    <span class="nx">description</span>
+            <span class="p">:</span>
+                <span class="dl">"</span><span class="s2">The AI response text to scan</span><span class="dl">"</span>
+            <span class="p">}</span>
+        <span class="p">,</span>
+            <span class="nx">profileName</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span>
+                    <span class="nx">description</span>
+            <span class="p">:</span>
+                <span class="dl">"</span><span class="s2">Security profile to use</span><span class="dl">"</span><span class="p">,</span>
+            <span class="k">default</span><span class="p">:</span>
+                <span class="dl">"</span><span class="s2">Prisma AIRS</span><span class="dl">"</span>
+            <span class="p">}</span>
+        <span class="p">,</span>
+            <span class="nx">metadata</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
+                    <span class="nx">description</span>
+            <span class="p">:</span>
+                <span class="dl">"</span><span class="s2">Additional metadata</span><span class="dl">"</span><span class="p">,</span>
+                    <span class="nx">properties</span>
+            <span class="p">:</span>
+                <span class="p">{</span>
+                    <span class="nl">app_name</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span>
+                    <span class="p">}</span>
+                <span class="p">,</span>
+                    <span class="nx">user_id</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
         <span class="p">}</span>
-      <span class="p">}</span>
     <span class="p">}</span>
-  <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -201,31 +227,60 @@
 <p>Submits content for asynchronous batch scanning.</p>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-  <span class="nl">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_scan_async</span><span class="dl">"</span><span class="p">,</span>
-  <span class="nx">description</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Submit multiple items for async scanning</span><span class="dl">"</span><span class="p">,</span>
-  <span class="nx">inputSchema</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
-    <span class="nx">required</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">contents</span><span class="dl">"</span><span class="p">],</span>
-    <span class="nx">properties</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nl">contents</span><span class="p">:</span> <span class="p">{</span>
-        <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">array</span><span class="dl">"</span><span class="p">,</span>
-        <span class="na">items</span><span class="p">:</span> <span class="p">{</span>
-          <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
-          <span class="na">properties</span><span class="p">:</span> <span class="p">{</span>
-            <span class="na">prompt</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span> <span class="p">},</span>
-            <span class="na">response</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span> <span class="p">},</span>
-            <span class="na">code_prompt</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span> <span class="p">},</span>
-            <span class="na">code_response</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span> <span class="p">}</span>
-          <span class="p">}</span>
+    <span class="nl">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_scan_async</span><span class="dl">"</span><span class="p">,</span>
+        <span class="nx">description</span>
+<span class="p">:</span>
+    <span class="dl">"</span><span class="s2">Submit multiple items for async scanning</span><span class="dl">"</span><span class="p">,</span>
+        <span class="nx">inputSchema</span>
+<span class="p">:</span>
+    <span class="p">{</span>
+        <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
+            <span class="nx">required</span>
+    <span class="p">:</span>
+        <span class="p">[</span><span class="dl">"</span><span class="s2">contents</span><span class="dl">"</span><span class="p">],</span>
+            <span class="nx">properties</span>
+    <span class="p">:</span>
+        <span class="p">{</span>
+            <span class="nl">contents</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">array</span><span class="dl">"</span><span class="p">,</span>
+                    <span class="na">items</span>
+            <span class="p">:</span>
+                <span class="p">{</span>
+                    <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
+                        <span class="na">properties</span>
+                <span class="p">:</span>
+                    <span class="p">{</span>
+                        <span class="na">prompt</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span>
+                        <span class="p">}</span>
+                    <span class="p">,</span>
+                        <span class="na">response</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span>
+                        <span class="p">}</span>
+                    <span class="p">,</span>
+                        <span class="na">code_prompt</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span>
+                        <span class="p">}</span>
+                    <span class="p">,</span>
+                        <span class="na">code_response</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">,</span>
+            <span class="nx">profileName</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span>
+            <span class="p">}</span>
+        <span class="p">,</span>
+            <span class="nx">tr_id</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span>
+                    <span class="nx">description</span>
+            <span class="p">:</span>
+                <span class="dl">"</span><span class="s2">Transaction ID for correlation</span><span class="dl">"</span>
+            <span class="p">}</span>
         <span class="p">}</span>
-      <span class="p">},</span>
-      <span class="nx">profileName</span><span class="p">:</span> <span class="p">{</span> <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span> <span class="p">},</span>
-      <span class="nx">tr_id</span><span class="p">:</span> <span class="p">{</span> 
-        <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span>
-        <span class="nx">description</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Transaction ID for correlation</span><span class="dl">"</span>
-      <span class="p">}</span>
     <span class="p">}</span>
-  <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -234,20 +289,35 @@
 <p>Retrieves results from async scan operations.</p>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-  <span class="nl">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_get_scan_results</span><span class="dl">"</span><span class="p">,</span>
-  <span class="nx">description</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Get results for async scan IDs</span><span class="dl">"</span><span class="p">,</span>
-  <span class="nx">inputSchema</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
-    <span class="nx">required</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">scan_ids</span><span class="dl">"</span><span class="p">],</span>
-    <span class="nx">properties</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nl">scan_ids</span><span class="p">:</span> <span class="p">{</span>
-        <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">array</span><span class="dl">"</span><span class="p">,</span>
-        <span class="na">items</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span> <span class="p">},</span>
-        <span class="na">maxItems</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="na">description</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Array of scan IDs to retrieve</span><span class="dl">"</span>
-      <span class="p">}</span>
+    <span class="nl">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_get_scan_results</span><span class="dl">"</span><span class="p">,</span>
+        <span class="nx">description</span>
+<span class="p">:</span>
+    <span class="dl">"</span><span class="s2">Get results for async scan IDs</span><span class="dl">"</span><span class="p">,</span>
+        <span class="nx">inputSchema</span>
+<span class="p">:</span>
+    <span class="p">{</span>
+        <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
+            <span class="nx">required</span>
+    <span class="p">:</span>
+        <span class="p">[</span><span class="dl">"</span><span class="s2">scan_ids</span><span class="dl">"</span><span class="p">],</span>
+            <span class="nx">properties</span>
+    <span class="p">:</span>
+        <span class="p">{</span>
+            <span class="nl">scan_ids</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">array</span><span class="dl">"</span><span class="p">,</span>
+                    <span class="na">items</span>
+            <span class="p">:</span>
+                <span class="p">{</span>
+                    <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span>
+                <span class="p">}</span>
+            <span class="p">,</span>
+                <span class="na">maxItems</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+                    <span class="na">description</span>
+            <span class="p">:</span>
+                <span class="dl">"</span><span class="s2">Array of scan IDs to retrieve</span><span class="dl">"</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
     <span class="p">}</span>
-  <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -256,19 +326,32 @@
 <p>Retrieves detailed threat analysis reports.</p>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-  <span class="nl">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_get_threat_reports</span><span class="dl">"</span><span class="p">,</span>
-  <span class="nx">description</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Get detailed threat analysis reports</span><span class="dl">"</span><span class="p">,</span>
-  <span class="nx">inputSchema</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
-    <span class="nx">required</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">report_ids</span><span class="dl">"</span><span class="p">],</span>
-    <span class="nx">properties</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nl">report_ids</span><span class="p">:</span> <span class="p">{</span>
-        <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">array</span><span class="dl">"</span><span class="p">,</span>
-        <span class="na">items</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span> <span class="p">},</span>
-        <span class="na">maxItems</span><span class="p">:</span> <span class="mi">5</span>
-      <span class="p">}</span>
+    <span class="nl">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_get_threat_reports</span><span class="dl">"</span><span class="p">,</span>
+        <span class="nx">description</span>
+<span class="p">:</span>
+    <span class="dl">"</span><span class="s2">Get detailed threat analysis reports</span><span class="dl">"</span><span class="p">,</span>
+        <span class="nx">inputSchema</span>
+<span class="p">:</span>
+    <span class="p">{</span>
+        <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
+            <span class="nx">required</span>
+    <span class="p">:</span>
+        <span class="p">[</span><span class="dl">"</span><span class="s2">report_ids</span><span class="dl">"</span><span class="p">],</span>
+            <span class="nx">properties</span>
+    <span class="p">:</span>
+        <span class="p">{</span>
+            <span class="nl">report_ids</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">array</span><span class="dl">"</span><span class="p">,</span>
+                    <span class="na">items</span>
+            <span class="p">:</span>
+                <span class="p">{</span>
+                    <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span>
+                <span class="p">}</span>
+            <span class="p">,</span>
+                <span class="na">maxItems</span><span class="p">:</span> <span class="mi">5</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
     <span class="p">}</span>
-  <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -277,18 +360,29 @@
 <p>Clears the server-side response cache.</p>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-  <span class="nl">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_clear_cache</span><span class="dl">"</span><span class="p">,</span>
-  <span class="nx">description</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Clear the response cache</span><span class="dl">"</span><span class="p">,</span>
-  <span class="nx">inputSchema</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
-    <span class="nx">properties</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nl">scope</span><span class="p">:</span> <span class="p">{</span>
-        <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span>
-        <span class="na">enum</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">all</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">scan_results</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">reports</span><span class="dl">"</span><span class="p">],</span>
-        <span class="na">default</span><span class="p">:</span> <span class="dl">"</span><span class="s2">all</span><span class="dl">"</span>
-      <span class="p">}</span>
+    <span class="nl">name</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_clear_cache</span><span class="dl">"</span><span class="p">,</span>
+        <span class="nx">description</span>
+<span class="p">:</span>
+    <span class="dl">"</span><span class="s2">Clear the response cache</span><span class="dl">"</span><span class="p">,</span>
+        <span class="nx">inputSchema</span>
+<span class="p">:</span>
+    <span class="p">{</span>
+        <span class="nl">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">object</span><span class="dl">"</span><span class="p">,</span>
+            <span class="nx">properties</span>
+    <span class="p">:</span>
+        <span class="p">{</span>
+            <span class="nl">scope</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span>
+
+                <span class="na">enum</span>
+
+            <span class="p">:</span>
+                <span class="p">[</span><span class="dl">"</span><span class="s2">all</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">scan_results</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">reports</span><span class="dl">"</span><span class="p">],</span>
+            <span class="na">default</span><span class="p">:</span>
+                <span class="dl">"</span><span class="s2">all</span><span class="dl">"</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
     <span class="p">}</span>
-  <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -296,179 +390,197 @@
 
 <h3 id="basic-tool-handler">Basic Tool Handler</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">CallToolRequestSchema</span><span class="p">,</span> <span class="nx">Tool</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@modelcontextprotocol/sdk/types.js</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span>
+    <span class="nx">CallToolRequestSchema</span><span class="p">,</span>
+    <span class="nx">Tool</span><span class="p">,</span>
+<span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@modelcontextprotocol/sdk/types.js</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">scanContentTool</span><span class="p">:</span> <span class="nx">Tool</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span>
-  <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Scan content for security threats</span><span class="dl">'</span><span class="p">,</span>
-  <span class="na">inputSchema</span><span class="p">:</span> <span class="p">{</span> <span class="cm">/* schema definition */</span> <span class="p">}</span>
+    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Scan content for security threats</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">inputSchema</span><span class="p">:</span> <span class="p">{</span>
+        <span class="cm">/* schema definition */</span>
+    <span class="p">},</span>
 <span class="p">};</span>
 
 <span class="nx">server</span><span class="p">.</span><span class="nx">setRequestHandler</span><span class="p">(</span><span class="nx">CallToolRequestSchema</span><span class="p">,</span> <span class="k">async</span> <span class="p">(</span><span class="nx">request</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="p">{</span> <span class="nx">name</span><span class="p">,</span> <span class="na">arguments</span><span class="p">:</span> <span class="nx">args</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">params</span><span class="p">;</span>
-  
-  <span class="k">switch</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">case</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">:</span>
-      <span class="k">return</span> <span class="nx">handleScanContent</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
-    <span class="k">case</span> <span class="dl">'</span><span class="s1">airs_scan_async</span><span class="dl">'</span><span class="p">:</span>
-      <span class="k">return</span> <span class="nx">handleScanAsync</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
-    <span class="c1">// ... other tools</span>
-    <span class="nl">default</span><span class="p">:</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Unknown tool: </span><span class="p">${</span><span class="nx">name</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
-  <span class="p">}</span>
+    <span class="kd">const</span> <span class="p">{</span><span class="nx">name</span><span class="p">,</span> <span class="na">arguments</span><span class="p">:</span> <span class="nx">args</span><span class="p">}</span> <span class="o">=</span> <span class="nx">request</span><span class="p">.</span><span class="nx">params</span><span class="p">;</span>
+
+    <span class="k">switch</span> <span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nx">handleScanContent</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
+        <span class="k">case</span> <span class="dl">'</span><span class="s1">airs_scan_async</span><span class="dl">'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nx">handleScanAsync</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
+        <span class="c1">// ... other tools</span>
+        <span class="nl">default</span><span class="p">:</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Unknown tool: </span><span class="p">${</span><span class="nx">name</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="p">}</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
 <h3 id="scan-content-implementation">Scan Content Implementation</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">handleScanContent</span><span class="p">(</span><span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ToolResult</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="k">try</span> <span class="p">{</span>
-    <span class="c1">// Validate input</span>
-    <span class="kd">const</span> <span class="p">{</span> <span class="nx">prompt</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">profileName</span><span class="p">,</span> <span class="nx">metadata</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">validateScanArgs</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
-    
-    <span class="c1">// Check if at least one content field is provided</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">prompt</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Either prompt or response must be provided</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="c1">// Validate input</span>
+        <span class="kd">const</span> <span class="p">{</span><span class="nx">prompt</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">profileName</span><span class="p">,</span> <span class="nx">metadata</span><span class="p">}</span> <span class="o">=</span>
+            <span class="nx">validateScanArgs</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
+
+        <span class="c1">// Check if at least one content field is provided</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">prompt</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Either prompt or response must be provided</span><span class="dl">'</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Build scan request</span>
+        <span class="kd">const</span> <span class="na">scanRequest</span><span class="p">:</span> <span class="nx">ScanRequest</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span><span class="na">profile_name</span><span class="p">:</span> <span class="nx">profileName</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span><span class="p">},</span>
+            <span class="na">contents</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="na">prompt</span><span class="p">:</span> <span class="nx">prompt</span> <span class="o">||</span> <span class="kc">undefined</span><span class="p">,</span>
+                    <span class="na">response</span><span class="p">:</span> <span class="nx">response</span> <span class="o">||</span> <span class="kc">undefined</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">],</span>
+            <span class="na">metadata</span><span class="p">:</span> <span class="nx">metadata</span> <span class="o">||</span> <span class="kc">undefined</span><span class="p">,</span>
+        <span class="p">};</span>
+
+        <span class="c1">// Execute scan</span>
+        <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">airsClient</span><span class="p">.</span><span class="nx">scanContent</span><span class="p">(</span><span class="nx">scanRequest</span><span class="p">);</span>
+
+        <span class="c1">// Format response</span>
+        <span class="kd">const</span> <span class="nx">summary</span> <span class="o">=</span> <span class="nx">formatScanResult</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+
+        <span class="c1">// Register as resource</span>
+        <span class="nx">resourceRegistry</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s2">`airs://scan-results/</span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">name</span><span class="p">:</span> <span class="s2">`Scan Result </span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+            <span class="na">description</span><span class="p">:</span> <span class="s2">`Security scan completed at </span><span class="p">${</span><span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()}</span><span class="s2">`</span><span class="p">,</span>
+            <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">});</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">content</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
+                    <span class="na">text</span><span class="p">:</span> <span class="nx">summary</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">],</span>
+            <span class="na">isError</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="p">};</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Scan content error</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">content</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
+                    <span class="na">text</span><span class="p">:</span> <span class="s2">`Error: </span><span class="p">${</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">],</span>
+            <span class="na">isError</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="p">};</span>
     <span class="p">}</span>
-    
-    <span class="c1">// Build scan request</span>
-    <span class="kd">const</span> <span class="na">scanRequest</span><span class="p">:</span> <span class="nx">ScanRequest</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">profile_name</span><span class="p">:</span> <span class="nx">profileName</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span> <span class="p">},</span>
-      <span class="na">contents</span><span class="p">:</span> <span class="p">[{</span>
-        <span class="na">prompt</span><span class="p">:</span> <span class="nx">prompt</span> <span class="o">||</span> <span class="kc">undefined</span><span class="p">,</span>
-        <span class="na">response</span><span class="p">:</span> <span class="nx">response</span> <span class="o">||</span> <span class="kc">undefined</span>
-      <span class="p">}],</span>
-      <span class="na">metadata</span><span class="p">:</span> <span class="nx">metadata</span> <span class="o">||</span> <span class="kc">undefined</span>
-    <span class="p">};</span>
-    
-    <span class="c1">// Execute scan</span>
-    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">airsClient</span><span class="p">.</span><span class="nx">scanContent</span><span class="p">(</span><span class="nx">scanRequest</span><span class="p">);</span>
-    
-    <span class="c1">// Format response</span>
-    <span class="kd">const</span> <span class="nx">summary</span> <span class="o">=</span> <span class="nx">formatScanResult</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-    
-    <span class="c1">// Register as resource</span>
-    <span class="nx">resourceRegistry</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s2">`airs://scan-results/</span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="p">{</span>
-      <span class="na">name</span><span class="p">:</span> <span class="s2">`Scan Result </span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
-      <span class="na">description</span><span class="p">:</span> <span class="s2">`Security scan completed at </span><span class="p">${</span><span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()}</span><span class="s2">`</span><span class="p">,</span>
-      <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span>
-    <span class="p">});</span>
-    
-    <span class="k">return</span> <span class="p">{</span>
-      <span class="na">content</span><span class="p">:</span> <span class="p">[{</span>
-        <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">text</span><span class="p">:</span> <span class="nx">summary</span>
-      <span class="p">}],</span>
-      <span class="na">isError</span><span class="p">:</span> <span class="kc">false</span>
-    <span class="p">};</span>
-    
-  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Scan content error</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">);</span>
-    <span class="k">return</span> <span class="p">{</span>
-      <span class="na">content</span><span class="p">:</span> <span class="p">[{</span>
-        <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">text</span><span class="p">:</span> <span class="s2">`Error: </span><span class="p">${</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">}</span><span class="s2">`</span>
-      <span class="p">}],</span>
-      <span class="na">isError</span><span class="p">:</span> <span class="kc">true</span>
-    <span class="p">};</span>
-  <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h3 id="async-scan-implementation">Async Scan Implementation</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">handleScanAsync</span><span class="p">(</span><span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ToolResult</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="k">try</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="p">{</span> <span class="nx">contents</span><span class="p">,</span> <span class="nx">profileName</span><span class="p">,</span> <span class="nx">tr_id</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">args</span><span class="p">;</span>
-    
-    <span class="c1">// Validate contents array</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">contents</span><span class="p">)</span> <span class="o">||</span> <span class="nx">contents</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Contents array is required</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="p">{</span><span class="nx">contents</span><span class="p">,</span> <span class="nx">profileName</span><span class="p">,</span> <span class="nx">tr_id</span><span class="p">}</span> <span class="o">=</span> <span class="nx">args</span><span class="p">;</span>
+
+        <span class="c1">// Validate contents array</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">contents</span><span class="p">)</span> <span class="o">||</span> <span class="nx">contents</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Contents array is required</span><span class="dl">'</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Build request</span>
+        <span class="kd">const</span> <span class="na">scanRequest</span><span class="p">:</span> <span class="nx">AsyncScanRequest</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span><span class="na">profile_name</span><span class="p">:</span> <span class="nx">profileName</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span><span class="p">},</span>
+            <span class="na">contents</span><span class="p">:</span> <span class="nx">contents</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">validateContentItem</span><span class="p">),</span>
+            <span class="na">tr_id</span><span class="p">:</span> <span class="nx">tr_id</span> <span class="o">||</span> <span class="nx">generateTransactionId</span><span class="p">(),</span>
+        <span class="p">};</span>
+
+        <span class="c1">// Submit async scan</span>
+        <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">airsClient</span><span class="p">.</span><span class="nx">scanAsync</span><span class="p">(</span><span class="nx">scanRequest</span><span class="p">);</span>
+
+        <span class="c1">// Track scan for later retrieval</span>
+        <span class="nx">scanTracker</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">submitted</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
+            <span class="na">itemCount</span><span class="p">:</span> <span class="nx">contents</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+            <span class="na">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">processing</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">});</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">content</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
+                    <span class="na">text</span><span class="p">:</span>
+                        <span class="s2">`Async scan submitted successfully\n\n`</span> <span class="o">+</span>
+                        <span class="s2">`Scan ID: </span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">\n`</span> <span class="o">+</span>
+                        <span class="s2">`Items: </span><span class="p">${</span><span class="nx">contents</span><span class="p">.</span><span class="nx">length</span><span class="p">}</span><span class="s2">\n`</span> <span class="o">+</span>
+                        <span class="s2">`Status: Processing\n\n`</span> <span class="o">+</span>
+                        <span class="s2">`Use airs_get_scan_results to retrieve results`</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">],</span>
+            <span class="na">isError</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="p">};</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">handleToolError</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
     <span class="p">}</span>
-    
-    <span class="c1">// Build request</span>
-    <span class="kd">const</span> <span class="na">scanRequest</span><span class="p">:</span> <span class="nx">AsyncScanRequest</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">profile_name</span><span class="p">:</span> <span class="nx">profileName</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">Prisma AIRS</span><span class="dl">'</span> <span class="p">},</span>
-      <span class="na">contents</span><span class="p">:</span> <span class="nx">contents</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">validateContentItem</span><span class="p">),</span>
-      <span class="na">tr_id</span><span class="p">:</span> <span class="nx">tr_id</span> <span class="o">||</span> <span class="nx">generateTransactionId</span><span class="p">()</span>
-    <span class="p">};</span>
-    
-    <span class="c1">// Submit async scan</span>
-    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">airsClient</span><span class="p">.</span><span class="nx">scanAsync</span><span class="p">(</span><span class="nx">scanRequest</span><span class="p">);</span>
-    
-    <span class="c1">// Track scan for later retrieval</span>
-    <span class="nx">scanTracker</span><span class="p">.</span><span class="nx">track</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">,</span> <span class="p">{</span>
-      <span class="na">submitted</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
-      <span class="na">itemCount</span><span class="p">:</span> <span class="nx">contents</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
-      <span class="na">status</span><span class="p">:</span> <span class="dl">'</span><span class="s1">processing</span><span class="dl">'</span>
-    <span class="p">});</span>
-    
-    <span class="k">return</span> <span class="p">{</span>
-      <span class="na">content</span><span class="p">:</span> <span class="p">[{</span>
-        <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">text</span><span class="p">:</span> <span class="s2">`Async scan submitted successfully\n\n`</span> <span class="o">+</span>
-              <span class="s2">`Scan ID: </span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">\n`</span> <span class="o">+</span>
-              <span class="s2">`Items: </span><span class="p">${</span><span class="nx">contents</span><span class="p">.</span><span class="nx">length</span><span class="p">}</span><span class="s2">\n`</span> <span class="o">+</span>
-              <span class="s2">`Status: Processing\n\n`</span> <span class="o">+</span>
-              <span class="s2">`Use airs_get_scan_results to retrieve results`</span>
-      <span class="p">}],</span>
-      <span class="na">isError</span><span class="p">:</span> <span class="kc">false</span>
-    <span class="p">};</span>
-    
-  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">handleToolError</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
-  <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h3 id="result-retrieval-implementation">Result Retrieval Implementation</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">async</span> <span class="kd">function</span> <span class="nx">handleGetScanResults</span><span class="p">(</span><span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ToolResult</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="k">try</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="p">{</span> <span class="nx">scan_ids</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">args</span><span class="p">;</span>
-    
-    <span class="c1">// Validate input</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">scan_ids</span><span class="p">)</span> <span class="o">||</span> <span class="nx">scan_ids</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_ids array is required</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="p">{</span><span class="nx">scan_ids</span><span class="p">}</span> <span class="o">=</span> <span class="nx">args</span><span class="p">;</span>
+
+        <span class="c1">// Validate input</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">scan_ids</span><span class="p">)</span> <span class="o">||</span> <span class="nx">scan_ids</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_ids array is required</span><span class="dl">'</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nx">scan_ids</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Maximum 5 scan IDs allowed per request</span><span class="dl">'</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Retrieve results</span>
+        <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">airsClient</span><span class="p">.</span><span class="nx">getScanResults</span><span class="p">(</span><span class="nx">scan_ids</span><span class="p">);</span>
+
+        <span class="c1">// Format results</span>
+        <span class="kd">const</span> <span class="nx">summary</span> <span class="o">=</span> <span class="nx">results</span>
+            <span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">result</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+                <span class="kd">const</span> <span class="nx">threats</span> <span class="o">=</span> <span class="nx">detectThreats</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+                <span class="k">return</span> <span class="p">(</span>
+                    <span class="s2">`</span><span class="p">${</span><span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">}</span><span class="s2">. Scan </span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">:\n`</span> <span class="o">+</span>
+                    <span class="s2">`   - Category: </span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">category</span><span class="p">}</span><span class="s2">\n`</span> <span class="o">+</span>
+                    <span class="s2">`   - Action: </span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">action</span><span class="p">}</span><span class="s2">\n`</span> <span class="o">+</span>
+                    <span class="s2">`   - Threats: </span><span class="p">${</span><span class="nx">threats</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">?</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">, </span><span class="dl">'</span><span class="p">)</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">None detected</span><span class="dl">'</span><span class="p">}</span><span class="s2">`</span>
+                <span class="p">);</span>
+            <span class="p">})</span>
+            <span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="se">\n\n</span><span class="dl">'</span><span class="p">);</span>
+
+        <span class="c1">// Register results as resources</span>
+        <span class="nx">results</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">result</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="nx">resourceRegistry</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s2">`airs://scan-results/</span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="p">{</span>
+                <span class="na">name</span><span class="p">:</span> <span class="s2">`Scan Result </span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+                <span class="na">description</span><span class="p">:</span> <span class="s2">`Retrieved at </span><span class="p">${</span><span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()}</span><span class="s2">`</span><span class="p">,</span>
+                <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+                <span class="na">data</span><span class="p">:</span> <span class="nx">result</span><span class="p">,</span>
+            <span class="p">});</span>
+        <span class="p">});</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">content</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
+                    <span class="na">text</span><span class="p">:</span> <span class="s2">`Retrieved </span><span class="p">${</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span><span class="p">}</span><span class="s2"> scan results:\n\n</span><span class="p">${</span><span class="nx">summary</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">],</span>
+            <span class="na">isError</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+        <span class="p">};</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">handleToolError</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
     <span class="p">}</span>
-    
-    <span class="k">if</span> <span class="p">(</span><span class="nx">scan_ids</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Maximum 5 scan IDs allowed per request</span><span class="dl">'</span><span class="p">);</span>
-    <span class="p">}</span>
-    
-    <span class="c1">// Retrieve results</span>
-    <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">airsClient</span><span class="p">.</span><span class="nx">getScanResults</span><span class="p">(</span><span class="nx">scan_ids</span><span class="p">);</span>
-    
-    <span class="c1">// Format results</span>
-    <span class="kd">const</span> <span class="nx">summary</span> <span class="o">=</span> <span class="nx">results</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">result</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="kd">const</span> <span class="nx">threats</span> <span class="o">=</span> <span class="nx">detectThreats</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
-      <span class="k">return</span> <span class="s2">`</span><span class="p">${</span><span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">}</span><span class="s2">. Scan </span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">:\n`</span> <span class="o">+</span>
-             <span class="s2">`   - Category: </span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">category</span><span class="p">}</span><span class="s2">\n`</span> <span class="o">+</span>
-             <span class="s2">`   - Action: </span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">action</span><span class="p">}</span><span class="s2">\n`</span> <span class="o">+</span>
-             <span class="s2">`   - Threats: </span><span class="p">${</span><span class="nx">threats</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">?</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">, </span><span class="dl">'</span><span class="p">)</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">None detected</span><span class="dl">'</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
-    <span class="p">}).</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="se">\n\n</span><span class="dl">'</span><span class="p">);</span>
-    
-    <span class="c1">// Register results as resources</span>
-    <span class="nx">results</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">result</span> <span class="o">=&gt;</span> <span class="p">{</span>
-      <span class="nx">resourceRegistry</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s2">`airs://scan-results/</span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span> <span class="p">{</span>
-        <span class="na">name</span><span class="p">:</span> <span class="s2">`Scan Result </span><span class="p">${</span><span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
-        <span class="na">description</span><span class="p">:</span> <span class="s2">`Retrieved at </span><span class="p">${</span><span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()}</span><span class="s2">`</span><span class="p">,</span>
-        <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">data</span><span class="p">:</span> <span class="nx">result</span>
-      <span class="p">});</span>
-    <span class="p">});</span>
-    
-    <span class="k">return</span> <span class="p">{</span>
-      <span class="na">content</span><span class="p">:</span> <span class="p">[{</span>
-        <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
-        <span class="na">text</span><span class="p">:</span> <span class="s2">`Retrieved </span><span class="p">${</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span><span class="p">}</span><span class="s2"> scan results:\n\n</span><span class="p">${</span><span class="nx">summary</span><span class="p">}</span><span class="s2">`</span>
-      <span class="p">}],</span>
-      <span class="na">isError</span><span class="p">:</span> <span class="kc">false</span>
-    <span class="p">};</span>
-    
-  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">handleToolError</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
-  <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -477,33 +589,35 @@
 <h3 id="tool-composition">Tool Composition</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Combine multiple tools for complex operations</span>
-<span class="k">async</span> <span class="kd">function</span> <span class="nx">performComprehensiveAnalysis</span><span class="p">(</span><span class="nx">content</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AnalysisResult</span><span class="o">&gt;</span> <span class="p">{</span>
-  <span class="c1">// Step 1: Initial scan</span>
-  <span class="kd">const</span> <span class="nx">scanResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-    <span class="na">prompt</span><span class="p">:</span> <span class="nx">content</span><span class="p">,</span>
-    <span class="na">profileName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Strict Security</span><span class="dl">'</span>
-  <span class="p">});</span>
-  
-  <span class="c1">// Step 2: If threats detected, get detailed report</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">scanResult</span><span class="p">.</span><span class="nx">category</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">malicious</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">report</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_get_threat_reports</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-      <span class="na">report_ids</span><span class="p">:</span> <span class="p">[</span><span class="nx">scanResult</span><span class="p">.</span><span class="nx">report_id</span><span class="p">]</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">performComprehensiveAnalysis</span><span class="p">(</span>
+    <span class="nx">content</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+<span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AnalysisResult</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="c1">// Step 1: Initial scan</span>
+    <span class="kd">const</span> <span class="nx">scanResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">prompt</span><span class="p">:</span> <span class="nx">content</span><span class="p">,</span>
+        <span class="na">profileName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Strict Security</span><span class="dl">'</span><span class="p">,</span>
     <span class="p">});</span>
-    
-    <span class="c1">// Step 3: Perform remediation</span>
-    <span class="kd">const</span> <span class="nx">remediation</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">suggest_remediation</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-      <span class="na">report_id</span><span class="p">:</span> <span class="nx">scanResult</span><span class="p">.</span><span class="nx">report_id</span><span class="p">,</span>
-      <span class="na">threat_type</span><span class="p">:</span> <span class="nx">report</span><span class="p">.</span><span class="nx">primary_threat</span>
-    <span class="p">});</span>
-    
-    <span class="k">return</span> <span class="p">{</span>
-      <span class="na">scan</span><span class="p">:</span> <span class="nx">scanResult</span><span class="p">,</span>
-      <span class="na">report</span><span class="p">:</span> <span class="nx">report</span><span class="p">,</span>
-      <span class="na">remediation</span><span class="p">:</span> <span class="nx">remediation</span>
-    <span class="p">};</span>
-  <span class="p">}</span>
-  
-  <span class="k">return</span> <span class="p">{</span> <span class="na">scan</span><span class="p">:</span> <span class="nx">scanResult</span> <span class="p">};</span>
+
+    <span class="c1">// Step 2: If threats detected, get detailed report</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">scanResult</span><span class="p">.</span><span class="nx">category</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">malicious</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">report</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_get_threat_reports</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">report_ids</span><span class="p">:</span> <span class="p">[</span><span class="nx">scanResult</span><span class="p">.</span><span class="nx">report_id</span><span class="p">],</span>
+        <span class="p">});</span>
+
+        <span class="c1">// Step 3: Perform remediation</span>
+        <span class="kd">const</span> <span class="nx">remediation</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">suggest_remediation</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">report_id</span><span class="p">:</span> <span class="nx">scanResult</span><span class="p">.</span><span class="nx">report_id</span><span class="p">,</span>
+            <span class="na">threat_type</span><span class="p">:</span> <span class="nx">report</span><span class="p">.</span><span class="nx">primary_threat</span><span class="p">,</span>
+        <span class="p">});</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">scan</span><span class="p">:</span> <span class="nx">scanResult</span><span class="p">,</span>
+            <span class="na">report</span><span class="p">:</span> <span class="nx">report</span><span class="p">,</span>
+            <span class="na">remediation</span><span class="p">:</span> <span class="nx">remediation</span><span class="p">,</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="na">scan</span><span class="p">:</span> <span class="nx">scanResult</span><span class="p">};</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -511,93 +625,102 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Add middleware for all tools</span>
 <span class="kr">interface</span> <span class="nx">ToolMiddleware</span> <span class="p">{</span>
-  <span class="nl">before</span><span class="p">?:</span> <span class="p">(</span><span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span><span class="p">;</span>
-  <span class="nl">after</span><span class="p">?:</span> <span class="p">(</span><span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">result</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="nl">before</span><span class="p">?:</span> <span class="p">(</span><span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="nl">after</span><span class="p">?:</span> <span class="p">(</span><span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">,</span> <span class="nx">result</span><span class="p">:</span> <span class="kr">any</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="kr">any</span><span class="o">&gt;</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="kd">class</span> <span class="nx">ToolExecutor</span> <span class="p">{</span>
-  <span class="k">private</span> <span class="nx">middlewares</span><span class="p">:</span> <span class="nx">ToolMiddleware</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
-  
-  <span class="nx">use</span><span class="p">(</span><span class="nx">middleware</span><span class="p">:</span> <span class="nx">ToolMiddleware</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">middlewares</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">middleware</span><span class="p">);</span>
-  <span class="p">}</span>
-  
-  <span class="k">async</span> <span class="nx">execute</span><span class="p">(</span><span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ToolResult</span><span class="o">&gt;</span> <span class="p">{</span>
-    <span class="c1">// Run before middlewares</span>
-    <span class="kd">let</span> <span class="nx">processedArgs</span> <span class="o">=</span> <span class="nx">args</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">mw</span> <span class="k">of</span> <span class="k">this</span><span class="p">.</span><span class="nx">middlewares</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">mw</span><span class="p">.</span><span class="nx">before</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">processedArgs</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">mw</span><span class="p">.</span><span class="nx">before</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">processedArgs</span><span class="p">);</span>
-      <span class="p">}</span>
+    <span class="k">private</span> <span class="nx">middlewares</span><span class="p">:</span> <span class="nx">ToolMiddleware</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
+
+    <span class="nx">use</span><span class="p">(</span><span class="nx">middleware</span><span class="p">:</span> <span class="nx">ToolMiddleware</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">middlewares</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">middleware</span><span class="p">);</span>
     <span class="p">}</span>
-    
-    <span class="c1">// Execute tool</span>
-    <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">executeToolHandler</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">processedArgs</span><span class="p">);</span>
-    
-    <span class="c1">// Run after middlewares</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">mw</span> <span class="k">of</span> <span class="k">this</span><span class="p">.</span><span class="nx">middlewares</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">mw</span><span class="p">.</span><span class="nx">after</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">mw</span><span class="p">.</span><span class="nx">after</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">processedArgs</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
-      <span class="p">}</span>
+
+    <span class="k">async</span> <span class="nx">execute</span><span class="p">(</span><span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ToolResult</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="c1">// Run before middlewares</span>
+        <span class="kd">let</span> <span class="nx">processedArgs</span> <span class="o">=</span> <span class="nx">args</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">mw</span> <span class="k">of</span> <span class="k">this</span><span class="p">.</span><span class="nx">middlewares</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">mw</span><span class="p">.</span><span class="nx">before</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">processedArgs</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">mw</span><span class="p">.</span><span class="nx">before</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">processedArgs</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Execute tool</span>
+        <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">executeToolHandler</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">processedArgs</span><span class="p">);</span>
+
+        <span class="c1">// Run after middlewares</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">mw</span> <span class="k">of</span> <span class="k">this</span><span class="p">.</span><span class="nx">middlewares</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">mw</span><span class="p">.</span><span class="nx">after</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">mw</span><span class="p">.</span><span class="nx">after</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">processedArgs</span><span class="p">,</span> <span class="nx">result</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
     <span class="p">}</span>
-    
-    <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
-  <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">// Example: Logging middleware</span>
 <span class="nx">toolExecutor</span><span class="p">.</span><span class="nx">use</span><span class="p">({</span>
-  <span class="na">before</span><span class="p">:</span> <span class="k">async</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">args</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Tool execution started</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">args</span> <span class="p">});</span>
-    <span class="k">return</span> <span class="nx">args</span><span class="p">;</span>
-  <span class="p">},</span>
-  <span class="na">after</span><span class="p">:</span> <span class="k">async</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Tool execution completed</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> 
-      <span class="nx">name</span><span class="p">,</span> 
-      <span class="na">success</span><span class="p">:</span> <span class="o">!</span><span class="nx">result</span><span class="p">.</span><span class="nx">isError</span> 
-    <span class="p">});</span>
-    <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
-  <span class="p">}</span>
+    <span class="na">before</span><span class="p">:</span> <span class="k">async</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">args</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Tool execution started</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span><span class="nx">name</span><span class="p">,</span> <span class="nx">args</span><span class="p">});</span>
+        <span class="k">return</span> <span class="nx">args</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="na">after</span><span class="p">:</span> <span class="k">async</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">args</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Tool execution completed</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nx">name</span><span class="p">,</span>
+            <span class="na">success</span><span class="p">:</span> <span class="o">!</span><span class="nx">result</span><span class="p">.</span><span class="nx">isError</span><span class="p">,</span>
+        <span class="p">});</span>
+        <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+    <span class="p">},</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
 <h3 id="tool-validation">Tool Validation</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">z</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">zod</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">z</span><span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">zod</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="c1">// Define schemas for each tool</span>
 <span class="kd">const</span> <span class="nx">toolSchemas</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="na">airs_scan_content</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
-    <span class="na">prompt</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
-    <span class="na">response</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
-    <span class="na">profileName</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
-    <span class="na">metadata</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
-      <span class="na">app_name</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
-      <span class="na">user_id</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">()</span>
-    <span class="p">}).</span><span class="nx">optional</span><span class="p">()</span>
-  <span class="p">}).</span><span class="nx">refine</span><span class="p">(</span>
-    <span class="nx">data</span> <span class="o">=&gt;</span> <span class="nx">data</span><span class="p">.</span><span class="nx">prompt</span> <span class="o">||</span> <span class="nx">data</span><span class="p">.</span><span class="nx">response</span><span class="p">,</span>
-    <span class="dl">'</span><span class="s1">Either prompt or response must be provided</span><span class="dl">'</span>
-  <span class="p">),</span>
-  
-  <span class="na">airs_scan_async</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
-    <span class="na">contents</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">array</span><span class="p">(</span><span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
-      <span class="na">prompt</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
-      <span class="na">response</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">()</span>
-    <span class="p">})).</span><span class="nx">min</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">max</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
-    <span class="na">profileName</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
-    <span class="na">tr_id</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">()</span>
-  <span class="p">})</span>
+    <span class="na">airs_scan_content</span><span class="p">:</span> <span class="nx">z</span>
+        <span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+            <span class="na">prompt</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
+            <span class="na">response</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
+            <span class="na">profileName</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
+            <span class="na">metadata</span><span class="p">:</span> <span class="nx">z</span>
+                <span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+                    <span class="na">app_name</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
+                    <span class="na">user_id</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
+                <span class="p">})</span>
+                <span class="p">.</span><span class="nx">optional</span><span class="p">(),</span>
+        <span class="p">})</span>
+        <span class="p">.</span><span class="nx">refine</span><span class="p">(</span>
+            <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">data</span><span class="p">.</span><span class="nx">prompt</span> <span class="o">||</span> <span class="nx">data</span><span class="p">.</span><span class="nx">response</span><span class="p">,</span>
+            <span class="dl">'</span><span class="s1">Either prompt or response must be provided</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">),</span>
+
+    <span class="na">airs_scan_async</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+        <span class="na">contents</span><span class="p">:</span> <span class="nx">z</span>
+            <span class="p">.</span><span class="nx">array</span><span class="p">(</span>
+                <span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+                    <span class="na">prompt</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
+                    <span class="na">response</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
+                <span class="p">}),</span>
+            <span class="p">)</span>
+            <span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+        <span class="na">profileName</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
+        <span class="na">tr_id</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">optional</span><span class="p">(),</span>
+    <span class="p">}),</span>
 <span class="p">};</span>
 
 <span class="c1">// Validate before execution</span>
 <span class="kd">function</span> <span class="nx">validateToolArgs</span><span class="p">(</span><span class="nx">name</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">args</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="kr">any</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">schema</span> <span class="o">=</span> <span class="nx">toolSchemas</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">schema</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`No schema defined for tool: </span><span class="p">${</span><span class="nx">name</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
-  <span class="p">}</span>
-  
-  <span class="k">return</span> <span class="nx">schema</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">schema</span> <span class="o">=</span> <span class="nx">toolSchemas</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">schema</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`No schema defined for tool: </span><span class="p">${</span><span class="nx">name</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">schema</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -606,40 +729,42 @@
 <h3 id="structured-error-responses">Structured Error Responses</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ToolError</span> <span class="p">{</span>
-  <span class="nl">code</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-  <span class="nl">message</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-  <span class="nl">details</span><span class="p">?:</span> <span class="kr">any</span><span class="p">;</span>
+    <span class="nl">code</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">message</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">details</span><span class="p">?:</span> <span class="kr">any</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="kd">function</span> <span class="nx">handleToolError</span><span class="p">(</span><span class="nx">error</span><span class="p">:</span> <span class="kr">any</span><span class="p">):</span> <span class="nx">ToolResult</span> <span class="p">{</span>
-  <span class="kd">let</span> <span class="nx">toolError</span><span class="p">:</span> <span class="nx">ToolError</span><span class="p">;</span>
-  
-  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nx">AIRSError</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">toolError</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="na">code</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">,</span>
-      <span class="na">message</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
-      <span class="na">details</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">details</span>
+    <span class="kd">let</span> <span class="nx">toolError</span><span class="p">:</span> <span class="nx">ToolError</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nx">AIRSError</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">toolError</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="na">code</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">code</span><span class="p">,</span>
+            <span class="na">message</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+            <span class="na">details</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">details</span><span class="p">,</span>
+        <span class="p">};</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nx">z</span><span class="p">.</span><span class="nx">ZodError</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">toolError</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="na">code</span><span class="p">:</span> <span class="dl">'</span><span class="s1">VALIDATION_ERROR</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">message</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Invalid tool arguments</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">details</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">errors</span><span class="p">,</span>
+        <span class="p">};</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">toolError</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="na">code</span><span class="p">:</span> <span class="dl">'</span><span class="s1">INTERNAL_ERROR</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">message</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">An unexpected error occurred</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="na">content</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
+                <span class="na">text</span><span class="p">:</span> <span class="s2">`Error: </span><span class="p">${</span><span class="nx">toolError</span><span class="p">.</span><span class="nx">message</span><span class="p">}</span><span class="s2">\nCode: </span><span class="p">${</span><span class="nx">toolError</span><span class="p">.</span><span class="nx">code</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">],</span>
+        <span class="na">isError</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
     <span class="p">};</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nx">z</span><span class="p">.</span><span class="nx">ZodError</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">toolError</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="na">code</span><span class="p">:</span> <span class="dl">'</span><span class="s1">VALIDATION_ERROR</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">message</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Invalid tool arguments</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">details</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">errors</span>
-    <span class="p">};</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nx">toolError</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="na">code</span><span class="p">:</span> <span class="dl">'</span><span class="s1">INTERNAL_ERROR</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">message</span><span class="p">:</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">An unexpected error occurred</span><span class="dl">'</span>
-    <span class="p">};</span>
-  <span class="p">}</span>
-  
-  <span class="k">return</span> <span class="p">{</span>
-    <span class="na">content</span><span class="p">:</span> <span class="p">[{</span>
-      <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">text</span><span class="p">:</span> <span class="s2">`Error: </span><span class="p">${</span><span class="nx">toolError</span><span class="p">.</span><span class="nx">message</span><span class="p">}</span><span class="s2">\nCode: </span><span class="p">${</span><span class="nx">toolError</span><span class="p">.</span><span class="nx">code</span><span class="p">}</span><span class="s2">`</span>
-    <span class="p">}],</span>
-    <span class="na">isError</span><span class="p">:</span> <span class="kc">true</span>
-  <span class="p">};</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -648,65 +773,62 @@
 <h3 id="unit-testing">Unit Testing</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_scan_content tool</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">let</span> <span class="na">mockClient</span><span class="p">:</span> <span class="nx">MockAIRSClient</span><span class="p">;</span>
-  
-  <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">mockClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MockAIRSClient</span><span class="p">();</span>
-  <span class="p">});</span>
-  
-  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should scan content successfully</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">mockClient</span><span class="p">.</span><span class="nx">setMockResponse</span><span class="p">(</span><span class="dl">'</span><span class="s1">scanContent</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-      <span class="na">scan_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test-123</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">category</span><span class="p">:</span> <span class="dl">'</span><span class="s1">benign</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">allow</span><span class="dl">'</span>
+    <span class="kd">let</span> <span class="na">mockClient</span><span class="p">:</span> <span class="nx">MockAIRSClient</span><span class="p">;</span>
+
+    <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">mockClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MockAIRSClient</span><span class="p">();</span>
     <span class="p">});</span>
-    
-    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">handleScanContent</span><span class="p">({</span>
-      <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test prompt</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">profileName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test Profile</span><span class="dl">'</span>
+
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should scan content successfully</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">mockClient</span><span class="p">.</span><span class="nx">setMockResponse</span><span class="p">(</span><span class="dl">'</span><span class="s1">scanContent</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">scan_id</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test-123</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">category</span><span class="p">:</span> <span class="dl">'</span><span class="s1">benign</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">allow</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">});</span>
+
+        <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">handleScanContent</span><span class="p">({</span>
+            <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test prompt</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">profileName</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test Profile</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">});</span>
+
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">isError</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">content</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="p">).</span><span class="nx">toContain</span><span class="p">(</span><span class="dl">'</span><span class="s1">benign</span><span class="dl">'</span><span class="p">);</span>
     <span class="p">});</span>
-    
-    <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">isError</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
-    <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">content</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="p">).</span><span class="nx">toContain</span><span class="p">(</span><span class="dl">'</span><span class="s1">benign</span><span class="dl">'</span><span class="p">);</span>
-  <span class="p">});</span>
-  
-  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should handle validation errors</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">handleScanContent</span><span class="p">({</span>
-      <span class="c1">// Missing both prompt and response</span>
+
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should handle validation errors</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">handleScanContent</span><span class="p">({</span>
+            <span class="c1">// Missing both prompt and response</span>
+        <span class="p">});</span>
+
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">isError</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">content</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="p">).</span><span class="nx">toContain</span><span class="p">(</span><span class="dl">'</span><span class="s1">Either prompt or response</span><span class="dl">'</span><span class="p">);</span>
     <span class="p">});</span>
-    
-    <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">isError</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
-    <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">content</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="p">).</span><span class="nx">toContain</span><span class="p">(</span><span class="dl">'</span><span class="s1">Either prompt or response</span><span class="dl">'</span><span class="p">);</span>
-  <span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
 <h3 id="integration-testing">Integration Testing</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">Tool integration tests</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should perform full scan workflow</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="c1">// Submit async scan</span>
-    <span class="kd">const</span> <span class="nx">submitResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_scan_async</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-      <span class="na">contents</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span> <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test 1</span><span class="dl">'</span> <span class="p">},</span>
-        <span class="p">{</span> <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test 2</span><span class="dl">'</span> <span class="p">}</span>
-      <span class="p">]</span>
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should perform full scan workflow</span><span class="dl">'</span><span class="p">,</span> <span class="k">async</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="c1">// Submit async scan</span>
+        <span class="kd">const</span> <span class="nx">submitResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_scan_async</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">contents</span><span class="p">:</span> <span class="p">[{</span><span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test 1</span><span class="dl">'</span><span class="p">},</span> <span class="p">{</span><span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Test 2</span><span class="dl">'</span><span class="p">}],</span>
+        <span class="p">});</span>
+
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">submitResult</span><span class="p">.</span><span class="nx">isError</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+        <span class="kd">const</span> <span class="nx">scanId</span> <span class="o">=</span> <span class="nx">extractScanId</span><span class="p">(</span><span class="nx">submitResult</span><span class="p">.</span><span class="nx">content</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="p">);</span>
+
+        <span class="c1">// Wait for processing</span>
+        <span class="k">await</span> <span class="nx">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
+
+        <span class="c1">// Retrieve results</span>
+        <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_get_scan_results</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">scan_ids</span><span class="p">:</span> <span class="p">[</span><span class="nx">scanId</span><span class="p">],</span>
+        <span class="p">});</span>
+
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">isError</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">content</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="p">).</span><span class="nx">toContain</span><span class="p">(</span><span class="dl">'</span><span class="s1">Retrieved 1 scan results</span><span class="dl">'</span><span class="p">);</span>
     <span class="p">});</span>
-    
-    <span class="nx">expect</span><span class="p">(</span><span class="nx">submitResult</span><span class="p">.</span><span class="nx">isError</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
-    <span class="kd">const</span> <span class="nx">scanId</span> <span class="o">=</span> <span class="nx">extractScanId</span><span class="p">(</span><span class="nx">submitResult</span><span class="p">.</span><span class="nx">content</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="p">);</span>
-    
-    <span class="c1">// Wait for processing</span>
-    <span class="k">await</span> <span class="nx">delay</span><span class="p">(</span><span class="mi">2000</span><span class="p">);</span>
-    
-    <span class="c1">// Retrieve results</span>
-    <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">airs_get_scan_results</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-      <span class="na">scan_ids</span><span class="p">:</span> <span class="p">[</span><span class="nx">scanId</span><span class="p">]</span>
-    <span class="p">});</span>
-    
-    <span class="nx">expect</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">isError</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
-    <span class="nx">expect</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">content</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">text</span><span class="p">).</span><span class="nx">toContain</span><span class="p">(</span><span class="dl">'</span><span class="s1">Retrieved 1 scan results</span><span class="dl">'</span><span class="p">);</span>
-  <span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div></div>
 

@@ -564,28 +564,30 @@ SHUTDOWN_TIMEOUT_MS=30000
 <p>For Kubernetes deployments, use ConfigMaps and Secrets:</p>
 
 <p><strong>ConfigMap</strong> (<code class="language-plaintext highlighter-rouge">configmap.yaml</code>):</p>
+
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">ConfigMap</span>
 <span class="na">metadata</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-config</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-config</span>
 <span class="na">data</span><span class="pi">:</span>
-  <span class="na">NODE_ENV</span><span class="pi">:</span> <span class="s2">"</span><span class="s">production"</span>
-  <span class="na">PORT</span><span class="pi">:</span> <span class="s2">"</span><span class="s">3000"</span>
-  <span class="na">LOG_LEVEL</span><span class="pi">:</span> <span class="s2">"</span><span class="s">info"</span>
-  <span class="na">AIRS_API_URL</span><span class="pi">:</span> <span class="s2">"</span><span class="s">https://service.api.aisecurity.paloaltonetworks.com"</span>
-  <span class="na">CACHE_TTL_SECONDS</span><span class="pi">:</span> <span class="s2">"</span><span class="s">300"</span>
-  <span class="na">RATE_LIMIT_MAX_REQUESTS</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100"</span>
+    <span class="na">NODE_ENV</span><span class="pi">:</span> <span class="s1">'</span><span class="s">production'</span>
+    <span class="na">PORT</span><span class="pi">:</span> <span class="s1">'</span><span class="s">3000'</span>
+    <span class="na">LOG_LEVEL</span><span class="pi">:</span> <span class="s1">'</span><span class="s">info'</span>
+    <span class="na">AIRS_API_URL</span><span class="pi">:</span> <span class="s1">'</span><span class="s">https://service.api.aisecurity.paloaltonetworks.com'</span>
+    <span class="na">CACHE_TTL_SECONDS</span><span class="pi">:</span> <span class="s1">'</span><span class="s">300'</span>
+    <span class="na">RATE_LIMIT_MAX_REQUESTS</span><span class="pi">:</span> <span class="s1">'</span><span class="s">100'</span>
 </code></pre></div></div>
 
 <p><strong>Secret</strong> (<code class="language-plaintext highlighter-rouge">secret.yaml</code>):</p>
+
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
 <span class="na">kind</span><span class="pi">:</span> <span class="s">Secret</span>
 <span class="na">metadata</span><span class="pi">:</span>
-  <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-secret</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-secret</span>
 <span class="na">type</span><span class="pi">:</span> <span class="s">Opaque</span>
 <span class="na">stringData</span><span class="pi">:</span>
-  <span class="na">api-key</span><span class="pi">:</span> <span class="s2">"</span><span class="s">your-api-key-here"</span>
-  <span class="na">profile-name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Prisma</span><span class="nv"> </span><span class="s">AIRS"</span>
+    <span class="na">api-key</span><span class="pi">:</span> <span class="s1">'</span><span class="s">your-api-key-here'</span>
+    <span class="na">profile-name</span><span class="pi">:</span> <span class="s1">'</span><span class="s">Prisma</span><span class="nv"> </span><span class="s">AIRS'</span>
 </code></pre></div></div>
 
 <h2 id="environment-specific-settings">Environment-Specific Settings</h2>
@@ -593,19 +595,21 @@ SHUTDOWN_TIMEOUT_MS=30000
 <h3 id="docker-compose">Docker Compose</h3>
 
 <p>In <code class="language-plaintext highlighter-rouge">docker-compose.yml</code>:</p>
+
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
-  <span class="na">prod</span><span class="pi">:</span>
-    <span class="na">environment</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">NODE_ENV=production</span>
-      <span class="pi">-</span> <span class="s">PORT=3000</span>
-      <span class="pi">-</span> <span class="s">LOG_LEVEL=info</span>
-    <span class="na">env_file</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">.env</span>
+    <span class="na">prod</span><span class="pi">:</span>
+        <span class="na">environment</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">NODE_ENV=production</span>
+            <span class="pi">-</span> <span class="s">PORT=3000</span>
+            <span class="pi">-</span> <span class="s">LOG_LEVEL=info</span>
+        <span class="na">env_file</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">.env</span>
 </code></pre></div></div>
 
 <h3 id="systemd">Systemd</h3>
 
 <p>In service file:</p>
+
 <div class="language-ini highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nn">[Service]</span>
 <span class="py">Environment</span><span class="p">=</span><span class="s">"NODE_ENV=production"</span>
 <span class="py">Environment</span><span class="p">=</span><span class="s">"PORT=3000"</span>
@@ -615,19 +619,22 @@ SHUTDOWN_TIMEOUT_MS=30000
 <h3 id="pm2">PM2</h3>
 
 <p>In <code class="language-plaintext highlighter-rouge">ecosystem.config.js</code>:</p>
+
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="na">apps</span><span class="p">:</span> <span class="p">[{</span>
-    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">prisma-airs-mcp</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">env</span><span class="p">:</span> <span class="p">{</span>
-      <span class="na">NODE_ENV</span><span class="p">:</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">PORT</span><span class="p">:</span> <span class="mi">3000</span>
-    <span class="p">},</span>
-    <span class="na">env_production</span><span class="p">:</span> <span class="p">{</span>
-      <span class="na">NODE_ENV</span><span class="p">:</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">LOG_LEVEL</span><span class="p">:</span> <span class="dl">'</span><span class="s1">info</span><span class="dl">'</span>
-    <span class="p">}</span>
-  <span class="p">}]</span>
-<span class="p">}</span>
+    <span class="na">apps</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">prisma-airs-mcp</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">env</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">NODE_ENV</span><span class="p">:</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span>
+                <span class="na">PORT</span><span class="p">:</span> <span class="mi">3000</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="na">env_production</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">NODE_ENV</span><span class="p">:</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span>
+                <span class="na">LOG_LEVEL</span><span class="p">:</span> <span class="dl">'</span><span class="s1">info</span><span class="dl">'</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+<span class="p">};</span>
 </code></pre></div></div>
 
 <h2 id="validation">Validation</h2>
@@ -645,11 +652,13 @@ SHUTDOWN_TIMEOUT_MS=30000
 <h3 id="security">Security</h3>
 
 <ol>
-  <li><strong>Never commit secrets to version control</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># .gitignore</span>
-.env
-.env.<span class="k">*</span>
-<span class="o">!</span>.env.example
+  <li>
+    <p><strong>Never commit secrets to version control</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># .gitignore</span>
+ .env
+ .env.<span class="k">*</span>
+ <span class="o">!</span>.env.example
 </code></pre></div>    </div>
   </li>
   <li><strong>Use secret management tools</strong>
@@ -737,6 +746,7 @@ SHUTDOWN_TIMEOUT_MS=30000
 <h3 id="debug-configuration">Debug Configuration</h3>
 
 <p>Enable debug logging to see configuration:</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">LOG_LEVEL</span><span class="o">=</span>debug npm start
 </code></pre></div></div>
 

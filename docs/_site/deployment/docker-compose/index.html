@@ -251,27 +251,27 @@ docker compose <span class="nt">--profile</span> dev <span class="nb">exec </spa
 <h3 id="development-docker-composeyml">Development docker-compose.yml</h3>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
-  <span class="na">dev</span><span class="pi">:</span>
-    <span class="na">profiles</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">dev</span>
-    <span class="na">build</span><span class="pi">:</span>
-      <span class="na">context</span><span class="pi">:</span> <span class="s">.</span>
-      <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">docker/Dockerfile.dev</span>
-    <span class="na">image</span><span class="pi">:</span> <span class="s">ghcr.io/cdot65/prisma-airs-mcp:dev-local</span>
-    <span class="na">container_name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp-dev</span>
-    <span class="na">ports</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s2">"</span><span class="s">3000:3000"</span>
-    <span class="na">volumes</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">./src:/app/src:ro</span>
-      <span class="pi">-</span> <span class="s">./package.json:/app/package.json:ro</span>
-      <span class="pi">-</span> <span class="s">./tsconfig.json:/app/tsconfig.json:ro</span>
-      <span class="pi">-</span> <span class="s">node_modules:/app/node_modules</span>
-    <span class="na">environment</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">NODE_ENV=development</span>
-      <span class="pi">-</span> <span class="s">LOG_LEVEL=debug</span>
-    <span class="na">env_file</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">.env</span>
-    <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
+    <span class="na">dev</span><span class="pi">:</span>
+        <span class="na">profiles</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">dev</span>
+        <span class="na">build</span><span class="pi">:</span>
+            <span class="na">context</span><span class="pi">:</span> <span class="s">.</span>
+            <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">docker/Dockerfile.dev</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">ghcr.io/cdot65/prisma-airs-mcp:dev-local</span>
+        <span class="na">container_name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp-dev</span>
+        <span class="na">ports</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s1">'</span><span class="s">3000:3000'</span>
+        <span class="na">volumes</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">./src:/app/src:ro</span>
+            <span class="pi">-</span> <span class="s">./package.json:/app/package.json:ro</span>
+            <span class="pi">-</span> <span class="s">./tsconfig.json:/app/tsconfig.json:ro</span>
+            <span class="pi">-</span> <span class="s">node_modules:/app/node_modules</span>
+        <span class="na">environment</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">NODE_ENV=development</span>
+            <span class="pi">-</span> <span class="s">LOG_LEVEL=debug</span>
+        <span class="na">env_file</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">.env</span>
+        <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
 </code></pre></div></div>
 
 <h2 id="production-profile">Production Profile</h2>
@@ -304,37 +304,43 @@ docker compose ps
 <h3 id="production-docker-composeyml">Production docker-compose.yml</h3>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
-  <span class="na">prod</span><span class="pi">:</span>
-    <span class="na">profiles</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">prod</span>
-    <span class="na">build</span><span class="pi">:</span>
-      <span class="na">context</span><span class="pi">:</span> <span class="s">.</span>
-      <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">docker/Dockerfile</span>
-      <span class="na">target</span><span class="pi">:</span> <span class="s">production</span>
-    <span class="na">image</span><span class="pi">:</span> <span class="s">ghcr.io/cdot65/prisma-airs-mcp:latest</span>
-    <span class="na">container_name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp-prod</span>
-    <span class="na">ports</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s2">"</span><span class="s">3000:3000"</span>
-    <span class="na">environment</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">NODE_ENV=production</span>
-      <span class="pi">-</span> <span class="s">LOG_LEVEL=info</span>
-    <span class="na">env_file</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">.env</span>
-    <span class="na">healthcheck</span><span class="pi">:</span>
-      <span class="na">test</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">CMD"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">node"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">-e"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">require('http').get('http://localhost:3000/health',</span><span class="nv"> </span><span class="s">(res)</span><span class="nv"> </span><span class="s">=&gt;</span><span class="nv"> </span><span class="s">{</span><span class="nv"> </span><span class="s">process.exit(res.statusCode</span><span class="nv"> </span><span class="s">===</span><span class="nv"> </span><span class="s">200</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">1);</span><span class="nv"> </span><span class="s">});"</span><span class="pi">]</span>
-      <span class="na">interval</span><span class="pi">:</span> <span class="s">30s</span>
-      <span class="na">timeout</span><span class="pi">:</span> <span class="s">3s</span>
-      <span class="na">retries</span><span class="pi">:</span> <span class="m">3</span>
-      <span class="na">start_period</span><span class="pi">:</span> <span class="s">10s</span>
-    <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
-    <span class="na">deploy</span><span class="pi">:</span>
-      <span class="na">resources</span><span class="pi">:</span>
-        <span class="na">limits</span><span class="pi">:</span>
-          <span class="na">cpus</span><span class="pi">:</span> <span class="s2">"</span><span class="s">1"</span>
-          <span class="na">memory</span><span class="pi">:</span> <span class="s">512M</span>
-        <span class="na">reservations</span><span class="pi">:</span>
-          <span class="na">cpus</span><span class="pi">:</span> <span class="s2">"</span><span class="s">0.25"</span>
-          <span class="na">memory</span><span class="pi">:</span> <span class="s">128M</span>
+    <span class="na">prod</span><span class="pi">:</span>
+        <span class="na">profiles</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">prod</span>
+        <span class="na">build</span><span class="pi">:</span>
+            <span class="na">context</span><span class="pi">:</span> <span class="s">.</span>
+            <span class="na">dockerfile</span><span class="pi">:</span> <span class="s">docker/Dockerfile</span>
+            <span class="na">target</span><span class="pi">:</span> <span class="s">production</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">ghcr.io/cdot65/prisma-airs-mcp:latest</span>
+        <span class="na">container_name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp-prod</span>
+        <span class="na">ports</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s1">'</span><span class="s">3000:3000'</span>
+        <span class="na">environment</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">NODE_ENV=production</span>
+            <span class="pi">-</span> <span class="s">LOG_LEVEL=info</span>
+        <span class="na">env_file</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">.env</span>
+        <span class="na">healthcheck</span><span class="pi">:</span>
+            <span class="na">test</span><span class="pi">:</span>
+                <span class="pi">[</span>
+                    <span class="s1">'</span><span class="s">CMD'</span><span class="pi">,</span>
+                    <span class="s1">'</span><span class="s">node'</span><span class="pi">,</span>
+                    <span class="s1">'</span><span class="s">-e'</span><span class="pi">,</span>
+                    <span class="s2">"</span><span class="s">require('http').get('http://localhost:3000/health',</span><span class="nv"> </span><span class="s">(res)</span><span class="nv"> </span><span class="s">=&gt;</span><span class="nv"> </span><span class="s">{</span><span class="nv"> </span><span class="s">process.exit(res.statusCode</span><span class="nv"> </span><span class="s">===</span><span class="nv"> </span><span class="s">200</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">1);</span><span class="nv"> </span><span class="s">});"</span><span class="pi">,</span>
+                <span class="pi">]</span>
+            <span class="na">interval</span><span class="pi">:</span> <span class="s">30s</span>
+            <span class="na">timeout</span><span class="pi">:</span> <span class="s">3s</span>
+            <span class="na">retries</span><span class="pi">:</span> <span class="m">3</span>
+            <span class="na">start_period</span><span class="pi">:</span> <span class="s">10s</span>
+        <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
+        <span class="na">deploy</span><span class="pi">:</span>
+            <span class="na">resources</span><span class="pi">:</span>
+                <span class="na">limits</span><span class="pi">:</span>
+                    <span class="na">cpus</span><span class="pi">:</span> <span class="s1">'</span><span class="s">1'</span>
+                    <span class="na">memory</span><span class="pi">:</span> <span class="s">512M</span>
+                <span class="na">reservations</span><span class="pi">:</span>
+                    <span class="na">cpus</span><span class="pi">:</span> <span class="s1">'</span><span class="s">0.25'</span>
+                    <span class="na">memory</span><span class="pi">:</span> <span class="s">128M</span>
 </code></pre></div></div>
 
 <h2 id="common-commands">Common Commands</h2>
@@ -441,16 +447,18 @@ RATE_LIMIT_WINDOW_MS=60000
 <p>Create environment-specific overrides:</p>
 
 <p><strong>docker-compose.dev.yml</strong>:</p>
+
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
-  <span class="na">dev</span><span class="pi">:</span>
-    <span class="na">environment</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">LOG_LEVEL=debug</span>
-      <span class="pi">-</span> <span class="s">CACHE_TTL_SECONDS=60</span>
-    <span class="na">ports</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s2">"</span><span class="s">3001:3000"</span>
+    <span class="na">dev</span><span class="pi">:</span>
+        <span class="na">environment</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">LOG_LEVEL=debug</span>
+            <span class="pi">-</span> <span class="s">CACHE_TTL_SECONDS=60</span>
+        <span class="na">ports</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s1">'</span><span class="s">3001:3000'</span>
 </code></pre></div></div>
 
 <p>Use with:</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker compose <span class="nt">-f</span> docker-compose.yml <span class="nt">-f</span> docker-compose.dev.yml <span class="nt">--profile</span> dev up
 </code></pre></div></div>
 
@@ -459,20 +467,21 @@ RATE_LIMIT_WINDOW_MS=60000
 <p>For production, use Docker secrets:</p>
 
 <p><strong>docker-compose.prod.yml</strong>:</p>
+
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
-  <span class="na">prod</span><span class="pi">:</span>
-    <span class="na">secrets</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">airs_api_key</span>
-      <span class="pi">-</span> <span class="s">airs_profile_name</span>
-    <span class="na">environment</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">AIRS_API_KEY_FILE=/run/secrets/airs_api_key</span>
-      <span class="pi">-</span> <span class="s">AIRS_PROFILE_NAME_FILE=/run/secrets/airs_profile_name</span>
+    <span class="na">prod</span><span class="pi">:</span>
+        <span class="na">secrets</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">airs_api_key</span>
+            <span class="pi">-</span> <span class="s">airs_profile_name</span>
+        <span class="na">environment</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">AIRS_API_KEY_FILE=/run/secrets/airs_api_key</span>
+            <span class="pi">-</span> <span class="s">AIRS_PROFILE_NAME_FILE=/run/secrets/airs_profile_name</span>
 
 <span class="na">secrets</span><span class="pi">:</span>
-  <span class="na">airs_api_key</span><span class="pi">:</span>
-    <span class="na">external</span><span class="pi">:</span> <span class="no">true</span>
-  <span class="na">airs_profile_name</span><span class="pi">:</span>
-    <span class="na">external</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">airs_api_key</span><span class="pi">:</span>
+        <span class="na">external</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">airs_profile_name</span><span class="pi">:</span>
+        <span class="na">external</span><span class="pi">:</span> <span class="no">true</span>
 </code></pre></div></div>
 
 <h2 id="advanced-configuration">Advanced Configuration</h2>
@@ -480,58 +489,62 @@ RATE_LIMIT_WINDOW_MS=60000
 <h3 id="custom-networks">Custom Networks</h3>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
-  <span class="na">prod</span><span class="pi">:</span>
-    <span class="na">networks</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">prisma-network</span>
+    <span class="na">prod</span><span class="pi">:</span>
+        <span class="na">networks</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">prisma-network</span>
 
 <span class="na">networks</span><span class="pi">:</span>
-  <span class="na">prisma-network</span><span class="pi">:</span>
-    <span class="na">driver</span><span class="pi">:</span> <span class="s">bridge</span>
-    <span class="na">ipam</span><span class="pi">:</span>
-      <span class="na">config</span><span class="pi">:</span>
-        <span class="pi">-</span> <span class="na">subnet</span><span class="pi">:</span> <span class="s">172.20.0.0/16</span>
+    <span class="na">prisma-network</span><span class="pi">:</span>
+        <span class="na">driver</span><span class="pi">:</span> <span class="s">bridge</span>
+        <span class="na">ipam</span><span class="pi">:</span>
+            <span class="na">config</span><span class="pi">:</span>
+                <span class="pi">-</span> <span class="na">subnet</span><span class="pi">:</span> <span class="s">172.20.0.0/16</span>
 </code></pre></div></div>
 
 <h3 id="volume-management">Volume Management</h3>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
-  <span class="na">dev</span><span class="pi">:</span>
-    <span class="na">volumes</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">./src:/app/src:ro</span>
-      <span class="pi">-</span> <span class="s">node_modules:/app/node_modules</span>
-      <span class="pi">-</span> <span class="s">logs:/app/logs</span>
+    <span class="na">dev</span><span class="pi">:</span>
+        <span class="na">volumes</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">./src:/app/src:ro</span>
+            <span class="pi">-</span> <span class="s">node_modules:/app/node_modules</span>
+            <span class="pi">-</span> <span class="s">logs:/app/logs</span>
 
 <span class="na">volumes</span><span class="pi">:</span>
-  <span class="na">node_modules</span><span class="pi">:</span>
-  <span class="na">logs</span><span class="pi">:</span>
-    <span class="na">driver</span><span class="pi">:</span> <span class="s">local</span>
+    <span class="na">node_modules</span><span class="pi">:</span>
+    <span class="na">logs</span><span class="pi">:</span>
+        <span class="na">driver</span><span class="pi">:</span> <span class="s">local</span>
 </code></pre></div></div>
 
 <h3 id="health-check-customization">Health Check Customization</h3>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
-  <span class="na">prod</span><span class="pi">:</span>
-    <span class="na">healthcheck</span><span class="pi">:</span>
-      <span class="na">test</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">CMD-SHELL"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">wget</span><span class="nv"> </span><span class="s">--no-verbose</span><span class="nv"> </span><span class="s">--tries=1</span><span class="nv"> </span><span class="s">--spider</span><span class="nv"> </span><span class="s">http://localhost:3000/health</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">exit</span><span class="nv"> </span><span class="s">1"</span><span class="pi">]</span>
-      <span class="na">interval</span><span class="pi">:</span> <span class="s">30s</span>
-      <span class="na">timeout</span><span class="pi">:</span> <span class="s">3s</span>
-      <span class="na">retries</span><span class="pi">:</span> <span class="m">3</span>
-      <span class="na">start_period</span><span class="pi">:</span> <span class="s">10s</span>
-      <span class="na">disable</span><span class="pi">:</span> <span class="no">false</span>
+    <span class="na">prod</span><span class="pi">:</span>
+        <span class="na">healthcheck</span><span class="pi">:</span>
+            <span class="na">test</span><span class="pi">:</span>
+                <span class="pi">[</span>
+                    <span class="s1">'</span><span class="s">CMD-SHELL'</span><span class="pi">,</span>
+                    <span class="s1">'</span><span class="s">wget</span><span class="nv"> </span><span class="s">--no-verbose</span><span class="nv"> </span><span class="s">--tries=1</span><span class="nv"> </span><span class="s">--spider</span><span class="nv"> </span><span class="s">http://localhost:3000/health</span><span class="nv"> </span><span class="s">||</span><span class="nv"> </span><span class="s">exit</span><span class="nv"> </span><span class="s">1'</span><span class="pi">,</span>
+                <span class="pi">]</span>
+            <span class="na">interval</span><span class="pi">:</span> <span class="s">30s</span>
+            <span class="na">timeout</span><span class="pi">:</span> <span class="s">3s</span>
+            <span class="na">retries</span><span class="pi">:</span> <span class="m">3</span>
+            <span class="na">start_period</span><span class="pi">:</span> <span class="s">10s</span>
+            <span class="na">disable</span><span class="pi">:</span> <span class="no">false</span>
 </code></pre></div></div>
 
 <h3 id="resource-limits">Resource Limits</h3>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
-  <span class="na">prod</span><span class="pi">:</span>
-    <span class="na">deploy</span><span class="pi">:</span>
-      <span class="na">resources</span><span class="pi">:</span>
-        <span class="na">limits</span><span class="pi">:</span>
-          <span class="na">cpus</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2"</span>
-          <span class="na">memory</span><span class="pi">:</span> <span class="s">1G</span>
-        <span class="na">reservations</span><span class="pi">:</span>
-          <span class="na">cpus</span><span class="pi">:</span> <span class="s2">"</span><span class="s">0.5"</span>
-          <span class="na">memory</span><span class="pi">:</span> <span class="s">256M</span>
+    <span class="na">prod</span><span class="pi">:</span>
+        <span class="na">deploy</span><span class="pi">:</span>
+            <span class="na">resources</span><span class="pi">:</span>
+                <span class="na">limits</span><span class="pi">:</span>
+                    <span class="na">cpus</span><span class="pi">:</span> <span class="s1">'</span><span class="s">2'</span>
+                    <span class="na">memory</span><span class="pi">:</span> <span class="s">1G</span>
+                <span class="na">reservations</span><span class="pi">:</span>
+                    <span class="na">cpus</span><span class="pi">:</span> <span class="s1">'</span><span class="s">0.5'</span>
+                    <span class="na">memory</span><span class="pi">:</span> <span class="s">256M</span>
 </code></pre></div></div>
 
 <h2 id="scaling">Scaling</h2>
@@ -550,20 +563,20 @@ docker compose ps
 <p>Add a load balancer service:</p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
-  <span class="na">nginx</span><span class="pi">:</span>
-    <span class="na">image</span><span class="pi">:</span> <span class="s">nginx:alpine</span>
-    <span class="na">ports</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s2">"</span><span class="s">80:80"</span>
-    <span class="na">volumes</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">./nginx.conf:/etc/nginx/nginx.conf:ro</span>
-    <span class="na">depends_on</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">prod</span>
+    <span class="na">nginx</span><span class="pi">:</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">nginx:alpine</span>
+        <span class="na">ports</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s1">'</span><span class="s">80:80'</span>
+        <span class="na">volumes</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">./nginx.conf:/etc/nginx/nginx.conf:ro</span>
+        <span class="na">depends_on</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">prod</span>
 
-  <span class="na">prod</span><span class="pi">:</span>
-    <span class="c1"># Remove ports mapping</span>
-    <span class="c1"># Remove container_name for scaling</span>
-    <span class="na">deploy</span><span class="pi">:</span>
-      <span class="na">replicas</span><span class="pi">:</span> <span class="m">3</span>
+    <span class="na">prod</span><span class="pi">:</span>
+        <span class="c1"># Remove ports mapping</span>
+        <span class="c1"># Remove container_name for scaling</span>
+        <span class="na">deploy</span><span class="pi">:</span>
+            <span class="na">replicas</span><span class="pi">:</span> <span class="m">3</span>
 </code></pre></div></div>
 
 <h2 id="troubleshooting">Troubleshooting</h2>
@@ -662,6 +675,7 @@ deploy:
 <p>Converting from <code class="language-plaintext highlighter-rouge">docker run</code> to Docker Compose:</p>
 
 <p><strong>From:</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="se">\</span>
   <span class="nt">--name</span> prisma-airs-mcp <span class="se">\</span>
   <span class="nt">-p</span> 3000:3000 <span class="se">\</span>
@@ -671,15 +685,16 @@ deploy:
 </code></pre></div></div>
 
 <p><strong>To docker-compose.yml:</strong></p>
+
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">services</span><span class="pi">:</span>
-  <span class="na">app</span><span class="pi">:</span>
-    <span class="na">image</span><span class="pi">:</span> <span class="s">ghcr.io/cdot65/prisma-airs-mcp:latest</span>
-    <span class="na">container_name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp</span>
-    <span class="na">ports</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s2">"</span><span class="s">3000:3000"</span>
-    <span class="na">env_file</span><span class="pi">:</span>
-      <span class="pi">-</span> <span class="s">.env</span>
-    <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
+    <span class="na">app</span><span class="pi">:</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">ghcr.io/cdot65/prisma-airs-mcp:latest</span>
+        <span class="na">container_name</span><span class="pi">:</span> <span class="s">prisma-airs-mcp</span>
+        <span class="na">ports</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s1">'</span><span class="s">3000:3000'</span>
+        <span class="na">env_file</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">.env</span>
+        <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
 </code></pre></div></div>
 
 <h2 id="next-steps">Next Steps</h2>
