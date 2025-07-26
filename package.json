@@ -31,6 +31,8 @@
         "comment:docker:runtime": "=== Docker Runtime Commands ===",
         "docker:run": "./scripts/docker-run.sh",
         "docker:run:dev": "./scripts/docker-run.sh --tag dev",
+        "docker:dev": "pnpm run docker:build:dev && pnpm run docker:run:dev:3100",
+        "docker:run:dev:3100": "./scripts/docker-run.sh --tag dev --port 3100",
         "docker:stop": "docker stop prisma-airs-mcp",
         "docker:logs": "docker logs -f prisma-airs-mcp",
         "docker:compose:up:dev": "docker compose --profile dev up -d",
