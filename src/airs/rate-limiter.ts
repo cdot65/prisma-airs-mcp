@@ -5,12 +5,7 @@
 
 import { getLogger } from '../utils/logger.js';
 import type { Logger } from 'winston';
-
-export interface RateLimiterConfig {
-    maxRequests: number;
-    windowMs: number;
-    enabled?: boolean;
-}
+import type { AirsRateLimiterConfig } from '../types';
 
 interface TokenBucket {
     tokens: number;
@@ -21,7 +16,7 @@ export class AIRSRateLimiter {
     private readonly logger: Logger;
     private readonly buckets = new Map<string, TokenBucket>();
 
-    constructor(private readonly config: RateLimiterConfig) {
+    constructor(private readonly config: AirsRateLimiterConfig) {
         this.logger = getLogger();
 
         this.logger.info('AIRS rate limiter initialized', {

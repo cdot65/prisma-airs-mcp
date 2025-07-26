@@ -5,41 +5,43 @@
 
 import { getLogger } from '../utils/logger.js';
 import type { Logger } from 'winston';
+import type {
+    AirsAsyncScanObject,
+    AirsAsyncScanResponse,
+    AirsClientConfig,
+    AirsErrorResponse,
+    AirsRequestOptions,
+    AirsScanIdResult,
+    AirsScanRequest,
+    AirsScanResponse,
+    AirsThreatScanReportObject,
+} from '../types';
 import {
-    type AIRSClientConfig,
-    type AIRSRequestOptions,
-    type ScanRequest,
-    type ScanResponse,
-    type AsyncScanObject,
-    type AsyncScanResponse,
-    type ScanIdResult,
-    type ThreatScanReportObject,
-    type AIRSErrorResponse,
-    AIRSErrorCode,
     AIRS_API_VERSION,
-    AIRS_CONTENT_TYPE,
     AIRS_AUTH_HEADER,
-    AIRS_MAX_SCAN_IDS,
+    AIRS_CONTENT_TYPE,
     AIRS_MAX_REPORT_IDS,
-} from './types.js';
+    AIRS_MAX_SCAN_IDS,
+    AirsErrorCode,
+} from '../types';
 
-export class AIRSAPIError extends Error {
+export class PrismaAirsApiError extends Error {
     constructor(
         message: string,
         public statusCode: number, // Exposed for error handling by consumers
-        public response?: AIRSErrorResponse,
+        public response?: AirsErrorResponse,
     ) {
         super(message);
-        this.name = 'AIRSAPIError';
+        this.name = 'PrismaAirsApiError';
     }
 }
 
-export class PrismaAIRSClient {
+export class PrismaAirsClient {
     private readonly logger: Logger;
-    private readonly config: Required<AIRSClientConfig>;
+    private readonly config: Required<AirsClientConfig>;
     private readonly baseUrl: string;
 
-    constructor(config: AIRSClientConfig) {
+    constructor(config: AirsClientConfig) {
         this.logger = getLogger();
         this.config = {
             timeout: 30000, // 30 seconds default
@@ -61,18 +63,21 @@ export class PrismaAIRSClient {
     /**
      * Send a synchronous scan request
      */
-    async scanSync(request: ScanRequest, options?: AIRSRequestOptions): Promise<ScanResponse> {
-        return this.makeRequest<ScanResponse>('POST', '/scan/sync/request', request, options);
+    async scanSync(
+        request: AirsScanRequest,
+        options?: AirsRequestOptions,
+    ): Promise<AirsScanResponse> {
+        return this.makeRequest<AirsScanResponse>('POST', '/scan/sync/request', request, options);
     }
 
     /**
      * Send an asynchronous scan request
      */
     async scanAsync(
-        requests: AsyncScanObject[],
-        options?: AIRSRequestOptions,
-    ): Promise<AsyncScanResponse> {
-        return this.makeRequest<AsyncScanResponse>(
+        requests: AirsAsyncScanObject[],
+        options?: AirsRequestOptions,
+    ): Promise<AirsAsyncScanResponse> {
+        return this.makeRequest<AirsAsyncScanResponse>(
             'POST',
             '/scan/async/request',
             requests,
@@ -83,22 +88,25 @@ export class PrismaAIRSClient {
     /**
      * Get scan results by scan IDs
      */
-    async getScanResults(scanIds: string[], options?: AIRSRequestOptions): Promise<ScanIdResult[]> {
+    async getScanResults(
+        scanIds: string[],
+        options?: AirsRequestOptions,
+    ): Promise<AirsScanIdResult[]> {
         if (scanIds.length === 0) {
-            throw new AIRSAPIError('No scan IDs provided', AIRSErrorCode.BadRequest);
+            throw new PrismaAirsApiError('No scan IDs provided', AirsErrorCode.BadRequest);
         }
 
         if (scanIds.length > AIRS_MAX_SCAN_IDS) {
-            throw new AIRSAPIError(
+            throw new PrismaAirsApiError(
                 `Too many scan IDs: maximum ${AIRS_MAX_SCAN_IDS} allowed`,
-                AIRSErrorCode.BadRequest,
+                AirsErrorCode.BadRequest,
             );
         }
 
         const params = new URLSearchParams();
         params.append('scan_ids', scanIds.join(','));
 
-        return this.makeRequest<ScanIdResult[]>(
+        return this.makeRequest<AirsScanIdResult[]>(
             'GET',
             `/scan/results?${params.toString()}`,
             undefined,
@@ -111,23 +119,23 @@ export class PrismaAIRSClient {
      */
     async getThreatScanReports(
         reportIds: string[],
-        options?: AIRSRequestOptions,
-    ): Promise<ThreatScanReportObject[]> {
+        options?: AirsRequestOptions,
+    ): Promise<AirsThreatScanReportObject[]> {
         if (reportIds.length === 0) {
-            throw new AIRSAPIError('No report IDs provided', AIRSErrorCode.BadRequest);
+            throw new PrismaAirsApiError('No report IDs provided', AirsErrorCode.BadRequest);
         }
 
         if (reportIds.length > AIRS_MAX_REPORT_IDS) {
-            throw new AIRSAPIError(
+            throw new PrismaAirsApiError(
                 `Too many report IDs: maximum ${AIRS_MAX_REPORT_IDS} allowed`,
-                AIRSErrorCode.BadRequest,
+                AirsErrorCode.BadRequest,
             );
         }
 
         const params = new URLSearchParams();
         params.append('report_ids', reportIds.join(','));
 
-        return this.makeRequest<ThreatScanReportObject[]>(
+        return this.makeRequest<AirsThreatScanReportObject[]>(
             'GET',
             `/scan/reports?${params.toString()}`,
             undefined,
@@ -142,7 +150,7 @@ export class PrismaAIRSClient {
         method: string,
         path: string,
         body?: unknown,
-        options?: AIRSRequestOptions,
+        options?: AirsRequestOptions,
         retryCount = 0,
     ): Promise<T> {
         const url = `${this.baseUrl}${path}`;
@@ -178,11 +186,11 @@ export class PrismaAIRSClient {
             const responseData = this.parseResponse(responseText, url, response.status);
 
             if (!response.ok) {
-                const errorResponse = responseData as AIRSErrorResponse;
+                const errorResponse = responseData as AirsErrorResponse;
 
                 // Handle rate limiting with retry
                 if (
-                    response.status === Number(AIRSErrorCode.TooManyRequests) &&
+                    response.status === Number(AirsErrorCode.TooManyRequests) &&
                     retryCount < this.config.maxRetries
                 ) {
                     const retryAfter = errorResponse.error?.retry_after;
@@ -233,8 +241,8 @@ export class PrismaAIRSClient {
                 }
             }
 
-            // Re-throw AIRSAPIError as-is
-            if (error instanceof AIRSAPIError) {
+            // Re-throw PrismaAirsApiError as-is
+            if (error instanceof PrismaAirsApiError) {
                 throw error;
             }
 
@@ -244,7 +252,10 @@ export class PrismaAIRSClient {
                 error: error instanceof Error ? error.message : 'Unknown error',
             });
 
-            throw new AIRSAPIError(error instanceof Error ? error.message : 'Unknown error', 0);
+            throw new PrismaAirsApiError(
+                error instanceof Error ? error.message : 'Unknown error',
+                0,
+            );
         }
     }
 
@@ -285,20 +296,20 @@ export class PrismaAIRSClient {
                 status,
                 responseText,
             });
-            throw new AIRSAPIError('Invalid JSON response from API', status);
+            throw new PrismaAirsApiError('Invalid JSON response from API', status);
         }
     }
 
     /**
      * Handle API error responses
      */
-    private handleAPIError(errorResponse: AIRSErrorResponse, status: number, url: string): never {
+    private handleAPIError(errorResponse: AirsErrorResponse, status: number, url: string): never {
         const errorMessage = errorResponse.error?.message || `HTTP ${status} error`;
         this.logger.error('AIRS API error', {
             url,
             status,
             error: errorMessage,
         });
-        throw new AIRSAPIError(errorMessage, status, errorResponse);
+        throw new PrismaAirsApiError(errorMessage, status, errorResponse);
     }
 }

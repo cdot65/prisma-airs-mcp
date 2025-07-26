@@ -3,7 +3,8 @@
  * Implements TTL-based caching with size limits
  */
 
-import { getLogger } from '../utils/logger.js';
+import { getLogger } from '../utils/logger';
+import type { AirsCacheConfig } from '../types';
 import type { Logger } from 'winston';
 
 interface CacheEntry<T> {
@@ -12,18 +13,12 @@ interface CacheEntry<T> {
     size: number;
 }
 
-export interface CacheConfig {
-    ttlSeconds: number;
-    maxSize: number;
-    enabled?: boolean;
-}
-
-export class AIRSCache {
+export class PrismaAirsCache {
     private readonly cache = new Map<string, CacheEntry<unknown>>();
     private readonly logger: Logger;
     private currentSize = 0;
 
-    constructor(private readonly config: CacheConfig) {
+    constructor(private readonly config: AirsCacheConfig) {
         this.logger = getLogger();
 
         if (this.config.enabled !== false) {
@@ -169,7 +164,7 @@ export class AIRSCache {
     }
 
     /**
-     * Evict oldest entries until we have enough space
+     * Evict the oldest entries until we have enough space
      */
     private evictOldest(): void {
         const sortedEntries = Array.from(this.cache.entries()).sort(

@@ -3,21 +3,21 @@
  */
 
 import { getConfig } from '../config';
-import { EnhancedPrismaAIRSClient } from './index.js';
-import { getLogger } from '../utils/logger.js';
+import { EnhancedPrismaAirsClient } from './index';
+import { getLogger } from '../utils/logger';
 import type { Logger } from 'winston';
 
-let clientInstance: EnhancedPrismaAIRSClient | null = null;
+let clientInstance: EnhancedPrismaAirsClient | null = null;
 const logger: Logger = getLogger();
 
 /**
  * Create or get the singleton AIRS client instance
  */
-export function getAIRSClient(): EnhancedPrismaAIRSClient {
+export function getAirsClient(): EnhancedPrismaAirsClient {
     if (!clientInstance) {
         const config = getConfig();
 
-        clientInstance = new EnhancedPrismaAIRSClient({
+        clientInstance = new EnhancedPrismaAirsClient({
             apiUrl: config.airs.apiUrl,
             apiKey: config.airs.apiKey,
             timeout: config.airs.timeout,

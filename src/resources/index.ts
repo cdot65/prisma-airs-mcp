@@ -3,20 +3,20 @@
  */
 
 import { getLogger } from '../utils/logger.js';
-import { getAIRSClient } from '../airs/factory.js';
+import { getAirsClient } from '../airs/factory.js';
 import type { Logger } from 'winston';
 import type {
     Resource,
+    ResourceContent,
     ResourcesListParams,
     ResourcesListResult,
     ResourcesReadParams,
     ResourcesReadResult,
-    ResourceContent,
 } from '../mcp/types.js';
 
 export class ResourceHandler {
     private readonly logger: Logger;
-    private readonly airsClient = getAIRSClient();
+    private readonly airsClient = getAirsClient();
 
     // Resource URIs follow pattern: airs://{type}/{id}
     private static readonly RESOURCE_TYPES = {

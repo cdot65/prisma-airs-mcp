@@ -123,7 +123,8 @@
       <article class="content">
         <h2 id="overview">Overview</h2>
 
-<p>The Prisma AIRS MCP server provides a JSON-RPC 2.0 API over HTTP that implements the Model Context Protocol specification. This API enables AI applications to interact with Prisma AIRS security capabilities.</p>
+<p>The Prisma AIRS MCP server provides a JSON-RPC 2.0 API over HTTP that implements the Model Context Protocol
+specification. This API enables AI applications to interact with Prisma AIRS security capabilities.</p>
 
 <h2 id="base-url">Base URL</h2>
 
@@ -135,11 +136,11 @@ Development: http://localhost:3000
 
 <p>All API requests use JSON-RPC 2.0 protocol:</p>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+<div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"method_name"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="err">//</span><span class="w"> </span><span class="err">method-specific</span><span class="w"> </span><span class="err">parameters</span><span class="w">
+    </span><span class="c1">// method-specific parameters</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -218,7 +219,8 @@ Development: http://localhost:3000
 
 <h2 id="authentication">Authentication</h2>
 
-<p>While the MCP protocol itself doesn’t require authentication at the transport layer, the underlying Prisma AIRS API requires an API key. This is configured server-side through environment variables.</p>
+<p>While the MCP protocol itself doesn’t require authentication at the transport layer, the underlying Prisma AIRS API
+requires an API key. This is configured server-side through environment variables.</p>
 
 <h2 id="quick-start-example">Quick Start Example</h2>
 
@@ -275,10 +277,10 @@ Development: http://localhost:3000
 
 <h3 id="success-response">Success Response</h3>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+<div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="err">//</span><span class="w"> </span><span class="err">Method-specific</span><span class="w"> </span><span class="err">result</span><span class="w">
+    </span><span class="c1">// Method-specific result</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -286,13 +288,13 @@ Development: http://localhost:3000
 
 <h3 id="error-response">Error Response</h3>
 
-<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+<div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
   </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">-32602</span><span class="p">,</span><span class="w">
     </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invalid params"</span><span class="p">,</span><span class="w">
     </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="err">//</span><span class="w"> </span><span class="err">Additional</span><span class="w"> </span><span class="err">error</span><span class="w"> </span><span class="err">details</span><span class="w">
+      </span><span class="c1">// Additional error details</span><span class="w">
     </span><span class="p">}</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
@@ -331,20 +333,22 @@ X-RateLimit-Reset: 1674567890
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">eventSource</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EventSource</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://localhost:3000/sse</span><span class="dl">'</span><span class="p">);</span>
 
 <span class="nx">eventSource</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Received:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">data</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Received:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
 <span class="p">};</span>
 
 <span class="c1">// Send request</span>
 <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://localhost:3000/sse</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
-  <span class="na">headers</span><span class="p">:</span> <span class="p">{</span> <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span> <span class="p">},</span>
-  <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
-    <span class="na">jsonrpc</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2.0</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">tools/call</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">params</span><span class="p">:</span> <span class="p">{</span> <span class="cm">/* ... */</span> <span class="p">},</span>
-    <span class="na">id</span><span class="p">:</span> <span class="mi">1</span>
-  <span class="p">})</span>
+    <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">POST</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">headers</span><span class="p">:</span> <span class="p">{</span><span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">},</span>
+    <span class="na">body</span><span class="p">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+        <span class="na">jsonrpc</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2.0</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">method</span><span class="p">:</span> <span class="dl">'</span><span class="s1">tools/call</span><span class="dl">'</span><span class="p">,</span>
+        <span class="na">params</span><span class="p">:</span> <span class="p">{</span>
+            <span class="cm">/* ... */</span>
+        <span class="p">},</span>
+        <span class="na">id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="p">}),</span>
 <span class="p">});</span>
 </code></pre></div></div>
 

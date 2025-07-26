@@ -1,41 +1,62 @@
 /**
- * Enhanced Prisma AIRS client with caching and rate limiting
+ * Enhanced Prisma AIRS Client Module
+ * 
+ * This module provides an enhanced wrapper around the base Prisma AIRS API client,
+ * adding critical production features:
+ * 
+ * 1. **Caching**: Reduces API calls by storing responses with configurable TTL
+ * 2. **Rate Limiting**: Prevents API quota exhaustion with token bucket algorithm
+ * 3. **Unified Interface**: Single entry point for all AIRS API operations
+ * 4. **Performance Optimization**: Automatic cache hit detection for repeated requests
+ * 
+ * The enhanced client orchestrates the base client, cache, and rate limiter to provide
+ * a robust, production-ready interface for interacting with the Prisma AIRS API.
+ * 
+ * @example
+ * ```typescript
+ * import { EnhancedPrismaAirsClient } from './airs';
+ * 
+ * const client = new EnhancedPrismaAirsClient({
+ *   apiUrl: 'https://api.airs.example.com',
+ *   apiKey: 'your-api-key',
+ *   cache: { ttlSeconds: 300, maxSize: 1000, enabled: true },
+ *   rateLimiter: { maxRequests: 100, windowMs: 60000, enabled: true }
+ * });
+ * 
+ * // All requests automatically benefit from caching and rate limiting
+ * const result = await client.scanSync(request);
+ * ```
  */
 
-import { PrismaAIRSClient } from './client.js';
-import { AIRSCache, type CacheConfig } from './cache.js';
-import { AIRSRateLimiter, type RateLimiterConfig } from './rate-limiter.js';
-import { getLogger } from '../utils/logger.js';
+import { PrismaAirsClient } from './client';
+import { PrismaAirsCache } from './cache';
+import { AIRSRateLimiter } from './rate-limiter';
+import { getLogger } from '../utils/logger';
 import type { Logger } from 'winston';
 import type {
-    AIRSClientConfig,
-    AIRSRequestOptions,
-    ScanRequest,
-    ScanResponse,
-    AsyncScanObject,
-    AsyncScanResponse,
-    ScanIdResult,
-    ThreatScanReportObject,
-} from './types.js';
+    AirsAsyncScanObject,
+    AirsAsyncScanResponse,
+    AirsEnhancedClientConfig,
+    AirsRequestOptions,
+    AirsScanIdResult,
+    AirsScanRequest,
+    AirsScanResponse,
+    AirsThreatScanReportObject,
+} from '../types';
 
-export interface EnhancedAIRSClientConfig extends AIRSClientConfig {
-    cache?: CacheConfig;
-    rateLimiter?: RateLimiterConfig;
-}
-
-export class EnhancedPrismaAIRSClient {
-    private readonly client: PrismaAIRSClient;
-    private readonly cache?: AIRSCache;
+export class EnhancedPrismaAirsClient {
+    private readonly client: PrismaAirsClient;
+    private readonly cache?: PrismaAirsCache;
     private readonly rateLimiter?: AIRSRateLimiter;
     private readonly logger: Logger;
 
-    constructor(config: EnhancedAIRSClientConfig) {
+    constructor(config: AirsEnhancedClientConfig) {
         this.logger = getLogger();
-        this.client = new PrismaAIRSClient(config);
+        this.client = new PrismaAirsClient(config);
 
         // Initialize cache if configured
         if (config.cache) {
-            this.cache = new AIRSCache(config.cache);
+            this.cache = new PrismaAirsCache(config.cache);
         }
 
         // Initialize rate limiter if configured
@@ -52,17 +73,20 @@ export class EnhancedPrismaAIRSClient {
     /**
      * Send a synchronous scan request with caching and rate limiting
      */
-    async scanSync(request: ScanRequest, options?: AIRSRequestOptions): Promise<ScanResponse> {
+    async scanSync(
+        request: AirsScanRequest,
+        options?: AirsRequestOptions,
+    ): Promise<AirsScanResponse> {
         // Check rate limit
         if (this.rateLimiter) {
             await this.rateLimiter.waitForLimit('scan');
         }
 
         // Check cache
-        const cacheKey = AIRSCache.generateScanKey('sync', request);
+        const cacheKey = PrismaAirsCache.generateScanKey('sync', request);
 
         if (this.cache) {
-            const cached = this.cache.get<ScanResponse>(cacheKey);
+            const cached = this.cache.get<AirsScanResponse>(cacheKey);
 
             if (cached) {
                 this.logger.debug('Returning cached scan result', { cacheKey });
@@ -85,9 +109,9 @@ export class EnhancedPrismaAIRSClient {
      * Send an asynchronous scan request with rate limiting
      */
     async scanAsync(
-        requests: AsyncScanObject[],
-        options?: AIRSRequestOptions,
-    ): Promise<AsyncScanResponse> {
+        requests: AirsAsyncScanObject[],
+        options?: AirsRequestOptions,
+    ): Promise<AirsAsyncScanResponse> {
         // Check rate limit
         if (this.rateLimiter) {
             await this.rateLimiter.waitForLimit('scan');
@@ -100,17 +124,20 @@ export class EnhancedPrismaAIRSClient {
     /**
      * Get scan results by scan IDs with caching and rate limiting
      */
-    async getScanResults(scanIds: string[], options?: AIRSRequestOptions): Promise<ScanIdResult[]> {
+    async getScanResults(
+        scanIds: string[],
+        options?: AirsRequestOptions,
+    ): Promise<AirsScanIdResult[]> {
         // Check rate limit
         if (this.rateLimiter) {
             await this.rateLimiter.waitForLimit('results');
         }
 
         // Check cache
-        const cacheKey = AIRSCache.generateResultKey('scan-results', scanIds);
+        const cacheKey = PrismaAirsCache.generateResultKey('scan-results', scanIds);
 
         if (this.cache) {
-            const cached = this.cache.get<ScanIdResult[]>(cacheKey);
+            const cached = this.cache.get<AirsScanIdResult[]>(cacheKey);
 
             if (cached) {
                 this.logger.debug('Returning cached scan results', { cacheKey });
@@ -138,18 +165,18 @@ export class EnhancedPrismaAIRSClient {
      */
     async getThreatScanReports(
         reportIds: string[],
-        options?: AIRSRequestOptions,
-    ): Promise<ThreatScanReportObject[]> {
+        options?: AirsRequestOptions,
+    ): Promise<AirsThreatScanReportObject[]> {
         // Check rate limit
         if (this.rateLimiter) {
             await this.rateLimiter.waitForLimit('reports');
         }
 
         // Check cache
-        const cacheKey = AIRSCache.generateResultKey('threat-reports', reportIds);
+        const cacheKey = PrismaAirsCache.generateResultKey('threat-reports', reportIds);
 
         if (this.cache) {
-            const cached = this.cache.get<ThreatScanReportObject[]>(cacheKey);
+            const cached = this.cache.get<AirsThreatScanReportObject[]>(cacheKey);
 
             if (cached) {
                 this.logger.debug('Returning cached threat reports', { cacheKey });
@@ -171,7 +198,7 @@ export class EnhancedPrismaAIRSClient {
     /**
      * Get cache statistics
      */
-    getCacheStats(): ReturnType<AIRSCache['getStats']> | null {
+    getCacheStats(): ReturnType<PrismaAirsCache['getStats']> | null {
         return this.cache?.getStats() || null;
     }
 
@@ -197,6 +224,5 @@ export class EnhancedPrismaAIRSClient {
     }
 }
 
-// Re-export types for convenience
-export * from './types.js';
-export { AIRSAPIError } from './client.js';
+// Re-export error class for convenience
+export { PrismaAirsApiError } from './client.js';

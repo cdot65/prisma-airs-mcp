@@ -3,7 +3,7 @@
  */
 
 import { getLogger } from '../utils/logger.js';
-import { getAIRSClient } from '../airs/factory.js';
+import { getAirsClient } from '../airs/factory.js';
 import { getConfig } from '../config';
 import { ResourceHandler } from '../resources';
 import type { Logger } from 'winston';
@@ -27,7 +27,7 @@ import type {
 
 export class ToolHandler {
     private readonly logger: Logger;
-    private readonly airsClient = getAIRSClient();
+    private readonly airsClient = getAirsClient();
 
     // Tool names
     private static readonly TOOLS = {
