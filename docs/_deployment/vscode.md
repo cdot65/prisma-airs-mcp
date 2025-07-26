@@ -6,19 +6,12 @@ category: deployment
 order: 8
 ---
 
-# Use Prisma AIRS MCP Server in VS Code
-
-Model Context Protocol (MCP) servers enable you to expand your chat experience in VS Code with extra tools for connecting to databases, invoking APIs, or performing specialized tasks. This guide walks you through setting up the Prisma AIRS MCP server to add advanced security capabilities to your VS Code development environment.
-
 ## Prerequisites
 
 - Install the latest version of [Visual Studio Code](https://code.visualstudio.com/)
 - Access to [GitHub Copilot](https://github.com/features/copilot)
 - Prisma AIRS MCP server running (either via Docker or from source)
 
-## What is MCP?
-
-Model Context Protocol (MCP) provides a standardized way for AI models to discover and interact with external tools, applications, and data sources. When you enter a chat prompt to a language model with agent mode in VS Code, the model can invoke various tools to perform tasks like file operations, accessing databases, or calling APIs in response to your request.
 
 ## Enable MCP Support in VS Code
 
@@ -155,13 +148,6 @@ If you have many MCP servers installed:
 2. Deselect unused tools or entire servers
 3. Keep only the Prisma AIRS tools you need active
 
-## Security Considerations
-
-> **Caution**: MCP servers can run code on your machine. Only add servers from trusted sources.
-
-- The Prisma AIRS MCP server runs security checks and doesn't execute arbitrary code
-- API keys and credentials are stored securely by VS Code when using input variables
-- Review the server configuration before connecting
 
 ## Next Steps
 
