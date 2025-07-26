@@ -1,25 +1,25 @@
 {
-  "version": "1.3.5",
-  "description": "Security hardening for public repository release",
-  "date": "2025-07-16",
-  "changes": [
-    "Removed hardcoded API key from k8s/overlays/production/kustomization.yaml",
-    "Created kustomization.yaml.example with placeholder values",
-    "Added SECURITY.md with comprehensive security policies",
-    "Updated .gitignore to prevent accidental secret commits",
-    "Enhanced all documentation with security setup instructions",
-    "Cleaned exposed API key from documentation files",
-    "Repository prepared for safe public release",
-    "Previous 1.3.4 changes:",
-    "- Fixed production Kubernetes deployment with proper secrets management",
-    "- Enhanced deployment scripts to use environment variables without prompting",
-    "- Created comprehensive deployment documentation",
-    "Previous 1.3.3 changes:",
-    "- Added environment variables for default profile configuration",
-    "- Updated Kubernetes ConfigMaps to support profile configuration",
-    "Previous 1.3.2 changes:",
-    "- Fixed AIRS scan API error - defaults to 'Prisma AIRS' profile",
-    "Previous 1.3.1 changes:",
-    "- Implemented SSE transport for streaming capabilities"
-  ]
+    "version": "1.3.5",
+    "description": "Security hardening for public repository release",
+    "date": "2025-07-16",
+    "changes": [
+        "Removed hardcoded API key from k8s/overlays/production/kustomization.yaml",
+        "Created kustomization.yaml.example with placeholder values",
+        "Added SECURITY.md with comprehensive security policies",
+        "Updated .gitignore to prevent accidental secret commits",
+        "Enhanced all documentation with security setup instructions",
+        "Cleaned exposed API key from documentation files",
+        "Repository prepared for safe public release",
+        "Previous 1.3.4 changes:",
+        "- Fixed production Kubernetes deployment with proper secrets management",
+        "- Enhanced deployment scripts to use environment variables without prompting",
+        "- Created comprehensive deployment documentation",
+        "Previous 1.3.3 changes:",
+        "- Added environment variables for default profile configuration",
+        "- Updated Kubernetes ConfigMaps to support profile configuration",
+        "Previous 1.3.2 changes:",
+        "- Fixed AIRS scan API error - defaults to 'Prisma AIRS' profile",
+        "Previous 1.3.1 changes:",
+        "- Implemented SSE transport for streaming capabilities"
+    ]
 }

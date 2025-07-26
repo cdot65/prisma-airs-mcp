@@ -53,24 +53,25 @@ When toxic content is detected, the API returns:
 
 ```json
 {
-  "action": "block",
-  "category": "malicious",
-  "profile_id": "00000000-0000-0000-0000-000000000000",
-  "profile_name": "detect-toxic-content-profile",
-  "prompt_detected": {
-    "dlp": false,
-    "injection": false,
-    "toxic_content": true,
-    "url_cats": false
-  },
-  "report_id": "R00000000-0000-0000-0000-000000000000",
-  "response_detected": {},
-  "scan_id": "00000000-0000-0000-0000-000000000000",
-  "tr_id": "1111"
+    "action": "block",
+    "category": "malicious",
+    "profile_id": "00000000-0000-0000-0000-000000000000",
+    "profile_name": "detect-toxic-content-profile",
+    "prompt_detected": {
+        "dlp": false,
+        "injection": false,
+        "toxic_content": true,
+        "url_cats": false
+    },
+    "report_id": "R00000000-0000-0000-0000-000000000000",
+    "response_detected": {},
+    "scan_id": "00000000-0000-0000-0000-000000000000",
+    "tr_id": "1111"
 }
 ```
 
 **Key Response Fields**:
+
 - `prompt_detected.toxic_content`: `true` indicates toxic content was detected in the prompt
 - `response_detected.toxic_content`: Would be `true` if toxic content detected in response
 - `category`: Set to `"malicious"` when toxic content is found
@@ -81,24 +82,28 @@ When toxic content is detected, the API returns:
 ## Detection Categories
 
 ### Violence & Threats
+
 - Physical violence or threats of harm
 - Self-harm or suicide content
 - Terrorism or extremist content
 - Weapons or dangerous instructions
 
 ### Hate Speech & Discrimination
+
 - Racial, ethnic, or religious discrimination
 - Gender-based hate or harassment
 - LGBTQ+ discrimination
 - Disability-based discrimination
 
 ### Adult & Sexual Content
+
 - Explicit sexual content
 - Sexual harassment
 - Child safety violations
 - Non-consensual content
 
 ### Illegal Activities
+
 - Drug trafficking or illegal substances
 - Financial fraud or scams
 - Hacking or unauthorized access
@@ -107,16 +112,19 @@ When toxic content is detected, the API returns:
 ## Use Cases
 
 ### Content Moderation
+
 - Filter inappropriate user inputs
 - Prevent generation of harmful content
 - Maintain platform safety standards
 
 ### Brand Protection
+
 - Ensure AI responses align with values
 - Prevent reputational damage
 - Maintain professional communication
 
 ### Compliance
+
 - Meet regulatory requirements
 - Enforce community guidelines
 - Protect vulnerable users

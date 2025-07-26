@@ -24,4 +24,4 @@ Welcome to the Prisma AIRS MCP deployment documentation. This section covers eve
 
 - [Getting Started]({{ site.baseurl }}/deployment/quickstart) - Quick installation guide
 - [Quick Start Tutorial]({{ site.baseurl }}/deployment/quickstart) - Get running in 5 minutes
-- [Claude Integration]({{ site.baseurl }}/deployment/claude-desktop) - Connect to Claude Desktop
+- [Claude Integration]({{ site.baseurl }}/deployment/mcp/claude-desktop) - Connect to Claude Desktop

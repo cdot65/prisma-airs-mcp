@@ -1,7 +1,7 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import type { Request, Response } from 'express';
 import express from 'express';
-import type { JsonRpcRequest, JsonRpcResponse, StreamableRequest } from './transport/http.js';
+import type { TransportJsonRpcRequest, TransportJsonRpcResponse, TransportStreamableRequest } from './types';
 import { HttpServerTransport } from './transport/http.js';
 import cors from 'cors';
 import { getConfig } from './config';
@@ -76,8 +76,8 @@ const createServer = (): void => {
     // Main MCP endpoint - handles JSON-RPC 2.0 messages with optional SSE streaming
     app.post(
         '/',
-        async (req: Request<unknown, unknown, JsonRpcRequest>, res: Response<JsonRpcResponse>) => {
-            await transport.handleRequest(req as StreamableRequest, res);
+        async (req: Request<unknown, unknown, TransportJsonRpcRequest>, res: Response<TransportJsonRpcResponse>) => {
+            await transport.handleRequest(req as TransportStreamableRequest, res);
         },
     );
 
@@ -87,7 +87,7 @@ const createServer = (): void => {
 
         if (acceptHeader.includes('text/event-stream')) {
             // Handle SSE connection
-            transport.handleSSEConnection(req as StreamableRequest, res);
+            transport.handleSSEConnection(req as TransportStreamableRequest, res);
         } else {
             // Return server information for non-SSE requests
             res.json({

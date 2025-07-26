@@ -38,7 +38,7 @@ Welcome to the Prisma AIRS MCP deployment documentation. Choose the deployment m
 ## Quick Comparison
 
 | Method             | Best For                  | Setup Time | Scalability     | Customization |
-|--------------------|---------------------------|------------|-----------------|---------------|
+| ------------------ | ------------------------- | ---------- | --------------- | ------------- |
 | **Docker**         | Development, Testing      | 5 minutes  | Single instance | Moderate      |
 | **Docker Compose** | Local Dev w/ Dependencies | 7 minutes  | Multi-container | Moderate      |
 | **Source**         | Development, Debugging    | 10 minutes | Single instance | Full          |
@@ -98,19 +98,19 @@ All deployment methods provide:
 For production deployments:
 
 1. **Security**
-   - Use secrets management (not plain text)
-   - Enable TLS/HTTPS
-   - Implement network policies
+    - Use secrets management (not plain text)
+    - Enable TLS/HTTPS
+    - Implement network policies
 
 2. **Reliability**
-   - Configure health checks
-   - Set up monitoring
-   - Plan for high availability
+    - Configure health checks
+    - Set up monitoring
+    - Plan for high availability
 
 3. **Performance**
-   - Tune cache settings
-   - Configure rate limits
-   - Monitor resource usage
+    - Tune cache settings
+    - Configure rate limits
+    - Monitor resource usage
 
 ## Configuration
 
@@ -129,9 +129,9 @@ Before deploying, ensure you have:
 
 1. **Prisma AIRS API Key**: Obtain from [Strata Cloud Manager](https://stratacloudmanager.paloaltonetworks.com)
 2. **System Requirements**:
-   - Node.js 18+ (for source builds)
-   - Docker (for containerized deployments)
-   - Kubernetes 1.24+ (for K8s deployments)
+    - Node.js 18+ (for source builds)
+    - Docker (for containerized deployments)
+    - Kubernetes 1.24+ (for K8s deployments)
 3. **Network Access**: Outbound HTTPS to `service.api.aisecurity.paloaltonetworks.com`
 
 ## Next Steps
@@ -139,7 +139,7 @@ Before deploying, ensure you have:
 1. Choose your deployment method from the guides above
 2. Review the [Configuration Reference]({{ site.baseurl }}/deployment/configuration)
 3. Follow the [Quick Start Guide]({{ site.baseurl }}/deployment/quickstart) to test your deployment
-4. Set up [Claude Integration]({{ site.baseurl }}/deployment/claude-desktop) to use with Claude Desktop
+4. Set up [Claude Integration]({{ site.baseurl }}/deployment/mcp/claude-desktop) to use with Claude Desktop
 
 ## Need Help?
 

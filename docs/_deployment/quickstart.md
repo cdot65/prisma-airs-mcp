@@ -15,9 +15,9 @@ Before you begin, you'll need:
 
 - **Prisma AIRS API key** from [Strata Cloud Manager](https://stratacloudmanager.paloaltonetworks.com)
 - **One of the following** depending on your deployment method:
-  - Docker (for containerized deployment)
-  - Node.js 18+ and pnpm/npm (for source deployment)
-  - Kubernetes cluster (for production deployment)
+    - Docker (for containerized deployment)
+    - Node.js 18+ and pnpm/npm (for source deployment)
+    - Kubernetes cluster (for production deployment)
 
 ## Quick Start Options
 
@@ -174,7 +174,7 @@ RATE_LIMIT_MAX_REQUESTS=100
 2. Configure MCP integration
 3. Start using Prisma AIRS security features
 
-**[Claude Integration Guide →]({{ site.baseurl }}/deployment/claude-desktop)**
+**[Claude Integration Guide →]({{ site.baseurl }}/deployment/mcp/claude-desktop)**
 
 ### Deployment Guides
 

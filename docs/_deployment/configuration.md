@@ -25,7 +25,7 @@ These settings must be configured for the server to start:
 ### AIRS API Settings
 
 | Variable       | Description              | Example                                               |
-|----------------|--------------------------|-------------------------------------------------------|
+| -------------- | ------------------------ | ----------------------------------------------------- |
 | `AIRS_API_URL` | Prisma AIRS API endpoint | `https://service.api.aisecurity.paloaltonetworks.com` |
 | `AIRS_API_KEY` | Your Prisma AIRS API key | `your-api-key-here`                                   |
 
@@ -34,7 +34,7 @@ These settings must be configured for the server to start:
 You must specify either a profile name OR profile ID (not both):
 
 | Variable                    | Description                | Example                                |
-|-----------------------------|----------------------------|----------------------------------------|
+| --------------------------- | -------------------------- | -------------------------------------- |
 | `AIRS_DEFAULT_PROFILE_NAME` | Profile name to use        | `Prisma AIRS`                          |
 | `AIRS_DEFAULT_PROFILE_ID`   | Profile UUID (alternative) | `123e4567-e89b-12d3-a456-426614174000` |
 
@@ -45,7 +45,7 @@ You must specify either a profile name OR profile ID (not both):
 ### Basic Settings
 
 | Variable    | Description       | Default      | Valid Values                        |
-|-------------|-------------------|--------------|-------------------------------------|
+| ----------- | ----------------- | ------------ | ----------------------------------- |
 | `PORT`      | Server port       | `3000`       | Any valid port number               |
 | `NODE_ENV`  | Environment mode  | `production` | `development`, `production`, `test` |
 | `LOG_LEVEL` | Logging verbosity | `info`       | `debug`, `info`, `warn`, `error`    |
@@ -53,7 +53,7 @@ You must specify either a profile name OR profile ID (not both):
 ### Advanced Settings
 
 | Variable              | Description                | Default |
-|-----------------------|----------------------------|---------|
+| --------------------- | -------------------------- | ------- |
 | `SHUTDOWN_TIMEOUT_MS` | Graceful shutdown timeout  | `30000` |
 | `REQUEST_TIMEOUT_MS`  | Request processing timeout | `30000` |
 | `BODY_SIZE_LIMIT`     | Maximum request body size  | `1mb`   |
@@ -63,7 +63,7 @@ You must specify either a profile name OR profile ID (not both):
 Control the in-memory cache behavior:
 
 | Variable                     | Description           | Default | Range     |
-|------------------------------|-----------------------|---------|-----------|
+| ---------------------------- | --------------------- | ------- | --------- |
 | `CACHE_TTL_SECONDS`          | Cache time-to-live    | `300`   | 60-3600   |
 | `CACHE_MAX_SIZE`             | Maximum cache entries | `1000`  | 100-10000 |
 | `CACHE_CHECK_PERIOD_SECONDS` | Cleanup interval      | `60`    | 30-300    |
@@ -89,7 +89,7 @@ CACHE_MAX_SIZE=1000
 Protect against abuse and ensure fair usage:
 
 | Variable                              | Description                    | Default |
-|---------------------------------------|--------------------------------|---------|
+| ------------------------------------- | ------------------------------ | ------- |
 | `RATE_LIMIT_MAX_REQUESTS`             | Maximum requests per window    | `100`   |
 | `RATE_LIMIT_WINDOW_MS`                | Time window in milliseconds    | `60000` |
 | `RATE_LIMIT_SKIP_SUCCESSFUL_REQUESTS` | Only count failed requests     | `false` |
@@ -116,7 +116,7 @@ RATE_LIMIT_WINDOW_MS=60000
 Fine-tune the AIRS API client behavior:
 
 | Variable                  | Description                | Default |
-|---------------------------|----------------------------|---------|
+| ------------------------- | -------------------------- | ------- |
 | `AIRS_RETRY_ATTEMPTS`     | Number of retry attempts   | `3`     |
 | `AIRS_RETRY_DELAY_MS`     | Initial retry delay        | `1000`  |
 | `AIRS_RETRY_MAX_DELAY_MS` | Maximum retry delay        | `30000` |
@@ -142,7 +142,7 @@ AIRS_RETRY_MAX_DELAY_MS=60000
 ### CORS Settings
 
 | Variable           | Description       | Default            |
-|--------------------|-------------------|--------------------|
+| ------------------ | ----------------- | ------------------ |
 | `CORS_ENABLED`     | Enable CORS       | `true`             |
 | `CORS_ORIGIN`      | Allowed origins   | `*`                |
 | `CORS_METHODS`     | Allowed methods   | `GET,POST,OPTIONS` |
@@ -151,7 +151,7 @@ AIRS_RETRY_MAX_DELAY_MS=60000
 ### Security Headers
 
 | Variable             | Description                 | Default |
-|----------------------|-----------------------------|---------|
+| -------------------- | --------------------------- | ------- |
 | `HELMET_ENABLED`     | Enable security headers     | `true`  |
 | `TRUST_PROXY`        | Trust proxy headers         | `true`  |
 | `ENABLE_COMPRESSION` | Enable response compression | `true`  |
@@ -214,30 +214,32 @@ SHUTDOWN_TIMEOUT_MS=30000
 For Kubernetes deployments, use ConfigMaps and Secrets:
 
 **ConfigMap** (`configmap.yaml`):
+
 ```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: prisma-airs-config
+    name: prisma-airs-config
 data:
-  NODE_ENV: "production"
-  PORT: "3000"
-  LOG_LEVEL: "info"
-  AIRS_API_URL: "https://service.api.aisecurity.paloaltonetworks.com"
-  CACHE_TTL_SECONDS: "300"
-  RATE_LIMIT_MAX_REQUESTS: "100"
+    NODE_ENV: 'production'
+    PORT: '3000'
+    LOG_LEVEL: 'info'
+    AIRS_API_URL: 'https://service.api.aisecurity.paloaltonetworks.com'
+    CACHE_TTL_SECONDS: '300'
+    RATE_LIMIT_MAX_REQUESTS: '100'
 ```
 
 **Secret** (`secret.yaml`):
+
 ```yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: prisma-airs-secret
+    name: prisma-airs-secret
 type: Opaque
 stringData:
-  api-key: "your-api-key-here"
-  profile-name: "Prisma AIRS"
+    api-key: 'your-api-key-here'
+    profile-name: 'Prisma AIRS'
 ```
 
 ## Environment-Specific Settings
@@ -245,20 +247,22 @@ stringData:
 ### Docker Compose
 
 In `docker-compose.yml`:
+
 ```yaml
 services:
-  prod:
-    environment:
-      - NODE_ENV=production
-      - PORT=3000
-      - LOG_LEVEL=info
-    env_file:
-      - .env
+    prod:
+        environment:
+            - NODE_ENV=production
+            - PORT=3000
+            - LOG_LEVEL=info
+        env_file:
+            - .env
 ```
 
 ### Systemd
 
 In service file:
+
 ```ini
 [Service]
 Environment="NODE_ENV=production"
@@ -269,20 +273,23 @@ EnvironmentFile=/etc/prisma-airs-mcp/.env
 ### PM2
 
 In `ecosystem.config.js`:
+
 ```javascript
 module.exports = {
-  apps: [{
-    name: 'prisma-airs-mcp',
-    env: {
-      NODE_ENV: 'production',
-      PORT: 3000
-    },
-    env_production: {
-      NODE_ENV: 'production',
-      LOG_LEVEL: 'info'
-    }
-  }]
-}
+    apps: [
+        {
+            name: 'prisma-airs-mcp',
+            env: {
+                NODE_ENV: 'production',
+                PORT: 3000,
+            },
+            env_production: {
+                NODE_ENV: 'production',
+                LOG_LEVEL: 'info',
+            },
+        },
+    ],
+};
 ```
 
 ## Validation
@@ -301,33 +308,34 @@ Error: Invalid configuration
 ### Security
 
 1. **Never commit secrets to version control**
-   ```bash
-   # .gitignore
-   .env
-   .env.*
-   !.env.example
-   ```
+
+    ```bash
+    # .gitignore
+    .env
+    .env.*
+    !.env.example
+    ```
 
 2. **Use secret management tools**
-   - Kubernetes Secrets
-   - AWS Secrets Manager
-   - HashiCorp Vault
-   - Azure Key Vault
+    - Kubernetes Secrets
+    - AWS Secrets Manager
+    - HashiCorp Vault
+    - Azure Key Vault
 
 3. **Rotate API keys regularly**
 
 ### Performance
 
 1. **Tune cache settings based on usage**
-   - High-traffic: Increase TTL and size
-   - Frequent updates: Decrease TTL
+    - High-traffic: Increase TTL and size
+    - Frequent updates: Decrease TTL
 
 2. **Monitor rate limits**
-   - Adjust based on actual usage
-   - Consider per-user limits
+    - Adjust based on actual usage
+    - Consider per-user limits
 
 3. **Set appropriate timeouts**
-   - Balance between reliability and responsiveness
+    - Balance between reliability and responsiveness
 
 ### Reliability
 
@@ -355,7 +363,7 @@ AIRS_API_KEY=test PORT=3001 npm start
 Common issues and solutions:
 
 | Error                    | Solution                         |
-|--------------------------|----------------------------------|
+| ------------------------ | -------------------------------- |
 | "AIRS_API_KEY: Required" | Set the API key in environment   |
 | "Invalid port number"    | Use a number between 1-65535     |
 | "Profile not found"      | Check profile name/ID is correct |
@@ -363,6 +371,7 @@ Common issues and solutions:
 ### Debug Configuration
 
 Enable debug logging to see configuration:
+
 ```bash
 LOG_LEVEL=debug npm start
 ```

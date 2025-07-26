@@ -1,174 +1,167 @@
 import type { Response } from 'express';
 import type { Logger } from 'winston';
-import type { JsonRpcResponse } from './http.js';
-
-export interface SSEMessage {
-  id?: string;
-  event?: string;
-  data: string;
-  retry?: number;
-}
+import type { TransportJsonRpcResponse, TransportSSEMessage } from '../types';
 
 export class SSETransport {
-  private clients: Map<string, Response> = new Map();
-  private messageId = 0;
+    private clients: Map<string, Response> = new Map();
+    private messageId = 0;
 
-  constructor(private logger: Logger) {}
+    constructor(private logger: Logger) {}
 
-  /**
-   * Initialize SSE connection
-   */
-  initializeSSE(res: Response, clientId: string): void {
-    // Set SSE headers
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.setHeader('X-Accel-Buffering', 'no'); // Disable Nginx buffering
+    /**
+     * Initialize SSE connection
+     */
+    initializeSSE(res: Response, clientId: string): void {
+        // Set SSE headers
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+        res.setHeader('X-Accel-Buffering', 'no'); // Disable Nginx buffering
 
-    // Store client connection
-    this.clients.set(clientId, res);
+        // Store client connection
+        this.clients.set(clientId, res);
 
-    // Send initial connection event
-    this.sendEvent(clientId, {
-      event: 'connect',
-      data: JSON.stringify({ connected: true }),
-    });
+        // Send initial connection event
+        this.sendEvent(clientId, {
+            event: 'connect',
+            data: JSON.stringify({ connected: true }),
+        });
 
-    // Handle client disconnect
-    res.on('close', () => {
-      this.logger.debug('SSE client disconnected', { clientId });
-      this.clients.delete(clientId);
-    });
-  }
-
-  /**
-   * Send an SSE event to a specific client
-   */
-  sendEvent(clientId: string, message: SSEMessage): boolean {
-    const res = this.clients.get(clientId);
-    if (!res) {
-      this.logger.warn('Attempted to send to disconnected client', { clientId });
-      return false;
+        // Handle client disconnect
+        res.on('close', () => {
+            this.logger.debug('SSE client disconnected', { clientId });
+            this.clients.delete(clientId);
+        });
     }
 
-    try {
-      // Format SSE message
-      const lines: string[] = [];
+    /**
+     * Send an SSE event to a specific client
+     */
+    sendEvent(clientId: string, message: TransportSSEMessage): boolean {
+        const res = this.clients.get(clientId);
+        if (!res) {
+            this.logger.warn('Attempted to send to disconnected client', { clientId });
+            return false;
+        }
 
-      if (message.id) {
-        lines.push(`id: ${message.id}`);
-      }
+        try {
+            // Format SSE message
+            const lines: string[] = [];
 
-      if (message.event) {
-        lines.push(`event: ${message.event}`);
-      }
+            if (message.id) {
+                lines.push(`id: ${message.id}`);
+            }
 
-      if (message.retry) {
-        lines.push(`retry: ${message.retry}`);
-      }
+            if (message.event) {
+                lines.push(`event: ${message.event}`);
+            }
 
-      // Split data by newlines and prefix each line
-      const dataLines = message.data.split('\n');
-      dataLines.forEach((line) => {
-        lines.push(`data: ${line}`);
-      });
+            if (message.retry) {
+                lines.push(`retry: ${message.retry}`);
+            }
 
-      // SSE messages end with double newline
-      const sseMessage = lines.join('\n') + '\n\n';
+            // Split data by newlines and prefix each line
+            const dataLines = message.data.split('\n');
+            dataLines.forEach((line) => {
+                lines.push(`data: ${line}`);
+            });
 
-      res.write(sseMessage);
+            // SSE messages end with double newline
+            const sseMessage = lines.join('\n') + '\n\n';
 
-      return true;
-    } catch (error) {
-      this.logger.error('Failed to send SSE event', {
-        clientId,
-        error: error instanceof Error ? error.message : String(error),
-      });
-      this.clients.delete(clientId);
-      return false;
+            res.write(sseMessage);
+
+            return true;
+        } catch (error) {
+            this.logger.error('Failed to send SSE event', {
+                clientId,
+                error: error instanceof Error ? error.message : String(error),
+            });
+            this.clients.delete(clientId);
+            return false;
+        }
     }
-  }
 
-  /**
-   * Send JSON-RPC response via SSE
-   */
-  sendJsonRpcResponse(clientId: string, response: JsonRpcResponse): boolean {
-    const messageId = String(++this.messageId);
+    /**
+     * Send JSON-RPC response via SSE
+     */
+    sendJsonRpcResponse(clientId: string, response: TransportJsonRpcResponse): boolean {
+        const messageId = String(++this.messageId);
 
-    return this.sendEvent(clientId, {
-      id: messageId,
-      event: 'message',
-      data: JSON.stringify(response),
-    });
-  }
-
-  /**
-   * Send server notification via SSE
-   */
-  sendNotification(clientId: string, method: string, params?: unknown): boolean {
-    const notification = {
-      jsonrpc: '2.0' as const,
-      method,
-      params,
-    };
-
-    return this.sendEvent(clientId, {
-      event: 'notification',
-      data: JSON.stringify(notification),
-    });
-  }
-
-  /**
-   * Broadcast a message to all connected clients
-   */
-  broadcast(message: SSEMessage): void {
-    const disconnectedClients: string[] = [];
-
-    this.clients.forEach((_, clientId) => {
-      if (!this.sendEvent(clientId, message)) {
-        disconnectedClients.push(clientId);
-      }
-    });
-
-    // Clean up disconnected clients
-    disconnectedClients.forEach((clientId) => {
-      this.clients.delete(clientId);
-    });
-  }
-
-  /**
-   * Check if a client is connected
-   */
-  isConnected(clientId: string): boolean {
-    return this.clients.has(clientId);
-  }
-
-  /**
-   * Get number of connected clients
-   */
-  getClientCount(): number {
-    return this.clients.size;
-  }
-
-  /**
-   * Disconnect a client
-   */
-  disconnect(clientId: string): void {
-    const res = this.clients.get(clientId);
-    if (res) {
-      res.end();
-      this.clients.delete(clientId);
+        return this.sendEvent(clientId, {
+            id: messageId,
+            event: 'message',
+            data: JSON.stringify(response),
+        });
     }
-  }
 
-  /**
-   * Disconnect all clients
-   */
-  disconnectAll(): void {
-    this.clients.forEach((res, clientId) => {
-      res.end();
-      this.logger.debug('Disconnected SSE client', { clientId });
-    });
-    this.clients.clear();
-  }
+    /**
+     * Send server notification via SSE
+     */
+    sendNotification(clientId: string, method: string, params?: unknown): boolean {
+        const notification = {
+            jsonrpc: '2.0' as const,
+            method,
+            params,
+        };
+
+        return this.sendEvent(clientId, {
+            event: 'notification',
+            data: JSON.stringify(notification),
+        });
+    }
+
+    /**
+     * Broadcast a message to all connected clients
+     */
+    broadcast(message: TransportSSEMessage): void {
+        const disconnectedClients: string[] = [];
+
+        this.clients.forEach((_, clientId) => {
+            if (!this.sendEvent(clientId, message)) {
+                disconnectedClients.push(clientId);
+            }
+        });
+
+        // Clean up disconnected clients
+        disconnectedClients.forEach((clientId) => {
+            this.clients.delete(clientId);
+        });
+    }
+
+    /**
+     * Check if a client is connected
+     */
+    isConnected(clientId: string): boolean {
+        return this.clients.has(clientId);
+    }
+
+    /**
+     * Get number of connected clients
+     */
+    getClientCount(): number {
+        return this.clients.size;
+    }
+
+    /**
+     * Disconnect a client
+     */
+    disconnect(clientId: string): void {
+        const res = this.clients.get(clientId);
+        if (res) {
+            res.end();
+            this.clients.delete(clientId);
+        }
+    }
+
+    /**
+     * Disconnect all clients
+     */
+    disconnectAll(): void {
+        this.clients.forEach((res, clientId) => {
+            res.end();
+            this.logger.debug('Disconnected SSE client', { clientId });
+        });
+        this.clients.clear();
+    }
 }

@@ -64,25 +64,26 @@
     <li><a href="/deployment/quickstart/" >Quick Start Guide</a></li>
   </ul>
   
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="/deployment/configuration/" >Configuration Reference</a></li>
+  </ul>
+  
   <h4>Deployment Documentation</h4>
   <ul>
     <li><a href="/deployment/docker/" >Docker</a></li>
     <li><a href="/deployment/docker-compose/" >Docker Compose</a></li>
     <li><a href="/deployment/source/" >Build from Source</a></li>
     <li><a href="/deployment/kubernetes/" >Kubernetes</a></li>
-  </ul>
-  
-  <h4>Configuration</h4>
-  <ul>
-    <li><a href="/deployment/configuration/" >Configuration Reference</a></li>
-  </ul>
-  
-  <h4>Additional</h4>
-  <ul>
     <li><a href="/deployment/docker-build-options/" class="active">Docker Build Options</a></li>
-    <li><a href="/deployment/vscode/" >VSCode</a></li>
-    <li><a href="/deployment/claude-desktop/" >Claude Desktop</a></li>
-    <li><a href="/deployment/claude-code/" >Claude Code</a></li>
+  </ul>
+  
+  <h4>MCP Client Config</h4>
+  <ul>
+    <li><a href="/deployment/mcp/" >Overview</a></li>
+    <li><a href="/deployment/mcp/vscode/" >Visual Studio Code</a></li>
+    <li><a href="/deployment/mcp/claude-desktop/" >Claude Desktop</a></li>
+    <li><a href="/deployment/mcp/claude-code/" >Claude Code</a></li>
   </ul>
 </nav>
 
@@ -247,19 +248,24 @@ pnpm run docker:build:prod
 <p>For developers on Apple Silicon Macs:</p>
 
 <ol>
-  <li><strong>Local Development</strong>:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Use native ARM64 build for best performance</span>
-pnpm run docker:build:dev
+  <li>
+    <p><strong>Local Development</strong>:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Use native ARM64 build for best performance</span>
+ pnpm run docker:build:dev
 </code></pre></div>    </div>
   </li>
-  <li><strong>Testing AMD64 Compatibility</strong>:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build AMD64 image (will use emulation)</span>
-pnpm run docker:build:amd64
+  <li>
+    <p><strong>Testing AMD64 Compatibility</strong>:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Build AMD64 image (will use emulation)</span>
+ pnpm run docker:build:amd64
 </code></pre></div>    </div>
   </li>
-  <li><strong>Using Pre-built Images</strong>:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Dev tag supports both architectures</span>
-docker pull ghcr.io/cdot65/prisma-airs-mcp:dev
+  <li>
+    <p><strong>Using Pre-built Images</strong>:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Dev tag supports both architectures</span>
+ docker pull ghcr.io/cdot65/prisma-airs-mcp:dev
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -491,22 +497,27 @@ docker push ghcr.io/cdot65/prisma-airs-mcp:latest
 <h3 id="optimization-tips">Optimization Tips</h3>
 
 <ol>
-  <li><strong>Use .dockerignore</strong>:
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>node_modules
-dist
-.git
-*.log
-.env
+  <li>
+    <p><strong>Use .dockerignore</strong>:</p>
+
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> node_modules
+ dist
+ .git
+ *.log
+ .env
 </code></pre></div>    </div>
   </li>
-  <li><strong>Leverage Build Cache</strong>:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Use cache from registry</span>
-docker build <span class="nt">--cache-from</span> ghcr.io/cdot65/prisma-airs-mcp:latest <span class="nb">.</span>
+  <li>
+    <p><strong>Leverage Build Cache</strong>:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Use cache from registry</span>
+ docker build <span class="nt">--cache-from</span> ghcr.io/cdot65/prisma-airs-mcp:latest <span class="nb">.</span>
 </code></pre></div>    </div>
   </li>
-  <li><strong>Parallel Builds</strong>:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build multiple platforms in parallel</span>
-docker buildx build <span class="nt">--platform</span> linux/amd64,linux/arm64 <span class="nb">.</span>
+  <li>
+    <p><strong>Parallel Builds</strong>:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Build multiple platforms in parallel</span>
+ docker buildx build <span class="nt">--platform</span> linux/amd64,linux/arm64 <span class="nb">.</span>
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -559,21 +570,21 @@ docker buildx <span class="nb">ls
 <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build and push</span>
   <span class="na">uses</span><span class="pi">:</span> <span class="s">docker/build-push-action@v4</span>
   <span class="na">with</span><span class="pi">:</span>
-    <span class="na">context</span><span class="pi">:</span> <span class="s">.</span>
-    <span class="na">platforms</span><span class="pi">:</span> <span class="s">linux/amd64,linux/arm64</span>
-    <span class="na">push</span><span class="pi">:</span> <span class="no">true</span>
-    <span class="na">tags</span><span class="pi">:</span> <span class="pi">|</span>
-      <span class="s">ghcr.io/cdot65/prisma-airs-mcp:latest</span>
-      <span class="s">ghcr.io/cdot65/prisma-airs-mcp:$</span>
+      <span class="na">context</span><span class="pi">:</span> <span class="s">.</span>
+      <span class="na">platforms</span><span class="pi">:</span> <span class="s">linux/amd64,linux/arm64</span>
+      <span class="na">push</span><span class="pi">:</span> <span class="no">true</span>
+      <span class="na">tags</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">ghcr.io/cdot65/prisma-airs-mcp:latest</span>
+          <span class="s">ghcr.io/cdot65/prisma-airs-mcp:$</span>
 </code></pre></div></div>
 
 <h3 id="gitlab-ci">GitLab CI</h3>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">docker-build</span><span class="pi">:</span>
-  <span class="na">stage</span><span class="pi">:</span> <span class="s">build</span>
-  <span class="na">script</span><span class="pi">:</span>
-    <span class="pi">-</span> <span class="s">docker buildx create --use</span>
-    <span class="pi">-</span> <span class="s">docker buildx build --platform linux/amd64,linux/arm64 --push -t $CI_REGISTRY_IMAGE:latest .</span>
+    <span class="na">stage</span><span class="pi">:</span> <span class="s">build</span>
+    <span class="na">script</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s">docker buildx create --use</span>
+        <span class="pi">-</span> <span class="s">docker buildx build --platform linux/amd64,linux/arm64 --push -t $CI_REGISTRY_IMAGE:latest .</span>
 </code></pre></div></div>
 
 <h2 id="security-scanning">Security Scanning</h2>

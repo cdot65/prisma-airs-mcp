@@ -52,6 +52,7 @@ For comprehensive implementation details, configuration options, and advanced us
 **📚 [Official Documentation](https://cdot65.github.io/prisma-airs-mcp)**
 
 The documentation includes:
+
 - Detailed setup instructions
 - Configuration examples
 - API reference
@@ -75,6 +76,7 @@ We welcome contributions! Please refer to our documentation site for contributio
 ## Support
 
 For support and questions, please:
+
 1. Check the [official documentation](https://cdot65.github.io/prisma-airs-mcp)
 2. Open an issue in this repository
 3. Review existing discussions and issues

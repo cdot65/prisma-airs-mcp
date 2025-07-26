@@ -66,23 +66,24 @@ When a malicious URL is detected, the API returns:
 
 ```json
 {
-  "action": "block",
-  "category": "malicious",
-  "profile_id": "00000000-0000-0000-0000-000000000000",
-  "profile_name": "dummy-profile",
-  "prompt_detected": {},
-  "report_id": "R00000000-0000-0000-0000-000000000000",
-  "response_detected": {
-    "db_security": false,
-    "dlp": false,
-    "url_cats": true
-  },
-  "scan_id": "00000000-0000-0000-0000-000000000000",
-  "tr_id": "1234"
+    "action": "block",
+    "category": "malicious",
+    "profile_id": "00000000-0000-0000-0000-000000000000",
+    "profile_name": "dummy-profile",
+    "prompt_detected": {},
+    "report_id": "R00000000-0000-0000-0000-000000000000",
+    "response_detected": {
+        "db_security": false,
+        "dlp": false,
+        "url_cats": true
+    },
+    "scan_id": "00000000-0000-0000-0000-000000000000",
+    "tr_id": "1234"
 }
 ```
 
 **Key Response Fields**:
+
 - `response_detected.url_cats`: `true` indicates malicious URL was detected
 - `category`: Set to `"malicious"` when threat URL is found
 - `action`: The recommended action (e.g., `"block"`)
@@ -93,16 +94,19 @@ When a malicious URL is detected, the API returns:
 ## Common Threat Patterns
 
 ### Phishing URLs
+
 - Typosquatted domains mimicking legitimate services
 - Fake login pages for credential harvesting
 - Deceptive URLs using homograph attacks
 
 ### Malware Distribution
+
 - Direct download links to executables
 - Drive-by download sites
 - Compromised legitimate sites
 
 ### URL Obfuscation
+
 - Shortened URLs hiding malicious destinations
 - Encoded URLs to bypass filters
 - Redirect chains to malicious sites

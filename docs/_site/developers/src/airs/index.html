@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIRS Module (src/airs/) | Prisma AIRS MCP</title>
+  <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
+  
+  <!-- SEO Tags -->
+  <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>AIRS Module (src/airs/) | Prisma AIRS MCP</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="AIRS Module (src/airs/)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="AIRS Module Documentation" />
+<meta property="og:description" content="AIRS Module Documentation" />
+<link rel="canonical" href="http://localhost:4000/developers/src/airs/" />
+<meta property="og:url" content="http://localhost:4000/developers/src/airs/" />
+<meta property="og:site_name" content="Prisma AIRS MCP" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="AIRS Module (src/airs/)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"AIRS Module Documentation","headline":"AIRS Module (src/airs/)","url":"http://localhost:4000/developers/src/airs/"}</script>
+<!-- End Jekyll SEO tag -->
+
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Rouge syntax highlighting is handled by Jekyll -->
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <a href="/" class="navbar-logo">
+          <i class="fas fa-shield-alt"></i>
+          Prisma AIRS MCP
+        </a>
+      </div>
+      <div class="navbar-menu">
+        <a href="/deployment" class="navbar-item ">Deployment</a>
+        <a href="/developers" class="navbar-item active">Developers</a>
+        <a href="/prisma-airs/overview" class="navbar-item ">Prisma AIRS</a>
+        <a href="https://github.com/cdot65/prisma-airs-mcp" class="navbar-item">
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="documentation-layout">
+    <aside class="sidebar">
+      
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="/developers/overview/" >Overview</a></li>
+  </ul>
+  
+  <h4>Source Code Documentation</h4>
+  <ul>
+    <li><a href="/developers/src/" >Root (src/)</a></li>
+    <li><a href="/developers/src/types/" >Types Module</a></li>
+    <li><a href="/developers/src/airs/" class="active">AIRS Module</a></li>
+    <li><a href="/developers/src/config/" >Configuration</a></li>
+    <li><a href="/developers/src/prompts/" >Prompts</a></li>
+    <li><a href="/developers/src/resources/" >Resources</a></li>
+    <li><a href="/developers/src/tools/" >Tools</a></li>
+    <li><a href="/developers/src/transport/" >Transport</a></li>
+    <li><a href="/developers/src/utils/" >Utilities</a></li>
+  </ul>
+  
+  <h4>API</h4>
+  <ul>
+    <li><a href="/developers/api/" >API Reference</a></li>
+  </ul>
+</nav>
+
+
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>
+    </aside>
+    
+    <main class="documentation-content">
+      <div class="content-header">
+        <h1>AIRS Module (src/airs/)</h1>
+        
+      </div>
+      
+      <article class="content">
+        <h1 id="airs-module-documentation">AIRS Module Documentation</h1>
+
+<p>The AIRS module provides a comprehensive client implementation for integrating with Prisma AI Runtime Security (AIRS) API. It features an enhanced client with caching and rate limiting, built on top of a robust base API client with retry logic and error handling.</p>
+
+<h2 id="module-overview">Module Overview</h2>
+
+<p>The AIRS module consists of five core files that work together to provide a production-ready API client:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>src/airs/
+├── client.ts        # Core REST API client with retry logic
+├── cache.ts         # LRU cache for API responses
+├── rate-limiter.ts  # Token bucket rate limiting
+├── index.ts         # Enhanced client orchestrating all features
+└── factory.ts       # Singleton factory for client instances
+</code></pre></div></div>
+
+<h2 id="architecture">Architecture</h2>
+
+<p>The module follows a layered architecture:</p>
+
+<ol>
+  <li><strong>Base Layer</strong> (<code class="language-plaintext highlighter-rouge">client.ts</code>) - Raw API communication</li>
+  <li><strong>Enhancement Layer</strong> (<code class="language-plaintext highlighter-rouge">cache.ts</code>, <code class="language-plaintext highlighter-rouge">rate-limiter.ts</code>) - Performance and reliability</li>
+  <li><strong>Orchestration Layer</strong> (<code class="language-plaintext highlighter-rouge">index.ts</code>) - Unified interface</li>
+  <li><strong>Factory Layer</strong> (<code class="language-plaintext highlighter-rouge">factory.ts</code>) - Instance management</li>
+</ol>
+
+<h2 id="type-system">Type System</h2>
+
+<p>All types are centralized in <code class="language-plaintext highlighter-rouge">src/types/airs.ts</code> with the <code class="language-plaintext highlighter-rouge">Airs</code> prefix:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span>
+    <span class="nx">AirsScanRequest</span><span class="p">,</span>
+    <span class="nx">AirsScanResponse</span><span class="p">,</span>
+    <span class="nx">AirsAsyncScanObject</span><span class="p">,</span>
+    <span class="nx">AirsEnhancedClientConfig</span>
+<span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="component-documentation">Component Documentation</h2>
+
+<h3 id="clientts---core-api-client">client.ts - Core API Client</h3>
+
+<p>The base client handles all HTTP communication with the AIRS API, including retry logic and error handling.</p>
+
+<h4 id="configuration">Configuration</h4>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AirsClientConfig</span> <span class="p">{</span>
+    <span class="nl">apiUrl</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>      <span class="c1">// AIRS API endpoint</span>
+    <span class="nl">apiKey</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>      <span class="c1">// Authentication token (x-pan-token)</span>
+    <span class="nl">timeout</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>    <span class="c1">// Request timeout (default: 30000ms)</span>
+    <span class="nl">maxRetries</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span> <span class="c1">// Retry attempts (default: 3)</span>
+    <span class="nl">retryDelay</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span> <span class="c1">// Initial retry delay (default: 1000ms)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="client-implementation">Client Implementation</h4>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">PrismaAirsClient</span> <span class="p">{</span>
+    <span class="kd">constructor</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AirsClientConfig</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Initialize axios instance with interceptors</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">api</span> <span class="o">=</span> <span class="nx">axios</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+            <span class="na">baseURL</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">,</span>
+            <span class="na">timeout</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">timeout</span> <span class="o">||</span> <span class="mi">30000</span><span class="p">,</span>
+            <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+                <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+                <span class="dl">'</span><span class="s1">x-pan-token</span><span class="dl">'</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">});</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Synchronous content scanning</span>
+    <span class="k">async</span> <span class="nx">scanSync</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">AirsScanRequest</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AirsScanResponse</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/v1/scan/sync/request</span><span class="dl">'</span><span class="p">,</span> <span class="nx">request</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Asynchronous batch scanning</span>
+    <span class="k">async</span> <span class="nx">scanAsync</span><span class="p">(</span><span class="nx">requests</span><span class="p">:</span> <span class="nx">AirsAsyncScanObject</span><span class="p">[]):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AirsAsyncScanResponse</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="dl">'</span><span class="s1">/v1/scan/async/request</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="nx">requests</span> <span class="p">});</span>
+        <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Retrieve scan results by IDs</span>
+    <span class="k">async</span> <span class="nx">getScanResults</span><span class="p">(</span><span class="nx">scanIds</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AirsScanIdResult</span><span class="p">[]</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/v1/scan/results</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">params</span><span class="p">:</span> <span class="p">{</span> <span class="na">scan_ids</span><span class="p">:</span> <span class="nx">scanIds</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">,</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+        <span class="p">});</span>
+        <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">scan_results</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Get detailed threat reports</span>
+    <span class="k">async</span> <span class="nx">getThreatScanReports</span><span class="p">(</span><span class="nx">reportIds</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AirsThreatScanReportObject</span><span class="p">[]</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">api</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/v1/scan/reports</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="na">params</span><span class="p">:</span> <span class="p">{</span> <span class="na">report_ids</span><span class="p">:</span> <span class="nx">reportIds</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">,</span><span class="dl">'</span><span class="p">)</span> <span class="p">}</span>
+        <span class="p">});</span>
+        <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">reports</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="error-handling">Error Handling</h4>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">PrismaAirsApiError</span> <span class="kd">extends</span> <span class="nb">Error</span> <span class="p">{</span>
+    <span class="kd">constructor</span><span class="p">(</span>
+        <span class="nx">message</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+        <span class="k">public</span> <span class="nx">statusCode</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span>
+        <span class="k">public</span> <span class="nx">response</span><span class="p">?:</span> <span class="nx">AirsErrorResponse</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">PrismaAirsApiError</span><span class="dl">'</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="cachets---response-caching">cache.ts - Response Caching</h3>
+
+<p>Implements an LRU (Least Recently Used) cache to reduce API calls and improve performance.</p>
+
+<h4 id="cache-configuration">Cache Configuration</h4>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AirsCacheConfig</span> <span class="p">{</span>
+    <span class="nl">ttlSeconds</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>   <span class="c1">// Time to live for cache entries</span>
+    <span class="nl">maxSize</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>      <span class="c1">// Maximum number of cached items</span>
+    <span class="nl">enabled</span><span class="p">?:</span> <span class="nx">boolean</span><span class="p">;</span>    <span class="c1">// Enable/disable caching</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="cache-implementation">Cache Implementation</h4>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">PrismaAirsCache</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="nx">cache</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">AirsCacheEntry</span><span class="o">&lt;</span><span class="nx">unknown</span><span class="o">&gt;&gt;</span><span class="p">();</span>
+    <span class="k">private</span> <span class="nx">accessOrder</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
+
+    <span class="c1">// Get cached value with automatic expiration</span>
+    <span class="kd">get</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nx">T</span> <span class="o">|</span> <span class="kc">null</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">entry</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">entry</span><span class="p">)</span> <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+        
+        <span class="c1">// Check expiration</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">&gt;</span> <span class="nx">entry</span><span class="p">.</span><span class="nx">expiresAt</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="k">delete</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// Update access order for LRU</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">updateAccessOrder</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+        <span class="nx">entry</span><span class="p">.</span><span class="nx">hits</span><span class="o">++</span><span class="p">;</span>
+        
+        <span class="k">return</span> <span class="nx">entry</span><span class="p">.</span><span class="nx">value</span> <span class="k">as</span> <span class="nx">T</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Set value with TTL</span>
+    <span class="kd">set</span><span class="o">&lt;</span><span class="nx">T</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">value</span><span class="p">:</span> <span class="nx">T</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+        <span class="c1">// Evict least recently used if at capacity</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">size</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">maxSize</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">evictLRU</span><span class="p">();</span>
+        <span class="p">}</span>
+        
+        <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="p">,</span>
+            <span class="na">expiresAt</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="o">+</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">ttlSeconds</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">),</span>
+            <span class="na">hits</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">});</span>
+        
+        <span class="k">this</span><span class="p">.</span><span class="nx">updateAccessOrder</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="cache-key-generation">Cache Key Generation</h4>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">PrismaAirsCache</span> <span class="p">{</span>
+    <span class="c1">// Generate deterministic cache keys</span>
+    <span class="k">static</span> <span class="nx">generateScanKey</span><span class="p">(</span><span class="kd">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">request</span><span class="p">:</span> <span class="nx">AirsScanRequest</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">hash</span> <span class="o">=</span> <span class="nx">crypto</span>
+            <span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="dl">'</span><span class="s1">sha256</span><span class="dl">'</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="kd">type</span><span class="p">,</span> <span class="nx">request</span> <span class="p">}))</span>
+            <span class="p">.</span><span class="nx">digest</span><span class="p">(</span><span class="dl">'</span><span class="s1">hex</span><span class="dl">'</span><span class="p">);</span>
+        <span class="k">return</span> <span class="s2">`scan:</span><span class="p">${</span><span class="kd">type</span><span class="p">}</span><span class="s2">:</span><span class="p">${</span><span class="nx">hash</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">)}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="nx">generateResultKey</span><span class="p">(</span><span class="kd">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">ids</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]):</span> <span class="kr">string</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">sortedIds</span> <span class="o">=</span> <span class="p">[...</span><span class="nx">ids</span><span class="p">].</span><span class="nx">sort</span><span class="p">();</span>
+        <span class="kd">const</span> <span class="nx">hash</span> <span class="o">=</span> <span class="nx">crypto</span>
+            <span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="dl">'</span><span class="s1">sha256</span><span class="dl">'</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span> <span class="kd">type</span><span class="p">,</span> <span class="na">ids</span><span class="p">:</span> <span class="nx">sortedIds</span> <span class="p">}))</span>
+            <span class="p">.</span><span class="nx">digest</span><span class="p">(</span><span class="dl">'</span><span class="s1">hex</span><span class="dl">'</span><span class="p">);</span>
+        <span class="k">return</span> <span class="s2">`</span><span class="p">${</span><span class="kd">type</span><span class="p">}</span><span class="s2">:</span><span class="p">${</span><span class="nx">hash</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">)}</span><span class="s2">`</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="rate-limiterts---api-rate-limiting">rate-limiter.ts - API Rate Limiting</h3>
+
+<p>Implements token bucket algorithm to prevent API quota exhaustion.</p>
+
+<h4 id="rate-limiter-configuration">Rate Limiter Configuration</h4>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AirsRateLimiterConfig</span> <span class="p">{</span>
+    <span class="nl">maxRequests</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>  <span class="c1">// Maximum requests per window</span>
+    <span class="nl">windowMs</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>     <span class="c1">// Time window in milliseconds</span>
+    <span class="nl">enabled</span><span class="p">?:</span> <span class="nx">boolean</span><span class="p">;</span>    <span class="c1">// Enable/disable rate limiting</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="token-bucket-implementation">Token Bucket Implementation</h4>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">PrismaAirsRateLimiter</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="nx">buckets</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Map</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">TokenBucket</span><span class="o">&gt;</span><span class="p">();</span>
+
+    <span class="c1">// Check if request is allowed</span>
+    <span class="nx">checkLimit</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">default</span><span class="dl">'</span><span class="p">):</span> <span class="nx">boolean</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">bucket</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getOrCreateBucket</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+        
+        <span class="c1">// Refill tokens based on time elapsed</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">refillTokens</span><span class="p">(</span><span class="nx">bucket</span><span class="p">);</span>
+        
+        <span class="c1">// Check if tokens available</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">bucket</span><span class="p">.</span><span class="nx">tokens</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">bucket</span><span class="p">.</span><span class="nx">tokens</span><span class="o">--</span><span class="p">;</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Wait until request is allowed</span>
+    <span class="k">async</span> <span class="nx">waitForLimit</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">default</span><span class="dl">'</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">checkLimit</span><span class="p">(</span><span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+            <span class="kd">const</span> <span class="nx">waitTime</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getWaitTime</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+            <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">sleep</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="nx">waitTime</span><span class="p">,</span> <span class="mi">1000</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Get current rate limit status</span>
+    <span class="nx">getStatus</span><span class="p">(</span><span class="nx">key</span><span class="p">:</span> <span class="kr">string</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">default</span><span class="dl">'</span><span class="p">):</span> <span class="nx">RateLimitStatus</span> <span class="p">{</span>
+        <span class="kd">const</span> <span class="nx">bucket</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">buckets</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="na">available</span><span class="p">:</span> <span class="nx">bucket</span><span class="p">?.</span><span class="nx">tokens</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">maxRequests</span><span class="p">,</span>
+            <span class="na">limit</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">maxRequests</span><span class="p">,</span>
+            <span class="na">resetAt</span><span class="p">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">bucket</span><span class="p">?.</span><span class="nx">lastRefill</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">config</span><span class="p">.</span><span class="nx">windowMs</span><span class="p">)</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="indexts---enhanced-client">index.ts - Enhanced Client</h3>
+
+<p>The enhanced client orchestrates the base client, cache, and rate limiter to provide a unified, production-ready interface.</p>
+
+<h4 id="enhanced-configuration">Enhanced Configuration</h4>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">AirsEnhancedClientConfig</span> <span class="kd">extends</span> <span class="nx">AirsClientConfig</span> <span class="p">{</span>
+    <span class="nl">cache</span><span class="p">?:</span> <span class="nx">AirsCacheConfig</span><span class="p">;</span>
+    <span class="nl">rateLimiter</span><span class="p">?:</span> <span class="nx">AirsRateLimiterConfig</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="enhanced-client-implementation">Enhanced Client Implementation</h4>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">EnhancedPrismaAirsClient</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">client</span><span class="p">:</span> <span class="nx">PrismaAirsClient</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">cache</span><span class="p">?:</span> <span class="nx">PrismaAirsCache</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">rateLimiter</span><span class="p">?:</span> <span class="nx">PrismaAirsRateLimiter</span><span class="p">;</span>
+
+    <span class="kd">constructor</span><span class="p">(</span><span class="nx">config</span><span class="p">:</span> <span class="nx">AirsEnhancedClientConfig</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PrismaAirsClient</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">cache</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">cache</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PrismaAirsCache</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">cache</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">rateLimiter</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">rateLimiter</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PrismaAirsRateLimiter</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">rateLimiter</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Scan with caching and rate limiting</span>
+    <span class="k">async</span> <span class="nx">scanSync</span><span class="p">(</span><span class="nx">request</span><span class="p">:</span> <span class="nx">AirsScanRequest</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AirsScanResponse</span><span class="o">&gt;</span> <span class="p">{</span>
+        <span class="c1">// Apply rate limiting</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rateLimiter</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">rateLimiter</span><span class="p">.</span><span class="nx">waitForLimit</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan</span><span class="dl">'</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Check cache</span>
+        <span class="kd">const</span> <span class="nx">cacheKey</span> <span class="o">=</span> <span class="nx">PrismaAirsCache</span><span class="p">.</span><span class="nx">generateScanKey</span><span class="p">(</span><span class="dl">'</span><span class="s1">sync</span><span class="dl">'</span><span class="p">,</span> <span class="nx">request</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">const</span> <span class="nx">cached</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">get</span><span class="o">&lt;</span><span class="nx">AirsScanResponse</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">cached</span><span class="p">)</span> <span class="k">return</span> <span class="nx">cached</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Make request</span>
+        <span class="kd">const</span> <span class="nx">response</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">.</span><span class="nx">scanSync</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
+
+        <span class="c1">// Cache response</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">cache</span> <span class="o">&amp;&amp;</span> <span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="nx">cacheKey</span><span class="p">,</span> <span class="nx">response</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nx">response</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Get performance statistics</span>
+    <span class="nx">getCacheStats</span><span class="p">():</span> <span class="nx">CacheStats</span> <span class="o">|</span> <span class="kc">null</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">cache</span><span class="p">?.</span><span class="nx">getStats</span><span class="p">()</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">getRateLimiterStats</span><span class="p">():</span> <span class="nx">RateLimiterStats</span> <span class="o">|</span> <span class="kc">null</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">rateLimiter</span><span class="p">?.</span><span class="nx">getStats</span><span class="p">()</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="factoryts---singleton-factory">factory.ts - Singleton Factory</h3>
+
+<p>Manages client instances using the singleton pattern to ensure consistent configuration and resource sharing.</p>
+
+<h4 id="factory-implementation">Factory Implementation</h4>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">PrismaAirsClientFactory</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="nx">instance</span><span class="p">:</span> <span class="nx">PrismaAirsClientFactory</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nx">client</span><span class="p">:</span> <span class="nx">EnhancedPrismaAirsClient</span> <span class="o">|</span> <span class="kc">null</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+    <span class="k">private</span> <span class="kd">constructor</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="k">static</span> <span class="nx">getInstance</span><span class="p">():</span> <span class="nx">PrismaAirsClientFactory</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">PrismaAirsClientFactory</span><span class="p">.</span><span class="nx">instance</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">PrismaAirsClientFactory</span><span class="p">.</span><span class="nx">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PrismaAirsClientFactory</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">PrismaAirsClientFactory</span><span class="p">.</span><span class="nx">instance</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">getClient</span><span class="p">(</span><span class="nx">config</span><span class="p">?:</span> <span class="nx">AirsEnhancedClientConfig</span><span class="p">):</span> <span class="nx">EnhancedPrismaAirsClient</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Configuration required for first client creation</span><span class="dl">'</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EnhancedPrismaAirsClient</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">client</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">resetClient</span><span class="p">():</span> <span class="k">void</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">client</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="usage-examples">Usage Examples</h2>
+
+<h3 id="basic-usage">Basic Usage</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">EnhancedPrismaAirsClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./airs</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">getConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./config</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EnhancedPrismaAirsClient</span><span class="p">({</span>
+    <span class="na">apiUrl</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">,</span>
+    <span class="na">apiKey</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">,</span>
+    <span class="na">cache</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">ttlSeconds</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span>
+        <span class="na">maxSize</span><span class="p">:</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="na">enabled</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">},</span>
+    <span class="na">rateLimiter</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">maxRequests</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="na">windowMs</span><span class="p">:</span> <span class="mi">60000</span><span class="p">,</span>
+        <span class="na">enabled</span><span class="p">:</span> <span class="kc">true</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// Scan content</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">scanSync</span><span class="p">({</span>
+    <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Check this user input</span><span class="dl">'</span><span class="p">,</span>
+    <span class="na">profile_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">strict</span><span class="dl">'</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="using-the-factory">Using the Factory</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">PrismaAirsClientFactory</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./airs/factory</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// Get singleton instance</span>
+<span class="kd">const</span> <span class="nx">factory</span> <span class="o">=</span> <span class="nx">PrismaAirsClientFactory</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+
+<span class="c1">// Get or create client</span>
+<span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">.</span><span class="nx">getClient</span><span class="p">({</span>
+    <span class="na">apiUrl</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_API_URL</span><span class="o">!</span><span class="p">,</span>
+    <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_API_KEY</span><span class="o">!</span>
+<span class="p">});</span>
+
+<span class="c1">// Use client across application</span>
+<span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">scanSync</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="monitoring-performance">Monitoring Performance</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Get cache statistics</span>
+<span class="kd">const</span> <span class="nx">cacheStats</span> <span class="o">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">getCacheStats</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Cache hit rate:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">cacheStats</span><span class="p">?.</span><span class="nx">hitRate</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Cache size:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">cacheStats</span><span class="p">?.</span><span class="nx">size</span><span class="p">);</span>
+
+<span class="c1">// Get rate limiter status</span>
+<span class="kd">const</span> <span class="nx">rateLimitStatus</span> <span class="o">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">getRateLimiterStats</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Available requests:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">rateLimitStatus</span><span class="p">?.</span><span class="nx">available</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Reset time:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">rateLimitStatus</span><span class="p">?.</span><span class="nx">resetAt</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h2 id="error-handling-1">Error Handling</h2>
+
+<h3 id="api-errors">API Errors</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">scanSync</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nx">PrismaAirsApiError</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">API Error:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">statusCode</span> <span class="o">===</span> <span class="mi">429</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// Rate limited by API</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Waiting for rate limit reset...</span><span class="dl">'</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="configuration-errors">Configuration Errors</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">.</span><span class="nx">getClient</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// No configuration provided for first client</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Client not configured:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="best-practices">Best Practices</h2>
+
+<h3 id="1-use-the-factory-pattern">1. Use the Factory Pattern</h3>
+
+<p>Always use the factory for consistent client instances:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">factory</span> <span class="o">=</span> <span class="nx">PrismaAirsClientFactory</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">.</span><span class="nx">getClient</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="2-configure-caching-appropriately">2. Configure Caching Appropriately</h3>
+
+<ul>
+  <li>Set TTL based on data freshness requirements</li>
+  <li>Size cache based on memory constraints</li>
+  <li>Monitor hit rates to optimize performance</li>
+</ul>
+
+<h3 id="3-implement-rate-limiting">3. Implement Rate Limiting</h3>
+
+<ul>
+  <li>Set limits below API quotas</li>
+  <li>Use different buckets for different operations</li>
+  <li>Monitor rate limit status proactively</li>
+</ul>
+
+<h3 id="4-handle-errors-gracefully">4. Handle Errors Gracefully</h3>
+
+<ul>
+  <li>Catch and handle specific error types</li>
+  <li>Implement retry logic for transient failures</li>
+  <li>Log errors with appropriate context</li>
+</ul>
+
+<h3 id="5-monitor-performance">5. Monitor Performance</h3>
+
+<ul>
+  <li>Track cache hit rates</li>
+  <li>Monitor rate limit utilization</li>
+  <li>Log slow requests</li>
+  <li>Alert on error rates</li>
+</ul>
+
+<h2 id="integration-with-mcp">Integration with MCP</h2>
+
+<p>The AIRS module integrates with the MCP server through tool handlers:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In tools/index.ts</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">EnhancedPrismaAirsClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../airs</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EnhancedPrismaAirsClient</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+
+<span class="c1">// Tool implementation</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nx">scanContent</span><span class="p">(</span><span class="nx">args</span><span class="p">:</span> <span class="nx">ToolsScanContentArgs</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AirsScanResponse</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">scanSync</span><span class="p">({</span>
+        <span class="na">prompt</span><span class="p">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">prompt</span><span class="p">,</span>
+        <span class="na">response</span><span class="p">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">response</span><span class="p">,</span>
+        <span class="na">profile_name</span><span class="p">:</span> <span class="nx">args</span><span class="p">.</span><span class="nx">profile</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="performance-considerations">Performance Considerations</h2>
+
+<h3 id="caching-strategy">Caching Strategy</h3>
+
+<ul>
+  <li><strong>Sync scans</strong>: Cached with content hash</li>
+  <li><strong>Async scans</strong>: Not cached (returns scan IDs)</li>
+  <li><strong>Results</strong>: Cached only when complete</li>
+  <li><strong>Reports</strong>: Always cached</li>
+</ul>
+
+<h3 id="rate-limiting-strategy">Rate Limiting Strategy</h3>
+
+<ul>
+  <li><strong>Per-operation buckets</strong>: Different limits for scan/results</li>
+  <li><strong>Graceful degradation</strong>: Queue requests when limited</li>
+  <li><strong>Monitoring</strong>: Track limit utilization</li>
+</ul>
+
+<h3 id="memory-management">Memory Management</h3>
+
+<ul>
+  <li><strong>LRU eviction</strong>: Removes least used entries</li>
+  <li><strong>TTL expiration</strong>: Automatic cleanup</li>
+  <li><strong>Size limits</strong>: Configurable maximum entries</li>
+</ul>
+
+<h2 id="next-steps">Next Steps</h2>
+
+<ul>
+  <li><a href="/developers/src/types/">Types Module</a> - Type definitions</li>
+  <li><a href="/developers/src/tools/">Tools Module</a> - MCP tool implementations</li>
+  <li><a href="/developers/src/config/">Config Module</a> - Configuration management</li>
+</ul>
+
+      </article>
+      
+      <div class="content-footer">
+        <div class="edit-page">
+          <a href="https://github.com/cdot65/prisma-airs-mcp/edit/main/docs/_developers/src/airs.md">
+            <i class="fas fa-edit"></i> Edit this page on GitHub
+          </a>
+        </div>
+        
+        
+        <div class="pagination">
+          
+          
+          <a href="/developers/src/config/" class="next">
+            Configuration Module (src/config/) <i class="fas fa-arrow-right"></i>
+          </a>
+          
+        </div>
+        
+      </div>
+    </main>
+    
+    <aside class="toc">
+      <h4>On this page</h4>
+      <nav id="table-of-contents"></nav>
+    </aside>
+  </div>
+
+  <!-- Syntax highlighting is handled by Jekyll Rouge -->
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>

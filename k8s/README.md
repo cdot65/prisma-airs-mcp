@@ -146,41 +146,41 @@ If you see `ImagePullBackOff`:
 
 1. Check registry secret exists:
 
-   ```bash
-   kubectl get secret ghcr-login-secret -n prisma-airs-mcp-server
-   ```
+    ```bash
+    kubectl get secret ghcr-login-secret -n prisma-airs-mcp-server
+    ```
 
 2. Recreate if needed:
-   ```bash
-   export CR_PAT='your-pat'
-   ./k8s/scripts/create-registry-secret.sh create
-   ```
+    ```bash
+    export CR_PAT='your-pat'
+    ./k8s/scripts/create-registry-secret.sh create
+    ```
 
 ### API Key Issues
 
 1. Verify secret exists:
 
-   ```bash
-   ./k8s/scripts/manage-secrets.sh verify prisma-airs-mcp-server
-   ```
+    ```bash
+    ./k8s/scripts/manage-secrets.sh verify prisma-airs-mcp-server
+    ```
 
 2. Check pod environment:
-   ```bash
-   kubectl exec -it <pod-name> -n prisma-airs-mcp-server -- env | grep AIRS
-   ```
+    ```bash
+    kubectl exec -it <pod-name> -n prisma-airs-mcp-server -- env | grep AIRS
+    ```
 
 ### Ingress Issues
 
 1. Check IngressRoute:
 
-   ```bash
-   kubectl get ingressroute -n prisma-airs-mcp-server
-   ```
+    ```bash
+    kubectl get ingressroute -n prisma-airs-mcp-server
+    ```
 
 2. Test internal service:
-   ```bash
-   kubectl run test --image=busybox -it --rm -n prisma-airs-mcp-server -- wget -qO- http://prisma-airs-mcp-server-mcp/health
-   ```
+    ```bash
+    kubectl run test --image=busybox -it --rm -n prisma-airs-mcp-server -- wget -qO- http://prisma-airs-mcp-server-mcp/health
+    ```
 
 ## Security Notes
 

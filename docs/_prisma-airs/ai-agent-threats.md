@@ -77,9 +77,9 @@ The asynchronous endpoint returns scan identifiers:
 
 ```json
 {
-  "received": "2025-05-08T15:54:21.922531408Z",
-  "report_id": "R00000000-0000-0000-0000-000000000000",
-  "scan_id": "00000000-0000-0000-0000-000000000000"
+    "received": "2025-05-08T15:54:21.922531408Z",
+    "report_id": "R00000000-0000-0000-0000-000000000000",
+    "scan_id": "00000000-0000-0000-0000-000000000000"
 }
 ```
 
@@ -89,57 +89,58 @@ Retrieve the detailed report using the `/v1/scan/reports` endpoint with the `rep
 
 ```json
 [
-  {
-    "detection_results": [
-      {
-        "action": "block",
-        "data_type": "prompt",
-        "detection_service": "agent_security",
-        "result_detail": {
-          "agent_report": {
-            "agent_framework": "AWS_Agent_Builder",
-            "agent_patterns": [],
-            "model_verdict": "malicious"
-          }
-        },
-        "verdict": "malicious"
-      }
-    ],
-    "report_id": "R00000000-0000-0000-0000-000000000000",
-    "req_id": 1,
-    "scan_id": "00000000-0000-0000-0000-000000000000",
-    "transaction_id": "2882"
-  },
-  {
-    "detection_results": [
-      {
-        "action": "block",
-        "data_type": "prompt",
-        "detection_service": "agent_security",
-        "result_detail": {
-          "agent_report": {
-            "agent_framework": "AWS_Agent_Builder",
-            "agent_patterns": [
-              {
-                "category_type": "tools-memory-manipulation",
+    {
+        "detection_results": [
+            {
+                "action": "block",
+                "data_type": "prompt",
+                "detection_service": "agent_security",
+                "result_detail": {
+                    "agent_report": {
+                        "agent_framework": "AWS_Agent_Builder",
+                        "agent_patterns": [],
+                        "model_verdict": "malicious"
+                    }
+                },
                 "verdict": "malicious"
-              }
-            ],
-            "model_verdict": "benign"
-          }
-        },
-        "verdict": "malicious"
-      }
-    ],
-    "report_id": "R00000000-0000-0000-0000-000000000000",
-    "req_id": 2,
-    "scan_id": "00000000-0000-0000-0000-000000000000",
-    "transaction_id": "2082"
-  }
+            }
+        ],
+        "report_id": "R00000000-0000-0000-0000-000000000000",
+        "req_id": 1,
+        "scan_id": "00000000-0000-0000-0000-000000000000",
+        "transaction_id": "2882"
+    },
+    {
+        "detection_results": [
+            {
+                "action": "block",
+                "data_type": "prompt",
+                "detection_service": "agent_security",
+                "result_detail": {
+                    "agent_report": {
+                        "agent_framework": "AWS_Agent_Builder",
+                        "agent_patterns": [
+                            {
+                                "category_type": "tools-memory-manipulation",
+                                "verdict": "malicious"
+                            }
+                        ],
+                        "model_verdict": "benign"
+                    }
+                },
+                "verdict": "malicious"
+            }
+        ],
+        "report_id": "R00000000-0000-0000-0000-000000000000",
+        "req_id": 2,
+        "scan_id": "00000000-0000-0000-0000-000000000000",
+        "transaction_id": "2082"
+    }
 ]
 ```
 
 **Key Report Fields**:
+
 - `detection_service`: `"agent_security"` indicates AI agent threat detection
 - `agent_framework`: Detected agent framework (e.g., "AWS_Agent_Builder")
 - `model_verdict`: AI model's threat assessment ("malicious" or "benign")
@@ -149,9 +150,11 @@ Retrieve the detailed report using the `/v1/scan/reports` endpoint with the `rep
 ## Detection Types
 
 ### Model-Based Detection
+
 For `req_id=1` in the example, the `model_verdict` is "malicious", detected directly by the AI model analyzing the prompt for agent manipulation attempts.
 
 ### Pattern-Based Detection
+
 For `req_id=2`, the `model_verdict` is "benign", but pattern-matching detected a threat with `category_type: tools-memory-manipulation`, resulting in a malicious verdict.
 
 Both requests were blocked according to the security profile settings.
@@ -159,16 +162,19 @@ Both requests were blocked according to the security profile settings.
 ## Common Threat Patterns
 
 ### Tool Memory Manipulation
+
 - Attempts to access or modify agent tool descriptions
 - Extracting system prompts or configurations
 - Bypassing tool access controls
 
 ### Agent Goal Override
+
 - Commands to ignore previous instructions
 - Attempts to change agent objectives
 - Role manipulation attacks
 
 ### Function Exploitation
+
 - Recursive tool calling patterns
 - Parameter injection attempts
 - Cross-tool attack chains
@@ -176,16 +182,19 @@ Both requests were blocked according to the security profile settings.
 ## Use Cases
 
 ### Agent Framework Protection
+
 - Secure AWS Agent Builder deployments
 - Protect Microsoft AutoGen applications
 - Safeguard LangChain implementations
 
 ### Tool Security
+
 - Validate tool descriptions and parameters
 - Prevent unauthorized tool access
 - Monitor tool usage patterns
 
 ### Workflow Integrity
+
 - Ensure agent goals remain unchanged
 - Detect workflow hijacking attempts
 - Maintain execution chain security

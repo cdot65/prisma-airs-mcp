@@ -24,24 +24,28 @@ AI systems can inadvertently expose sensitive information through:
 ### Data Types Protected
 
 #### Financial Information
+
 - **Credit Card Numbers**: All major card types
 - **Bank Account Numbers**: Domestic and IBAN
 - **Routing Numbers**: ACH and wire transfers
 - **Cryptocurrency Keys**: Private keys and seeds
 
 #### Personal Identifiable Information (PII)
+
 - **Social Security Numbers**: US SSN format
 - **National IDs**: 50+ country formats
 - **Passport Numbers**: International formats
 - **Driver's License**: State and country specific
 
 #### Authentication Credentials
+
 - **API Keys**: 100+ service patterns
 - **Passwords**: Plain text passwords
 - **OAuth Tokens**: Bearer tokens and secrets
 - **Database Credentials**: Connection strings
 
 #### Healthcare Data (PHI)
+
 - **Medical Record Numbers**: MRN patterns
 - **Insurance IDs**: Policy numbers
 - **Health Information**: Diagnoses, medications
@@ -82,25 +86,26 @@ When sensitive data is detected, the API returns:
 
 ```json
 {
-  "action": "block",
-  "category": "malicious",
-  "profile_name": "aisec-profile-demo",
-  "prompt_detected": {
-    "dlp": true,
-    "injection": false,
-    "url_cats": false
-  },
-  "report_id": "R00000000-0000-0000-0000-000000000000",
-  "response_detected": {
-    "dlp": false,
-    "url_cats": false
-  },
-  "scan_id": "00000000-0000-0000-0000-000000000000",
-  "tr_id": "1234"
+    "action": "block",
+    "category": "malicious",
+    "profile_name": "aisec-profile-demo",
+    "prompt_detected": {
+        "dlp": true,
+        "injection": false,
+        "url_cats": false
+    },
+    "report_id": "R00000000-0000-0000-0000-000000000000",
+    "response_detected": {
+        "dlp": false,
+        "url_cats": false
+    },
+    "scan_id": "00000000-0000-0000-0000-000000000000",
+    "tr_id": "1234"
 }
 ```
 
 **Key Response Fields**:
+
 - `prompt_detected.dlp`: `true` indicates sensitive data was detected in the prompt
 - `response_detected.dlp`: `true` indicates sensitive data was detected in the response
 - `category`: Set to `"malicious"` when DLP match found, `"benign"` otherwise
@@ -111,18 +116,21 @@ When sensitive data is detected, the API returns:
 ## Common Sensitive Data Patterns
 
 ### Financial Data
+
 - Bank account numbers with routing numbers
 - Credit card numbers (all major formats)
 - SWIFT/BIC codes
 - Cryptocurrency private keys
 
 ### Authentication Secrets
+
 - API keys and tokens
 - OAuth credentials
 - JWT tokens
 - Database connection strings
 
 ### Personal Information
+
 - Social Security Numbers
 - Passport numbers
 - Driver's license numbers

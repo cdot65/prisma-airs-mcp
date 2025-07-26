@@ -64,9 +64,7 @@ When a topic violation is detected, the API returns:
     },
     "prompt_detection_details": {
         "topic_guardrails_details": {
-            "blocked_topics": [
-                "Astronomy and outer space exploration"
-            ]
+            "blocked_topics": ["Astronomy and outer space exploration"]
         }
     },
     "report_id": "R00000000-0000-0000-0000-000000000000",
@@ -75,9 +73,7 @@ When a topic violation is detected, the API returns:
     },
     "response_detection_details": {
         "topic_guardrails_details": {
-            "blocked_topics": [
-                "Astronomy and outer space exploration"
-            ]
+            "blocked_topics": ["Astronomy and outer space exploration"]
         }
     },
     "scan_id": "00000000-0000-0000-0000-000000000000",
@@ -86,6 +82,7 @@ When a topic violation is detected, the API returns:
 ```
 
 **Key Response Fields**:
+
 - `prompt_detected.topic_violation`: `true` indicates topic violation in prompt
 - `response_detected.topic_violation`: `true` indicates topic violation in response
 - `topic_guardrails_details.blocked_topics`: Array of violated blocked topics
@@ -139,6 +136,7 @@ The scan report provides additional details about the topic violation:
 ```
 
 **Report Fields**:
+
 - `allowed_topic_list`: Whether content matches allowed topics ("matched" or "not_matched")
 - `blocked_topic_list`: Whether content matches blocked topics ("matched" or "not_matched")
 - `blockedTopics`: List of specific blocked topics that were detected
@@ -146,14 +144,18 @@ The scan report provides additional details about the topic violation:
 ## Configuration Types
 
 ### Blocked Topics
+
 Topics that should be prevented in prompts and responses:
+
 - Competitor information
 - Unreleased products
 - Internal processes
 - Sensitive company data
 
 ### Allowed Topics
+
 Topics that are explicitly permitted:
+
 - Public product information
 - General customer support
 - Educational content
@@ -162,18 +164,21 @@ Topics that are explicitly permitted:
 ## Common Use Cases
 
 ### Enterprise Security
+
 - Block discussion of competitor strategies
 - Prevent leakage of confidential projects
 - Restrict access to internal procedures
 - Control financial information disclosure
 
 ### Industry Compliance
+
 - Healthcare: Block medical advice
 - Financial: Prevent investment recommendations
 - Legal: Restrict legal counsel
 - Education: Enforce age-appropriate content
 
 ### Brand Protection
+
 - Control messaging about products
 - Prevent unauthorized announcements
 - Maintain consistent communication
@@ -182,12 +187,14 @@ Topics that are explicitly permitted:
 ## Topic Detection
 
 ### How It Works
+
 1. Content is analyzed for topic matches
 2. Both allowed and blocked lists are checked
 3. Blocked topics take precedence
 4. Violations trigger configured actions
 
 ### Detection Precision
+
 - Semantic understanding of topics
 - Context-aware matching
 - Multi-language support

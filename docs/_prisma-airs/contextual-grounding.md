@@ -10,8 +10,9 @@ category: prisma-airs
 The contextual grounding detection ensures AI responses are grounded in the provided context, preventing hallucinations and unrelated content. Enable Contextual Grounding in the API security profile and set an Allow or Block action.
 
 **Note**: The maximum supported size limitations are:
+
 - Context: 100K characters
-- Prompt: 10K characters  
+- Prompt: 10K characters
 - Response: 20K characters
 
 ## The Challenge of AI Hallucinations
@@ -85,9 +86,9 @@ The asynchronous endpoint returns scan identifiers:
 
 ```json
 {
-  "received": "2025-05-08T12:36:58.056655917Z",
-  "report_id": "R00000000-0000-0000-0000-000000000000",
-  "scan_id": "00000000-0000-0000-0000-000000000000"
+    "received": "2025-05-08T12:36:58.056655917Z",
+    "report_id": "R00000000-0000-0000-0000-000000000000",
+    "scan_id": "00000000-0000-0000-0000-000000000000"
 }
 ```
 
@@ -97,48 +98,49 @@ Retrieve results using the `/v1/scan/results` endpoint with the `scan_id`:
 
 ```json
 [
-  {
-    "req_id": 2,
-    "result": {
-      "action": "block",
-      "category": "malicious",
-      "completed_at": "2025-05-08T12:36:59Z",
-      "profile_id": "00000000-0000-0000-0000-000000000000",
-      "profile_name": "contextual-grounding-profile",
-      "prompt_detected": {},
-      "report_id": "R00000000-0000-0000-0000-000000000000",
-      "response_detected": {
-        "ungrounded": true
-      },
-      "scan_id": "00000000-0000-0000-0000-000000000000",
-      "tr_id": "2082"
+    {
+        "req_id": 2,
+        "result": {
+            "action": "block",
+            "category": "malicious",
+            "completed_at": "2025-05-08T12:36:59Z",
+            "profile_id": "00000000-0000-0000-0000-000000000000",
+            "profile_name": "contextual-grounding-profile",
+            "prompt_detected": {},
+            "report_id": "R00000000-0000-0000-0000-000000000000",
+            "response_detected": {
+                "ungrounded": true
+            },
+            "scan_id": "00000000-0000-0000-0000-000000000000",
+            "tr_id": "2082"
+        },
+        "scan_id": "00000000-0000-0000-0000-000000000000",
+        "status": "complete"
     },
-    "scan_id": "00000000-0000-0000-0000-000000000000",
-    "status": "complete"
-  },
-  {
-    "req_id": 1,
-    "result": {
-      "action": "allow",
-      "category": "benign",
-      "completed_at": "2025-05-08T12:36:59Z",
-      "profile_id": "00000000-0000-0000-0000-000000000000",
-      "profile_name": "contextual-grounding-profile",
-      "prompt_detected": {},
-      "report_id": "R00000000-0000-0000-0000-000000000000",
-      "response_detected": {
-        "ungrounded": false
-      },
-      "scan_id": "00000000-0000-0000-0000-000000000000",
-      "tr_id": "2882"
-    },
-    "scan_id": "00000000-0000-0000-0000-000000000000",
-    "status": "complete"
-  }
+    {
+        "req_id": 1,
+        "result": {
+            "action": "allow",
+            "category": "benign",
+            "completed_at": "2025-05-08T12:36:59Z",
+            "profile_id": "00000000-0000-0000-0000-000000000000",
+            "profile_name": "contextual-grounding-profile",
+            "prompt_detected": {},
+            "report_id": "R00000000-0000-0000-0000-000000000000",
+            "response_detected": {
+                "ungrounded": false
+            },
+            "scan_id": "00000000-0000-0000-0000-000000000000",
+            "tr_id": "2882"
+        },
+        "scan_id": "00000000-0000-0000-0000-000000000000",
+        "status": "complete"
+    }
 ]
 ```
 
 **Key Response Fields**:
+
 - `response_detected.ungrounded`: `true` indicates the response is not grounded in context
 - `category`: Set to `"malicious"` when ungrounded, `"benign"` when grounded
 - `action`: Based on your API security profile settings
@@ -149,47 +151,49 @@ The `/v1/scan/reports` endpoint provides additional details:
 
 ```json
 [
-  {
-    "detection_results": [
-      {
-        "action": "allow", 
-        "data_type": "response",
-        "detection_service": "contextual_grounding",
-        "result_detail": {},
-        "verdict": "benign"
-      }
-    ],
-    "report_id": "R00000000-0000-0000-0000-000000000000",
-    "req_id": 1,
-    "scan_id": "00000000-0000-0000-0000-000000000000",
-    "transaction_id": "2882"
-  },
-  {
-    "detection_results": [
-      {
-        "action": "block",
-        "data_type": "response",
-        "detection_service": "contextual_grounding",
-        "result_detail": {},
-        "verdict": "malicious"
-      }
-    ],
-    "report_id": "R00000000-0000-0000-0000-000000000000",
-    "req_id": 2,
-    "scan_id": "00000000-0000-0000-0000-000000000000",
-    "transaction_id": "2082"
-  }
+    {
+        "detection_results": [
+            {
+                "action": "allow",
+                "data_type": "response",
+                "detection_service": "contextual_grounding",
+                "result_detail": {},
+                "verdict": "benign"
+            }
+        ],
+        "report_id": "R00000000-0000-0000-0000-000000000000",
+        "req_id": 1,
+        "scan_id": "00000000-0000-0000-0000-000000000000",
+        "transaction_id": "2882"
+    },
+    {
+        "detection_results": [
+            {
+                "action": "block",
+                "data_type": "response",
+                "detection_service": "contextual_grounding",
+                "result_detail": {},
+                "verdict": "malicious"
+            }
+        ],
+        "report_id": "R00000000-0000-0000-0000-000000000000",
+        "req_id": 2,
+        "scan_id": "00000000-0000-0000-0000-000000000000",
+        "transaction_id": "2082"
+    }
 ]
 ```
 
 ## Example Analysis
 
 ### Grounded Response (req_id: 1)
+
 - **Prompt**: "How long was the last touchdown?"
 - **Response**: "The last touchdown was 15 yards"
 - **Verdict**: Benign - The response correctly references the 15-yard TD pass to Laveranues Coles mentioned in the context
 
 ### Ungrounded Response (req_id: 2)
+
 - **Prompt**: "How long was the last touchdown?"
 - **Response**: "Salary of John Smith is $100K"
 - **Verdict**: Malicious - The response is completely unrelated to the football game context
@@ -197,16 +201,19 @@ The `/v1/scan/reports` endpoint provides additional details:
 ## Use Cases
 
 ### Document Q&A Systems
+
 - Ensure answers come from provided documents
 - Prevent fabrication of information
 - Maintain factual accuracy
 
 ### Customer Support
+
 - Keep responses relevant to product documentation
 - Avoid making up features or policies
 - Ensure accurate technical information
 
 ### Educational Applications
+
 - Ground responses in course materials
 - Prevent misinformation in tutoring
 - Maintain academic integrity

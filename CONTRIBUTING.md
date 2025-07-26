@@ -18,21 +18,21 @@ By participating in this project, you agree to abide by our Code of Conduct:
 1. **Check existing issues** - Before creating a new issue, please check if it already exists
 2. **Use issue templates** - If available, use the appropriate issue template
 3. **Provide details** - Include:
-   - Clear description of the issue
-   - Steps to reproduce
-   - Expected behavior
-   - Actual behavior
-   - Environment details (OS, Node version, etc.)
-   - Relevant logs or error messages
+    - Clear description of the issue
+    - Steps to reproduce
+    - Expected behavior
+    - Actual behavior
+    - Environment details (OS, Node version, etc.)
+    - Relevant logs or error messages
 
 ### Suggesting Features
 
 1. **Check the roadmap** - Review existing feature requests and the project roadmap
 2. **Open a discussion** - Start with a GitHub Discussion before creating a feature request
 3. **Provide context** - Explain:
-   - The use case for the feature
-   - How it would benefit users
-   - Potential implementation approach
+    - The use case for the feature
+    - How it would benefit users
+    - Potential implementation approach
 
 ### Contributing Code
 
@@ -48,85 +48,85 @@ By participating in this project, you agree to abide by our Code of Conduct:
 
 1. **Fork the repository**
 
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/prisma-airs-mcp.git
-   cd prisma-airs-mcp
-   ```
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/prisma-airs-mcp.git
+    cd prisma-airs-mcp
+    ```
 
 2. **Install dependencies**
 
-   ```bash
-   pnpm install
-   ```
+    ```bash
+    pnpm install
+    ```
 
 3. **Create a feature branch**
 
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
+    ```bash
+    git checkout -b feature/your-feature-name
+    ```
 
 4. **Set up environment**
-   ```bash
-   cp .env.example .env
-   # Configure your AIRS credentials
-   ```
+    ```bash
+    cp .env.example .env
+    # Configure your AIRS credentials
+    ```
 
 #### Development Workflow
 
 1. **Before making changes**
 
-   ```bash
-   # Ensure you're up to date with main
-   git pull origin main
+    ```bash
+    # Ensure you're up to date with main
+    git pull origin main
 
-   # Run validation to ensure clean start
-   pnpm run validate
-   ```
+    # Run validation to ensure clean start
+    pnpm run validate
+    ```
 
 2. **Make your changes**
-   - Follow the TypeScript style guide (`.claude/conventions/typescript-style-guide.md`)
-   - Write clean, documented code
-   - Add tests for new functionality
-   - Update documentation as needed
+    - Follow the TypeScript style guide (`.claude/conventions/typescript-style-guide.md`)
+    - Write clean, documented code
+    - Add tests for new functionality
+    - Update documentation as needed
 
 3. **Validate your changes**
 
-   ```bash
-   # Run all validation checks
-   pnpm run validate
+    ```bash
+    # Run all validation checks
+    pnpm run validate
 
-   # This includes:
-   # - TypeScript compilation
-   # - ESLint checks
-   # - Prettier formatting
-   # - Unit tests
-   ```
+    # This includes:
+    # - TypeScript compilation
+    # - ESLint checks
+    # - Prettier formatting
+    # - Unit tests
+    ```
 
 4. **Test thoroughly**
 
-   ```bash
-   # Run unit tests
-   pnpm test:unit
+    ```bash
+    # Run unit tests
+    pnpm test:unit
 
-   # Run integration tests
-   pnpm test:integration
+    # Run integration tests
+    pnpm test:integration
 
-   # Test locally with dev server
-   pnpm dev
+    # Test locally with dev server
+    pnpm dev
 
-   # Test with Docker
-   pnpm run docker:build
-   pnpm run docker:run
-   ```
+    # Test with Docker
+    pnpm run docker:build
+    pnpm run docker:run
+    ```
 
 #### Code Style Guidelines
 
 - **TypeScript**: Use strict mode, avoid `any` types
 - **Naming**:
-  - Files: `kebab-case.ts`
-  - Classes/Interfaces: `PascalCase`
-  - Functions/Variables: `camelCase`
-  - Constants: `UPPER_SNAKE_CASE`
+    - Files: `kebab-case.ts`
+    - Classes/Interfaces: `PascalCase`
+    - Functions/Variables: `camelCase`
+    - Constants: `UPPER_SNAKE_CASE`
 - **Comments**: Write JSDoc comments for public APIs
 - **Error Handling**: Use structured error types
 - **Logging**: Use appropriate log levels (debug, info, warn, error)
@@ -165,26 +165,26 @@ docs(readme): update deployment instructions
 
 1. **Ensure all checks pass**
 
-   ```bash
-   pnpm run validate
-   ```
+    ```bash
+    pnpm run validate
+    ```
 
 2. **Update documentation**
-   - Update README.md if needed
-   - Update API documentation
-   - Add/update tests
+    - Update README.md if needed
+    - Update API documentation
+    - Add/update tests
 
 3. **Create Pull Request**
-   - Use a clear, descriptive title
-   - Reference any related issues
-   - Provide a detailed description
-   - Include testing instructions
+    - Use a clear, descriptive title
+    - Reference any related issues
+    - Provide a detailed description
+    - Include testing instructions
 
 4. **PR Requirements**:
-   - All CI checks must pass
-   - Code coverage must not decrease
-   - At least one approval from a maintainer
-   - No merge conflicts
+    - All CI checks must pass
+    - Code coverage must not decrease
+    - At least one approval from a maintainer
+    - No merge conflicts
 
 ### Testing
 
@@ -229,33 +229,33 @@ curl -X POST https://airs.cdot.io/prisma-airs \
 - Use clear, concise language
 - Include code examples where appropriate
 - Update the following when relevant:
-  - README.md
-  - API documentation
-  - Deployment guides
-  - Claude integration docs
+    - README.md
+    - API documentation
+    - Deployment guides
+    - Claude integration docs
 
 ### Release Process
 
 1. **Version Bumping**
-   - Follow semantic versioning (MAJOR.MINOR.PATCH)
-   - Update version in package.json
-   - Update version badges in README.md
+    - Follow semantic versioning (MAJOR.MINOR.PATCH)
+    - Update version in package.json
+    - Update version badges in README.md
 
 2. **Changelog**
-   - Document all changes in CHANGELOG.md
-   - Group by type (Features, Fixes, etc.)
-   - Include breaking changes prominently
+    - Document all changes in CHANGELOG.md
+    - Group by type (Features, Fixes, etc.)
+    - Include breaking changes prominently
 
 3. **Testing**
-   - Full test suite must pass
-   - Manual testing of critical paths
-   - Docker image build and test
+    - Full test suite must pass
+    - Manual testing of critical paths
+    - Docker image build and test
 
 4. **Deployment**
-   - Build and push Docker images
-   - Update Kubernetes manifests if needed
-   - Deploy to staging first
-   - Verify in production
+    - Build and push Docker images
+    - Update Kubernetes manifests if needed
+    - Deploy to staging first
+    - Verify in production
 
 ## Getting Help
 

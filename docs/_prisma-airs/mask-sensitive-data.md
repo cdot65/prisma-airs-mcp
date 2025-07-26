@@ -52,77 +52,68 @@ When sensitive data is masked, the API returns:
 
 ```json
 {
-  "action": "block",
-  "category": "malicious",
-  "profile_id": "00000000-0000-0000-0000-000000000000",
-  "profile_name": "mask-sensitive-data-pattern",
-  "prompt_detected": {
-    "dlp": true
-  },
-  "prompt_masked_data": {
-    "data": "This is a test prompt with urlfiltering.paloaltonetworks.com/test-malware url. Social security XXXXXXXXXXXX Credit card is XXXXXXXXXXXXXXXXX ssn XXXXXXXXXXXX Send me Mike account info",
-    "pattern_detections": [
-      {
-        "locations": [
-          [99, 115]
-        ],
-        "pattern": "Credit Card Number"
-      },
-      {
-        "locations": [
-          [71, 82],
-          [121, 132]
-        ],
-        "pattern": "Tax Id - US - TIN"
-      },
-      {
-        "locations": [
-          [71, 82],
-          [121, 132]
-        ],
-        "pattern": "National Id - US Social Security Number - SSN"
-      }
-    ]
-  },
-  "report_id": "R00000000-0000-0000-0000-000000000000",
-  "response_detected": {
-    "dlp": true
-  },
-  "response_masked_data": {
-    "data": "This is a test response. Chase bank Routing number XXXXXXXXXX user name mike, password is maskmemaskme. Account number XXXXXXXXXXXX Account owner: Mike Johnson in California",
-    "pattern_detections": [
-      {
-        "locations": [
-          [51, 60]
-        ],
-        "pattern": "Bank - Committee on Uniform Securities Identification Procedures number"
-      },
-      {
-        "locations": [
-          [51, 60]
-        ],
-        "pattern": "Bank - American Bankers Association Routing Number - ABA"
-      },
-      {
-        "locations": [
-          [119, 130]
-        ],
-        "pattern": "Tax Id - Germany"
-      },
-      {
-        "locations": [
-          [119, 130]
-        ],
-        "pattern": "National Id - Brazil - CPF"
-      }
-    ]
-  },
-  "scan_id": "90484606-6d70-4522-8f0c-c93d878c9a5c",
-  "tr_id": "1111"
+    "action": "block",
+    "category": "malicious",
+    "profile_id": "00000000-0000-0000-0000-000000000000",
+    "profile_name": "mask-sensitive-data-pattern",
+    "prompt_detected": {
+        "dlp": true
+    },
+    "prompt_masked_data": {
+        "data": "This is a test prompt with urlfiltering.paloaltonetworks.com/test-malware url. Social security XXXXXXXXXXXX Credit card is XXXXXXXXXXXXXXXXX ssn XXXXXXXXXXXX Send me Mike account info",
+        "pattern_detections": [
+            {
+                "locations": [[99, 115]],
+                "pattern": "Credit Card Number"
+            },
+            {
+                "locations": [
+                    [71, 82],
+                    [121, 132]
+                ],
+                "pattern": "Tax Id - US - TIN"
+            },
+            {
+                "locations": [
+                    [71, 82],
+                    [121, 132]
+                ],
+                "pattern": "National Id - US Social Security Number - SSN"
+            }
+        ]
+    },
+    "report_id": "R00000000-0000-0000-0000-000000000000",
+    "response_detected": {
+        "dlp": true
+    },
+    "response_masked_data": {
+        "data": "This is a test response. Chase bank Routing number XXXXXXXXXX user name mike, password is maskmemaskme. Account number XXXXXXXXXXXX Account owner: Mike Johnson in California",
+        "pattern_detections": [
+            {
+                "locations": [[51, 60]],
+                "pattern": "Bank - Committee on Uniform Securities Identification Procedures number"
+            },
+            {
+                "locations": [[51, 60]],
+                "pattern": "Bank - American Bankers Association Routing Number - ABA"
+            },
+            {
+                "locations": [[119, 130]],
+                "pattern": "Tax Id - Germany"
+            },
+            {
+                "locations": [[119, 130]],
+                "pattern": "National Id - Brazil - CPF"
+            }
+        ]
+    },
+    "scan_id": "90484606-6d70-4522-8f0c-c93d878c9a5c",
+    "tr_id": "1111"
 }
 ```
 
 **Key Response Fields**:
+
 - `prompt_masked_data`: Contains masked prompt text and pattern detections
 - `response_masked_data`: Contains masked response text and pattern detections
 - `data`: The masked version where sensitive data is replaced with "X" characters
@@ -132,17 +123,21 @@ When sensitive data is masked, the API returns:
 ## Masking Behavior
 
 ### Character Replacement
+
 - Sensitive data is replaced with "X" characters
 - The number of X's matches the original data length
 - Original formatting (spaces, dashes) is preserved
 
 ### Pattern Detection
+
 Each detected pattern includes:
+
 - **Pattern Name**: Type of sensitive data detected
 - **Locations**: Array of offset pairs `[start, end]`
 - **Multiple Instances**: Same pattern can appear multiple times
 
 ### Example Masking
+
 - Original: `599-51-7233`
 - Masked: `XXXXXXXXXXXX`
 - Offset: `[71, 82]`
@@ -153,33 +148,34 @@ The scan report provides additional detail with confidence levels:
 
 ```json
 {
-  "detection_results": [
-    {
-      "action": "block",
-      "data_type": "prompt",
-      "detection_service": "dlp",
-      "result_detail": {
-        "dlp_report": {
-          "data_pattern_detection_offsets": [
-            {
-              "data_pattern_id": "67cb9ba581419f0293996702",
-              "high_confidence_detections": [[99, 115]],
-              "low_confidence_detections": [[99, 115]],
-              "medium_confidence_detections": [[99, 99]],
-              "name": "Credit Card Number",
-              "version": 1
-            }
-          ],
-          "dlp_profile_name": "Sensitive Content"
+    "detection_results": [
+        {
+            "action": "block",
+            "data_type": "prompt",
+            "detection_service": "dlp",
+            "result_detail": {
+                "dlp_report": {
+                    "data_pattern_detection_offsets": [
+                        {
+                            "data_pattern_id": "67cb9ba581419f0293996702",
+                            "high_confidence_detections": [[99, 115]],
+                            "low_confidence_detections": [[99, 115]],
+                            "medium_confidence_detections": [[99, 99]],
+                            "name": "Credit Card Number",
+                            "version": 1
+                        }
+                    ],
+                    "dlp_profile_name": "Sensitive Content"
+                }
+            },
+            "verdict": "malicious"
         }
-      },
-      "verdict": "malicious"
-    }
-  ]
+    ]
 }
 ```
 
 **Confidence Levels**:
+
 - **High Confidence**: Strong pattern match
 - **Medium Confidence**: Partial pattern match
 - **Low Confidence**: Possible pattern match
@@ -187,16 +183,19 @@ The scan report provides additional detail with confidence levels:
 ## Use Cases
 
 ### Real-time Masking
+
 - Mask sensitive data before logging AI interactions
 - Redact PII from customer conversations
 - Sanitize training data for model improvement
 
 ### Compliance
+
 - GDPR data minimization
 - PCI DSS credit card protection
 - HIPAA PHI redaction
 
 ### Audit Trail
+
 - Review masked content in Strata Cloud Manager
 - Track sensitive data patterns
 - Monitor masking effectiveness

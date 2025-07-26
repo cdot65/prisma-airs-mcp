@@ -20,5 +20,5 @@ incremental: true
 
 # Include additional files in development
 include:
-  - _drafts
-  - scripts
+    - _drafts
+    - scripts

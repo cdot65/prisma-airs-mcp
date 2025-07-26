@@ -190,34 +190,36 @@
 <h4 id="example-request">Example Request</h4>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scan_content"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Write code to hack into a system"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"I cannot provide hacking instructions..."</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prisma AIRS"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"app_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claude-desktop"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user123"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scan_content"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Write code to hack into a system"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"I cannot provide hacking instructions..."</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prisma AIRS"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"app_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"claude-desktop"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user123"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h4 id="example-response">Example Response</h4>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Scan completed. Category: malicious, Action: block</span><span class="se">\n\n</span><span class="s2">Threats detected:</span><span class="se">\n</span><span class="s2">- Prompt: prompt_injection</span><span class="se">\n\n</span><span class="s2">Report available at: airs://reports/rpt_123456"</span><span class="w">
-    </span><span class="p">}],</span><span class="w">
-    </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Scan completed. Category: malicious, Action: block</span><span class="se">\n\n</span><span class="s2">Threats detected:</span><span class="se">\n</span><span class="s2">- Prompt: prompt_injection</span><span class="se">\n\n</span><span class="s2">Report available at: airs://reports/rpt_123456"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -280,52 +282,54 @@
 <h4 id="content-item-schema">Content Item Schema</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ContentItem</span> <span class="p">{</span>
-  <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-  <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-  <span class="nl">code_prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-  <span class="nl">code_response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-  <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">code_prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">code_response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="example-request-1">Example Request</h4>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scan_async"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"contents"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"First prompt to scan"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"First AI response"</span><span class="w">
-        </span><span class="p">},</span><span class="w">
-        </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Second prompt to scan"</span><span class="p">,</span><span class="w">
-          </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Second AI response"</span><span class="w">
+    </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"scan_async"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"contents"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"First prompt to scan"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"First AI response"</span><span class="w">
+                </span><span class="p">},</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Second prompt to scan"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Second AI response"</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prisma AIRS"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"batch-001"</span><span class="w">
         </span><span class="p">}</span><span class="w">
-      </span><span class="p">],</span><span class="w">
-      </span><span class="nl">"profile_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prisma AIRS"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"tr_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"batch-001"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h4 id="example-response-1">Example Response</h4>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Async scan submitted successfully</span><span class="se">\n\n</span><span class="s2">Scan ID: scan_789012</span><span class="se">\n</span><span class="s2">Status: processing</span><span class="se">\n\n</span><span class="s2">Retrieve results with: get_scan_results"</span><span class="w">
-    </span><span class="p">}],</span><span class="w">
-    </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
+    </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Async scan submitted successfully</span><span class="se">\n\n</span><span class="s2">Scan ID: scan_789012</span><span class="se">\n</span><span class="s2">Status: processing</span><span class="se">\n\n</span><span class="s2">Retrieve results with: get_scan_results"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -360,30 +364,32 @@
 <h4 id="example-request-2">Example Request</h4>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"get_scan_results"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"scan_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"scan_789012"</span><span class="p">,</span><span class="w"> </span><span class="s2">"scan_789013"</span><span class="p">]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"get_scan_results"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"scan_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"scan_789012"</span><span class="p">,</span><span class="w"> </span><span class="s2">"scan_789013"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h4 id="example-response-2">Example Response</h4>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Retrieved 2 scan results:</span><span class="se">\n\n</span><span class="s2">1. Scan scan_789012:</span><span class="se">\n</span><span class="s2">   - Category: benign</span><span class="se">\n</span><span class="s2">   - Action: allow</span><span class="se">\n</span><span class="s2">   - No threats detected</span><span class="se">\n\n</span><span class="s2">2. Scan scan_789013:</span><span class="se">\n</span><span class="s2">   - Category: malicious</span><span class="se">\n</span><span class="s2">   - Action: block</span><span class="se">\n</span><span class="s2">   - Threats: malicious_code detected"</span><span class="w">
-    </span><span class="p">}],</span><span class="w">
-    </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
+    </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Retrieved 2 scan results:</span><span class="se">\n\n</span><span class="s2">1. Scan scan_789012:</span><span class="se">\n</span><span class="s2">   - Category: benign</span><span class="se">\n</span><span class="s2">   - Action: allow</span><span class="se">\n</span><span class="s2">   - No threats detected</span><span class="se">\n\n</span><span class="s2">2. Scan scan_789013:</span><span class="se">\n</span><span class="s2">   - Category: malicious</span><span class="se">\n</span><span class="s2">   - Action: block</span><span class="se">\n</span><span class="s2">   - Threats: malicious_code detected"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -418,30 +424,32 @@
 <h4 id="example-request-3">Example Request</h4>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"get_threat_reports"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"report_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rpt_123456"</span><span class="p">]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
+    </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"get_threat_reports"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"report_ids"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rpt_123456"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h4 id="example-response-3">Example Response</h4>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Threat Report rpt_123456:</span><span class="se">\n\n</span><span class="s2">Scan Time: 2025-01-20T10:30:00Z</span><span class="se">\n</span><span class="s2">Profile: Prisma AIRS</span><span class="se">\n\n</span><span class="s2">Threats Detected:</span><span class="se">\n</span><span class="s2">1. Prompt Injection</span><span class="se">\n</span><span class="s2">   - Confidence: 0.95</span><span class="se">\n</span><span class="s2">   - Pattern: System prompt override attempt</span><span class="se">\n</span><span class="s2">   - Location: Line 1, Position 0-50</span><span class="se">\n\n</span><span class="s2">Recommendations:</span><span class="se">\n</span><span class="s2">- Block this content</span><span class="se">\n</span><span class="s2">- Review user activity</span><span class="se">\n</span><span class="s2">- Consider stricter input validation"</span><span class="w">
-    </span><span class="p">}],</span><span class="w">
-    </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
+    </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Threat Report rpt_123456:</span><span class="se">\n\n</span><span class="s2">Scan Time: 2025-01-20T10:30:00Z</span><span class="se">\n</span><span class="s2">Profile: Prisma AIRS</span><span class="se">\n\n</span><span class="s2">Threats Detected:</span><span class="se">\n</span><span class="s2">1. Prompt Injection</span><span class="se">\n</span><span class="s2">   - Confidence: 0.95</span><span class="se">\n</span><span class="s2">   - Pattern: System prompt override attempt</span><span class="se">\n</span><span class="s2">   - Location: Line 1, Position 0-50</span><span class="se">\n\n</span><span class="s2">Recommendations:</span><span class="se">\n</span><span class="s2">- Block this content</span><span class="se">\n</span><span class="s2">- Review user activity</span><span class="se">\n</span><span class="s2">- Consider stricter input validation"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -476,30 +484,32 @@
 <h4 id="example-request-4">Example Request</h4>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"clear_cache"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"all"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+    </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"clear_cache"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"scope"</span><span class="p">:</span><span class="w"> </span><span class="s2">"all"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h4 id="example-response-4">Example Response</h4>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w">
-      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cache cleared successfully</span><span class="se">\n\n</span><span class="s2">Cleared: 42 entries</span><span class="se">\n</span><span class="s2">Cache size: 0 bytes</span><span class="se">\n</span><span class="s2">Next cleanup: in 5 minutes"</span><span class="w">
-    </span><span class="p">}],</span><span class="w">
-    </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
+    </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cache cleared successfully</span><span class="se">\n\n</span><span class="s2">Cleared: 42 entries</span><span class="se">\n</span><span class="s2">Cache size: 0 bytes</span><span class="se">\n</span><span class="s2">Next cleanup: in 5 minutes"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nl">"isError"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -544,16 +554,16 @@
 <h3 id="error-response-example">Error Response Example</h3>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">-32602</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invalid params"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile_name"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Profile 'InvalidProfile' not found"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+    </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">-32602</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invalid params"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"field"</span><span class="p">:</span><span class="w"> </span><span class="s2">"profile_name"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Profile 'InvalidProfile' not found"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -571,34 +581,34 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Good: Batch multiple scans</span>
 <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_async</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-  <span class="na">contents</span><span class="p">:</span> <span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">item</span> <span class="o">=&gt;</span> <span class="p">({</span>
-    <span class="na">prompt</span><span class="p">:</span> <span class="nx">item</span><span class="p">.</span><span class="nx">userInput</span><span class="p">,</span>
-    <span class="na">response</span><span class="p">:</span> <span class="nx">item</span><span class="p">.</span><span class="nx">aiOutput</span>
-  <span class="p">}))</span>
+    <span class="na">contents</span><span class="p">:</span> <span class="nx">items</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">item</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
+        <span class="na">prompt</span><span class="p">:</span> <span class="nx">item</span><span class="p">.</span><span class="nx">userInput</span><span class="p">,</span>
+        <span class="na">response</span><span class="p">:</span> <span class="nx">item</span><span class="p">.</span><span class="nx">aiOutput</span><span class="p">,</span>
+    <span class="p">})),</span>
 <span class="p">});</span>
 
 <span class="c1">// Less optimal: Individual scans</span>
 <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">item</span> <span class="k">of</span> <span class="nx">items</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_content</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-    <span class="na">prompt</span><span class="p">:</span> <span class="nx">item</span><span class="p">.</span><span class="nx">userInput</span>
-  <span class="p">});</span>
+    <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_content</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">prompt</span><span class="p">:</span> <span class="nx">item</span><span class="p">.</span><span class="nx">userInput</span><span class="p">,</span>
+    <span class="p">});</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h3 id="3-handle-errors-gracefully">3. Handle Errors Gracefully</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span>
-  <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_content</span><span class="dl">'</span><span class="p">,</span> <span class="nx">params</span><span class="p">);</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">category</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">malicious</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// Handle threat detection</span>
-  <span class="p">}</span>
+    <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">callTool</span><span class="p">(</span><span class="dl">'</span><span class="s1">scan_content</span><span class="dl">'</span><span class="p">,</span> <span class="nx">params</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">category</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">malicious</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Handle threat detection</span>
+    <span class="p">}</span>
 <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span> <span class="o">===</span> <span class="o">-</span><span class="mi">32002</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// Rate limited - implement backoff</span>
-    <span class="k">await</span> <span class="nx">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nx">retry</span><span class="p">();</span>
-  <span class="p">}</span>
-  <span class="c1">// Handle other errors</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">code</span> <span class="o">===</span> <span class="o">-</span><span class="mi">32002</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Rate limited - implement backoff</span>
+        <span class="k">await</span> <span class="nx">delay</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">retry</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="c1">// Handle other errors</span>
 <span class="p">}</span>
 </code></pre></div></div>
 

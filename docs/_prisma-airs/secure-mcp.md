@@ -7,13 +7,14 @@ category: prisma-airs
 
 ## Overview
 
-Guard against 'tool poisoning' and prompt injection in agentic AI workflows. Use API Intercept to scan and validate MCP tool descriptions, inputs, and outputs—building guardrails that keep your agents safe. 
+Guard against 'tool poisoning' and prompt injection in agentic AI workflows. Use API Intercept to scan and validate MCP tool descriptions, inputs, and outputs—building guardrails that keep your agents safe.
 
 ## MCP Security Challenges
 
 As the blog post highlights, MCP is "insecure by default" - similar to how HTTP was when first released. The Model Context Protocol introduces new attack vectors:
 
 ### Tool Poisoning
+
 Tool Poisoning is a form of indirect prompt injection where MCP servers embed malicious instructions inside tool descriptions. These instructions can be invisible to end users but visible to AI applications/agents, enabling attackers to potentially:
 
 - **Exfiltrate sensitive files/data**
@@ -177,32 +178,41 @@ async def validate_mcp_tool_descriptions(tools):
 ## Key Implementation Points
 
 ### Detection Capabilities
+
 - **SHA256 hashing** to detect tool description changes
 - **SQLite persistence** for tracking tool description history
 - **Interactive prompts** for human review of changes
 - **API Intercept scanning** for malicious content detection
 
 ### User Experience
+
 When a guardrail is triggered:
+
 - **Rug Pull Detection**: Shows old vs new descriptions, prompts for approval
 - **Tool Poisoning Detection**: Blocks malicious tool descriptions with clear error messages
 
 ## Best Practices
 
 ### 1. Defense in Depth
+
 Just as HTTP evolved with SSL/TLS, PKI, and browser safeguards, MCP security requires multiple layers:
+
 - Hash-based change detection
 - API-based threat scanning
 - Human review for critical changes
 - Immutable tool objects after initialization
 
 ### 2. Structure Agent Flows
+
 Design your agent flows so that tripping a guardrail results in either:
+
 - Prompting the end user for permission to continue
 - Exiting to avoid possible exploitation
 
 ### 3. Scan Multiple Points
+
 Don't just scan tool descriptions - also scan:
+
 - Context retrieved via MCP
 - Prompt templates
 - Agent inputs and outputs

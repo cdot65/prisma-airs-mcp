@@ -64,25 +64,26 @@
     <li><a href="/deployment/quickstart/" >Quick Start Guide</a></li>
   </ul>
   
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="/deployment/configuration/" >Configuration Reference</a></li>
+  </ul>
+  
   <h4>Deployment Documentation</h4>
   <ul>
     <li><a href="/deployment/docker/" >Docker</a></li>
     <li><a href="/deployment/docker-compose/" >Docker Compose</a></li>
     <li><a href="/deployment/source/" class="active">Build from Source</a></li>
     <li><a href="/deployment/kubernetes/" >Kubernetes</a></li>
-  </ul>
-  
-  <h4>Configuration</h4>
-  <ul>
-    <li><a href="/deployment/configuration/" >Configuration Reference</a></li>
-  </ul>
-  
-  <h4>Additional</h4>
-  <ul>
     <li><a href="/deployment/docker-build-options/" >Docker Build Options</a></li>
-    <li><a href="/deployment/vscode/" >VSCode</a></li>
-    <li><a href="/deployment/claude-desktop/" >Claude Desktop</a></li>
-    <li><a href="/deployment/claude-code/" >Claude Code</a></li>
+  </ul>
+  
+  <h4>MCP Client Config</h4>
+  <ul>
+    <li><a href="/deployment/mcp/" >Overview</a></li>
+    <li><a href="/deployment/mcp/vscode/" >Visual Studio Code</a></li>
+    <li><a href="/deployment/mcp/claude-desktop/" >Claude Desktop</a></li>
+    <li><a href="/deployment/mcp/claude-code/" >Claude Code</a></li>
   </ul>
 </nav>
 
@@ -167,6 +168,7 @@
 <h3 id="installing-prerequisites">Installing Prerequisites</h3>
 
 <p><strong>macOS:</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install Node.js using Homebrew</span>
 brew <span class="nb">install </span>node
 
@@ -175,6 +177,7 @@ npm <span class="nb">install</span> <span class="nt">-g</span> pnpm
 </code></pre></div></div>
 
 <p><strong>Ubuntu/Debian:</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install Node.js 18.x</span>
 curl <span class="nt">-fsSL</span> https://deb.nodesource.com/setup_18.x | <span class="nb">sudo</span> <span class="nt">-E</span> bash -
 <span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> nodejs
@@ -184,6 +187,7 @@ npm <span class="nb">install</span> <span class="nt">-g</span> pnpm
 </code></pre></div></div>
 
 <p><strong>Windows:</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Use WSL2 and follow Ubuntu instructions</span>
 <span class="c"># Or use Windows Package Manager</span>
 winget <span class="nb">install </span>OpenJS.NodeJS
@@ -201,10 +205,12 @@ npm <span class="nb">install</span> <span class="nt">-g</span> pnpm
 <h3 id="2-install-dependencies">2. Install Dependencies</h3>
 
 <p>Using pnpm (recommended):</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pnpm <span class="nb">install</span>
 </code></pre></div></div>
 
 <p>Using npm:</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm <span class="nb">install</span>
 </code></pre></div></div>
 
@@ -218,6 +224,7 @@ nano .env  <span class="c"># or vim, code, etc.</span>
 </code></pre></div></div>
 
 <p>Required configuration in <code class="language-plaintext highlighter-rouge">.env</code>:</p>
+
 <pre><code class="language-env"># Prisma AIRS API Configuration
 AIRS_API_URL=https://service.api.aisecurity.paloaltonetworks.com
 AIRS_API_KEY=your-api-key-here
@@ -253,11 +260,33 @@ npm run dev
 </code></pre></div></div>
 
 <p>The server will:</p>
+
 <ul>
   <li>Start on http://localhost:3000</li>
   <li>Automatically restart on file changes</li>
   <li>Show detailed debug logs</li>
   <li>Enable source maps for debugging</li>
+</ul>
+
+<h3 id="docker-development-mode">Docker Development Mode</h3>
+
+<p>For testing MCP clients with a containerized server:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build and run development container on port 3100</span>
+pnpm docker:dev
+
+<span class="c"># This command:</span>
+<span class="c"># 1. Builds the development Docker image</span>
+<span class="c"># 2. Runs the container on port 3100</span>
+<span class="c"># 3. Mounts your .env file for configuration</span>
+<span class="c"># 4. Enables hot reload through volume mounts</span>
+</code></pre></div></div>
+
+<p>This is ideal for:</p>
+<ul>
+  <li>Testing with MCP clients in isolation</li>
+  <li>Verifying Docker deployment before production</li>
+  <li>Development in a containerized environment</li>
 </ul>
 
 <h3 id="production-mode">Production Mode</h3>
@@ -307,6 +336,11 @@ pnpm dev              <span class="c"># Start development server</span>
 pnpm build            <span class="c"># Build TypeScript</span>
 pnpm start            <span class="c"># Start production server</span>
 
+<span class="c"># Docker Development</span>
+pnpm docker:dev       <span class="c"># Build and run dev container on port 3100</span>
+pnpm docker:build:dev <span class="c"># Build development Docker image</span>
+pnpm docker:run:dev:3100 <span class="c"># Run dev container on port 3100</span>
+
 <span class="c"># Testing</span>
 pnpm <span class="nb">test</span>             <span class="c"># Run all tests</span>
 pnpm <span class="nb">test</span>:unit        <span class="c"># Run unit tests only</span>
@@ -328,11 +362,15 @@ pnpm docs:serve       <span class="c"># Serve documentation locally</span>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>prisma-airs-mcp/
 ├── src/                    # Source code
-│   ├── server/            # MCP server implementation
-│   ├── handlers/          # Request handlers
-│   ├── airs/             # AIRS API client
+│   ├── index.ts          # Application entry point
+│   ├── airs/             # AIRS API client module
 │   ├── config/           # Configuration management
-│   └── types/            # TypeScript types
+│   ├── prompts/          # MCP prompt handlers
+│   ├── resources/        # MCP resource handlers
+│   ├── tools/            # MCP tool handlers
+│   ├── transport/        # HTTP/SSE transport layer
+│   ├── types/            # Centralized TypeScript types
+│   └── utils/            # Shared utilities
 ├── tests/                 # Test files
 ├── docs/                  # Documentation
 ├── k8s/                   # Kubernetes manifests
@@ -343,21 +381,26 @@ pnpm docs:serve       <span class="c"># Serve documentation locally</span>
 <h3 id="making-changes">Making Changes</h3>
 
 <ol>
-  <li><strong>Create a feature branch:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout <span class="nt">-b</span> feature/my-feature
+  <li>
+    <p><strong>Create a feature branch:</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git checkout <span class="nt">-b</span> feature/my-feature
 </code></pre></div>    </div>
   </li>
-  <li><strong>Make your changes and test:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run tests</span>
-pnpm <span class="nb">test</span>
-   
-<span class="c"># Check code quality</span>
-pnpm validate
+  <li>
+    <p><strong>Make your changes and test:</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Run tests</span>
+ pnpm <span class="nb">test</span>
+
+ <span class="c"># Check code quality</span>
+ pnpm validate
 </code></pre></div>    </div>
   </li>
-  <li><strong>Build and verify:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pnpm build
-pnpm start
+  <li>
+    <p><strong>Build and verify:</strong></p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> pnpm build
+ pnpm start
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -373,30 +416,33 @@ pnpm start
 <p><strong>TypeScript Configuration:</strong></p>
 
 <p>Edit <code class="language-plaintext highlighter-rouge">tsconfig.json</code> for custom TypeScript settings:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"compilerOptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ES2022"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"module"</span><span class="p">:</span><span class="w"> </span><span class="s2">"commonjs"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"outDir"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./dist"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"strict"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+    </span><span class="nl">"compilerOptions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ES2022"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"module"</span><span class="p">:</span><span class="w"> </span><span class="s2">"commonjs"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"outDir"</span><span class="p">:</span><span class="w"> </span><span class="s2">"./dist"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"strict"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <p><strong>ESLint Configuration:</strong></p>
 
 <p>Customize linting rules in <code class="language-plaintext highlighter-rouge">.eslintrc.json</code>:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"extends"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"eslint:recommended"</span><span class="p">],</span><span class="w">
-  </span><span class="nl">"rules"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="nl">"no-console"</span><span class="p">:</span><span class="w"> </span><span class="s2">"warn"</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+    </span><span class="nl">"extends"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"eslint:recommended"</span><span class="p">],</span><span class="w">
+    </span><span class="nl">"rules"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"no-console"</span><span class="p">:</span><span class="w"> </span><span class="s2">"warn"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
 <h3 id="performance-tuning">Performance Tuning</h3>
 
 <p><strong>Node.js Options:</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Increase memory limit</span>
 <span class="nv">NODE_OPTIONS</span><span class="o">=</span><span class="s2">"--max-old-space-size=4096"</span> pnpm start
 
@@ -407,6 +453,7 @@ pnpm start
 <p><strong>Clustering:</strong></p>
 
 <p>For multi-core systems, use PM2:</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Install PM2</span>
 npm <span class="nb">install</span> <span class="nt">-g</span> pm2
 
@@ -422,18 +469,21 @@ pm2 monit
 <h3 id="common-issues">Common Issues</h3>
 
 <p><strong>Module Not Found</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clear node_modules and reinstall</span>
 <span class="nb">rm</span> <span class="nt">-rf</span> node_modules pnpm-lock.yaml
 pnpm <span class="nb">install</span>
 </code></pre></div></div>
 
 <p><strong>TypeScript Errors</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clean build directory</span>
 <span class="nb">rm</span> <span class="nt">-rf</span> dist
 pnpm build
 </code></pre></div></div>
 
 <p><strong>Port Already in Use</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Use a different port</span>
 <span class="nv">PORT</span><span class="o">=</span>3001 pnpm dev
 
@@ -443,6 +493,7 @@ lsof <span class="nt">-i</span> :3000
 </code></pre></div></div>
 
 <p><strong>Permission Errors</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Fix script permissions</span>
 <span class="nb">chmod</span> +x scripts/<span class="k">*</span>.sh
 
@@ -454,10 +505,12 @@ npm config <span class="nb">set </span>prefix ~/.npm-global
 <h3 id="debugging">Debugging</h3>
 
 <p><strong>Enable Debug Logs:</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">LOG_LEVEL</span><span class="o">=</span>debug pnpm dev
 </code></pre></div></div>
 
 <p><strong>Use Node.js Inspector:</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start with inspector</span>
 node <span class="nt">--inspect</span> dist/index.js
 
@@ -468,19 +521,20 @@ pnpm dev <span class="nt">--inspect</span>
 <p><strong>VSCode Debugging:</strong></p>
 
 <p>Create <code class="language-plaintext highlighter-rouge">.vscode/launch.json</code>:</p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-  </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.2.0"</span><span class="p">,</span><span class="w">
-  </span><span class="nl">"configurations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="p">{</span><span class="w">
-      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"request"</span><span class="p">:</span><span class="w"> </span><span class="s2">"launch"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Debug Server"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"skipFiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;node_internals&gt;/**"</span><span class="p">],</span><span class="w">
-      </span><span class="nl">"program"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/dist/index.js"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"envFile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/.env"</span><span class="p">,</span><span class="w">
-      </span><span class="nl">"outFiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"${workspaceFolder}/dist/**/*.js"</span><span class="p">]</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">]</span><span class="w">
+    </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.2.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"configurations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"node"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"request"</span><span class="p">:</span><span class="w"> </span><span class="s2">"launch"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Debug Server"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"skipFiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;node_internals&gt;/**"</span><span class="p">],</span><span class="w">
+            </span><span class="nl">"program"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/dist/index.js"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"envFile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/.env"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"outFiles"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"${workspaceFolder}/dist/**/*.js"</span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -507,6 +561,7 @@ pnpm dev <span class="nt">--inspect</span>
 </code></pre></div></div>
 
 <p>Enable and start:</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>systemctl <span class="nb">enable </span>prisma-airs-mcp
 <span class="nb">sudo </span>systemctl start prisma-airs-mcp
 </code></pre></div></div>
@@ -527,22 +582,25 @@ pm2 startup
 </code></pre></div></div>
 
 <p>Example <code class="language-plaintext highlighter-rouge">ecosystem.config.js</code>:</p>
+
 <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="na">apps</span><span class="p">:</span> <span class="p">[{</span>
-    <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">prisma-airs-mcp</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">script</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./dist/index.js</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">instances</span><span class="p">:</span> <span class="dl">'</span><span class="s1">max</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">exec_mode</span><span class="p">:</span> <span class="dl">'</span><span class="s1">cluster</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">env</span><span class="p">:</span> <span class="p">{</span>
-      <span class="na">NODE_ENV</span><span class="p">:</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span>
-      <span class="na">PORT</span><span class="p">:</span> <span class="mi">3000</span>
-    <span class="p">},</span>
-    <span class="na">error_file</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./logs/err.log</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">out_file</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./logs/out.log</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">log_file</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./logs/combined.log</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">time</span><span class="p">:</span> <span class="kc">true</span>
-  <span class="p">}]</span>
-<span class="p">}</span>
+    <span class="na">apps</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">prisma-airs-mcp</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">script</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./dist/index.js</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">instances</span><span class="p">:</span> <span class="dl">'</span><span class="s1">max</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">exec_mode</span><span class="p">:</span> <span class="dl">'</span><span class="s1">cluster</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">env</span><span class="p">:</span> <span class="p">{</span>
+                <span class="na">NODE_ENV</span><span class="p">:</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span>
+                <span class="na">PORT</span><span class="p">:</span> <span class="mi">3000</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="na">error_file</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./logs/err.log</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">out_file</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./logs/out.log</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">log_file</span><span class="p">:</span> <span class="dl">'</span><span class="s1">./logs/combined.log</span><span class="dl">'</span><span class="p">,</span>
+            <span class="na">time</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+<span class="p">};</span>
 </code></pre></div></div>
 
 <h2 id="next-steps">Next Steps</h2>
@@ -550,7 +608,7 @@ pm2 startup
 <ul>
   <li>Review the <a href="/deployment/configuration">Configuration Reference</a></li>
   <li>Follow the <a href="/deployment/quickstart">Quick Start Guide</a></li>
-  <li>Set up <a href="/deployment/claude-desktop">Claude Integration</a></li>
+  <li>Set up <a href="/deployment/mcp/claude-desktop">Claude Integration</a></li>
   <li>Consider <a href="/deployment/docker">Docker</a> or <a href="/deployment/kubernetes">Kubernetes</a> for easier deployment</li>
 </ul>
 
@@ -563,15 +621,6 @@ pm2 startup
           </a>
         </div>
         
-        
-        <div class="pagination">
-          
-          
-          <a href="/deployment/vscode/" class="next">
-            Use Prisma AIRS MCP Server in VS Code <i class="fas fa-arrow-right"></i>
-          </a>
-          
-        </div>
         
       </div>
     </main>

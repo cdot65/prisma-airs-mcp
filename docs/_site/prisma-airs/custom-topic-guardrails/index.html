@@ -204,9 +204,7 @@
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"prompt_detection_details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nl">"topic_guardrails_details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"blocked_topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="s2">"Astronomy and outer space exploration"</span><span class="w">
-            </span><span class="p">]</span><span class="w">
+            </span><span class="nl">"blocked_topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Astronomy and outer space exploration"</span><span class="p">]</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"report_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"R00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
@@ -215,9 +213,7 @@
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"response_detection_details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nl">"topic_guardrails_details"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"blocked_topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="s2">"Astronomy and outer space exploration"</span><span class="w">
-            </span><span class="p">]</span><span class="w">
+            </span><span class="nl">"blocked_topics"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Astronomy and outer space exploration"</span><span class="p">]</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="nl">"scan_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"00000000-0000-0000-0000-000000000000"</span><span class="p">,</span><span class="w">
@@ -226,6 +222,7 @@
 </span></code></pre></div></div>
 
 <p><strong>Key Response Fields</strong>:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">prompt_detected.topic_violation</code>: <code class="language-plaintext highlighter-rouge">true</code> indicates topic violation in prompt</li>
   <li><code class="language-plaintext highlighter-rouge">response_detected.topic_violation</code>: <code class="language-plaintext highlighter-rouge">true</code> indicates topic violation in response</li>
@@ -280,6 +277,7 @@
 </span></code></pre></div></div>
 
 <p><strong>Report Fields</strong>:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">allowed_topic_list</code>: Whether content matches allowed topics (“matched” or “not_matched”)</li>
   <li><code class="language-plaintext highlighter-rouge">blocked_topic_list</code>: Whether content matches blocked topics (“matched” or “not_matched”)</li>
@@ -289,7 +287,9 @@
 <h2 id="configuration-types">Configuration Types</h2>
 
 <h3 id="blocked-topics">Blocked Topics</h3>
+
 <p>Topics that should be prevented in prompts and responses:</p>
+
 <ul>
   <li>Competitor information</li>
   <li>Unreleased products</li>
@@ -298,7 +298,9 @@
 </ul>
 
 <h3 id="allowed-topics">Allowed Topics</h3>
+
 <p>Topics that are explicitly permitted:</p>
+
 <ul>
   <li>Public product information</li>
   <li>General customer support</li>
@@ -309,6 +311,7 @@
 <h2 id="common-use-cases">Common Use Cases</h2>
 
 <h3 id="enterprise-security">Enterprise Security</h3>
+
 <ul>
   <li>Block discussion of competitor strategies</li>
   <li>Prevent leakage of confidential projects</li>
@@ -317,6 +320,7 @@
 </ul>
 
 <h3 id="industry-compliance">Industry Compliance</h3>
+
 <ul>
   <li>Healthcare: Block medical advice</li>
   <li>Financial: Prevent investment recommendations</li>
@@ -325,6 +329,7 @@
 </ul>
 
 <h3 id="brand-protection">Brand Protection</h3>
+
 <ul>
   <li>Control messaging about products</li>
   <li>Prevent unauthorized announcements</li>
@@ -335,6 +340,7 @@
 <h2 id="topic-detection">Topic Detection</h2>
 
 <h3 id="how-it-works">How It Works</h3>
+
 <ol>
   <li>Content is analyzed for topic matches</li>
   <li>Both allowed and blocked lists are checked</li>
@@ -343,6 +349,7 @@
 </ol>
 
 <h3 id="detection-precision">Detection Precision</h3>
+
 <ul>
   <li>Semantic understanding of topics</li>
   <li>Context-aware matching</li>

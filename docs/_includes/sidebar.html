@@ -5,24 +5,17 @@
     <li><a href="{{ site.baseurl }}/developers/overview/" {% if page.url == '/developers/overview/' %}class="active"{% endif %}>Overview</a></li>
   </ul>
   
-  <h4>MCP Server Documentation</h4>
-  <ul>
-    <li><a href="{{ site.baseurl }}/developers/client/" {% if page.url == '/developers/client/' %}class="active"{% endif %}>AIRS Client Integration</a></li>
-    <li><a href="{{ site.baseurl }}/developers/resources/" {% if page.url == '/developers/resources/' %}class="active"{% endif %}>MCP Resources</a></li>
-    <li><a href="{{ site.baseurl }}/developers/tools/" {% if page.url == '/developers/tools/' %}class="active"{% endif %}>MCP Tools</a></li>
-  </ul>
-  
   <h4>Source Code Documentation</h4>
   <ul>
-    <li><a href="{{ site.baseurl }}/developers/src-root/" {% if page.url == '/developers/src-root/' %}class="active"{% endif %}>Root (src/)</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src-airs/" {% if page.url == '/developers/src-airs/' %}class="active"{% endif %}>AIRS Module</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src-config/" {% if page.url == '/developers/src-config/' %}class="active"{% endif %}>Configuration</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src-mcp/" {% if page.url == '/developers/src-mcp/' %}class="active"{% endif %}>MCP Types</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src-prompts/" {% if page.url == '/developers/src-prompts/' %}class="active"{% endif %}>Prompts</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src-resources/" {% if page.url == '/developers/src-resources/' %}class="active"{% endif %}>Resources</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src-tools/" {% if page.url == '/developers/src-tools/' %}class="active"{% endif %}>Tools</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src-transport/" {% if page.url == '/developers/src-transport/' %}class="active"{% endif %}>Transport</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src-utils/" {% if page.url == '/developers/src-utils/' %}class="active"{% endif %}>Utilities</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/" {% if page.url == '/developers/src/' %}class="active"{% endif %}>Root (src/)</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/" {% if page.url == '/developers/src/types/' %}class="active"{% endif %}>Types Module</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/airs/" {% if page.url == '/developers/src/airs/' %}class="active"{% endif %}>AIRS Module</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/config/" {% if page.url == '/developers/src/config/' %}class="active"{% endif %}>Configuration</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/prompts/" {% if page.url == '/developers/src/prompts/' %}class="active"{% endif %}>Prompts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/resources/" {% if page.url == '/developers/src/resources/' %}class="active"{% endif %}>Resources</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/tools/" {% if page.url == '/developers/src/tools/' %}class="active"{% endif %}>Tools</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/transport/" {% if page.url == '/developers/src/transport/' %}class="active"{% endif %}>Transport</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/utils/" {% if page.url == '/developers/src/utils/' %}class="active"{% endif %}>Utilities</a></li>
   </ul>
   
   <h4>API</h4>
@@ -63,25 +56,26 @@
     <li><a href="{{ site.baseurl }}/deployment/quickstart/" {% if page.url == '/deployment/quickstart/' %}class="active"{% endif %}>Quick Start Guide</a></li>
   </ul>
   
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/deployment/configuration/" {% if page.url == '/deployment/configuration/' %}class="active"{% endif %}>Configuration Reference</a></li>
+  </ul>
+  
   <h4>Deployment Documentation</h4>
   <ul>
     <li><a href="{{ site.baseurl }}/deployment/docker/" {% if page.url == '/deployment/docker/' %}class="active"{% endif %}>Docker</a></li>
     <li><a href="{{ site.baseurl }}/deployment/docker-compose/" {% if page.url == '/deployment/docker-compose/' %}class="active"{% endif %}>Docker Compose</a></li>
     <li><a href="{{ site.baseurl }}/deployment/source/" {% if page.url == '/deployment/source/' %}class="active"{% endif %}>Build from Source</a></li>
     <li><a href="{{ site.baseurl }}/deployment/kubernetes/" {% if page.url == '/deployment/kubernetes/' %}class="active"{% endif %}>Kubernetes</a></li>
-  </ul>
-  
-  <h4>Configuration</h4>
-  <ul>
-    <li><a href="{{ site.baseurl }}/deployment/configuration/" {% if page.url == '/deployment/configuration/' %}class="active"{% endif %}>Configuration Reference</a></li>
-  </ul>
-  
-  <h4>Additional</h4>
-  <ul>
     <li><a href="{{ site.baseurl }}/deployment/docker-build-options/" {% if page.url == '/deployment/docker-build-options/' %}class="active"{% endif %}>Docker Build Options</a></li>
-    <li><a href="{{ site.baseurl }}/deployment/vscode/" {% if page.url == '/deployment/vscode/' %}class="active"{% endif %}>VSCode</a></li>
-    <li><a href="{{ site.baseurl }}/deployment/claude-desktop/" {% if page.url == '/deployment/claude-desktop/' %}class="active"{% endif %}>Claude Desktop</a></li>
-    <li><a href="{{ site.baseurl }}/deployment/claude-code/" {% if page.url == '/deployment/claude-code/' %}class="active"{% endif %}>Claude Code</a></li>
+  </ul>
+  
+  <h4>MCP Client Config</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/deployment/mcp/" {% if page.url == '/deployment/mcp/' %}class="active"{% endif %}>Overview</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/mcp/vscode/" {% if page.url == '/deployment/mcp/vscode/' %}class="active"{% endif %}>Visual Studio Code</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/mcp/claude-desktop/" {% if page.url == '/deployment/mcp/claude-desktop/' %}class="active"{% endif %}>Claude Desktop</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/mcp/claude-code/" {% if page.url == '/deployment/mcp/claude-code/' %}class="active"{% endif %}>Claude Code</a></li>
   </ul>
 </nav>
 
