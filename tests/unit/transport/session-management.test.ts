@@ -3,11 +3,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-require-imports */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 
 import type { Response } from 'express';
 import { HttpServerTransport } from '../../../src/transport/http';
-import type { StreamableRequest } from '../../../src/transport/http';
+import type { TransportStreamableRequest as StreamableRequest } from '../../../src/types';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { getLogger } from '../../../src/utils/logger';
 

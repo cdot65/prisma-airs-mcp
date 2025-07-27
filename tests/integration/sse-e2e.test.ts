@@ -10,13 +10,14 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 const EventSource = require('eventsource');
 const fetch = require('node-fetch');
 import { HttpServerTransport } from '../../src/transport/http';
-import type { StreamableRequest } from '../../src/transport/http';
+import type { TransportStreamableRequest as StreamableRequest } from '../../src/types';
 import { getLogger } from '../../src/utils/logger';
 import { getConfig } from '../../src/config';
 
 // Mock dependencies
 jest.mock('../../src/utils/logger');
 jest.mock('../../src/config');
+jest.mock('../../src/airs/factory');
 
 // Increase timeout for E2E tests
 jest.setTimeout(10000);
