@@ -1,19 +1,53 @@
 ---
 layout: documentation
-title: Utils Module (src/utils/)
+title: Utils Module
 permalink: /developers/src/utils/
 category: developers
 ---
 
-# Utils Module Documentation
+# Utilities (src/utils/)
 
 The utils module provides utility functions used throughout the Prisma AIRS MCP server. Currently, it contains the logging system implementation using Winston.
 
-## Module Overview
+## Module Structure
 
-The utils module consists of a single file:
+```
+src/utils/
+└── logger.ts    # Winston logger configuration and initialization
+```
 
-- **logger.ts** - Winston logger configuration and initialization
+## Architecture Overview
+
+```
+┌─────────────────────────────────────────┐
+│         Application Module              │
+│    (any module in the codebase)         │
+└─────────────────┬───────────────────────┘
+                  │
+                  │ getLogger()
+                  ▼
+┌─────────────────────────────────────────┐
+│          Logger Singleton               │
+│  • Lazy initialization                  │
+│  • Environment-aware formatting         │
+│  • Configured log levels                │
+└─────────────────┬───────────────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│         Winston Logger                  │
+│  • Timestamp formatting                 │
+│  • Error stack traces                   │
+│  • Default metadata                     │
+└─────────────────┬───────────────────────┘
+                  │
+        ┌─────────┴─────────┐
+        │                   │
+┌───────▼────────┐ ┌────────▼──────┐
+│  Development   │ │  Production   │
+│  • Colorized   │ │  • JSON       │
+│  • Simple      │ │  • Structured │
+└────────────────┘ └───────────────┘
+```
 
 ## Logger Implementation
 
@@ -105,7 +139,41 @@ transports: [
 Creates and configures a Winston logger instance:
 
 ```typescript
-export function createLogger(): winston.Logger;
+export function createLogger(): winston.Logger {
+    if (logger) {
+        return logger;
+    }
+    
+    const config = getConfig();
+    const { environment, logLevel } = config.server;
+    
+    const formats = [
+        winston.format.timestamp(),
+        winston.format.errors({ stack: true })
+    ];
+    
+    if (environment === 'development') {
+        formats.push(winston.format.colorize(), winston.format.simple());
+    } else {
+        formats.push(winston.format.json());
+    }
+    
+    logger = winston.createLogger({
+        level: logLevel,
+        format: winston.format.combine(...formats),
+        defaultMeta: {
+            service: config.mcp.serverName,
+            version: config.mcp.serverVersion,
+        },
+        transports: [
+            new winston.transports.Console({
+                silent: environment === 'test',
+            }),
+        ],
+    });
+    
+    return logger;
+}
 ```
 
 **Features:**
@@ -116,33 +184,29 @@ export function createLogger(): winston.Logger;
 - Adds default metadata (service name and version)
 - Includes timestamp and error stack traces
 
-**Usage:**
-
-```typescript
-import { createLogger } from './utils/logger';
-
-const logger = createLogger();
-logger.info('Application started');
-```
-
 ### getLogger()
 
 Gets the logger instance, creating it if necessary:
 
 ```typescript
-export function getLogger(): winston.Logger;
+export function getLogger(): winston.Logger {
+    if (!logger) {
+        return createLogger();
+    }
+    return logger;
+}
 ```
 
 **Features:**
 
 - Lazy initialization
 - Ensures logger is always available
-- Most commonly used function
+- Most commonly used function throughout the codebase
 
-**Usage:**
+**Usage Example:**
 
 ```typescript
-import { getLogger } from './utils/logger';
+import { getLogger } from '../utils/logger';
 
 const logger = getLogger();
 logger.debug('Processing request', { requestId: '123' });
@@ -387,18 +451,54 @@ console.log('Transports:', logger.transports.length);
 console.log('Environment:', process.env.NODE_ENV);
 ```
 
+## Type System
+
+The logger module uses standard Winston types:
+
+| Type | Module | Purpose |
+|------|--------|---------|
+| `winston.Logger` | `winston` | Logger instance type |
+| `winston.LoggerOptions` | `winston` | Logger configuration options |
+
+## Dependencies
+
+### External Dependencies
+
+| Module | Purpose |
+|--------|---------|
+| `winston` | Logging framework |
+
+### Internal Dependencies
+
+| Module | Import | Purpose |
+|--------|--------|---------|
+| `../config` | `getConfig()` | Configuration access |
+
 ## Future Enhancements
 
 Potential additions to the utils module:
 
-1. **File Rotation** - Add file transport with rotation
-2. **External Services** - Send logs to CloudWatch, Datadog, etc.
-3. **Request ID Tracking** - Automatic request ID propagation
-4. **Performance Metrics** - Built-in performance logging
-5. **Audit Logging** - Separate audit log transport
+1. **Additional Utilities**:
+   - Error helpers and custom error classes
+   - Validation utilities
+   - Data sanitization functions
+   - Retry helpers
+   - Async utilities
 
-## Next Steps
+2. **Logger Enhancements**:
+   - File rotation transport
+   - External service integration (CloudWatch, Datadog)
+   - Request ID tracking
+   - Performance metrics logging
+   - Separate audit log transport
+
+## Related Documentation
 
 - [Configuration Module]({{ site.baseurl }}/developers/src/config/) - How logger gets its configuration
-- [Server Root]({{ site.baseurl }}/developers/src/) - Logger initialization on startup
-- [AIRS Module]({{ site.baseurl }}/developers/src/airs/) - Example logger usage
+- [Application Entry Point]({{ site.baseurl }}/developers/src/) - Logger initialization on startup
+- [AIRS Module]({{ site.baseurl }}/developers/src/airs/) - Example logger usage in production
+- [Tools Module]({{ site.baseurl }}/developers/src/tools/) - Logger usage patterns
+
+## Summary
+
+The utils module currently provides a simple but powerful logging system that adapts to different environments. The singleton pattern ensures consistent logging throughout the application, while environment-specific formatting makes logs suitable for both development debugging and production monitoring.

@@ -1,3 +1,4 @@
+/* eslint-env browser */
 // Table of Contents Generator
 document.addEventListener('DOMContentLoaded', function() {
   // Generate TOC for documentation pages

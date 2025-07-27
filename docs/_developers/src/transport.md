@@ -1,119 +1,209 @@
 ---
 layout: documentation
-title: Transport Module (src/transport/)
+title: Transport Module
 permalink: /developers/src/transport/
 category: developers
 ---
 
-# Transport Module Documentation
+# HTTP Transport Layer (src/transport/)
 
-The transport module handles HTTP and Server-Sent Events (SSE) communication for the MCP server. It implements the JSON-RPC 2.0 protocol over HTTP with optional SSE streaming for long-running operations.
+The transport module implements the HTTP and Server-Sent Events (SSE) transport layer for the MCP server. It handles JSON-RPC 2.0 protocol communication, request routing, session management, and optional streaming responses.
 
-## Module Overview
+## Module Structure
 
-The transport module consists of three files:
+```
+src/transport/
+├── http.ts    # Main HTTP transport with JSON-RPC routing
+└── sse.ts     # Server-Sent Events for streaming responses
+```
 
-- **http.ts** - Main HTTP transport handler with JSON-RPC routing
-- **sse.ts** - Server-Sent Events implementation for streaming responses
-- **prompt.md** - Prompt engineering guidelines (documentation)
+## Architecture Overview
 
-## HTTP Transport (http.ts)
+```
+┌─────────────────────────────────────────┐
+│        HTTP Client Request              │
+│     (JSON-RPC 2.0 over HTTP)            │
+└─────────────────┬───────────────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│      HttpServerTransport                │
+│  • Request validation                   │
+│  • Session management                   │
+│  • Method routing                       │
+│  • Response formatting                  │
+└────┬────────────┴──────────┬────────────┘
+     │ Standard Response     │ Streaming
+     │                       │
+     ▼                       ▼
+┌──────────────┐       ┌──────────────────┐
+│ JSON Response│       │   SSETransport   │
+│  (immediate) │       │ (event stream)   │
+└──────────────┘       └──────────────────┘
+```
 
-### Overview
+## Core Components
 
-The HTTP transport handles incoming MCP requests, routes them to appropriate handlers, and manages client sessions for streaming responses.
+### 1. HttpServerTransport (http.ts)
 
-### Key Components
+The main transport handler that processes incoming requests and routes them to appropriate MCP handlers.
 
-#### HttpServerTransport Class
+#### Class Structure
 
 ```typescript
 export class HttpServerTransport {
-    private server: Server;
-    private logger: Logger;
+    private server: Server;              // MCP SDK server instance
+    private logger: Logger;              // Winston logger
     private resourceHandler: ResourceHandler;
     private toolHandler: ToolHandler;
     private promptHandler: PromptHandler;
+    private config = getConfig();
     private sseTransport: SSETransport;
     private sessions: Map<string, { clientId: string; createdAt: Date }>;
 
-    // Handle incoming JSON-RPC requests
-    async handleRequest(req: StreamableRequest, res: Response): Promise<void>;
+    constructor(options: TransportHttpOptions);
 
-    // Handle SSE connections for streaming
-    handleSSEConnection(req: StreamableRequest, res: Response): void;
+    async handleRequest(req: TransportStreamableRequest, res: Response): Promise<void>;
 
-    // Route requests to appropriate handlers
-    private async routeRequest(
-        method: string,
-        params: unknown,
-    ): Promise<unknown>;
+    handleSSEConnection(req: TransportStreamableRequest, res: Response): void;
 }
 ```
 
-### JSON-RPC Implementation
+#### Key Responsibilities
 
-#### Request Format
+1. **Request Validation**: Ensures valid JSON-RPC 2.0 format
+2. **Method Routing**: Routes requests to appropriate handlers
+3. **Session Management**: Tracks client sessions for streaming
+4. **Response Mode Selection**: Chooses between standard JSON or SSE
+5. **Error Handling**: Formats errors according to JSON-RPC spec
+
+### 2. SSETransport (sse.ts)
+
+Manages Server-Sent Events connections for streaming responses.
+
+#### Class Structure
 
 ```typescript
-export interface JsonRpcRequest {
+export class SSETransport {
+    private clients: Map<string, Response>;
+    private messageId: number;
+
+    initializeSSE(res: Response, clientId: string): void;
+
+    sendEvent(clientId: string, message: TransportSSEMessage): boolean;
+
+    sendJsonRpcResponse(clientId: string, response: TransportJsonRpcResponse): boolean;
+
+    sendNotification(clientId: string, method: string, params?: unknown): boolean;
+
+    broadcast(message: TransportSSEMessage): void;
+
+    isConnected(clientId: string): boolean;
+
+    disconnect(clientId: string): void;
+}
+```
+
+## Request Flow
+
+### 1. Standard JSON-RPC Request
+
+```
+Client → POST / → handleRequest() → routeRequest() → Handler → JSON Response
+```
+
+### 2. Streaming SSE Request
+
+```
+Client → GET / (Accept: text/event-stream) → handleSSEConnection() → SSE Stream
+       → POST / → handleRequest() → routeRequest() → Handler → SSE Events
+```
+
+## Supported Methods
+
+### Resource Methods
+
+| Method                     | Handler                         | Purpose                  |
+|----------------------------|---------------------------------|--------------------------|
+| `resources/list`           | `handleResourcesList()`         | List available resources |
+| `resources/read`           | `handleResourcesRead()`         | Read resource content    |
+| `resources/templates/list` | `handleResourceTemplatesList()` | List URI templates       |
+
+### Tool Methods
+
+| Method       | Handler             | Purpose              |
+|--------------|---------------------|----------------------|
+| `tools/list` | `handleToolsList()` | List available tools |
+| `tools/call` | `handleToolsCall()` | Execute a tool       |
+
+### Prompt Methods
+
+| Method         | Handler               | Purpose                   |
+|----------------|-----------------------|---------------------------|
+| `prompts/list` | `handlePromptsList()` | List available prompts    |
+| `prompts/get`  | `handlePromptsGet()`  | Get prompt with arguments |
+
+### System Methods
+
+| Method                      | Handler                            | Purpose                     |
+|-----------------------------|------------------------------------|-----------------------------|
+| `initialize`                | `handleInitialize()`               | Initialize MCP session      |
+| `ping`                      | `handlePing()`                     | Health check                |
+| `notifications/initialized` | `handleNotificationsInitialized()` | Client ready notification   |
+| `completion/complete`       | `handleCompletionComplete()`       | MCP Inspector compatibility |
+
+## Type System
+
+All transport types are centralized in `src/types/transport.ts`:
+
+### Request/Response Types
+
+```typescript
+interface TransportJsonRpcRequest {
     jsonrpc: '2.0';
     method: string;
     params?: unknown;
     id: string | number | null;
 }
-```
 
-#### Response Format
-
-```typescript
-export interface JsonRpcResponse {
+interface TransportJsonRpcResponse {
     jsonrpc: '2.0';
     result?: unknown;
-    error?: JsonRpcError;
+    error?: TransportJsonRpcError;
     id: string | number | null;
 }
 
-export interface JsonRpcError {
+interface TransportJsonRpcError {
     code: number;
     message: string;
     data?: unknown;
 }
 ```
 
-### Supported Methods
-
-The transport routes the following MCP methods:
-
-#### Resource Methods
-
-- `resources/list` - List available resources
-- `resources/read` - Read resource content
-- `resources/templates/list` - List resource URI templates
-
-#### Tool Methods
-
-- `tools/list` - List available tools
-- `tools/call` - Execute a tool
-
-#### Prompt Methods
-
-- `prompts/list` - List available prompts
-- `prompts/get` - Get prompt with arguments
-
-#### Server Methods
-
-- `initialize` - Initialize MCP connection
-- `ping` - Health check
-- `notifications/initialized` - Client initialized notification
-- `completion/complete` - Completion support (MCP Inspector compatibility)
-
-### Session Management
-
-Sessions enable streaming responses via SSE:
+### SSE Types
 
 ```typescript
-private getOrCreateSession(req: StreamableRequest): string {
+interface TransportSSEMessage {
+    id?: string;      // Message ID for reconnection
+    event?: string;   // Event type
+    data: string;     // Message data (JSON string)
+    retry?: number;   // Reconnection retry interval
+}
+
+interface TransportStreamableRequest extends Request {
+    headers: {
+        accept?: string;
+        'last-event-id'?: string;
+        'mcp-session-id'?: string;
+    } & Request['headers'];
+}
+```
+
+## Session Management
+
+Sessions enable stateful connections for streaming responses:
+
+```typescript
+private getOrCreateSession(req: TransportStreamableRequest): string {
     const existingSessionId = req.headers['mcp-session-id'];
 
     if (existingSessionId && this.sessions.has(existingSessionId)) {
@@ -122,297 +212,290 @@ private getOrCreateSession(req: StreamableRequest): string {
 
     const sessionId = uuidv4();
     const clientId = uuidv4();
-    this.sessions.set(sessionId, { clientId, createdAt: new Date() });
+    this.sessions.set(sessionId, {clientId, createdAt: new Date()});
 
     return sessionId;
 }
 ```
 
-### Request Routing
+**Session Headers**:
+
+- `Mcp-Session-Id`: Unique session identifier
+- `Last-Event-Id`: For SSE reconnection
+
+## Response Mode Selection
+
+The transport automatically selects the appropriate response mode:
 
 ```typescript
-private async routeRequest(method: string, params: unknown): Promise<unknown> {
-    switch (method) {
-        case 'resources/list':
-            return this.resourceHandler.listResources(params);
-        case 'tools/call':
-            return this.toolHandler.callTool(params);
-        // ... other methods
-        default:
-            throw new Error(`Method not found: ${method}`);
-    }
+private shouldStreamResponse(method: string, result: unknown): boolean {
+    // Currently returns false for all methods
+    // Can be extended for long-running operations
+    return false;
 }
-```
 
-### Error Handling
-
-Standard JSON-RPC error codes:
-
-```typescript
-// Invalid request
+private
+acceptsSSE(req
+:
+TransportStreamableRequest
+):
+boolean
 {
-    "jsonrpc": "2.0",
-    "error": {
-        "code": -32600,
-        "message": "Invalid Request: missing or invalid method"
-    },
-    "id": null
-}
-
-// Internal error
-{
-    "jsonrpc": "2.0",
-    "error": {
-        "code": -32603,
-        "message": "Internal error",
-        "data": "Error details"
-    },
-    "id": "request-id"
+    const accept = req.headers.accept || '';
+    return accept.includes('text/event-stream');
 }
 ```
 
-## SSE Transport (sse.ts)
+## SSE Implementation
 
-### Overview
-
-The SSE transport enables server-to-client streaming for long-running operations and real-time updates.
-
-### SSETransport Class
+### Connection Setup
 
 ```typescript
-export class SSETransport {
-    private clients: Map<string, Response> = new Map();
-    private messageId = 0;
-
-    // Initialize SSE connection
-    initializeSSE(res: Response, clientId: string): void;
-
-    // Send SSE event
-    sendEvent(clientId: string, message: SSEMessage): boolean;
-
-    // Send JSON-RPC response via SSE
-    sendJsonRpcResponse(clientId: string, response: JsonRpcResponse): boolean;
-
-    // Send server notification
-    sendNotification(
-        clientId: string,
-        method: string,
-        params?: unknown,
-    ): boolean;
-
-    // Broadcast to all clients
-    broadcast(message: SSEMessage): void;
-}
-```
-
-### SSE Message Format
-
-```typescript
-export interface SSEMessage {
-    id?: string; // Message ID for reconnection
-    event?: string; // Event type
-    data: string; // Message data (JSON string)
-    retry?: number; // Reconnection retry interval
-}
-```
-
-### SSE Event Types
-
-1. **connect** - Initial connection confirmation
-2. **message** - JSON-RPC response
-3. **notification** - Server-initiated notification
-4. **endpoint** - Legacy endpoint information
-
-### SSE Headers
-
-```typescript
+// Set SSE headers
 res.setHeader('Content-Type', 'text/event-stream');
 res.setHeader('Cache-Control', 'no-cache');
 res.setHeader('Connection', 'keep-alive');
 res.setHeader('X-Accel-Buffering', 'no'); // Disable Nginx buffering
 ```
 
-## Usage Examples
+### Event Format
 
-### Basic Request Handling
+```
+event: message
+id: 123
+data: {"jsonrpc":"2.0","result":{...},"id":"req-123"}
+
+event: notification
+data: {"jsonrpc":"2.0","method":"tools/list_changed"}
+
+```
+
+### Event Types
+
+| Event          | Purpose              | Payload                     |
+|----------------|----------------------|-----------------------------|
+| `connect`      | Initial connection   | `{ connected: true }`       |
+| `endpoint`     | Legacy compatibility | `{ endpoint: '/messages' }` |
+| `message`      | JSON-RPC response    | Full JSON-RPC response      |
+| `notification` | Server notification  | JSON-RPC notification       |
+
+## Error Handling
+
+### JSON-RPC Error Codes
+
+| Code   | Constant         | Description            |
+|--------|------------------|------------------------|
+| -32700 | Parse error      | Invalid JSON           |
+| -32600 | Invalid Request  | Missing/invalid method |
+| -32601 | Method not found | Unknown method         |
+| -32602 | Invalid params   | Invalid parameters     |
+| -32603 | Internal error   | Server error           |
+
+### Error Response Format
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": -32600,
+    "message": "Invalid Request: missing or invalid method",
+    "data": "Additional error details"
+  },
+  "id": "request-123"
+}
+```
+
+## Handler Implementations
+
+### Initialize Handler
 
 ```typescript
-// Express route handler
-app.post('/messages', async (req, res) => {
-    await transport.handleRequest(req, res);
-});
+private async
+handleInitialize(params
+:
+unknown
+):
+Promise < unknown > {
+    return {
+        protocolVersion: this.config.mcp.protocolVersion,
+        capabilities: {
+            experimental: {},
+            prompts: {
+                listChanged: false,
+            },
+            resources: {
+                subscribe: false,
+                listChanged: false,
+            },
+            tools: {
+                listChanged: false,
+            },
+        },
+        serverInfo: {
+            name: this.config.mcp.serverName,
+            version: this.config.mcp.serverVersion,
+        },
+    };
+}
+```
+
+### Resource Templates Handler
+
+```typescript
+private async handleResourceTemplatesList(): Promise<unknown> {
+    return {
+        resourceTemplates: [
+            {
+                uriTemplate: 'airs://scan-results/{scanId}',
+                name: 'Scan Results',
+                description: 'Retrieve results for a specific scan by ID',
+                mimeType: 'application/json',
+            },
+            {
+                uriTemplate: 'airs://threat-reports/{reportId}',
+                name: 'Threat Report',
+                description: 'Retrieve detailed threat report by ID',
+                mimeType: 'application/json',
+            },
+        ],
+    };
+}
+```
+
+## Usage Examples
+
+### Basic JSON-RPC Request
+
+```bash
+curl -X POST http://localhost:3000/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "tools/list",
+    "id": 1
+  }'
+
+# Response
+{
+    "jsonrpc": "2.0",
+    "result": {
+        "tools": [...]
+    },
+    "id": 1
+}
 ```
 
 ### SSE Connection
 
-```typescript
-// SSE endpoint for streaming
-app.get('/sse', (req, res) => {
-    transport.handleSSEConnection(req, res);
-});
+```bash
+# Establish SSE connection
+curl -H "Accept: text/event-stream" http://localhost:3000/
+
+# Server sends:
+event: endpoint
+data: {"endpoint":"/messages"}
+
+event: connect
+data: {"connected":true}
 ```
 
-### Client Request Example
+### Tool Execution
 
-```typescript
-// JSON-RPC request
-POST /messages
-{
+```bash
+curl -X POST http://localhost:3000/ \
+  -H "Content-Type: application/json" \
+  -d '{
     "jsonrpc": "2.0",
     "method": "tools/call",
     "params": {
         "name": "airs_scan_content",
         "arguments": {
-            "prompt": "Scan this content"
+            "prompt": "Check this content"
         }
     },
-    "id": "req-123"
-}
-
-// Response
-{
-    "jsonrpc": "2.0",
-    "result": {
-        "content": [
-            {
-                "type": "text",
-                "text": "Scan completed successfully"
-            }
-        ]
-    },
-    "id": "req-123"
-}
+    "id": "scan-123"
+  }'
 ```
 
-### SSE Streaming Example
+## Performance Considerations
+
+### Connection Management
+
+- SSE connections are cleaned up on client disconnect
+- Sessions are stored in-memory (consider Redis for scale)
+- Automatic disconnection after response for non-persistent operations
+
+### Streaming Decision
+
+Currently, all responses are sent as standard JSON. The framework supports streaming for:
+
+- Long-running tool executions
+- Large resource reads
+- Real-time notifications
+
+### Request Logging
 
 ```typescript
-// Client connects with SSE
-GET /sse
-Accept: text/event-stream
+this.logger.debug('Handling MCP request', {
+    method,
+    id,
+    params: JSON.stringify(params),
+});
 
-// Server sends events
-event: connect
-data: {"connected": true}
-
-event: message
-id: 1
-data: {"jsonrpc":"2.0","result":{...},"id":"req-123"}
-
-event: notification
-data: {"jsonrpc":"2.0","method":"tools/list_changed"}
-```
-
-## Integration Points
-
-### Handler Integration
-
-The transport integrates with:
-
-1. **ResourceHandler** - Resource operations
-2. **ToolHandler** - Tool execution
-3. **PromptHandler** - Prompt retrieval
-4. **Config** - Server configuration
-5. **Logger** - Request logging
-
-### Initialize Response
-
-```typescript
-{
-    "protocolVersion": "2024-11-05",
-    "capabilities": {
-        "resources": { "read": true, "list": true },
-        "tools": { "list": true, "call": true },
-        "prompts": { "list": true, "get": true }
-    },
-    "serverInfo": {
-        "name": "prisma-airs-mcp",
-        "version": "1.0.0"
-    }
-}
-```
-
-### Resource Templates
-
-Dynamic resource URI templates:
-
-```typescript
-{
-    "resourceTemplates": [
-        {
-            "uriTemplate": "airs://scan-results/{scanId}",
-            "name": "Scan Results",
-            "description": "Retrieve results for a specific scan by ID",
-            "mimeType": "application/json"
-        }
-    ]
-}
+this.logger.debug('Request completed', {
+    method,
+    duration: Date.now() - startTime,
+    streaming: shouldStream && acceptsSSE,
+});
 ```
 
 ## Security Considerations
 
-1. **Session Management** - Sessions are ephemeral and tied to connections
-2. **Input Validation** - JSON-RPC requests are validated
-3. **Error Handling** - Errors don't expose internal details
-4. **CORS** - Should be configured at Express level
-5. **Authentication** - Handled by AIRS API key in handlers
+1. **Input Validation**: All requests are validated for JSON-RPC format
+2. **Error Sanitization**: Internal errors don't expose stack traces
+3. **Session Isolation**: Each client gets a unique session
+4. **Header Security**: Proper CORS and security headers at Express level
+5. **Authentication**: Handled by AIRS client (API key not exposed)
 
-## Performance Optimization
+## Testing Strategies
 
-### Streaming Decision
-
-```typescript
-private shouldStreamResponse(method: string, result: unknown): boolean {
-    const streamableMethods = [
-        'tools/call',      // Long-running operations
-        'resources/read',  // Large resources
-    ];
-
-    return streamableMethods.includes(method);
-}
-```
-
-### Connection Management
-
-- SSE connections are cleaned up on disconnect
-- Broadcast operations skip disconnected clients
-- Sessions are memory-based (consider Redis for scale)
-
-## Error Codes
-
-Standard JSON-RPC 2.0 error codes:
-
-| Code   | Message          | Description               |
-| ------ | ---------------- | ------------------------- |
-| -32700 | Parse error      | Invalid JSON              |
-| -32600 | Invalid Request  | Invalid request structure |
-| -32601 | Method not found | Unknown method            |
-| -32602 | Invalid params   | Invalid method parameters |
-| -32603 | Internal error   | Server error              |
-
-## Testing
-
-### Unit Testing
+### Unit Tests
 
 ```typescript
-// Test request routing
-const transport = new HttpServerTransport({ server, logger });
-const result = await transport.routeRequest('tools/list', {});
-assert(result.tools.length > 0);
-```
+describe('HttpServerTransport', () => {
+    it('should route tools/list correctly', async () => {
+        const transport = new HttpServerTransport({server, logger});
+        const result = await transport.routeRequest('tools/list', {});
+        expect(result).toHaveProperty('tools');
+    });
 
-### Integration Testing
-
-```typescript
-// Test full request flow
-const response = await request(app).post('/messages').send({
-    jsonrpc: '2.0',
-    method: 'ping',
-    id: 'test-1',
+    it('should handle invalid methods', async () => {
+        const transport = new HttpServerTransport({server, logger});
+        await expect(
+            transport.routeRequest('invalid/method', {})
+        ).rejects.toThrow('Method not found');
+    });
 });
+```
 
-assert(response.body.jsonrpc === '2.0');
-assert(response.body.id === 'test-1');
+### Integration Tests
+
+```typescript
+describe('Transport Integration', () => {
+    it('should handle full request cycle', async () => {
+        const response = await request(app)
+            .post('/')
+            .send({
+                jsonrpc: '2.0',
+                method: 'ping',
+                id: 'test-1'
+            });
+
+        expect(response.status).toBe(200);
+        expect(response.body.jsonrpc).toBe('2.0');
+        expect(response.body.id).toBe('test-1');
+    });
+});
 ```
 
 ## Troubleshooting
@@ -420,32 +503,48 @@ assert(response.body.id === 'test-1');
 ### Common Issues
 
 1. **SSE Connection Drops**
-    - Check proxy/load balancer timeout settings
-    - Ensure X-Accel-Buffering header is set
-    - Implement heartbeat/keepalive
+    - Check proxy timeout settings
+    - Ensure `X-Accel-Buffering: no` header
+    - Implement heartbeat mechanism
 
 2. **Session Not Found**
     - Sessions are in-memory only
-    - Check Mcp-Session-Id header
-    - Verify session creation logic
+    - Check `Mcp-Session-Id` header
+    - Verify session creation
 
-3. **Method Not Found**
-    - Verify method name spelling
+3. **Method Routing Errors**
+    - Verify method name in switch statement
     - Check handler registration
-    - Review routeRequest switch statement
+    - Review error logs
 
-## Best Practices
+### Debug Mode
 
-1. **Always validate JSON-RPC structure** before processing
-2. **Use appropriate error codes** for different failure scenarios
-3. **Log requests with context** for debugging
-4. **Clean up resources** on disconnect
-5. **Consider rate limiting** at transport level
-6. **Implement request timeouts** for long operations
+Enable detailed logging:
 
-## Next Steps
+```bash
+LOG_LEVEL=debug npm start
+```
 
-- [Server Root]({{ site.baseurl }}/developers/src/) - Express server setup
+## Future Enhancements
+
+1. **Streaming Implementation**
+    - Add progress events for long operations
+    - Implement chunked responses
+    - Support cancellation
+
+2. **Session Persistence**
+    - Redis-backed sessions
+    - Session expiration
+    - Multi-instance support
+
+3. **Enhanced Security**
+    - Rate limiting per session
+    - Request size limits
+    - Method-specific timeouts
+
+## Related Documentation
+
+- [Application Entry Point]({{ site.baseurl }}/developers/src/) - Express server setup
+- [Types Module]({{ site.baseurl }}/developers/src/types/) - Transport type definitions
 - [Tools Module]({{ site.baseurl }}/developers/src/tools/) - Tool handler implementation
 - [Resources Module]({{ site.baseurl }}/developers/src/resources/) - Resource handler implementation
-- [MCP Types]({{ site.baseurl }}/developers/src/types/) - Protocol type definitions

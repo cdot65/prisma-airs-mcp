@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tools Module (src/tools/) | Prisma AIRS MCP</title>
+  <title>Tools Module | Prisma AIRS MCP</title>
   <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
   
   <!-- SEO Tags -->
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Tools Module (src/tools/) | Prisma AIRS MCP</title>
+<title>Tools Module | Prisma AIRS MCP</title>
 <meta name="generator" content="Jekyll v3.9.5" />
-<meta property="og:title" content="Tools Module (src/tools/)" />
+<meta property="og:title" content="Tools Module" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Tools Module Documentation" />
-<meta property="og:description" content="Tools Module Documentation" />
+<meta name="description" content="Security Tools (src/tools/)" />
+<meta property="og:description" content="Security Tools (src/tools/)" />
 <link rel="canonical" href="http://localhost:4000/developers/src/tools/" />
 <meta property="og:url" content="http://localhost:4000/developers/src/tools/" />
 <meta property="og:site_name" content="Prisma AIRS MCP" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Tools Module (src/tools/)" />
+<meta property="twitter:title" content="Tools Module" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Tools Module Documentation","headline":"Tools Module (src/tools/)","url":"http://localhost:4000/developers/src/tools/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Security Tools (src/tools/)","headline":"Tools Module","url":"http://localhost:4000/developers/src/tools/"}</script>
 <!-- End Jekyll SEO tag -->
 
   
@@ -79,6 +79,11 @@
   <h4>API</h4>
   <ul>
     <li><a href="/developers/api/" >API Reference</a></li>
+  </ul>
+  
+  <h4>Release Notes</h4>
+  <ul>
+    <li><a href="/developers/release-notes/" >Version History</a></li>
   </ul>
 </nav>
 
@@ -140,269 +145,317 @@
     
     <main class="documentation-content">
       <div class="content-header">
-        <h1>Tools Module (src/tools/)</h1>
+        <h1>Tools Module</h1>
         
       </div>
       
       <article class="content">
-        <h1 id="tools-module-documentation">Tools Module Documentation</h1>
+        <h1 id="security-tools-srctools">Security Tools (src/tools/)</h1>
 
-<p>The tools module provides MCP tool handlers for Prisma AIRS operations. Tools are callable functions that AI models can use to perform security scans, retrieve results, and manage the system cache.</p>
+<p>The tools module provides MCP tool handlers for Prisma AIRS operations. Tools are callable functions that AI models can
+use to perform security scans, retrieve results, and manage the system cache.</p>
 
-<h2 id="module-overview">Module Overview</h2>
+<h2 id="module-structure">Module Structure</h2>
 
-<p>The tools module consists of two files:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>src/tools/
+└── index.ts    # Main tool handler implementation with all tool logic
+</code></pre></div></div>
 
-<ul>
-  <li><strong>index.ts</strong> - Main tool handler implementation with all tool logic</li>
-  <li><strong>types.ts</strong> - TypeScript interfaces for tool arguments and responses</li>
-</ul>
+<p><strong>Note</strong>: Tool types are centralized in <code class="language-plaintext highlighter-rouge">src/types/tools.ts</code> with the prefix <code class="language-plaintext highlighter-rouge">Tools</code> to avoid namespace conflicts.</p>
+
+<h2 id="architecture-overview">Architecture Overview</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────┐
+│         MCP Tool Request                │
+│   (via HttpServerTransport.callTool)    │
+└─────────────────┬───────────────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│         ToolHandler.callTool            │
+│  • Validates tool name                  │
+│  • Routes to specific handler           │
+│  • Handles errors globally              │
+└─────────────────┬───────────────────────┘
+                  │
+        ┌─────────┴─────────┬─────────────┬──────────────┬────────────┐
+        │                   │             │              │            │
+┌───────▼────────┐ ┌────────▼──────┐ ┌────▼────┐ ┌───────▼──────┐ ┌───▼───┐
+│ scanContent    │ │ scanAsync     │ │getScan  │ │getThreat     │ │clear  │
+│ • Sync scan    │ │ • Batch scan  │ │Results  │ │Reports       │ │Cache  │
+│ • Progress     │ │ • Progress    │ │         │ │              │ │       │
+└───────┬────────┘ └────────┬──────┘ └────┬────┘ └───────┬──────┘ └───┬───┘
+        │                   │             │              │            │
+        └─────────┬─────────┴─────────────┴──────────────┴────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│          AIRSClient (singleton)         │
+│  • Caching layer                        │
+│  • Rate limiting                        │
+│  • Error handling                       │
+└─────────────────┬───────────────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│         Prisma AIRS API                 │
+│  • Security scanning                    │
+│  • Threat detection                     │
+│  • Report generation                    │
+└─────────────────────────────────────────┘
+</code></pre></div></div>
 
 <h2 id="available-tools">Available Tools</h2>
 
 <h3 id="1-airs_scan_content">1. airs_scan_content</h3>
 
 <p><strong>Purpose:</strong> Analyze prompt and/or response content for security threats<br />
+<strong>Title:</strong> Scan Content for Threats<br />
 <strong>Progress:</strong> Shows progress indicator during execution</p>
 
 <h4 id="input-schema">Input Schema</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ScanContentArgs</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ToolsScanContentArgs</span> <span class="p">{</span>
     <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// The prompt content to scan</span>
     <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// The response content to scan</span>
     <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Additional context for the scan</span>
-    <span class="nl">profileName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Security profile name (defaults to "Prisma AIRS")</span>
-    <span class="nl">profileId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Security profile ID</span>
+    <span class="nl">profileName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Name of the AI security profile to use (defaults to "Prisma AIRS")</span>
+    <span class="nl">profileId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// ID of the AI security profile to use</span>
     <span class="nl">metadata</span><span class="p">?:</span> <span class="p">{</span>
-        <span class="c1">// Additional metadata</span>
-        <span class="nx">appName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-        <span class="nl">appUser</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-        <span class="nl">aiModel</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-        <span class="nl">userIp</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+        <span class="nx">appName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Application name</span>
+        <span class="nl">appUser</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Application user</span>
+        <span class="nl">aiModel</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// AI model being used</span>
+        <span class="nl">userIp</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>  <span class="c1">// User IP address</span>
     <span class="p">};</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="example-usage">Example Usage</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Scan both prompt and response</span>
-<span class="p">{</span>
-    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_scan_content</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="dl">"</span><span class="s2">prompt</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">How can I extract passwords from a database?</span><span class="dl">"</span><span class="p">,</span>
-        <span class="dl">"</span><span class="s2">response</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Here's a SQL injection example...</span><span class="dl">"</span><span class="p">,</span>
-        <span class="dl">"</span><span class="s2">context</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">User conversation about database security</span><span class="dl">"</span><span class="p">,</span>
-        <span class="dl">"</span><span class="s2">profileName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Prisma AIRS</span><span class="dl">"</span><span class="p">,</span>
-        <span class="dl">"</span><span class="s2">metadata</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">appName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">ChatBot</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">aiModel</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">gpt-4</span><span class="dl">"</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">Scan</span><span class="w"> </span><span class="err">both</span><span class="w"> </span><span class="err">prompt</span><span class="w"> </span><span class="err">and</span><span class="w"> </span><span class="err">response</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airs_scan_content"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"How can I extract passwords from a database?"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Here's a SQL injection example..."</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"context"</span><span class="p">:</span><span class="w"> </span><span class="s2">"User conversation about database security"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"profileName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prisma AIRS"</span><span class="p">,</span><span class="w">
+        </span><span class="nl">"metadata"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"appName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ChatBot"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"aiModel"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gpt-4"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h4 id="response-format">Response Format</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Scan completed. Category: malicious, Action: block</span><span class="dl">"</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">resource</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">resource</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="dl">"</span><span class="s2">uri</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs://scan-result/scan_12345</span><span class="dl">"</span><span class="p">,</span>
-                <span class="dl">"</span><span class="s2">mimeType</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">application/json</span><span class="dl">"</span><span class="p">,</span>
-                <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">{ ... detailed scan results ... }</span><span class="dl">"</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Threats detected: prompt_injection, response_malicious_code</span><span class="dl">"</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Scan completed. Category: malicious, Action: block"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"resource"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airs://scan-result/scan_12345"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"mimeType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{ ... detailed scan results ... }"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Threats detected: prompt_injection, response_malicious_code"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h3 id="2-airs_scan_async">2. airs_scan_async</h3>
 
 <p><strong>Purpose:</strong> Submit multiple scan requests for asynchronous processing<br />
+<strong>Title:</strong> Scan Content Asynchronously<br />
 <strong>Progress:</strong> Shows progress indicator during submission</p>
 
 <h4 id="input-schema-1">Input Schema</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ScanAsyncArgs</span> <span class="p">{</span>
-    <span class="nl">requests</span><span class="p">:</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="p">{</span>
-        <span class="na">reqId</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span> <span class="c1">// Unique identifier (required)</span>
-        <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Prompt to scan</span>
-        <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Response to scan</span>
-        <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Additional context</span>
-        <span class="nl">profileName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Security profile name</span>
-        <span class="nl">profileId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Security profile ID</span>
-    <span class="p">}</span><span class="o">&gt;</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ToolsScanAsyncArgs</span> <span class="p">{</span>
+    <span class="nl">requests</span><span class="p">:</span> <span class="nx">ToolsAsyncScanRequestItem</span><span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="kr">interface</span> <span class="nx">ToolsAsyncScanRequestItem</span> <span class="p">{</span>
+    <span class="nl">reqId</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span> <span class="c1">// Unique identifier for this request (required)</span>
+    <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// The prompt content to scan</span>
+    <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// The response content to scan</span>
+    <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Additional context for the scan</span>
+    <span class="nl">profileName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// Name of the AI security profile to use</span>
+    <span class="nl">profileId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span> <span class="c1">// ID of the AI security profile to use</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="example-usage-1">Example Usage</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_scan_async</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="dl">"</span><span class="s2">requests</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">{</span>
-                <span class="dl">"</span><span class="s2">reqId</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                <span class="dl">"</span><span class="s2">prompt</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">First prompt to scan</span><span class="dl">"</span><span class="p">,</span>
-                <span class="dl">"</span><span class="s2">profileName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Prisma AIRS</span><span class="dl">"</span>
-            <span class="p">},</span>
-            <span class="p">{</span>
-                <span class="dl">"</span><span class="s2">reqId</span><span class="dl">"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-                <span class="dl">"</span><span class="s2">response</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Second response to scan</span><span class="dl">"</span><span class="p">,</span>
-                <span class="dl">"</span><span class="s2">profileName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Prisma AIRS</span><span class="dl">"</span>
-            <span class="p">}</span>
-        <span class="p">]</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airs_scan_async"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"reqId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"First prompt to scan"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"profileName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prisma AIRS"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"reqId"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Second response to scan"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"profileName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Prisma AIRS"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h4 id="response-format-1">Response Format</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Async scan submitted. Scan ID: scan_batch_123</span><span class="dl">"</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Report ID: rpt_batch_123</span><span class="dl">"</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Async scan submitted. Scan ID: scan_batch_123"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Report ID: rpt_batch_123"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h3 id="3-airs_get_scan_results">3. airs_get_scan_results</h3>
 
 <p><strong>Purpose:</strong> Retrieve results for previously submitted scans<br />
+<strong>Title:</strong> Get Scan Results<br />
 <strong>Read-only:</strong> This tool only reads data</p>
 
 <h4 id="input-schema-2">Input Schema</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">GetScanResultsArgs</span> <span class="p">{</span>
-    <span class="nl">scanIds</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span> <span class="c1">// Array of scan IDs (max 5)</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ToolsGetScanResultsArgs</span> <span class="p">{</span>
+    <span class="nl">scanIds</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span> <span class="c1">// Array of scan IDs to retrieve (max 5)</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="example-usage-2">Example Usage</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_get_scan_results</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="dl">"</span><span class="s2">scanIds</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">scan_12345</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">scan_67890</span><span class="dl">"</span><span class="p">]</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airs_get_scan_results"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"scanIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"scan_12345"</span><span class="p">,</span><span class="w"> </span><span class="s2">"scan_67890"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h4 id="response-format-2">Response Format</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Retrieved 2 scan results</span><span class="dl">"</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">resource</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">resource</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="dl">"</span><span class="s2">uri</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs://scan-result/scan_12345</span><span class="dl">"</span><span class="p">,</span>
-                <span class="dl">"</span><span class="s2">mimeType</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">application/json</span><span class="dl">"</span><span class="p">,</span>
-                <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">{ ... scan result ... }</span><span class="dl">"</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">resource</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">resource</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="dl">"</span><span class="s2">uri</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs://scan-result/scan_67890</span><span class="dl">"</span><span class="p">,</span>
-                <span class="dl">"</span><span class="s2">mimeType</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">application/json</span><span class="dl">"</span><span class="p">,</span>
-                <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">{ ... scan result ... }</span><span class="dl">"</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Retrieved 2 scan results"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"resource"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airs://scan-result/scan_12345"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"mimeType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{ ... scan result ... }"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"resource"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airs://scan-result/scan_67890"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"mimeType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{ ... scan result ... }"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h3 id="4-airs_get_threat_reports">4. airs_get_threat_reports</h3>
 
 <p><strong>Purpose:</strong> Retrieve detailed threat scan reports<br />
+<strong>Title:</strong> Get Threat Reports<br />
 <strong>Read-only:</strong> This tool only reads data</p>
 
 <h4 id="input-schema-3">Input Schema</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">GetThreatReportsArgs</span> <span class="p">{</span>
-    <span class="nl">reportIds</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span> <span class="c1">// Array of report IDs (max 5)</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">ToolsGetThreatReportsArgs</span> <span class="p">{</span>
+    <span class="nl">reportIds</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span> <span class="c1">// Array of report IDs to retrieve (max 5)</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="example-usage-3">Example Usage</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_get_threat_reports</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="dl">"</span><span class="s2">reportIds</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">rpt_12345</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">rpt_67890</span><span class="dl">"</span><span class="p">]</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airs_get_threat_reports"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"reportIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rpt_12345"</span><span class="p">,</span><span class="w"> </span><span class="s2">"rpt_67890"</span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h4 id="response-format-3">Response Format</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Retrieved 2 threat reports</span><span class="dl">"</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">resource</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">resource</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="dl">"</span><span class="s2">uri</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs://threat-report/rpt_12345</span><span class="dl">"</span><span class="p">,</span>
-                <span class="dl">"</span><span class="s2">mimeType</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">application/json</span><span class="dl">"</span><span class="p">,</span>
-                <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">{ ... detailed threat report ... }</span><span class="dl">"</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Retrieved 2 threat reports"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"resource"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nl">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airs://threat-report/rpt_12345"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"mimeType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="p">,</span><span class="w">
+                </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{ ... detailed threat report ... }"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h3 id="5-airs_clear_cache">5. airs_clear_cache</h3>
 
 <p><strong>Purpose:</strong> Clear the AIRS response cache<br />
+<strong>Title:</strong> Clear Cache<br />
 <strong>No arguments required</strong></p>
 
 <h4 id="example-usage-4">Example Usage</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_clear_cache</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span><span class="p">:</span> <span class="p">{}</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airs_clear_cache"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h4 id="response-format-4">Response Format</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Cache cleared successfully</span><span class="dl">"</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"content"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Cache cleared successfully"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <h2 id="implementation-details">Implementation Details</h2>
 
 <h3 id="toolhandler-class">ToolHandler Class</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nx">ToolHandler</span> <span class="p">{</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">logger</span><span class="p">:</span> <span class="nx">Logger</span><span class="p">;</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">airsClient</span> <span class="o">=</span> <span class="nx">getAirsClient</span><span class="p">();</span>
+
     <span class="c1">// Tool name constants</span>
     <span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="nx">TOOLS</span> <span class="o">=</span> <span class="p">{</span>
         <span class="na">SCAN_CONTENT</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span>
@@ -413,10 +466,10 @@
     <span class="p">}</span> <span class="k">as</span> <span class="kd">const</span><span class="p">;</span>
 
     <span class="c1">// List available tools</span>
-    <span class="nx">listTools</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">ToolsListParams</span><span class="p">):</span> <span class="nx">ToolsListResult</span><span class="p">;</span>
+    <span class="nx">listTools</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">McpToolsListParams</span><span class="p">):</span> <span class="nx">McpToolsListResult</span><span class="p">;</span>
 
     <span class="c1">// Execute a tool</span>
-    <span class="k">async</span> <span class="nx">callTool</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">ToolsCallParams</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">ToolsCallResult</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="k">async</span> <span class="nx">callTool</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">McpToolsCallParams</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">McpToolsCallResult</span><span class="o">&gt;</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -445,22 +498,44 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
+<h3 id="transaction-id-generation">Transaction ID Generation</h3>
+
+<p>The sync scan tool generates unique transaction IDs using timestamps:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">scanRequest</span><span class="p">:</span> <span class="nx">AirsScanRequest</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">tr_id</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">().</span><span class="nx">toString</span><span class="p">(),</span> <span class="c1">// Generate unique transaction ID</span>
+    <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="na">contents</span><span class="p">:</span> <span class="p">[],</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p><strong>Note</strong>: Async scans don’t require manual transaction ID generation as the AIRS API handles it internally.</p>
+
 <h3 id="threat-summarization">Threat Summarization</h3>
 
 <p>The module automatically summarizes detected threats:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">summarizeThreats</span><span class="p">(</span><span class="nx">result</span><span class="p">:</span> <span class="nx">ScanResponseWithDetected</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">summarizeThreats</span><span class="p">(</span><span class="nx">result</span><span class="p">:</span> <span class="nx">ToolsScanResponseWithDetected</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">threats</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
 
     <span class="c1">// Check prompt threats</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">prompt_detected</span><span class="p">?.</span><span class="nx">injection</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">prompt_injection</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">prompt_detected</span><span class="p">?.</span><span class="nx">url_cats</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">prompt_url_cats</span><span class="dl">'</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">prompt_detected</span><span class="p">?.</span><span class="nx">dlp</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">prompt_dlp</span><span class="dl">'</span><span class="p">);</span>
-    <span class="c1">// ... other threat types</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">prompt_detected</span><span class="p">?.</span><span class="nx">injection</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">prompt_injection</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">prompt_detected</span><span class="p">?.</span><span class="nx">toxic_content</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">prompt_toxic_content</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">prompt_detected</span><span class="p">?.</span><span class="nx">malicious_code</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">prompt_malicious_code</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">prompt_detected</span><span class="p">?.</span><span class="nx">agent</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">prompt_agent</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">prompt_detected</span><span class="p">?.</span><span class="nx">topic_violation</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">prompt_topic_violation</span><span class="dl">'</span><span class="p">);</span>
 
     <span class="c1">// Check response threats</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">response_detected</span><span class="p">?.</span><span class="nx">url_cats</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">response_url_cats</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">response_detected</span><span class="p">?.</span><span class="nx">dlp</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">response_dlp</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">response_detected</span><span class="p">?.</span><span class="nx">db_security</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">response_db_security</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">response_detected</span><span class="p">?.</span><span class="nx">toxic_content</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">response_toxic_content</span><span class="dl">'</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">response_detected</span><span class="p">?.</span><span class="nx">malicious_code</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">response_malicious_code</span><span class="dl">'</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">response_detected</span><span class="p">?.</span><span class="nx">agent</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">response_agent</span><span class="dl">'</span><span class="p">);</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">response_detected</span><span class="p">?.</span><span class="nx">ungrounded</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">response_ungrounded</span><span class="dl">'</span><span class="p">);</span>
-    <span class="c1">// ... other threat types</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">response_detected</span><span class="p">?.</span><span class="nx">topic_violation</span><span class="p">)</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="dl">'</span><span class="s1">response_topic_violation</span><span class="dl">'</span><span class="p">);</span>
 
     <span class="k">return</span> <span class="nx">threats</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">, </span><span class="dl">'</span><span class="p">)</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">unknown threats</span><span class="dl">'</span><span class="p">;</span>
 <span class="p">}</span>
@@ -516,26 +591,38 @@
 
 <h2 id="integration-with-resources">Integration with Resources</h2>
 
-<p>Tools create resource references for detailed results:</p>
+<p>Tools create resource references for detailed results using the <code class="language-plaintext highlighter-rouge">ResourceHandler.createResourceReference</code> static method:</p>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// After successful scan</span>
 <span class="nx">contents</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span>
     <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">resource</span><span class="dl">'</span><span class="p">,</span>
     <span class="na">resource</span><span class="p">:</span> <span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">createResourceReference</span><span class="p">(</span>
-        <span class="dl">'</span><span class="s1">scan-result</span><span class="dl">'</span><span class="p">,</span>
-        <span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">,</span>
-        <span class="dl">'</span><span class="s1">Scan Result Details</span><span class="dl">'</span><span class="p">,</span>
-        <span class="nx">result</span><span class="p">,</span>
+        <span class="dl">'</span><span class="s1">scan-result</span><span class="dl">'</span><span class="p">,</span>          <span class="c1">// Resource type</span>
+        <span class="nx">result</span><span class="p">.</span><span class="nx">scan_id</span><span class="p">,</span>         <span class="c1">// Unique identifier</span>
+        <span class="dl">'</span><span class="s1">Scan Result Details</span><span class="dl">'</span><span class="p">,</span>  <span class="c1">// Human-readable name</span>
+        <span class="nx">result</span><span class="p">,</span>                 <span class="c1">// Full result data</span>
     <span class="p">),</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
-<p>This allows AI models to:</p>
+<h3 id="resource-uri-format">Resource URI Format</h3>
+
+<p>Generated resources follow the pattern:</p>
+
+<ul>
+  <li>Scan Results: <code class="language-plaintext highlighter-rouge">airs://scan-result/{scanId}</code></li>
+  <li>Threat Reports: <code class="language-plaintext highlighter-rouge">airs://threat-report/{reportId}</code></li>
+</ul>
+
+<h3 id="benefits">Benefits</h3>
+
+<p>This resource reference pattern allows AI models to:</p>
 
 <ol>
-  <li>Get summary information immediately</li>
+  <li>Get summary information immediately in the tool response</li>
   <li>Access detailed results through resource URIs</li>
-  <li>Navigate between related data</li>
+  <li>Navigate between related data without re-scanning</li>
+  <li>Store references for later retrieval</li>
 </ol>
 
 <h2 id="best-practices">Best Practices</h2>
@@ -578,7 +665,10 @@
 
 <h3 id="unit-testing">Unit Testing</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Test tool listing</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">ToolHandler</span><span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../src/tools</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// Test tool listing</span>
+<span class="kd">const</span> <span class="nx">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ToolHandler</span><span class="p">();</span>
 <span class="kd">const</span> <span class="nx">tools</span> <span class="o">=</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">listTools</span><span class="p">({});</span>
 <span class="nx">assert</span><span class="p">(</span><span class="nx">tools</span><span class="p">.</span><span class="nx">tools</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">5</span><span class="p">);</span>
 <span class="nx">assert</span><span class="p">(</span><span class="nx">tools</span><span class="p">.</span><span class="nx">tools</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">name</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">);</span>
@@ -586,7 +676,7 @@
 <span class="c1">// Test tool execution</span>
 <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">callTool</span><span class="p">({</span>
     <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span> <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test content</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span><span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test content</span><span class="dl">'</span><span class="p">},</span>
 <span class="p">});</span>
 <span class="nx">assert</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
 <span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">result</span><span class="p">.</span><span class="nx">isError</span><span class="p">);</span>
@@ -627,13 +717,164 @@
   <li><strong>Metadata Privacy</strong> - Sensitive metadata should be handled carefully</li>
 </ol>
 
-<h2 id="next-steps">Next Steps</h2>
+<h2 id="type-system">Type System</h2>
+
+<p>The tools module uses centralized types from <code class="language-plaintext highlighter-rouge">src/types/</code>:</p>
+
+<h3 id="tool-specific-types">Tool-Specific Types</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Module</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ToolsScanContentArgs</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Arguments for content scanning</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ToolsScanAsyncArgs</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Arguments for async scanning</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ToolsAsyncScanRequestItem</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Individual async scan request</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ToolsGetScanResultsArgs</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Arguments for retrieving scan results</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ToolsGetThreatReportsArgs</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Arguments for retrieving threat reports</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ToolsScanResponseWithDetected</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Alias for <code class="language-plaintext highlighter-rouge">AirsScanResponse</code> with threat details</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="mcp-protocol-types">MCP Protocol Types</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Module</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">McpTool</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Tool definition with metadata</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">McpToolsListParams</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Parameters for listing tools</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">McpToolsListResult</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Result of tool listing</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">McpToolsCallParams</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Parameters for calling a tool</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">McpToolsCallResult</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Result of tool execution</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">McpToolResultContent</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Content items in tool results</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies">Dependencies</h2>
+
+<h3 id="external-dependencies">External Dependencies</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Module</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">winston</code></td>
+      <td>Structured logging</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="internal-dependencies">Internal Dependencies</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Module</th>
+      <th>Import</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">../utils/logger.js</code></td>
+      <td><code class="language-plaintext highlighter-rouge">getLogger()</code></td>
+      <td>Logger instance</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">../airs/factory.js</code></td>
+      <td><code class="language-plaintext highlighter-rouge">getAirsClient()</code></td>
+      <td>AIRS client singleton</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">../config</code></td>
+      <td><code class="language-plaintext highlighter-rouge">getConfig()</code></td>
+      <td>Configuration access</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">../resources</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ResourceHandler</code></td>
+      <td>Resource reference creation</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">../types</code></td>
+      <td>Various types</td>
+      <td>Type definitions</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="related-documentation">Related Documentation</h2>
 
 <ul>
   <li><a href="/developers/src/resources/">Resources Module</a> - How resources work with tools</li>
-  <li><a href="/developers/src/types/">MCP Types</a> - Tool type definitions</li>
+  <li><a href="/developers/src/types/">Types Module</a> - Tool type definitions</li>
   <li><a href="/developers/src/airs/">AIRS Module</a> - Client used by tools</li>
   <li><a href="/developers/src/prompts/">Prompts Module</a> - Prompts that use these tools</li>
+  <li><a href="/developers/src/transport/">Transport Module</a> - How tools are exposed via MCP</li>
 </ul>
 
       </article>
@@ -650,7 +891,7 @@
           
           
           <a href="/developers/src/transport/" class="next">
-            Transport Module (src/transport/) <i class="fas fa-arrow-right"></i>
+            Transport Module <i class="fas fa-arrow-right"></i>
           </a>
           
         </div>

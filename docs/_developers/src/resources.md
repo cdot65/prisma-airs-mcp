@@ -1,29 +1,56 @@
 ---
 layout: documentation
-title: Resources Module (src/resources/)
+title: Resources Module
 permalink: /developers/src/resources/
 category: developers
 ---
 
-# Resources Module Documentation
+# Resource Handlers (src/resources/)
 
-The resources module provides MCP resource handlers for accessing Prisma AIRS data. Resources represent external data sources that can be read by AI models, including scan results, threat reports, and system statistics.
+The resources module provides MCP resource handlers for accessing Prisma AIRS data. Resources represent external data
+sources that can be read by AI models, including scan results, threat reports, and system statistics.
 
-## Module Overview
+## Module Structure
 
-The resources module implements the MCP resource interface to provide:
+```
+src/resources/
+└── index.ts    # Resource handler implementation
+```
 
-- Resource URI scheme for AIRS data
-- Static and dynamic resource listing
-- Scan result retrieval
-- Threat report access
-- Cache statistics monitoring
-- Rate limit status checking
-- Resource reference creation for tool results
+**Note**: Resource types are centralized in `src/types/mcp.ts` with the prefix `Mcp` to avoid namespace conflicts.
 
-## Architecture
+## Architecture Overview
 
-The module follows the MCP resource specification, providing structured access to AIRS data through a URI-based system.
+```
+┌─────────────────────────────────────────┐
+│         MCP Resource Request            │
+│  (via HttpServerTransport.readResource) │
+└─────────────────┬───────────────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│      ResourceHandler.readResource       │
+│  • Parse URI: airs://{type}/{id}        │
+│  • Validate format                      │
+│  • Route to handler                     │
+└─────────────────┬───────────────────────┘
+                  │
+        ┌─────────┴─────────┬─────────────┬──────────────┐
+        │                   │             │              │
+┌───────▼────────┐ ┌────────▼──────┐ ┌────▼────┐ ┌───────▼──────┐
+│ Scan Results   │ │ Threat Reports│ │Cache    │ │Rate Limit    │
+│ • Dynamic      │ │ • Dynamic     │ │Stats    │ │Status        │
+│ • By scan ID   │ │ • By report ID│ │• Static │ │• Static      │
+└───────┬────────┘ └────────┬──────┘ └────┬────┘ └───────┬──────┘
+        │                   │             │              │
+        └─────────┬─────────┴─────────────┴──────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│        AIRSClient (singleton)           │
+│  • Data retrieval                       │
+│  • Caching                              │
+│  • Statistics                           │
+└─────────────────────────────────────────┘
+```
 
 ## Type System
 
@@ -47,12 +74,15 @@ All resources follow the URI pattern: `airs://{type}/{id}`
 
 ### Resource Types
 
-| Type                | URI Pattern                        | Description              |
-| ------------------- | ---------------------------------- | ------------------------ |
-| `scan-results`      | `airs://scan-results/{scanId}`     | Individual scan results  |
-| `threat-reports`    | `airs://threat-reports/{reportId}` | Detailed threat reports  |
-| `cache-stats`       | `airs://cache-stats/current`       | Current cache statistics |
-| `rate-limit-status` | `airs://rate-limit-status/current` | Rate limiting status     |
+| Type                | URI Pattern                        | Description              | Listed |
+|---------------------|------------------------------------|--------------------------|--------|
+| `scan-results`      | `airs://scan-results/{scanId}`     | Individual scan results  | No     |
+| `threat-reports`    | `airs://threat-reports/{reportId}` | Detailed threat reports  | No     |
+| `cache-stats`       | `airs://cache-stats/current`       | Current cache statistics | Yes    |
+| `rate-limit-status` | `airs://rate-limit-status/current` | Rate limiting status     | Yes    |
+
+**Note**: Dynamic resources (scan-results, threat-reports) are not listed by `listResources()` but can be accessed
+directly when their URIs are returned from tool operations.
 
 ## Implementation Details
 
@@ -61,46 +91,59 @@ All resources follow the URI pattern: `airs://{type}/{id}`
 ```typescript
 export class ResourceHandler {
     private readonly logger: Logger;
-    private airsClient?: EnhancedPrismaAirsClient;
-    
+    private readonly airsClient = getAirsClient();
+
+    // Resource URIs follow pattern: airs://{type}/{id}
+    private static readonly RESOURCE_TYPES = {
+        SCAN_RESULT: 'scan-results',      // Plural to match URI pattern
+        THREAT_REPORT: 'threat-reports',  // Plural to match URI pattern
+        CACHE_STATS: 'cache-stats',
+        RATE_LIMIT_STATUS: 'rate-limit-status',
+    } as const;
+
     constructor() {
         this.logger = getLogger();
     }
-    
-    listResources(params?: McpResourcesListParams): McpResourcesListResult {
+
+    listResources(params: McpResourcesListParams): McpResourcesListResult {
         const resources: McpResource[] = [
             {
-                uri: 'airs://cache-stats/current',
+                uri: `airs://${ResourceHandler.RESOURCE_TYPES.CACHE_STATS}/current`,
                 name: 'Cache Statistics',
-                description: 'Current cache performance metrics',
-                mimeType: 'application/json'
+                description: 'Current cache statistics and performance metrics',
+                mimeType: 'application/json',
             },
             {
-                uri: 'airs://rate-limit-status/current',
+                uri: `airs://${ResourceHandler.RESOURCE_TYPES.RATE_LIMIT_STATUS}/current`,
                 name: 'Rate Limit Status',
-                description: 'Current rate limiting status',
-                mimeType: 'application/json'
-            }
+                description: 'Current rate limiting status and quotas',
+                mimeType: 'application/json',
+            },
         ];
-        
-        return { resources };
+
+        return {resources};
     }
-    
+
     async readResource(params: McpResourcesReadParams): Promise<McpResourcesReadResult> {
-        const uri = params.uri;
-        const parsed = this.parseResourceUri(uri);
-        
-        switch (parsed.type) {
-            case 'cache-stats':
+        const parsed = this.parseResourceUri(params.uri);
+
+        if (!parsed) {
+            throw new Error(`Invalid resource URI: ${params.uri}`);
+        }
+
+        const {type, id} = parsed;
+
+        switch (type) {
+            case ResourceHandler.RESOURCE_TYPES.SCAN_RESULT:
+                return this.readScanResult(id);
+            case ResourceHandler.RESOURCE_TYPES.THREAT_REPORT:
+                return this.readThreatReport(id);
+            case ResourceHandler.RESOURCE_TYPES.CACHE_STATS:
                 return this.readCacheStats();
-            case 'rate-limit-status':
+            case ResourceHandler.RESOURCE_TYPES.RATE_LIMIT_STATUS:
                 return this.readRateLimitStatus();
-            case 'scan-results':
-                return this.readScanResults(parsed.id!);
-            case 'threat-reports':
-                return this.readThreatReports(parsed.id!);
             default:
-                throw new Error(`Unknown resource type: ${parsed.type}`);
+                throw new Error(`Unknown resource type: ${type}`);
         }
     }
 }
@@ -109,16 +152,19 @@ export class ResourceHandler {
 ### URI Parsing
 
 ```typescript
-private parseResourceUri(uri: string): ParsedResourceUri {
-    const match = uri.match(/^airs:\/\/([^\/]+)(?:\/(.+))?$/);
-    
+private parseResourceUri(uri: string): {
+    type: string;
+    id: string
+} | null {
+    const match = uri.match(/^airs:\/\/([^/]+)\/(.+)$/);
+
     if (!match) {
-        throw new Error(`Invalid resource URI: ${uri}`);
+        return null;
     }
-    
+
     return {
-        type: match[1],
-        id: match[2]
+        type: match[1] || '',
+        id: match[2] || '',
     };
 }
 ```
@@ -131,52 +177,46 @@ private parseResourceUri(uri: string): ParsedResourceUri {
 **MIME Type:** `application/json`  
 **Description:** Retrieves detailed scan results by scan ID
 
-#### Content Structure
-
-```typescript
-interface ScanResultResource {
-    scan_id: string;
-    status: 'complete' | 'in_progress' | 'failed';
-    scan_type: 'Prompt' | 'Response';
-    scanned_text?: string;
-    detected: boolean;
-    findings?: AirsSecurityFinding[];
-    metadata?: {
-        profile_name?: string;
-        scan_time?: string;
-        processing_time_ms?: number;
-    };
-}
-```
-
 #### Implementation
 
 ```typescript
-private async readScanResults(scanId: string): Promise<McpResourcesReadResult> {
-    const airsClient = this.getAirsClient();
-    
+private async readScanResult(scanId: string): Promise<McpResourcesReadResult> {
     try {
-        const results = await airsClient.getScanResults([scanId]);
-        
+        const results = await this.airsClient.getScanResults([scanId]);
+
         if (results.length === 0) {
-            throw new Error(`Scan results not found: ${scanId}`);
-        }
-        
-        const result = results[0];
-        
-        return {
-            contents: [{
-                uri: `airs://scan-results/${scanId}`,
-                mimeType: 'application/json',
-                text: JSON.stringify(result, null, 2)
-            }]
-        };
-    } catch (error) {
-        this.logger.error('Failed to read scan results', { scanId, error });
-        throw error;
-    }
+    throw new Error(`Scan result not found: ${scanId}`);
+}
+
+const result = results[0];
+const content: McpResourceContent = {
+    uri: `airs://${ResourceHandler.RESOURCE_TYPES.SCAN_RESULT}/${scanId}`,
+    mimeType: 'application/json',
+};
+
+if (result) {
+    content.text = JSON.stringify(result, null, 2);
+}
+
+return {contents: [content]};
+} catch (error) {
+    this.logger.error('Failed to read scan result', {
+        scanId,
+        error: error instanceof Error ? error.message : 'Unknown error',
+    });
+    throw error;
+}
 }
 ```
+
+#### Content Structure
+
+The scan result returns the complete `AirsScanIdResult` from the AIRS API, including:
+
+- Scan status and metadata
+- Detected threats in prompt/response
+- Security findings and details
+- Processing information
 
 ### 2. Threat Reports
 
@@ -184,52 +224,46 @@ private async readScanResults(scanId: string): Promise<McpResourcesReadResult> {
 **MIME Type:** `application/json`  
 **Description:** Retrieves detailed threat analysis reports
 
-#### Content Structure
-
-```typescript
-interface ThreatReportResource {
-    report_id: string;
-    scan_id: string;
-    threat_summary: {
-        total_threats: number;
-        high_severity: number;
-        medium_severity: number;
-        low_severity: number;
-    };
-    detailed_findings: AirsThreatDetail[];
-    recommendations: string[];
-    created_at: string;
-}
-```
-
 #### Implementation
 
 ```typescript
-private async readThreatReports(reportId: string): Promise<McpResourcesReadResult> {
-    const airsClient = this.getAirsClient();
-    
+private async readThreatReport(reportId: string): Promise<McpResourcesReadResult> {
     try {
-        const reports = await airsClient.getThreatScanReports([reportId]);
-        
+        const reports = await this.airsClient.getThreatScanReports([reportId]);
+
         if (reports.length === 0) {
-            throw new Error(`Threat report not found: ${reportId}`);
-        }
-        
-        const report = reports[0];
-        
-        return {
-            contents: [{
-                uri: `airs://threat-reports/${reportId}`,
-                mimeType: 'application/json',
-                text: JSON.stringify(report, null, 2)
-            }]
-        };
-    } catch (error) {
-        this.logger.error('Failed to read threat report', { reportId, error });
-        throw error;
-    }
+    throw new Error(`Threat report not found: ${reportId}`);
+}
+
+const report = reports[0];
+const content: McpResourceContent = {
+    uri: `airs://${ResourceHandler.RESOURCE_TYPES.THREAT_REPORT}/${reportId}`,
+    mimeType: 'application/json',
+};
+
+if (report) {
+    content.text = JSON.stringify(report, null, 2);
+}
+
+return {contents: [content]};
+} catch (error) {
+    this.logger.error('Failed to read threat report', {
+        reportId,
+        error: error instanceof Error ? error.message : 'Unknown error',
+    });
+    throw error;
+}
 }
 ```
+
+#### Content Structure
+
+The threat report returns the complete `AirsThreatScanReportObject` from the AIRS API, containing:
+
+- Report metadata and scan associations
+- Detailed threat analysis
+- Security recommendations
+- Severity classifications
 
 ### 3. Cache Statistics
 
@@ -237,46 +271,41 @@ private async readThreatReports(reportId: string): Promise<McpResourcesReadResul
 **MIME Type:** `application/json`  
 **Description:** Real-time cache performance metrics
 
-#### Content Structure
-
-```typescript
-interface CacheStatsResource {
-    enabled: boolean;
-    size: number;
-    maxSize: number;
-    hits: number;
-    misses: number;
-    hitRate: number;
-    evictions: number;
-    ttlSeconds: number;
-}
-```
-
 #### Implementation
 
 ```typescript
 private readCacheStats(): McpResourcesReadResult {
-    const airsClient = this.getAirsClient();
-    const stats = airsClient.getCacheStats() || {
-        enabled: false,
+    const stats = this.airsClient.getCacheStats() || {
         size: 0,
-        maxSize: 0,
-        hits: 0,
-        misses: 0,
-        hitRate: 0,
-        evictions: 0,
-        ttlSeconds: 0
+        count: 0,
+        enabled: false,
     };
-    
-    return {
-        contents: [{
-            uri: 'airs://cache-stats/current',
-            mimeType: 'application/json',
-            text: JSON.stringify(stats, null, 2)
-        }]
+
+    const content: McpResourceContent = {
+        uri: `airs://${ResourceHandler.RESOURCE_TYPES.CACHE_STATS}/current`,
+        mimeType: 'application/json',
+        text: JSON.stringify(
+            {
+                ...stats,
+                timestamp: new Date().toISOString(),
+            },
+            null,
+            2,
+        ),
     };
+
+    return {contents: [content]};
 }
 ```
+
+#### Content Structure
+
+The cache statistics include:
+
+- `size`: Current cache size in bytes
+- `count`: Number of cached entries
+- `enabled`: Whether caching is enabled
+- `timestamp`: When the stats were generated
 
 ### 4. Rate Limit Status
 
@@ -284,106 +313,74 @@ private readCacheStats(): McpResourcesReadResult {
 **MIME Type:** `application/json`  
 **Description:** Current rate limiting status and available capacity
 
-#### Content Structure
-
-```typescript
-interface RateLimitStatusResource {
-    enabled: boolean;
-    limits: {
-        [bucket: string]: {
-            available: number;
-            limit: number;
-            resetAt: string;
-        };
-    };
-}
-```
-
 #### Implementation
 
 ```typescript
 private readRateLimitStatus(): McpResourcesReadResult {
-    const airsClient = this.getAirsClient();
-    const stats = airsClient.getRateLimiterStats();
-    
-    const status = {
-        enabled: stats?.enabled || false,
-        limits: {}
+    const stats = this.airsClient.getRateLimiterStats() || {
+        bucketCount: 0,
+        enabled: false,
     };
-    
-    if (stats?.enabled) {
-        // Get status for common buckets
-        ['scan', 'results', 'reports'].forEach(bucket => {
-            const bucketStatus = airsClient.rateLimiter?.getStatus(bucket);
-            if (bucketStatus) {
-                status.limits[bucket] = {
-                    available: bucketStatus.available,
-                    limit: bucketStatus.limit,
-                    resetAt: bucketStatus.resetAt.toISOString()
-                };
-            }
-        });
-    }
-    
-    return {
-        contents: [{
-            uri: 'airs://rate-limit-status/current',
-            mimeType: 'application/json',
-            text: JSON.stringify(status, null, 2)
-        }]
+
+    const content: McpResourceContent = {
+        uri: `airs://${ResourceHandler.RESOURCE_TYPES.RATE_LIMIT_STATUS}/current`,
+        mimeType: 'application/json',
+        text: JSON.stringify(
+            {
+                ...stats,
+                timestamp: new Date().toISOString(),
+            },
+            null,
+            2,
+        ),
     };
+
+    return {contents: [content]};
 }
 ```
 
-## Resource Templates
+#### Content Structure
 
-The module provides templates for dynamic resources:
+The rate limit status includes:
 
-```typescript
-const resourceTemplates: McpResourceTemplate[] = [
-    {
-        uriTemplate: 'airs://scan-results/{scanId}',
-        name: 'Scan Results',
-        description: 'Retrieve results for a specific scan by ID',
-        mimeType: 'application/json'
-    },
-    {
-        uriTemplate: 'airs://threat-reports/{reportId}',
-        name: 'Threat Reports',
-        description: 'Retrieve detailed threat report by ID',
-        mimeType: 'application/json'
-    }
-];
-```
+- `bucketCount`: Number of rate limit buckets
+- `enabled`: Whether rate limiting is enabled
+- `timestamp`: When the stats were generated
+
+**Note**: The actual implementation returns simplified stats. For detailed bucket information, the AIRS client would
+need to expose per-bucket status.
 
 ## Creating Resource References
 
-The module provides utility functions for creating resource references in tool results:
+The module provides a static utility method for creating resource references in tool results:
 
 ```typescript
-export function createScanResultReference(
-    scanId: string,
-    scanResult: AirsScanIdResult
-): McpResourceReference {
-    return {
-        uri: `airs://scan-results/${scanId}`,
-        title: `Scan Result: ${scanId}`,
-        mimeType: 'application/json',
-        text: JSON.stringify(scanResult, null, 2)
-    };
-}
+static createResourceReference(
+    type: string,
+    id: string,
+    _title: string,  // Unused but available for future use
+    data?: unknown,
+): McpResourceContent {
+    const uri = `airs://${type}/${id}`;
 
-export function createThreatReportReference(
-    reportId: string,
-    report: AirsThreatScanReportObject
-): McpResourceReference {
     return {
-        uri: `airs://threat-reports/${reportId}`,
-        title: `Threat Report: ${reportId}`,
+        uri,
         mimeType: 'application/json',
-        text: JSON.stringify(report, null, 2)
+        text: data ? JSON.stringify(data, null, 2) : undefined,
     };
 }
+```
+
+### Usage Example
+
+```typescript
+// In tools, create a resource reference for scan results
+const resourceRef = ResourceHandler.createResourceReference(
+    'scan-results',       // Resource type
+    result.scan_id,       // Unique ID
+    'Scan Result Details', // Title (currently unused)
+    result                // Full data object
+);
 ```
 
 ## Integration with Tools
@@ -391,18 +388,38 @@ export function createThreatReportReference(
 Resources are often returned as references in tool results:
 
 ```typescript
-// In tools/index.ts
-async function handleGetScanResults(args: ToolsGetScanResultsArgs): Promise<McpToolsCallResult> {
-    const results = await airsClient.getScanResults(args.scanIds);
-    
-    const content: McpToolResultContent[] = results.map(result => ({
+// In tools/index.ts - scanContent method
+if (result.scan_id) {
+    contents.push({
         type: 'resource',
-        resource: createScanResultReference(result.scan_id, result)
-    }));
-    
-    return { content };
+        resource: ResourceHandler.createResourceReference(
+            'scan-result',    // Note: singular form used here
+            result.scan_id,
+            'Scan Result Details',
+            result,
+        ),
+    });
 }
+
+// In tools/index.ts - getScanResults method
+results.forEach((result) => {
+    if (result.scan_id) {
+        contents.push({
+            type: 'resource',
+            resource: ResourceHandler.createResourceReference(
+                'scan-result',
+                result.scan_id,
+                `Scan Result: ${result.status || 'unknown'}`,
+                result,
+            ),
+        });
+    }
+});
 ```
+
+**Important Note**: The tools use singular form ('scan-result', 'threat-report') when creating references, while the
+resource handler expects plural form ('scan-results', 'threat-reports'). This is handled internally by the resource type
+constants.
 
 ## Error Handling
 
@@ -410,92 +427,144 @@ async function handleGetScanResults(args: ToolsGetScanResultsArgs): Promise<McpT
 
 ```typescript
 if (results.length === 0) {
-    throw new Error(`Resource not found: ${uri}`);
+    throw new Error(`Scan result not found: ${scanId}`);
+}
+// or
+if (reports.length === 0) {
+    throw new Error(`Threat report not found: ${reportId}`);
 }
 ```
 
 ### Invalid URI
 
 ```typescript
-const match = uri.match(/^airs:\/\/([^\/]+)(?:\/(.+))?$/);
-if (!match) {
-    throw new Error(`Invalid resource URI: ${uri}`);
+const parsed = this.parseResourceUri(params.uri);
+
+if (!parsed) {
+    throw new Error(`Invalid resource URI: ${params.uri}`);
 }
 ```
 
-### Client Not Initialized
+### Unknown Resource Type
 
 ```typescript
-private getAirsClient(): EnhancedPrismaAirsClient {
-    if (!this.airsClient) {
-        const config = getConfig();
-        this.airsClient = new EnhancedPrismaAirsClient({
-            apiUrl: config.airs.apiUrl,
-            apiKey: config.airs.apiKey,
-            // ... other config
-        });
-    }
-    return this.airsClient;
-}
+default:
+throw new Error(`Unknown resource type: ${type}`);
+```
+
+### Error Logging
+
+All errors are logged with context before being thrown:
+
+```typescript
+this.logger.error('Failed to read scan result', {
+    scanId,
+    error: error instanceof Error ? error.message : 'Unknown error',
+});
 ```
 
 ## Best Practices
 
-### 1. Resource URI Validation
+### 1. URI Pattern Consistency
 
-Always validate resource URIs before processing:
+Always use the defined constants for resource types:
 
 ```typescript
-private validateResourceUri(uri: string): void {
-    if (!uri.startsWith('airs://')) {
-        throw new Error('Resource URI must start with airs://');
-    }
+// Good - uses constant
+uri: `airs://${ResourceHandler.RESOURCE_TYPES.SCAN_RESULT}/${scanId}`
+
+// Bad - hardcoded string
+uri: `airs://scan-results/${scanId}`
+```
+
+### 2. Error Context
+
+Always include relevant context in error messages:
+
+```typescript
+this.logger.error('Failed to read scan result', {
+    scanId,
+    error: error instanceof Error ? error.message : 'Unknown error',
+});
+```
+
+### 3. Resource Data Inclusion
+
+Include full data in resource references when available:
+
+```typescript
+// Include data for immediate access
+return {
+    uri,
+    mimeType: 'application/json',
+    text: data ? JSON.stringify(data, null, 2) : undefined,
+};
+```
+
+### 4. Null Safety
+
+Always check for existence before accessing properties:
+
+```typescript
+if (result) {
+    content.text = JSON.stringify(result, null, 2);
 }
-```
-
-### 2. Consistent Error Messages
-
-Provide clear error messages for resource access:
-
-```typescript
-throw new Error(`Scan results not found: ${scanId}`);
-throw new Error(`Invalid resource type: ${type}`);
-throw new Error(`Resource access denied: ${uri}`);
-```
-
-### 3. Resource Caching
-
-Resources automatically benefit from AIRS client caching:
-
-```typescript
-// Scan results are cached by the AIRS client
-const results = await airsClient.getScanResults([scanId]);
-```
-
-### 4. JSON Formatting
-
-Always format JSON resources for readability:
-
-```typescript
-text: JSON.stringify(result, null, 2)
 ```
 
 ## Performance Considerations
 
-- Static resources (cache stats, rate limit) are lightweight
-- Dynamic resources leverage AIRS client caching
-- Resource listing is paginated for large result sets
-- JSON serialization is performed on-demand
+1. **Caching**: Dynamic resources benefit from AIRS client caching layer
+2. **Lightweight Stats**: Static resources (cache, rate limit) have minimal overhead
+3. **On-demand Serialization**: JSON formatting only when resources are read
+4. **Singleton Client**: Single AIRS client instance reduces connection overhead
 
 ## Security Considerations
 
-- Resource URIs are validated before processing
-- API keys are never exposed in resource content
-- Sensitive data is filtered from resource responses
-- Access control follows MCP server permissions
+1. **URI Validation**: All URIs are parsed and validated before processing
+2. **No Credential Exposure**: API keys are never included in resource content
+3. **Error Sanitization**: Internal errors don't expose sensitive details
+4. **Type Safety**: Full TypeScript typing prevents runtime errors
 
-## Next Steps
+## Type System
+
+The resources module uses centralized types from `src/types/`:
+
+### MCP Resource Types
+
+| Type                     | Module    | Purpose                            |
+|--------------------------|-----------|------------------------------------|
+| `McpResource`            | `./types` | Resource definition with metadata  |
+| `McpResourceContent`     | `./types` | Resource content with URI and data |
+| `McpResourcesListParams` | `./types` | Parameters for listing resources   |
+| `McpResourcesListResult` | `./types` | Result of resource listing         |
+| `McpResourcesReadParams` | `./types` | Parameters for reading a resource  |
+| `McpResourcesReadResult` | `./types` | Result of resource reading         |
+
+## Dependencies
+
+### External Dependencies
+
+| Module    | Purpose            |
+|-----------|--------------------|
+| `winston` | Structured logging |
+
+### Internal Dependencies
+
+| Module            | Import            | Purpose               |
+|-------------------|-------------------|-----------------------|
+| `../utils/logger` | `getLogger()`     | Logger instance       |
+| `../airs/factory` | `getAirsClient()` | AIRS client singleton |
+| `../types`        | Various types     | Type definitions      |
+
+## Related Documentation
 
 - [Types Module]({{ site.baseurl }}/developers/src/types/) - Resource type definitions
-- [Tools Module]({{ site.baseurl }}/developers/src/tools/) - Tool implementations
-- [Transport Module]({{ site.baseurl }}/developers/src/transport/) - Request handling
+- [Tools Module]({{ site.baseurl }}/developers/src/tools/) - Tools that create resource references
+- [Transport Module]({{ site.baseurl }}/developers/src/transport/) - How resources are exposed via MCP
+- [AIRS Module]({{ site.baseurl }}/developers/src/airs/) - Client used for data retrieval
+
+## Summary
+
+The resources module provides a clean URI-based abstraction for accessing AIRS data through the MCP protocol. It
+supports both static system resources and dynamic scan/report data, with proper error handling, logging, and type safety
+throughout.

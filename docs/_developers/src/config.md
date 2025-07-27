@@ -1,420 +1,398 @@
 ---
 layout: documentation
-title: Configuration Module (src/config/)
+title: Configuration Module
 permalink: /developers/src/config/
 category: developers
 ---
 
-# Configuration Module Documentation
+# Configuration Management (src/config/)
 
-The configuration module provides centralized environment configuration management for the Prisma AIRS MCP server. It implements a singleton pattern with Zod schema validation, ensuring type-safe configuration access and runtime validation of all environment variables.
+The configuration module provides centralized, type-safe configuration management for the Prisma AIRS MCP server. It uses Zod for runtime validation, implements a singleton pattern, and supports environment-based configuration with sensible defaults.
 
-## Module Overview
+## Module Structure
 
-The configuration module handles:
+```
+src/config/
+└── index.ts    # Configuration parser, validator, and singleton
+```
 
-- Environment variable parsing with defaults
-- Runtime validation using Zod schemas
-- Type-safe configuration access
-- Singleton pattern for consistent configuration
-- Version detection from package.json
+**Key Features**:
+- 🔒 Type-safe configuration with TypeScript interfaces
+- ✅ Runtime validation using Zod schemas
+- 🔧 Environment variable support with defaults
+- 📦 Singleton pattern for consistent access
+- 🚀 Fast-fail on invalid configuration
+- 📊 Automatic version detection
 
 ## Architecture
 
-```typescript
-/**
- * Configuration Management Module
- * 
- * This module is responsible for:
- * 1. Loading configuration values from environment variables
- * 2. Applying sensible defaults when environment variables are not set
- * 3. Validating all configuration values at runtime using Zod schemas
- * 4. Providing type-safe access to configuration throughout the application
- */
+```
+┌─────────────────────────────────────────┐
+│         Environment Variables           │
+│  (process.env, .env file via dotenv)    │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────▼────────────────────────┐
+│          parseConfig()                  │
+│  • Reads environment variables          │
+│  • Applies defaults                     │
+│  • Parses numeric values                │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────▼────────────────────────┐
+│       Zod Schema Validation             │
+│  • Type checking                        │
+│  • Range validation                     │
+│  • Required field checks                │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────▼────────────────────────┐
+│      Singleton Config Instance          │
+│  • Cached after first load              │
+│  • Type-safe Config object              │
+│  • Accessed via getConfig()             │
+└─────────────────────────────────────────┘
 ```
 
-## Type System
+## Configuration Structure
 
-All configuration types are defined in `src/types/config.ts` with the `Config` prefix:
-
-```typescript
-import type { Config } from '../types';
-
-// Configuration structure
-export interface Config {
-    server: ConfigServerOptions;
-    mcp: ConfigMcpOptions;
-    airs: ConfigAirsOptions;
-}
-```
-
-## Configuration Schema
-
-### Complete Configuration Structure
+The complete configuration is defined in `src/types/config.ts`:
 
 ```typescript
-export interface Config {
-    server: ConfigServerOptions;
-    mcp: ConfigMcpOptions;
-    airs: ConfigAirsOptions;
-}
-
-export interface ConfigServerOptions {
-    port: number;
-    environment: 'development' | 'production';
-    corsOrigin: string;
-}
-
-export interface ConfigMcpOptions {
-    serverName: string;
-    serverVersion: string;
-    protocolVersion: string;
-}
-
-export interface ConfigAirsOptions {
-    apiUrl: string;
-    apiKey: string;
-    timeout: number;
-    retryAttempts: number;
-    retryDelay: number;
+interface Config {
+    server: ConfigServer;
+    airs: ConfigAirs;
+    cache: ConfigCache;
+    rateLimit: ConfigRateLimit;
+    mcp: ConfigMcp;
 }
 ```
 
-## Zod Schema Validation
+### Server Configuration (`ConfigServer`)
 
-The module uses Zod schemas for runtime validation:
+Controls the HTTP server behavior:
 
-```typescript
-const configSchema = z.object({
-    server: z.object({
-        port: z.coerce.number().int().min(1).max(65535),
-        environment: z.enum(['development', 'production']),
-        corsOrigin: z.string().min(1),
-    }),
-    mcp: z.object({
-        serverName: z.string().min(1),
-        serverVersion: z.string().min(1),
-        protocolVersion: z.string().min(1),
-    }),
-    airs: z.object({
-        apiUrl: z.string().url(),
-        apiKey: z.string().min(1),
-        timeout: z.coerce.number().int().min(1000),
-        retryAttempts: z.coerce.number().int().min(0),
-        retryDelay: z.coerce.number().int().min(100),
-    }),
-});
-```
+| Field | Type | Default | Environment Variable | Description |
+|-------|------|---------|---------------------|-------------|
+| `port` | number | 3000 | `PORT` | HTTP server port (1-65535) |
+| `environment` | enum | development | `NODE_ENV` | Runtime environment |
+| `logLevel` | enum | info | `LOG_LEVEL` | Logging verbosity |
+
+**Environment Values**:
+- `development`, `production`, `test`
+
+**Log Levels** (in order of verbosity):
+- `error`, `warn`, `info`, `debug`
+
+### AIRS Configuration (`ConfigAirs`)
+
+Prisma AIRS API integration settings:
+
+| Field | Type | Default | Environment Variable | Description |
+|-------|------|---------|---------------------|-------------|
+| `apiUrl` | string | [production URL] | `AIRS_API_URL` | AIRS API endpoint |
+| `apiKey` | string | (required) | `AIRS_API_KEY` | Authentication token |
+| `timeout` | number | 30000 | `AIRS_TIMEOUT` | Request timeout (ms) |
+| `retryAttempts` | number | 3 | `AIRS_RETRY_ATTEMPTS` | Max retry attempts |
+| `retryDelay` | number | 1000 | `AIRS_RETRY_DELAY` | Initial retry delay (ms) |
+| `defaultProfileId` | string? | undefined | `AIRS_DEFAULT_PROFILE_ID` | Default scan profile ID |
+| `defaultProfileName` | string? | undefined | `AIRS_DEFAULT_PROFILE_NAME` | Default scan profile name |
+
+**Default API URL**: `https://service.api.aisecurity.paloaltonetworks.com`
+
+### Cache Configuration (`ConfigCache`)
+
+In-memory caching behavior:
+
+| Field | Type | Default | Environment Variable | Description |
+|-------|------|---------|---------------------|-------------|
+| `ttlSeconds` | number | 300 | `CACHE_TTL_SECONDS` | Cache TTL (seconds) |
+| `maxSize` | number | 1000 | `CACHE_MAX_SIZE` | Max cache entries |
+| `enabled` | boolean | true | `CACHE_ENABLED` | Enable/disable cache |
+
+### Rate Limit Configuration (`ConfigRateLimit`)
+
+API rate limiting settings:
+
+| Field | Type | Default | Environment Variable | Description |
+|-------|------|---------|---------------------|-------------|
+| `maxRequests` | number | 100 | `RATE_LIMIT_MAX_REQUESTS` | Max requests per window |
+| `windowMs` | number | 60000 | `RATE_LIMIT_WINDOW_MS` | Time window (ms) |
+| `enabled` | boolean | true | `RATE_LIMIT_ENABLED` | Enable/disable rate limiting |
+
+### MCP Configuration (`ConfigMcp`)
+
+Model Context Protocol settings:
+
+| Field | Type | Default | Environment Variable | Description |
+|-------|------|---------|---------------------|-------------|
+| `serverName` | string | prisma-airs-mcp | `MCP_SERVER_NAME` | Server identifier |
+| `serverVersion` | string | [auto-detected] | `MCP_SERVER_VERSION` | Server version |
+| `protocolVersion` | string | 2024-11-05 | `MCP_PROTOCOL_VERSION` | MCP protocol version |
 
 ## Environment Variables
 
-### Server Configuration
+### Complete Example (.env file)
 
 ```bash
-# Server port (default: 3000)
-# Valid range: 1-65535
+# Server Configuration
 PORT=3000
-
-# Environment mode (default: development)
-# Options: development, production
 NODE_ENV=production
+LOG_LEVEL=info
 
-# CORS origin (default: *)
-# Use specific origin in production
-CORS_ORIGIN=https://app.example.com
-```
+# Prisma AIRS API
+AIRS_API_URL=https://service.api.aisecurity.paloaltonetworks.com
+AIRS_API_KEY=your-api-key-here
+AIRS_TIMEOUT=30000
+AIRS_RETRY_ATTEMPTS=3
+AIRS_RETRY_DELAY=1000
+AIRS_DEFAULT_PROFILE_NAME=Prisma AIRS
 
-### MCP Configuration
+# Cache Settings
+CACHE_TTL_SECONDS=300
+CACHE_MAX_SIZE=1000
+CACHE_ENABLED=true
 
-```bash
-# MCP server name (default: prisma-airs-mcp-server)
-MCP_SERVER_NAME=my-custom-server
+# Rate Limiting
+RATE_LIMIT_MAX_REQUESTS=100
+RATE_LIMIT_WINDOW_MS=60000
+RATE_LIMIT_ENABLED=true
 
-# MCP protocol version (default: 2024-11-05)
-# Should match MCP specification version
+# MCP Protocol
+MCP_SERVER_NAME=prisma-airs-mcp
 MCP_PROTOCOL_VERSION=2024-11-05
 ```
 
-### AIRS Configuration
+### Minimal Configuration
+
+Only one environment variable is required:
 
 ```bash
-# Required: Prisma AIRS API endpoint
-# Default: https://service.api.aisecurity.paloaltonetworks.com
-AIRS_API_URL=https://service.api.aisecurity.paloaltonetworks.com
-
-# Required: API authentication key
+# Required
 AIRS_API_KEY=your-api-key-here
-
-# Request timeout in milliseconds (default: 30000)
-# Minimum: 1000ms
-AIRS_TIMEOUT=30000
-
-# Number of retry attempts (default: 3)
-# Minimum: 0 (no retries)
-AIRS_RETRY_ATTEMPTS=3
-
-# Initial retry delay in milliseconds (default: 1000)
-# Minimum: 100ms
-AIRS_RETRY_DELAY=1000
 ```
+
+All other values have sensible defaults.
 
 ## Implementation Details
 
 ### Singleton Pattern
 
-The configuration uses a singleton pattern to ensure consistent configuration across the application:
-
 ```typescript
 let config: Config | null = null;
 
 export function getConfig(): Config {
-    if (config === null) {
-        config = parseConfig();
+    if (!config) {
+        try {
+            config = parseConfig();
+        } catch (error) {
+            // Handle validation errors
+            if (error instanceof z.ZodError) {
+                console.error('Configuration validation failed:', error.issues);
+                throw new Error(
+                    `Invalid configuration: ${error.issues.map((e) => e.message).join(', ')}`
+                );
+            }
+            throw error;
+        }
     }
     return config;
 }
 ```
 
-### Configuration Parser
-
-```typescript
-function parseConfig(): Config {
-    const config = {
-        server: {
-            port: parseInt(process.env.PORT || '3000', 10),
-            environment: (process.env.NODE_ENV || 'development') as 'development' | 'production',
-            corsOrigin: process.env.CORS_ORIGIN || '*',
-        },
-        mcp: {
-            serverName: process.env.MCP_SERVER_NAME || 'prisma-airs-mcp-server',
-            serverVersion: getVersion(),
-            protocolVersion: process.env.MCP_PROTOCOL_VERSION || '2024-11-05',
-        },
-        airs: {
-            apiUrl: process.env.AIRS_API_URL || 'https://service.api.aisecurity.paloaltonetworks.com',
-            apiKey: process.env.AIRS_API_KEY || '',
-            timeout: parseInt(process.env.AIRS_TIMEOUT || '30000', 10),
-            retryAttempts: parseInt(process.env.AIRS_RETRY_ATTEMPTS || '3', 10),
-            retryDelay: parseInt(process.env.AIRS_RETRY_DELAY || '1000', 10),
-        },
-    };
-
-    try {
-        return configSchema.parse(config);
-    } catch (error) {
-        if (error instanceof z.ZodError) {
-            console.error('Configuration validation failed:');
-            error.errors.forEach((err) => {
-                console.error(`  ${err.path.join('.')}: ${err.message}`);
-            });
-            process.exit(1);
-        }
-        throw error;
-    }
-}
-```
-
 ### Version Detection
 
-The module automatically detects the server version from package.json:
+The module automatically detects version from `version.json`:
 
 ```typescript
-function getVersion(): string {
-    try {
-        const packageJson = JSON.parse(
-            fs.readFileSync(path.resolve(__dirname, '../../package.json'), 'utf-8')
-        );
-        return packageJson.version || '1.0.0';
-    } catch {
-        return '1.0.0';
-    }
+let versionFromFile = '1.0.0';
+try {
+    const versionJson = JSON.parse(
+        readFileSync(join(process.cwd(), 'version.json'), 'utf-8')
+    ) as { version: string };
+    versionFromFile = versionJson.version;
+} catch {
+    // Fall back to default if file doesn't exist
 }
 ```
 
-## Usage Examples
+### Validation Schema
+
+Uses Zod for comprehensive validation:
+
+```typescript
+const configSchema = z.object({
+    server: z.object({
+        port: z.number().min(1).max(65535),
+        environment: z.enum(['development', 'production', 'test']),
+        logLevel: z.enum(['error', 'warn', 'info', 'debug']),
+    }),
+    // ... other schemas
+});
+```
+
+## Usage Patterns
 
 ### Basic Usage
 
 ```typescript
 import { getConfig } from './config';
 
-// Get configuration singleton
+// Get configuration (validated and cached)
 const config = getConfig();
 
-// Access configuration values
-console.log('Server port:', config.server.port);
-console.log('API URL:', config.airs.apiUrl);
-console.log('Environment:', config.server.environment);
+// Type-safe access
+console.log(`Server running on port ${config.server.port}`);
+console.log(`Environment: ${config.server.environment}`);
 ```
 
-### Using in Express Server
+### Conditional Logic
 
 ```typescript
-import express from 'express';
-import { getConfig } from './config';
-
-const config = getConfig();
-const app = express();
-
-// Use configuration for server setup
-app.listen(config.server.port, () => {
-    console.log(`Server running on port ${config.server.port}`);
-    console.log(`Environment: ${config.server.environment}`);
-});
-```
-
-### Using in AIRS Client
-
-```typescript
-import { EnhancedPrismaAirsClient } from './airs';
-import { getConfig } from './config';
-
 const config = getConfig();
 
-// Create AIRS client with configuration
-const client = new EnhancedPrismaAirsClient({
-    apiUrl: config.airs.apiUrl,
-    apiKey: config.airs.apiKey,
-    timeout: config.airs.timeout,
-    maxRetries: config.airs.retryAttempts,
-    retryDelay: config.airs.retryDelay,
-});
+if (config.server.environment === 'production') {
+    // Production-specific logic
+    logger.setLevel('error');
+} else {
+    // Development logic
+    logger.setLevel('debug');
+}
 ```
 
-## Configuration Validation
-
-### Required Fields
-
-The following fields are required and will cause startup failure if not provided:
-
-1. **AIRS_API_KEY** - Must be a non-empty string
-2. **AIRS_API_URL** - Must be a valid URL (defaults provided)
-
-### Validation Examples
-
-```bash
-# Missing required API key
-$ node dist/index.js
-Configuration validation failed:
-  airs.apiKey: String must contain at least 1 character(s)
-
-# Invalid port number
-$ PORT=70000 node dist/index.js
-Configuration validation failed:
-  server.port: Number must be less than or equal to 65535
-
-# Invalid URL format
-$ AIRS_API_URL=not-a-url node dist/index.js
-Configuration validation failed:
-  airs.apiUrl: Invalid url
-```
-
-## Best Practices
-
-### 1. Environment-Specific Configuration
-
-Use `.env` files for different environments:
-
-```bash
-# .env.development
-NODE_ENV=development
-LOG_LEVEL=debug
-AIRS_API_URL=https://dev-api.airs.example.com
-
-# .env.production
-NODE_ENV=production
-LOG_LEVEL=error
-AIRS_API_URL=https://api.airs.example.com
-```
-
-### 2. Secure API Keys
-
-Never commit API keys to version control:
-
-```bash
-# .env.example (commit this)
-AIRS_API_KEY=your-api-key-here
-
-# .env (don't commit this)
-AIRS_API_KEY=actual-secret-key
-```
-
-### 3. Validate Early
-
-Configuration is validated on first access, ensuring failures happen at startup:
+### Feature Flags
 
 ```typescript
-// This will validate configuration immediately
 const config = getConfig();
-```
 
-### 4. Type Safety
+// Enable/disable features based on config
+if (config.cache.enabled) {
+    app.use(cacheMiddleware);
+}
 
-Always use the typed configuration object:
-
-```typescript
-// Good - type safe
-const port: number = config.server.port;
-
-// Bad - no type safety
-const port = process.env.PORT; // string | undefined
-```
-
-### 5. Default Values
-
-Provide sensible defaults for optional configuration:
-
-```typescript
-// Defaults are applied in parseConfig()
-timeout: parseInt(process.env.AIRS_TIMEOUT || '30000', 10),
+if (config.rateLimit.enabled) {
+    app.use(rateLimitMiddleware);
+}
 ```
 
 ## Error Handling
 
-### Validation Errors
+### Validation Failures
 
-Configuration validation errors are logged and cause immediate exit:
+Configuration errors fail fast with clear messages:
 
-```typescript
-try {
-    return configSchema.parse(config);
-} catch (error) {
-    if (error instanceof z.ZodError) {
-        console.error('Configuration validation failed:');
-        error.errors.forEach((err) => {
-            console.error(`  ${err.path.join('.')}: ${err.message}`);
-        });
-        process.exit(1);
-    }
-    throw error;
-}
+```bash
+# Missing required field
+$ node dist/index.js
+Configuration validation failed: [
+  {
+    "code": "too_small",
+    "minimum": 1,
+    "path": ["airs", "apiKey"],
+    "message": "String must contain at least 1 character(s)"
+  }
+]
+
+# Invalid value
+$ PORT=99999 node dist/index.js
+Configuration validation failed: [
+  {
+    "code": "too_big",
+    "maximum": 65535,
+    "path": ["server", "port"],
+    "message": "Number must be less than or equal to 65535"
+  }
+]
 ```
 
-### Missing Configuration
+### Common Issues
 
-The singleton pattern ensures configuration is loaded once:
+1. **Invalid URL Format**
+   ```bash
+   AIRS_API_URL=not-a-url
+   # Error: Invalid URL
+   ```
 
-```typescript
-export function getConfig(): Config {
-    if (config === null) {
-        config = parseConfig(); // Validates here
-    }
-    return config; // Always returns valid config
-}
+2. **Out of Range Values**
+   ```bash
+   CACHE_TTL_SECONDS=-1
+   # Error: Number must be greater than or equal to 0
+   ```
+
+3. **Invalid Enum Values**
+   ```bash
+   NODE_ENV=staging
+   # Error: Invalid enum value. Expected 'development' | 'production' | 'test'
+   ```
+
+## Best Practices
+
+### 1. Use Environment Files
+
+```bash
+# Development
+cp .env.example .env.development
+dotenv -e .env.development -- npm run dev
+
+# Production
+dotenv -e .env.production -- npm start
 ```
 
-## Testing Configuration
+### 2. Validate Early
+
+```typescript
+// In your main entry point
+import { getConfig } from './config';
+
+// This validates immediately
+const config = getConfig();
+
+// Now start your application
+startServer(config);
+```
+
+### 3. Don't Access process.env Directly
+
+```typescript
+// ❌ Bad - No validation, no defaults
+const port = process.env.PORT || '3000';
+
+// ✅ Good - Validated, typed, with defaults
+const config = getConfig();
+const port = config.server.port;
+```
+
+### 4. Log Configuration (Safely)
+
+```typescript
+const config = getConfig();
+logger.info('Configuration loaded', {
+    server: config.server,
+    mcp: config.mcp,
+    cache: config.cache,
+    rateLimit: config.rateLimit,
+    airs: {
+        apiUrl: config.airs.apiUrl,
+        hasApiKey: !!config.airs.apiKey, // Don't log secrets!
+        timeout: config.airs.timeout,
+    },
+});
+```
+
+## Testing
 
 ### Unit Testing
 
-Mock environment variables for testing:
-
 ```typescript
+import { getConfig } from './config';
+
 describe('Configuration', () => {
     const originalEnv = process.env;
 
     beforeEach(() => {
+        // Reset module cache
         jest.resetModules();
+        // Clone environment
         process.env = { ...originalEnv };
     });
 
@@ -422,60 +400,122 @@ describe('Configuration', () => {
         process.env = originalEnv;
     });
 
-    it('should parse valid configuration', () => {
+    it('should load default configuration', () => {
         process.env.AIRS_API_KEY = 'test-key';
-        process.env.PORT = '8080';
         
         const config = getConfig();
+        
+        expect(config.server.port).toBe(3000);
+        expect(config.server.environment).toBe('development');
+    });
+
+    it('should override with environment variables', () => {
+        process.env.PORT = '8080';
+        process.env.NODE_ENV = 'production';
+        process.env.AIRS_API_KEY = 'test-key';
+        
+        const config = getConfig();
+        
         expect(config.server.port).toBe(8080);
-        expect(config.airs.apiKey).toBe('test-key');
+        expect(config.server.environment).toBe('production');
     });
 });
 ```
 
 ### Integration Testing
 
-Test with actual environment files:
-
 ```typescript
-import dotenv from 'dotenv';
-
 // Load test environment
+import dotenv from 'dotenv';
 dotenv.config({ path: '.env.test' });
 
+import { getConfig } from './config';
+
 const config = getConfig();
-// Test with real configuration
+// Use config in integration tests
 ```
 
-## Monitoring Configuration
+## Docker Configuration
 
-Log configuration at startup (excluding secrets):
+### Using Environment Variables
+
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+
+# Configuration via environment
+ENV NODE_ENV=production
+ENV LOG_LEVEL=error
+
+# API key must be provided at runtime
+# docker run -e AIRS_API_KEY=xxx myimage
+```
+
+### Using .env File
+
+```bash
+# Run with env file
+docker run --env-file .env.production myimage
+```
+
+## Kubernetes Configuration
+
+### ConfigMap Example
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prisma-airs-config
+data:
+  PORT: "3000"
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+  CACHE_TTL_SECONDS: "300"
+  RATE_LIMIT_MAX_REQUESTS: "100"
+```
+
+### Secret Example
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: prisma-airs-secrets
+type: Opaque
+stringData:
+  AIRS_API_KEY: "your-api-key-here"
+```
+
+## Troubleshooting
+
+### Debug Configuration Loading
 
 ```typescript
-import { getLogger } from './utils/logger';
-
-const logger = getLogger();
-const config = getConfig();
-
-logger.info('Server configuration loaded', {
-    server: {
-        port: config.server.port,
-        environment: config.server.environment,
-    },
-    mcp: {
-        serverName: config.mcp.serverName,
-        version: config.mcp.serverVersion,
-    },
-    airs: {
-        apiUrl: config.airs.apiUrl,
-        // Don't log sensitive data
-        hasApiKey: !!config.airs.apiKey,
-    },
-});
+// Add debug logging
+const config = parseConfig();
+console.log('Loaded configuration:', JSON.stringify(config, null, 2));
 ```
 
-## Next Steps
+### Check Environment Variables
+
+```bash
+# List all environment variables
+env | grep -E '^(AIRS_|MCP_|CACHE_|RATE_)'
+
+# Check specific variable
+echo $AIRS_API_KEY
+```
+
+### Common Solutions
+
+1. **Configuration not updating**: Module caches config - restart application
+2. **Boolean parsing**: Use `!== 'false'` pattern for proper parsing
+3. **Number parsing**: Always use `parseInt()` with radix 10
+4. **URL validation**: Ensure protocol is included (https://)
+
+## Related Documentation
 
 - [Types Module]({{ site.baseurl }}/developers/src/types/) - Configuration type definitions
-- [Server Module]({{ site.baseurl }}/developers/src/index/) - Server initialization
-- [AIRS Module]({{ site.baseurl }}/developers/src/airs/) - AIRS client configuration
+- [Application Entry Point]({{ site.baseurl }}/developers/src/) - How configuration is used at startup
+- [AIRS Module]({{ site.baseurl }}/developers/src/airs/) - AIRS client configuration usage

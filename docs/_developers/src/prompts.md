@@ -1,27 +1,56 @@
 ---
 layout: documentation
-title: Prompts Module (src/prompts/)
+title: Prompts Module
 permalink: /developers/src/prompts/
 category: developers
 ---
 
-# Prompts Module Documentation
+# Security Workflows (src/prompts/)
 
-The prompts module provides pre-defined conversation templates for common security workflows using Prisma AIRS. These prompts guide AI models through structured security analysis, threat investigation, compliance checking, and incident response procedures.
+The prompts module provides pre-defined conversation templates for common security workflows using Prisma AIRS. These
+prompts guide AI models through structured security analysis, threat investigation, compliance checking, and incident
+response procedures.
 
-## Module Overview
+## Module Structure
 
-The prompts module implements the MCP prompt interface to provide:
+```
+src/prompts/
+└── index.ts    # Prompt handler implementation
+```
 
-- Security analysis workflows
-- Threat investigation procedures
-- Compliance checking protocols
-- Incident response guidance
-- Structured prompt generation with argument interpolation
+**Note**: Prompt types are centralized in `src/types/mcp.ts` with the prefix `Mcp` to avoid namespace conflicts.
 
-## Architecture
+## Architecture Overview
 
-The module follows the MCP prompt specification, providing structured conversation templates that can be filled with dynamic arguments.
+```
+┌─────────────────────────────────────────┐
+│         MCP Prompt Request              │
+│    (via HttpServerTransport)            │
+└─────────────────┬───────────────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│       PromptHandler.getPrompt           │
+│  • Validate prompt name                 │
+│  • Process arguments                    │
+│  • Generate workflow messages           │
+└─────────────────┬───────────────────────┘
+                  │
+        ┌─────────┴─────────┬─────────────┬──────────────┐
+        │                   │             │              │
+┌───────▼────────┐ ┌────────▼──────┐ ┌────▼─────┐ ┌──────▼──────┐
+│ Security       │ │ Threat        │ │Compliance│ │ Incident    │
+│ Analysis       │ │ Investigation │ │Check     │ │ Response    │
+└───────┬────────┘ └────────┬──────┘ └────┬─────┘ └──────┬──────┘
+        │                   │             │              │
+        └─────────┬─────────┴─────────────┴──────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│    Generated Conversation Messages      │
+│  • User instructions                    │
+│  • Assistant acknowledgment             │
+│  • Workflow guidance                    │
+└─────────────────────────────────────────┘
+```
 
 ## Type System
 
@@ -44,175 +73,155 @@ import type {
 ### 1. Security Analysis Workflow
 
 **Name:** `security_analysis`  
-**Purpose:** Analyze content for security threats and provide recommendations
+**Title:** Security Analysis Workflow  
+**Description:** Analyze content for security threats and provide recommendations
 
 #### Arguments
 
-```typescript
-const securityAnalysisPrompt: McpPrompt = {
-    name: 'security_analysis',
-    description: 'Analyze content for security threats',
-    arguments: [
-        {
-            name: 'content',
-            description: 'The content to analyze',
-            required: true
-        },
-        {
-            name: 'context',
-            description: 'Additional context',
-            required: false
-        },
-        {
-            name: 'severity_threshold',
-            description: 'Minimum severity (low, medium, high)',
-            required: false
-        }
-    ]
-};
-```
+| Name                 | Description                                          | Required |
+|----------------------|------------------------------------------------------|----------|
+| `content`            | The content to analyze (prompt, response, or both)   | Yes      |
+| `context`            | Additional context about the content source          | No       |
+| `severity_threshold` | Minimum severity level to report (low, medium, high) | No       |
 
 #### Generated Workflow
 
-The prompt generates a structured conversation that:
+The prompt generates a structured security analysis that includes:
 
-1. Scans content using AIRS tools
-2. Reports threats above severity threshold
-3. Provides specific examples for each threat
-4. Suggests remediation steps
-5. Delivers overall security assessment
+1. **Executive Summary** - High-level threat overview
+2. **Detailed Findings** - Using `airs_scan_content` tool
+3. **Risk Assessment** - Severity and impact analysis
+4. **Recommendations** - Remediation steps for each threat
 
-#### Example Usage
+#### Workflow Structure
 
 ```typescript
-const result = await promptHandler.getPrompt({
-    name: 'security_analysis',
-    arguments: {
-        content: 'Check if this SQL query is safe: SELECT * FROM users',
-        context: 'User-submitted database query',
-        severity_threshold: 'medium'
-    }
-});
+// User message includes:
+- Content to analyze
+- Context information
+- Requirements:
+  1. Use airs_scan_content tool
+  2. Report threats at threshold or higher
+  3. Provide specific examples
+  4. Suggest remediation steps
+  5. Give overall risk score
+
+// Assistant response:
+- Acknowledges the request
+- Indicates it will use Prisma AIRS for analysis
 ```
 
 ### 2. Threat Investigation Workflow
 
 **Name:** `threat_investigation`  
-**Purpose:** Investigate detected threats and provide detailed analysis
+**Title:** Threat Investigation Workflow  
+**Description:** Investigate detected threats and provide detailed analysis
 
 #### Arguments
 
-```typescript
-const threatInvestigationPrompt: McpPrompt = {
-    name: 'threat_investigation',
-    arguments: [
-        {
-            name: 'scan_id',
-            description: 'Scan ID or report ID',
-            required: true
-        },
-        {
-            name: 'threat_type',
-            description: 'Specific threat to investigate',
-            required: false
-        },
-        {
-            name: 'deep_analysis',
-            description: 'Perform deep analysis (true/false)',
-            required: false
-        }
-    ]
-};
-```
+| Name         | Description                                                            | Required |
+|--------------|------------------------------------------------------------------------|----------|
+| `scan_id`    | The scan ID to investigate                                             | Yes      |
+| `focus_area` | Specific threat type to focus on (e.g., injection, dlp, toxic_content) | No       |
 
-#### Investigation Process
+#### Investigation Steps
 
-1. Retrieves scan results using provided ID
-2. Analyzes specific threat indicators
-3. Traces threat patterns and behaviors
-4. Identifies potential attack vectors
-5. Recommends containment strategies
+The prompt guides through a comprehensive threat investigation:
+
+1. **Retrieve Scan Results** - Using `airs_get_scan_results`
+2. **Get Threat Reports** - Using `airs_get_threat_reports` if available
+3. **Threat Analysis**:
+    - Threat type and severity
+    - Potential impact assessment
+    - Attack vector identification
+    - False positive evaluation
+4. **Timeline & Correlation** - Pattern analysis
+5. **Recommendations** - Immediate actions and long-term mitigations
+
+#### Output Format
+
+The investigation is formatted as a professional security report with structured sections for easy consumption.
 
 ### 3. Compliance Check Workflow
 
 **Name:** `compliance_check`  
-**Purpose:** Check content against regulatory compliance requirements
+**Title:** Compliance Check Workflow  
+**Description:** Check content against compliance policies and regulations
 
 #### Arguments
 
-```typescript
-const complianceCheckPrompt: McpPrompt = {
-    name: 'compliance_check',
-    arguments: [
-        {
-            name: 'content',
-            description: 'Content to check',
-            required: true
-        },
-        {
-            name: 'regulations',
-            description: 'Regulations to check (GDPR, HIPAA, PCI-DSS)',
-            required: true
-        },
-        {
-            name: 'region',
-            description: 'Geographic region',
-            required: false
-        }
-    ]
-};
-```
+| Name           | Description                                                           | Required                                |
+|----------------|-----------------------------------------------------------------------|-----------------------------------------|
+| `content`      | The content to check for compliance                                   | Yes                                     |
+| `regulations`  | Comma-separated list of regulations to check (e.g., GDPR, HIPAA, PCI) | No (defaults to "GDPR, HIPAA, PCI-DSS") |
+| `profile_name` | Security profile to use for compliance checking                       | No                                      |
 
-#### Compliance Analysis
+#### Compliance Analysis Steps
 
-- Scans for sensitive data exposure
-- Checks data handling practices
-- Identifies regulatory violations
-- Provides compliance recommendations
-- Generates audit trail
+1. **Data Identification** - Using `airs_scan_content` to find:
+    - Personal Identifiable Information (PII)
+    - Protected Health Information (PHI)
+    - Payment Card Information (PCI)
+    - Sensitive personal data categories
+
+2. **Regulatory Mapping** - Map findings to specific requirements
+
+3. **Risk Assessment** - Evaluate compliance risk level
+
+4. **Remediation Guidance** - Provide actionable steps
+
+#### Response Structure
+
+- **Compliance Summary** - Overview of compliance status
+- **Detailed Findings by Regulation** - Specific violations per regulation
+- **Risk Matrix** - Visual risk assessment
+- **Remediation Plan** - Step-by-step fixes
+- **Compliance Checklist** - Actionable items
 
 ### 4. Incident Response Workflow
 
 **Name:** `incident_response`  
-**Purpose:** Guide through security incident response procedures
+**Title:** Incident Response Workflow  
+**Description:** Guide through incident response for detected security issues
 
 #### Arguments
 
-```typescript
-const incidentResponsePrompt: McpPrompt = {
-    name: 'incident_response',
-    arguments: [
-        {
-            name: 'incident_type',
-            description: 'Type of incident',
-            required: true
-        },
-        {
-            name: 'severity',
-            description: 'Incident severity',
-            required: true
-        },
-        {
-            name: 'affected_systems',
-            description: 'Affected systems',
-            required: false
-        },
-        {
-            name: 'initial_indicators',
-            description: 'Initial indicators',
-            required: false
-        }
-    ]
-};
-```
+| Name            | Description                                                           | Required                  |
+|-----------------|-----------------------------------------------------------------------|---------------------------|
+| `incident_type` | Type of incident (e.g., data_leak, injection_attempt, malicious_code) | Yes                       |
+| `report_id`     | Threat report ID if available                                         | No                        |
+| `urgency`       | Incident urgency level (low, medium, high, critical)                  | No (defaults to "medium") |
 
-#### Response Workflow
+#### Response Timeline
 
-1. **Identification**: Scan and identify threats
-2. **Containment**: Immediate containment steps
-3. **Eradication**: Remove threat sources
-4. **Recovery**: System restoration guidance
-5. **Lessons Learned**: Post-incident analysis
+The prompt provides time-boxed incident response guidance:
+
+1. **Immediate Actions (0-15 minutes)**:
+    - Containment steps
+    - Evidence preservation
+    - Initial assessment
+
+2. **Investigation (15-60 minutes)**:
+    - Use `airs_get_threat_reports` if report_id provided
+    - Identify affected systems/data
+    - Determine attack vector
+
+3. **Mitigation (1-4 hours)**:
+    - Stop the threat
+    - Patch vulnerabilities
+    - Update security controls
+
+4. **Recovery (4-24 hours)**:
+    - Restore normal operations
+    - Verify security posture
+    - Monitor for recurrence
+
+5. **Lessons Learned**:
+    - Root cause analysis
+    - Process improvements
+    - Documentation updates
+
+The response includes specific commands and checks for each phase.
 
 ## Implementation Details
 
@@ -220,91 +229,89 @@ const incidentResponsePrompt: McpPrompt = {
 
 ```typescript
 export class PromptHandler {
-    private prompts: Map<string, McpPrompt>;
+    private readonly logger: Logger;
+
+    // Prompt names
+    private static readonly PROMPTS = {
+        SECURITY_ANALYSIS: 'security_analysis',
+        THREAT_INVESTIGATION: 'threat_investigation',
+        COMPLIANCE_CHECK: 'compliance_check',
+        INCIDENT_RESPONSE: 'incident_response',
+    } as const;
 
     constructor() {
-        this.prompts = new Map();
-        this.initializePrompts();
+        this.logger = getLogger();
     }
 
-    listPrompts(params?: McpPromptsListParams): McpPromptsListResult {
-        const prompts = Array.from(this.prompts.values());
-        
-        // Handle pagination if cursor provided
-        if (params?.cursor) {
-            // Implementation for cursor-based pagination
-        }
-        
-        return { prompts };
+    listPrompts(params: McpPromptsListParams): McpPromptsListResult {
+        // Returns static list of all available prompts
+        const prompts: McpPrompt[] = [...];
+        return {prompts};
     }
 
     getPrompt(params: McpPromptsGetParams): McpPromptsGetResult {
-        const prompt = this.prompts.get(params.name);
-        
-        if (!prompt) {
-            throw new Error(`Prompt not found: ${params.name}`);
+        const args = params.arguments || {};
+
+        switch (params.name) {
+            case PromptHandler.PROMPTS.SECURITY_ANALYSIS:
+                return this.getSecurityAnalysisPrompt(args);
+            case PromptHandler.PROMPTS.THREAT_INVESTIGATION:
+                return this.getThreatInvestigationPrompt(args);
+            case PromptHandler.PROMPTS.COMPLIANCE_CHECK:
+                return this.getComplianceCheckPrompt(args);
+            case PromptHandler.PROMPTS.INCIDENT_RESPONSE:
+                return this.getIncidentResponsePrompt(args);
+            default:
+                throw new Error(`Unknown prompt: ${params.name}`);
         }
-        
-        // Generate messages with interpolated arguments
-        const messages = this.generateMessages(prompt, params.arguments);
-        
-        return { messages };
     }
 }
 ```
 
 ### Message Generation
 
-```typescript
-private generateMessages(
-    prompt: McpPrompt,
-    args?: Record<string, string>
-): McpPromptMessage[] {
-    // Validate required arguments
-    this.validateArguments(prompt, args);
-    
-    // Generate workflow-specific messages
-    switch (prompt.name) {
-        case 'security_analysis':
-            return this.generateSecurityAnalysisMessages(args!);
-        case 'threat_investigation':
-            return this.generateThreatInvestigationMessages(args!);
-        // ... other workflows
-    }
-}
-```
+Each prompt handler method generates a conversation structure with:
 
-### Security Analysis Message Generation
+1. **User Message**: Detailed instructions with interpolated arguments
+2. **Assistant Message**: Acknowledgment and next steps
+
+#### Example: Security Analysis Generation
 
 ```typescript
-private generateSecurityAnalysisMessages(
-    args: Record<string, string>
-): McpPromptMessage[] {
-    const severityThreshold = args.severity_threshold || 'low';
-    
-    return [
+private getSecurityAnalysisPrompt(args: Record<string, string>): McpPromptsGetResult {
+    const content = args.content || '[No content provided]';
+    const context = args.context || 'No additional context';
+    const threshold = args.severity_threshold || 'low';
+
+    const messages: McpPromptMessage[] = [
         {
             role: 'user',
             content: {
                 type: 'text',
-                text: `Please analyze this content for security threats:\n\n${args.content}`
-            }
+                text: `Please perform a comprehensive security analysis...
+                
+**Content to Analyze:**
+${content}
+
+**Context:**
+${context}
+
+**Requirements:**
+1. Use the airs_scan_content tool to analyze the content
+2. Report all threats with severity ${threshold} or higher
+[... detailed instructions ...]`
+            },
         },
         {
             role: 'assistant',
             content: {
                 type: 'text',
-                text: 'I\'ll analyze this content for security threats using Prisma AIRS.'
-            }
+                text: `I'll perform a comprehensive security analysis of the provided content using Prisma AIRS. Let me start by scanning the content for potential threats.`,
+            },
         },
-        {
-            role: 'assistant',
-            content: {
-                type: 'text',
-                text: `First, let me scan the content with severity threshold: ${severityThreshold}`
-            }
-        }
     ];
+
+    return {messages};
 }
 ```
 
@@ -346,7 +353,7 @@ try {
 
 ```typescript
 // List available prompts
-const { prompts } = await client.listPrompts();
+const {prompts} = await client.listPrompts();
 
 prompts.forEach(prompt => {
     console.log(`${prompt.name}: ${prompt.description}`);
@@ -376,7 +383,7 @@ result.messages.forEach(msg => {
 ```typescript
 // Execute threat investigation workflow
 async function investigateThreat(scanId: string) {
-    const { messages } = await client.getPrompt({
+    const {messages} = await client.getPrompt({
         name: 'threat_investigation',
         arguments: {
             scan_id: scanId,
@@ -384,7 +391,7 @@ async function investigateThreat(scanId: string) {
             deep_analysis: 'true'
         }
     });
-    
+
     // Process workflow messages
     for (const message of messages) {
         if (message.content.type === 'text') {
@@ -396,109 +403,156 @@ async function investigateThreat(scanId: string) {
 
 ## Best Practices
 
-### 1. Argument Validation
+### 1. Default Values
 
-Always validate required arguments:
+Always provide sensible defaults for optional arguments:
 
 ```typescript
-private validateArguments(
-    prompt: McpPrompt,
-    args?: Record<string, string>
-): void {
-    const required = prompt.arguments?.filter(a => a.required) || [];
-    
-    for (const arg of required) {
-        if (!args?.[arg.name]) {
-            throw new Error(`Missing required argument: ${arg.name}`);
-        }
-    }
-}
+const content = args.content || '[No content provided]';
+const context = args.context || 'No additional context';
+const threshold = args.severity_threshold || 'low';
 ```
 
-### 2. Structured Workflows
+### 2. Structured Instructions
 
-Design prompts as complete workflows:
-
-- Clear initialization
-- Step-by-step progression
-- Error handling guidance
-- Summary and next steps
-
-### 3. Context Preservation
-
-Include context throughout the workflow:
+Each prompt includes clear, numbered instructions:
 
 ```typescript
-{
-    role: 'assistant',
-    content: {
-        type: 'text',
-        text: `Analyzing content with context: ${args.context || 'General'}`
-    }
-}
+**Requirements:**
+1. Use the airs_scan_content tool to analyze the content
+2. Report all threats with severity ${threshold} or higher
+3. Provide specific examples from the content for each threat found
+4. Suggest remediation steps for each identified issue
+5. Give an overall security assessment and risk score
+```
+
+### 3. Professional Formatting
+
+Structure prompts to generate professional outputs:
+
+```typescript
+Please structure your response with:
+- Executive Summary
+- Detailed Findings
+- Risk Assessment
+- Recommendations
 ```
 
 ### 4. Tool Integration
 
-Integrate with MCP tools in prompts:
+Explicitly mention which tools to use:
 
 ```typescript
-{
-    role: 'assistant',
-    content: {
-        type: 'text',
-        text: 'I\'ll use the airs_scan_content tool to analyze this...'
-    }
-}
+"1. Use airs_get_scan_results to retrieve the scan details"
+"2. If a report ID is available, use airs_get_threat_reports"
 ```
 
 ## Extending Prompts
 
 ### Adding New Prompts
 
-1. Define the prompt interface:
+1. **Add to PROMPTS constant**:
 
 ```typescript
-const newPrompt: McpPrompt = {
-    name: 'custom_workflow',
-    description: 'Custom security workflow',
+private static readonly PROMPTS = {
+    // ... existing prompts
+    CUSTOM_WORKFLOW: 'custom_workflow',
+} as const;
+```
+
+2. **Add to listPrompts() array**:
+
+```typescript
+{
+    name: PromptHandler.PROMPTS.CUSTOM_WORKFLOW,
+    title: 'Custom Workflow',
+    description: 'Custom security workflow description',
     arguments: [
         {
             name: 'param1',
             description: 'First parameter',
-            required: true
-        }
-    ]
-};
-```
-
-2. Add to prompt registry:
-
-```typescript
-private initializePrompts(): void {
-    this.prompts.set('custom_workflow', newPrompt);
+            required: true,
+        },
+    ],
 }
 ```
 
-3. Implement message generation:
+3. **Add case to getPrompt() switch**:
 
 ```typescript
-private generateCustomWorkflowMessages(
-    args: Record<string, string>
-): McpPromptMessage[] {
-    // Generate workflow messages
+case PromptHandler.PROMPTS.CUSTOM_WORKFLOW:
+    return this.getCustomWorkflowPrompt(args);
+```
+
+4. **Implement prompt method**:
+
+```typescript
+private getCustomWorkflowPrompt(args: Record<string, string>): McpPromptsGetResult {
+    const param1 = args.param1 || '[No value provided]';
+
+    const messages: McpPromptMessage[] = [
+        // User instructions
+        // Assistant acknowledgment
+    ];
+
+    return {messages};
 }
 ```
+
+## Type System
+
+The prompts module uses centralized types from `src/types/`:
+
+### MCP Prompt Types
+
+| Type                   | Module    | Purpose                          |
+|------------------------|-----------|----------------------------------|
+| `McpPrompt`            | `./types` | Prompt definition with arguments |
+| `McpPromptArgument`    | `./types` | Individual argument definition   |
+| `McpPromptMessage`     | `./types` | Conversation message structure   |
+| `McpPromptsListParams` | `./types` | Parameters for listing prompts   |
+| `McpPromptsListResult` | `./types` | Result of prompt listing         |
+| `McpPromptsGetParams`  | `./types` | Parameters for getting a prompt  |
+| `McpPromptsGetResult`  | `./types` | Generated prompt messages        |
+
+## Dependencies
+
+### External Dependencies
+
+| Module    | Purpose            |
+|-----------|--------------------|
+| `winston` | Structured logging |
+
+### Internal Dependencies
+
+| Module            | Import        | Purpose          |
+|-------------------|---------------|------------------|
+| `../utils/logger` | `getLogger()` | Logger instance  |
+| `../types`        | Various types | Type definitions |
 
 ## Performance Considerations
 
-- Prompts are stateless and lightweight
-- Message generation is synchronous
-- No caching needed (prompts are static)
-- Minimal memory footprint
+1. **Stateless Design**: No state maintained between requests
+2. **Synchronous Generation**: Messages generated immediately
+3. **Minimal Memory**: Only static prompt definitions in memory
+4. **No Caching**: Prompts are deterministic, no caching needed
 
-## Next Steps
+## Security Considerations
+
+1. **Argument Sanitization**: Arguments are included as-is in messages
+2. **No Code Execution**: Prompts only generate text messages
+3. **Tool References**: Prompts reference but don't execute tools
+4. **Professional Language**: All prompts use appropriate security terminology
+
+## Related Documentation
 
 - [Types Module]({{ site.baseurl }}/developers/src/types/) - MCP type definitions
-- [Tools Module]({{ site.baseurl }}/developers/src/tools/) - Tool implementations
-- [Transport Module]({{ site.baseurl }}/developers/src/transport/) - Request handling
+- [Tools Module]({{ site.baseurl }}/developers/src/tools/) - Tools referenced in prompts
+- [Transport Module]({{ site.baseurl }}/developers/src/transport/) - How prompts are exposed via MCP
+- [Resources Module]({{ site.baseurl }}/developers/src/resources/) - Resources accessed in workflows
+
+## Summary
+
+The prompts module provides pre-configured security workflows that guide AI models through complex security analysis
+tasks. Each prompt generates structured conversations with clear instructions, tool references, and professional
+formatting to ensure consistent, high-quality security assessments.

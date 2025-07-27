@@ -1,112 +1,87 @@
 ---
 layout: documentation
-title: AIRS Module (src/airs/)
+title: AIRS Client Module
 permalink: /developers/src/airs/
 category: developers
 ---
 
-# AIRS Module Documentation
+# AIRS Integration Layer (src/airs/)
 
-The AIRS module provides a comprehensive client implementation for integrating with Prisma AI Runtime Security (AIRS) API. It features an enhanced client with caching and rate limiting, built on top of a robust base API client with retry logic and error handling.
+The AIRS module provides a production-ready client implementation for integrating with Prisma AI Runtime Security (AIRS) API. It features a layered architecture with caching, rate limiting, retry logic, and comprehensive error handling.
 
-## Module Overview
-
-The AIRS module consists of five core files that work together to provide a production-ready API client:
+## Module Structure
 
 ```
 src/airs/
 ├── client.ts        # Core REST API client with retry logic
-├── cache.ts         # LRU cache for API responses
+├── cache.ts         # LRU cache implementation for responses
 ├── rate-limiter.ts  # Token bucket rate limiting
 ├── index.ts         # Enhanced client orchestrating all features
 └── factory.ts       # Singleton factory for client instances
 ```
 
-## Architecture
+## Architecture Overview
 
-The module follows a layered architecture:
-
-1. **Base Layer** (`client.ts`) - Raw API communication
-2. **Enhancement Layer** (`cache.ts`, `rate-limiter.ts`) - Performance and reliability
-3. **Orchestration Layer** (`index.ts`) - Unified interface
-4. **Factory Layer** (`factory.ts`) - Instance management
-
-## Type System
-
-All types are centralized in `src/types/airs.ts` with the `Airs` prefix:
-
-```typescript
-import type {
-    AirsScanRequest,
-    AirsScanResponse,
-    AirsAsyncScanObject,
-    AirsEnhancedClientConfig
-} from '../types';
+```
+┌─────────────────────────────────────────────┐
+│            Application Code                 │
+└─────────────────┬───────────────────────────┘
+                  │ Uses singleton via factory
+┌─────────────────▼───────────────────────────┐
+│          EnhancedPrismaAirsClient           │
+│              (index.ts)                     │
+│  • Orchestrates all features                │
+│  • Provides unified API                     │
+└─────────┬──────────┬──────────┬─────────────┘
+          │          │          │
+┌─────────▼───┐ ┌────▼────┐ ┌──▼──────────────┐
+│   Cache     │ │  Rate   │ │  Base Client    │
+│ (cache.ts)  │ │ Limiter │ │ (client.ts)     │
+│             │ │         │ │                 │
+│ • LRU evict │ │ • Token │ │ • HTTP calls    │
+│ • TTL expiry│ │  bucket │ │ • Retry logic   │
+│ • SHA keys  │ │ • Queue │ │ • Error handle  │
+└─────────────┘ └─────────┘ └────────┬────────┘
+                                     │
+                            ┌────────▼────────┐
+                            │ Prisma AIRS API │
+                            └─────────────────┘
 ```
 
-## Component Documentation
+## Core Components
 
-### client.ts - Core API Client
+### 1. Base Client (client.ts)
 
-The base client handles all HTTP communication with the AIRS API, including retry logic and error handling.
+The foundation layer handling all HTTP communication with the AIRS API.
+
+#### Key Features
+
+- **Automatic Retry**: Exponential backoff for transient failures
+- **Error Handling**: Typed errors with status codes
+- **Request Validation**: Parameter checking before API calls
+- **Logging**: Structured logging of all operations
 
 #### Configuration
 
 ```typescript
-export interface AirsClientConfig {
-    apiUrl: string;      // AIRS API endpoint
+// Imported from '../types'
+interface AirsClientConfig {
+    apiUrl: string;      // Base URL for AIRS API
     apiKey: string;      // Authentication token (x-pan-token)
-    timeout?: number;    // Request timeout (default: 30000ms)
+    timeout?: number;    // Request timeout in ms (default: 30000)
     maxRetries?: number; // Retry attempts (default: 3)
-    retryDelay?: number; // Initial retry delay (default: 1000ms)
+    retryDelay?: number; // Initial retry delay in ms (default: 1000)
 }
 ```
 
-#### Client Implementation
+#### API Methods
 
-```typescript
-export class PrismaAirsClient {
-    constructor(config: AirsClientConfig) {
-        // Initialize axios instance with interceptors
-        this.api = axios.create({
-            baseURL: config.apiUrl,
-            timeout: config.timeout || 30000,
-            headers: {
-                'Content-Type': 'application/json',
-                'x-pan-token': config.apiKey,
-            },
-        });
-    }
-
-    // Synchronous content scanning
-    async scanSync(request: AirsScanRequest): Promise<AirsScanResponse> {
-        const response = await this.api.post('/v1/scan/sync/request', request);
-        return response.data;
-    }
-
-    // Asynchronous batch scanning
-    async scanAsync(requests: AirsAsyncScanObject[]): Promise<AirsAsyncScanResponse> {
-        const response = await this.api.post('/v1/scan/async/request', { requests });
-        return response.data;
-    }
-
-    // Retrieve scan results by IDs
-    async getScanResults(scanIds: string[]): Promise<AirsScanIdResult[]> {
-        const response = await this.api.get('/v1/scan/results', {
-            params: { scan_ids: scanIds.join(',') }
-        });
-        return response.data.scan_results;
-    }
-
-    // Get detailed threat reports
-    async getThreatScanReports(reportIds: string[]): Promise<AirsThreatScanReportObject[]> {
-        const response = await this.api.get('/v1/scan/reports', {
-            params: { report_ids: reportIds.join(',') }
-        });
-        return response.data.reports;
-    }
-}
-```
+| Method               | Endpoint                      | Purpose                    |
+|----------------------|-------------------------------|----------------------------|
+| `scanSync()`         | `POST /v1/scan/sync/request`  | Real-time content scanning |
+| `scanAsync()`        | `POST /v1/scan/async/request` | Batch scanning             |
+| `getScanResults()`   | `GET /v1/scan/results`        | Retrieve scan results      |
+| `getThreatReports()` | `GET /v1/scan/reports`        | Get detailed reports       |
 
 #### Error Handling
 
@@ -115,7 +90,7 @@ export class PrismaAirsApiError extends Error {
     constructor(
         message: string,
         public statusCode: number,
-        public response?: AirsErrorResponse
+        public response?: AirsErrorResponse,
     ) {
         super(message);
         this.name = 'PrismaAirsApiError';
@@ -123,421 +98,381 @@ export class PrismaAirsApiError extends Error {
 }
 ```
 
-### cache.ts - Response Caching
+**Common Error Codes**:
 
-Implements an LRU (Least Recently Used) cache to reduce API calls and improve performance.
+- `400` - Bad request (invalid parameters)
+- `401` - Unauthorized (invalid API key)
+- `429` - Rate limited
+- `500` - Server error
 
-#### Cache Configuration
+### 2. Cache Layer (cache.ts)
+
+In-memory LRU cache reducing API calls and improving response times.
+
+#### Features
+
+- **LRU Eviction**: Removes least recently used items when full
+- **TTL Support**: Automatic expiration of stale entries
+- **SHA-256 Keys**: Consistent hashing for cache keys
+- **Hit Rate Tracking**: Performance metrics
+
+#### Configuration
 
 ```typescript
-export interface AirsCacheConfig {
-    ttlSeconds: number;   // Time to live for cache entries
-    maxSize: number;      // Maximum number of cached items
-    enabled?: boolean;    // Enable/disable caching
-}
-```
-
-#### Cache Implementation
-
-```typescript
-export class PrismaAirsCache {
-    private cache = new Map<string, AirsCacheEntry<unknown>>();
-    private accessOrder: string[] = [];
-
-    // Get cached value with automatic expiration
-    get<T>(key: string): T | null {
-        const entry = this.cache.get(key);
-        
-        if (!entry) return null;
-        
-        // Check expiration
-        if (Date.now() > entry.expiresAt) {
-            this.delete(key);
-            return null;
-        }
-        
-        // Update access order for LRU
-        this.updateAccessOrder(key);
-        entry.hits++;
-        
-        return entry.value as T;
-    }
-
-    // Set value with TTL
-    set<T>(key: string, value: T): void {
-        // Evict least recently used if at capacity
-        if (this.cache.size >= this.config.maxSize) {
-            this.evictLRU();
-        }
-        
-        this.cache.set(key, {
-            value,
-            expiresAt: Date.now() + (this.config.ttlSeconds * 1000),
-            hits: 0
-        });
-        
-        this.updateAccessOrder(key);
-    }
+interface AirsCacheConfig {
+    enabled?: boolean;    // Enable/disable caching (default: true)
+    maxSize?: number;     // Maximum cache entries (default: 1000)
+    ttlSeconds?: number;  // Time-to-live in seconds (default: 300)
 }
 ```
 
 #### Cache Key Generation
 
 ```typescript
-export class PrismaAirsCache {
-    // Generate deterministic cache keys
-    static generateScanKey(type: string, request: AirsScanRequest): string {
-        const hash = crypto
-            .createHash('sha256')
-            .update(JSON.stringify({ type, request }))
-            .digest('hex');
-        return `scan:${type}:${hash.substring(0, 16)}`;
-    }
-
-    static generateResultKey(type: string, ids: string[]): string {
-        const sortedIds = [...ids].sort();
-        const hash = crypto
-            .createHash('sha256')
-            .update(JSON.stringify({ type, ids: sortedIds }))
-            .digest('hex');
-        return `${type}:${hash.substring(0, 16)}`;
-    }
+// Key format: prefix:sha256(normalized_json)
+generateKey(prefix
+:
+string, data
+:
+unknown
+):
+string
+{
+    const normalized = JSON.stringify(this.sortKeys(data));
+    const hash = crypto.createHash('sha256')
+        .update(normalized)
+        .digest('hex');
+    return `${prefix}:${hash}`;
 }
 ```
 
-### rate-limiter.ts - API Rate Limiting
-
-Implements token bucket algorithm to prevent API quota exhaustion.
-
-#### Rate Limiter Configuration
+#### Statistics
 
 ```typescript
-export interface AirsRateLimiterConfig {
-    maxRequests: number;  // Maximum requests per window
-    windowMs: number;     // Time window in milliseconds
-    enabled?: boolean;    // Enable/disable rate limiting
+interface CacheStats {
+    size: number;        // Current number of entries
+    maxSize: number;     // Maximum allowed entries
+    hits: number;        // Total cache hits
+    misses: number;      // Total cache misses
+    hitRate: number;     // Hit rate percentage
+    evictions: number;   // Total evictions
 }
 ```
 
-#### Token Bucket Implementation
+### 3. Rate Limiter (rate-limiter.ts)
+
+Token bucket implementation preventing API quota exhaustion.
+
+#### Algorithm
+
+- **Token Bucket**: Fixed capacity with continuous refill
+- **Per-Operation Limits**: Different limits for different operations
+- **Request Queuing**: Automatic waiting when bucket empty
+
+#### Configuration
 
 ```typescript
-export class PrismaAirsRateLimiter {
-    private buckets = new Map<string, TokenBucket>();
-
-    // Check if request is allowed
-    checkLimit(key: string = 'default'): boolean {
-        const bucket = this.getOrCreateBucket(key);
-        
-        // Refill tokens based on time elapsed
-        this.refillTokens(bucket);
-        
-        // Check if tokens available
-        if (bucket.tokens > 0) {
-            bucket.tokens--;
-            return true;
-        }
-        
-        return false;
-    }
-
-    // Wait until request is allowed
-    async waitForLimit(key: string = 'default'): Promise<void> {
-        while (!this.checkLimit(key)) {
-            const waitTime = this.getWaitTime(key);
-            await this.sleep(Math.min(waitTime, 1000));
-        }
-    }
-
-    // Get current rate limit status
-    getStatus(key: string = 'default'): RateLimitStatus {
-        const bucket = this.buckets.get(key);
-        return {
-            available: bucket?.tokens || this.config.maxRequests,
-            limit: this.config.maxRequests,
-            resetAt: new Date(bucket?.lastRefill + this.config.windowMs)
-        };
-    }
+interface AirsRateLimiterConfig {
+    enabled?: boolean;           // Enable rate limiting (default: true)
+    scanRequestsPerMinute?: number;    // Scan limit (default: 100)
+    reportRequestsPerMinute?: number;  // Report limit (default: 50)
+    resultRequestsPerMinute?: number;  // Result limit (default: 200)
 }
 ```
 
-### index.ts - Enhanced Client
+#### Operation Types
 
-The enhanced client orchestrates the base client, cache, and rate limiter to provide a unified, production-ready interface.
+| Operation | Default Limit | Use Case         |
+|-----------|---------------|------------------|
+| `scan`    | 100/min       | Content scanning |
+| `report`  | 50/min        | Threat reports   |
+| `result`  | 200/min       | Result retrieval |
 
-#### Enhanced Configuration
+### 4. Enhanced Client (index.ts)
 
-```typescript
-export interface AirsEnhancedClientConfig extends AirsClientConfig {
-    cache?: AirsCacheConfig;
-    rateLimiter?: AirsRateLimiterConfig;
-}
-```
+Orchestration layer combining all features into a unified interface.
 
-#### Enhanced Client Implementation
+#### Features
 
-```typescript
-export class EnhancedPrismaAirsClient {
-    private readonly client: PrismaAirsClient;
-    private readonly cache?: PrismaAirsCache;
-    private readonly rateLimiter?: PrismaAirsRateLimiter;
+- **Automatic Caching**: Transparent response caching
+- **Rate Limit Management**: Automatic request throttling
+- **Unified API**: Single interface for all operations
+- **Graceful Degradation**: Works without cache/rate limiter
 
-    constructor(config: AirsEnhancedClientConfig) {
-        this.client = new PrismaAirsClient(config);
-        
-        if (config.cache) {
-            this.cache = new PrismaAirsCache(config.cache);
-        }
-        
-        if (config.rateLimiter) {
-            this.rateLimiter = new PrismaAirsRateLimiter(config.rateLimiter);
-        }
-    }
-
-    // Scan with caching and rate limiting
-    async scanSync(request: AirsScanRequest): Promise<AirsScanResponse> {
-        // Apply rate limiting
-        if (this.rateLimiter) {
-            await this.rateLimiter.waitForLimit('scan');
-        }
-
-        // Check cache
-        const cacheKey = PrismaAirsCache.generateScanKey('sync', request);
-        if (this.cache) {
-            const cached = this.cache.get<AirsScanResponse>(cacheKey);
-            if (cached) return cached;
-        }
-
-        // Make request
-        const response = await this.client.scanSync(request);
-
-        // Cache response
-        if (this.cache && response) {
-            this.cache.set(cacheKey, response);
-        }
-
-        return response;
-    }
-
-    // Get performance statistics
-    getCacheStats(): CacheStats | null {
-        return this.cache?.getStats() || null;
-    }
-
-    getRateLimiterStats(): RateLimiterStats | null {
-        return this.rateLimiter?.getStats() || null;
-    }
-}
-```
-
-### factory.ts - Singleton Factory
-
-Manages client instances using the singleton pattern to ensure consistent configuration and resource sharing.
-
-#### Factory Implementation
+#### Usage Example
 
 ```typescript
-export class PrismaAirsClientFactory {
-    private static instance: PrismaAirsClientFactory;
-    private client: EnhancedPrismaAirsClient | null = null;
-
-    private constructor() {}
-
-    static getInstance(): PrismaAirsClientFactory {
-        if (!PrismaAirsClientFactory.instance) {
-            PrismaAirsClientFactory.instance = new PrismaAirsClientFactory();
-        }
-        return PrismaAirsClientFactory.instance;
-    }
-
-    getClient(config?: AirsEnhancedClientConfig): EnhancedPrismaAirsClient {
-        if (!this.client) {
-            if (!config) {
-                throw new Error('Configuration required for first client creation');
-            }
-            this.client = new EnhancedPrismaAirsClient(config);
-        }
-        return this.client;
-    }
-
-    resetClient(): void {
-        this.client = null;
-    }
-}
-```
-
-## Usage Examples
-
-### Basic Usage
-
-```typescript
-import { EnhancedPrismaAirsClient } from './airs';
-import { getConfig } from './config';
-
-const config = getConfig();
 const client = new EnhancedPrismaAirsClient({
-    apiUrl: config.airs.apiUrl,
-    apiKey: config.airs.apiKey,
+    apiUrl: 'https://api.aisecurity.paloaltonetworks.com',
+    apiKey: process.env.AIRS_API_KEY,
     cache: {
+        enabled: true,
         ttlSeconds: 300,
-        maxSize: 1000,
-        enabled: true
+        maxSize: 1000
     },
     rateLimiter: {
-        maxRequests: 100,
-        windowMs: 60000,
-        enabled: true
+        enabled: true,
+        scanRequestsPerMinute: 100
     }
 });
 
-// Scan content
+// Automatic caching and rate limiting
 const result = await client.scanSync({
-    prompt: 'Check this user input',
+    prompt: 'Check this content',
     profile_name: 'strict'
 });
 ```
 
-### Using the Factory
+### 5. Factory Pattern (factory.ts)
+
+Singleton factory ensuring single client instance per configuration.
+
+#### Purpose
+
+- **Resource Efficiency**: Reuses connections and caches
+- **Consistency**: Same client across application
+- **Configuration Management**: Centralizes client setup
+
+#### Implementation
 
 ```typescript
-import { PrismaAirsClientFactory } from './airs/factory';
+export class PrismaAirsClientFactory {
+    private static instance?: EnhancedPrismaAirsClient;
 
-// Get singleton instance
-const factory = PrismaAirsClientFactory.getInstance();
+    static getInstance(config?: AirsEnhancedClientConfig): EnhancedPrismaAirsClient {
+        if (!this.instance) {
+            if (!config) {
+                throw new Error('Configuration required for first initialization');
+            }
+            this.instance = new EnhancedPrismaAirsClient(config);
+        }
+        return this.instance;
+    }
 
-// Get or create client
-const client = factory.getClient({
-    apiUrl: process.env.AIRS_API_URL!,
-    apiKey: process.env.AIRS_API_KEY!
-});
-
-// Use client across application
-const results = await client.scanSync(request);
+    static reset(): void {
+        this.instance = undefined;
+    }
+}
 ```
 
-### Monitoring Performance
+## Type System
+
+All types are centralized in `src/types/airs.ts` with consistent `Airs` prefixing:
+
+### Request Types
+
+| Type                  | Purpose                |
+|-----------------------|------------------------|
+| `AirsScanRequest`     | Synchronous scan input |
+| `AirsAsyncScanObject` | Async scan item        |
+| `AirsRequestOptions`  | Request configuration  |
+
+### Response Types
+
+| Type                         | Purpose                |
+|------------------------------|------------------------|
+| `AirsScanResponse`           | Scan results           |
+| `AirsAsyncScanResponse`      | Async operation status |
+| `AirsScanIdResult`           | Retrieved scan result  |
+| `AirsThreatScanReportObject` | Detailed threat report |
+
+### Configuration Types
+
+| Type                       | Purpose                |
+|----------------------------|------------------------|
+| `AirsClientConfig`         | Base client settings   |
+| `AirsCacheConfig`          | Cache settings         |
+| `AirsRateLimiterConfig`    | Rate limit settings    |
+| `AirsEnhancedClientConfig` | Complete configuration |
+
+## Best Practices
+
+### 1. Use the Factory
 
 ```typescript
-// Get cache statistics
-const cacheStats = client.getCacheStats();
-console.log('Cache hit rate:', cacheStats?.hitRate);
-console.log('Cache size:', cacheStats?.size);
+// ✅ Good - Use factory for singleton
+const client = getAirsClient();
 
-// Get rate limiter status
-const rateLimitStatus = client.getRateLimiterStats();
-console.log('Available requests:', rateLimitStatus?.available);
-console.log('Reset time:', rateLimitStatus?.resetAt);
+// ❌ Bad - Direct instantiation
+const client = new EnhancedPrismaAirsClient(config);
 ```
 
-## Error Handling
-
-### API Errors
+### 2. Handle Errors
 
 ```typescript
 try {
     const result = await client.scanSync(request);
 } catch (error) {
     if (error instanceof PrismaAirsApiError) {
-        console.error('API Error:', error.statusCode, error.message);
-        
         if (error.statusCode === 429) {
-            // Rate limited by API
-            console.log('Waiting for rate limit reset...');
+            // Handle rate limiting
+        } else if (error.statusCode === 401) {
+            // Handle auth error
         }
     }
 }
 ```
 
-### Configuration Errors
+### 3. Monitor Performance
 
 ```typescript
-try {
-    const client = factory.getClient();
-} catch (error) {
-    // No configuration provided for first client
-    console.error('Client not configured:', error.message);
+// Get cache statistics
+const stats = client.getCacheStats();
+logger.info('Cache performance', {
+    hitRate: `${stats.hitRate}%`,
+    size: stats.size
+});
+
+// Get rate limit status
+const status = client.getRateLimitStatus();
+logger.info('Rate limit status', status);
+```
+
+### 4. Configure Appropriately
+
+```typescript
+// Production configuration
+const config: AirsEnhancedClientConfig = {
+    apiUrl: process.env.AIRS_API_URL,
+    apiKey: process.env.AIRS_API_KEY,
+    timeout: 30000,
+    maxRetries: 3,
+    cache: {
+        enabled: true,
+        ttlSeconds: 300,      // 5 minutes
+        maxSize: 1000
+    },
+    rateLimiter: {
+        enabled: true,
+        scanRequestsPerMinute: 100
+    }
+};
+```
+
+## Common Patterns
+
+### Batch Processing
+
+```typescript
+// Process multiple items with rate limiting
+const items = ['content1', 'content2', ...];
+const results = [];
+
+for (const item of items) {
+    try {
+        // Rate limiter automatically throttles
+        const result = await client.scanSync({
+            prompt: item,
+            profile_name: 'default'
+        });
+        results.push(result);
+    } catch (error) {
+        logger.error('Scan failed', {item, error});
+    }
 }
 ```
 
-## Best Practices
-
-### 1. Use the Factory Pattern
-
-Always use the factory for consistent client instances:
+### Cache Warming
 
 ```typescript
-const factory = PrismaAirsClientFactory.getInstance();
-const client = factory.getClient(config);
+// Pre-populate cache with common requests
+const commonPrompts = ['test', 'hello', ...];
+
+for (const prompt of commonPrompts) {
+    await client.scanSync({prompt, profile_name: 'default'});
+}
 ```
 
-### 2. Configure Caching Appropriately
+### Graceful Degradation
 
-- Set TTL based on data freshness requirements
-- Size cache based on memory constraints
-- Monitor hit rates to optimize performance
+```typescript
+// Disable features in development
+const isDev = process.env.NODE_ENV === 'development';
 
-### 3. Implement Rate Limiting
+const config: AirsEnhancedClientConfig = {
+    // ... base config
+    cache: {
+        enabled: !isDev,  // Disable in dev for fresh results
+        ttlSeconds: 300
+    },
+    rateLimiter: {
+        enabled: true,    // Always enable to respect API limits
+        scanRequestsPerMinute: isDev ? 10 : 100
+    }
+};
+```
 
-- Set limits below API quotas
-- Use different buckets for different operations
-- Monitor rate limit status proactively
+## Troubleshooting
 
-### 4. Handle Errors Gracefully
+### Common Issues
 
-- Catch and handle specific error types
-- Implement retry logic for transient failures
-- Log errors with appropriate context
+1. **Authentication Failures**
+    - Verify `AIRS_API_KEY` is set correctly
+    - Check API key permissions
+    - Ensure `x-pan-token` header is sent
 
-### 5. Monitor Performance
+2. **Rate Limiting**
+    - Monitor rate limit status
+    - Adjust limits based on quota
+    - Implement backoff strategies
 
-- Track cache hit rates
-- Monitor rate limit utilization
-- Log slow requests
-- Alert on error rates
+3. **Cache Misses**
+    - Check TTL configuration
+    - Monitor cache size
+    - Verify key generation
+
+4. **Timeout Errors**
+    - Increase timeout for large payloads
+    - Check network connectivity
+    - Monitor API response times
+
+### Debug Logging
+
+Enable debug logs for troubleshooting:
+
+```bash
+LOG_LEVEL=debug npm start
+```
+
+## Performance Optimization
+
+### Cache Tuning
+
+```typescript
+// Monitor and adjust cache size
+const stats = client.getCacheStats();
+if (stats.evictions > stats.hits * 0.1) {
+    // Too many evictions, increase cache size
+}
+```
+
+### Rate Limit Optimization
+
+```typescript
+// Adjust limits based on usage patterns
+const status = client.getRateLimitStatus();
+if (status.scan.available < 10) {
+    // Near limit, slow down requests
+}
+```
 
 ## Integration with MCP
 
-The AIRS module integrates with the MCP server through tool handlers:
+The AIRS client is primarily used by the Tools handler to execute security scans:
 
 ```typescript
-// In tools/index.ts
-import { EnhancedPrismaAirsClient } from '../airs';
+// In src/tools/index.ts
+const client = getAirsClient();
 
-const client = new EnhancedPrismaAirsClient(config);
-
-// Tool implementation
-async function scanContent(args: ToolsScanContentArgs): Promise<AirsScanResponse> {
-    return await client.scanSync({
-        prompt: args.prompt,
-        response: args.response,
-        profile_name: args.profile
-    });
-}
+const result = await client.scanSync({
+    prompt: params.prompt,
+    response: params.response,
+    profile_name: params.profile || 'default'
+});
 ```
-
-## Performance Considerations
-
-### Caching Strategy
-
-- **Sync scans**: Cached with content hash
-- **Async scans**: Not cached (returns scan IDs)
-- **Results**: Cached only when complete
-- **Reports**: Always cached
-
-### Rate Limiting Strategy
-
-- **Per-operation buckets**: Different limits for scan/results
-- **Graceful degradation**: Queue requests when limited
-- **Monitoring**: Track limit utilization
-
-### Memory Management
-
-- **LRU eviction**: Removes least used entries
-- **TTL expiration**: Automatic cleanup
-- **Size limits**: Configurable maximum entries
 
 ## Next Steps
 
-- [Types Module]({{ site.baseurl }}/developers/src/types/) - Type definitions
-- [Tools Module]({{ site.baseurl }}/developers/src/tools/) - MCP tool implementations
-- [Config Module]({{ site.baseurl }}/developers/src/config/) - Configuration management
+- [Tools Module]({{ site.baseurl }}/developers/src/tools/) - See how tools use the AIRS client
+- [Configuration Module]({{ site.baseurl }}/developers/src/config/) - Understand configuration management
+- [Types Module]({{ site.baseurl }}/developers/src/types/) - Explore type definitions
