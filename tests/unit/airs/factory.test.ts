@@ -2,6 +2,7 @@ import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals
 import { getAirsClient, resetAirsClient } from '../../../src/airs/factory';
 import { EnhancedPrismaAirsClient } from '../../../src/airs';
 import { getConfig } from '../../../src/config';
+import type { Config } from '../../../src/types';
 
 // Mock dependencies
 jest.mock('../../../src/config');
@@ -16,7 +17,12 @@ jest.mock('../../../src/utils/logger', () => ({
 jest.mock('../../../src/airs/index');
 
 describe('AIRS Factory', () => {
-    const mockConfig = {
+    const mockConfig: Config = {
+        server: {
+            port: 3000,
+            environment: 'test',
+            logLevel: 'info',
+        },
         airs: {
             apiUrl: 'https://test.api.com',
             apiKey: 'test-key',
@@ -36,23 +42,38 @@ describe('AIRS Factory', () => {
             maxRequests: 10,
             windowMs: 60000,
         },
+        mcp: {
+            serverName: 'test-server',
+            serverVersion: '1.0.0',
+            protocolVersion: '1.0',
+        },
     };
 
+    const mockClearCache = jest.fn();
+    const mockResetRateLimits = jest.fn();
+    
     const mockClient = {
-        clearCache: jest.fn(),
-        resetRateLimits: jest.fn(),
-    };
+        clearCache: mockClearCache,
+        resetRateLimits: mockResetRateLimits,
+        scanSync: jest.fn(),
+        scanAsync: jest.fn(),
+        getScanResults: jest.fn(),
+        getThreatReports: jest.fn(),
+        getCacheStats: jest.fn(),
+        getRateLimitStatus: jest.fn(),
+    } as unknown as EnhancedPrismaAirsClient;
 
     beforeEach(() => {
         // Reset all mocks
         jest.clearAllMocks();
         
         // Setup mock implementations
-        (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(mockConfig as any);
+        (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(mockConfig);
         
         // Mock the EnhancedPrismaAirsClient constructor
         const MockedClient = EnhancedPrismaAirsClient as jest.MockedClass<typeof EnhancedPrismaAirsClient>;
         MockedClient.mockClear();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         MockedClient.mockImplementation(() => mockClient as any);
     });
 
@@ -103,7 +124,7 @@ describe('AIRS Factory', () => {
                 ...mockConfig,
                 cache: { ...mockConfig.cache, enabled: false },
             };
-            (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(configWithoutCache as any);
+            (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(configWithoutCache);
 
             getAirsClient();
 
@@ -119,7 +140,7 @@ describe('AIRS Factory', () => {
                 ...mockConfig,
                 rateLimit: { ...mockConfig.rateLimit, enabled: false },
             };
-            (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(configWithoutRateLimit as any);
+            (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(configWithoutRateLimit);
 
             getAirsClient();
 
@@ -140,8 +161,8 @@ describe('AIRS Factory', () => {
             // Reset the client
             resetAirsClient();
 
-            expect(mockClient.clearCache).toHaveBeenCalledTimes(1);
-            expect(mockClient.resetRateLimits).toHaveBeenCalledTimes(1);
+            expect(mockClearCache).toHaveBeenCalledTimes(1);
+            expect(mockResetRateLimits).toHaveBeenCalledTimes(1);
             // Note: Logger calls are not tested due to module-level initialization
         });
 
@@ -165,8 +186,8 @@ describe('AIRS Factory', () => {
             resetAirsClient();
 
             // Should not throw and should not call any methods
-            expect(mockClient.clearCache).not.toHaveBeenCalled();
-            expect(mockClient.resetRateLimits).not.toHaveBeenCalled();
+            expect(mockClearCache).not.toHaveBeenCalled();
+            expect(mockResetRateLimits).not.toHaveBeenCalled();
         });
 
         it('should allow configuration changes between resets', () => {
@@ -186,7 +207,7 @@ describe('AIRS Factory', () => {
                     apiKey: 'new-key',
                 },
             };
-            (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(newConfig as any);
+            (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(newConfig);
 
             // Create new client with new config
             getAirsClient();
