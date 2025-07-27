@@ -114,6 +114,6 @@ module.exports = [
     },
   },
   {
-    ignores: ['node_modules/', 'dist/', 'coverage/', '*.js', '!eslint.config.js', '.claude/'],
+    ignores: ['node_modules/', 'dist/', 'coverage/', '*.js', '!eslint.config.js', '.claude/', 'docs/_site/', 'docs/.jekyll-cache/', 'docs/assets/js/'],
   },
 ];

@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 
 import type { Response } from 'express';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -88,7 +90,7 @@ describe('HTTP Transport with SSE Integration', () => {
                 accept: 'application/json',
             };
 
-            await transport.handleRequest(mockRequest, mockResponse);
+            await transport.handleRequest(mockRequest as StreamableRequest, mockResponse);
 
             expect(mockResponse.json).toHaveBeenCalledWith({
                 jsonrpc: '2.0',
@@ -105,7 +107,7 @@ describe('HTTP Transport with SSE Integration', () => {
                 id: 1,
             };
 
-            await transport.handleRequest(mockRequest, mockResponse);
+            await transport.handleRequest(mockRequest as StreamableRequest, mockResponse);
 
             expect(mockResponse.json).toHaveBeenCalledWith({
                 jsonrpc: '2.0',
@@ -133,7 +135,7 @@ describe('HTTP Transport with SSE Integration', () => {
                 accept: 'application/json, text/event-stream',
             };
 
-            await transport.handleRequest(mockRequest, mockResponse);
+            await transport.handleRequest(mockRequest as StreamableRequest, mockResponse);
 
             // Should still return JSON for non-streamable methods
             expect(mockResponse.json).toHaveBeenCalled();
@@ -214,7 +216,7 @@ describe('HTTP Transport with SSE Integration', () => {
                 accept: 'application/json, text/event-stream',
             };
 
-            await transport.handleRequest(mockRequest, mockResponse);
+            await transport.handleRequest(mockRequest as StreamableRequest, mockResponse);
 
             // Even though tools/call is streamable, it returns false by default
             // so we should get a standard JSON response
@@ -253,7 +255,7 @@ describe('HTTP Transport with SSE Integration', () => {
                 id: 1,
             };
 
-            await transport.handleRequest(mockRequest, mockResponse);
+            await transport.handleRequest(mockRequest as StreamableRequest, mockResponse);
 
             expect(mockResponse.status).toHaveBeenCalledWith(400);
             expect(mockResponse.json).toHaveBeenCalledWith({
@@ -273,7 +275,7 @@ describe('HTTP Transport with SSE Integration', () => {
                 id: 1,
             };
 
-            await transport.handleRequest(mockRequest, mockResponse);
+            await transport.handleRequest(mockRequest as StreamableRequest, mockResponse);
 
             expect(mockResponse.status).toHaveBeenCalledWith(500);
             expect(mockResponse.json).toHaveBeenCalledWith({
@@ -290,7 +292,7 @@ describe('HTTP Transport with SSE Integration', () => {
         it('should handle request body parsing errors', async () => {
             mockRequest.body = null as any;
 
-            await transport.handleRequest(mockRequest, mockResponse);
+            await transport.handleRequest(mockRequest as StreamableRequest, mockResponse);
 
             expect(mockResponse.status).toHaveBeenCalledWith(400);
             expect(mockLogger.error).toHaveBeenCalled();
@@ -318,7 +320,7 @@ describe('HTTP Transport with SSE Integration', () => {
                     id: 1,
                 };
 
-                await transport.handleRequest(mockRequest, mockResponse);
+                await transport.handleRequest(mockRequest as StreamableRequest, mockResponse);
 
                 expect(mockResponse.json).toHaveBeenCalledWith({
                     jsonrpc: '2.0',

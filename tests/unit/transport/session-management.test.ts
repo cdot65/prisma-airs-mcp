@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 
 import type { Response } from 'express';
 import { HttpServerTransport } from '../../../src/transport/http';
@@ -183,7 +184,7 @@ describe('Session Management', () => {
                 },
             } as jest.Mocked<StreamableRequest>;
 
-            await transport.handleRequest(mockRequest, mockResponse);
+            await transport.handleRequest(mockRequest as StreamableRequest, mockResponse);
 
             // Session should be maintained
             expect(mockResponse.json).toHaveBeenCalledWith({
@@ -372,7 +373,7 @@ describe('Session Management', () => {
                 throw new Error('Connection lost');
             });
 
-            await transport.handleRequest(mockRequest, mockResponse);
+            await transport.handleRequest(mockRequest as StreamableRequest, mockResponse);
 
             // Should fall back to JSON response on SSE error
             expect(mockResponse.json).toHaveBeenCalled();
