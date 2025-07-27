@@ -20,7 +20,7 @@ spec:
       containers:
       - name: prisma-airs-mcp
         image: ghcr.io/cdot65/prisma-airs-mcp:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         env:
         - name: NODE_ENV
           value: production

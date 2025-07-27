@@ -28,7 +28,8 @@ configMapGenerator:
   - rate.limit.max.requests=100
   - rate.limit.window.ms=60000
 
-secretGenerator:
-- name: prisma-airs-mcp-secrets
-  literals:
-  - airs.api.key=PLACEHOLDER_API_KEY
+# Note: Secrets should be created using the manage-secrets.sh script
+# secretGenerator:
+# - name: prisma-airs-mcp-secrets
+#   literals:
+#   - airs.api.key=PLACEHOLDER_API_KEY

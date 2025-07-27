@@ -111,6 +111,10 @@ fi
 echo "Applying Kubernetes configuration..."
 kubectl apply -k k8s/overlays/production -n "$NAMESPACE"
 
+# Force rollout restart to ensure fresh image pull
+echo "Forcing rollout restart to pull fresh images..."
+kubectl rollout restart deployment/prisma-airs-mcp -n "$NAMESPACE"
+
 # Wait for rollout to complete
 echo "Waiting for deployment rollout..."
 kubectl rollout status deployment/prisma-airs-mcp -n "$NAMESPACE"
@@ -126,6 +130,17 @@ echo ""
 # Show the deployed image
 echo "Deployed image versions:"
 kubectl get deployment prisma-airs-mcp -n "$NAMESPACE" -o jsonpath='{.spec.template.spec.containers[0].image}' && echo
+echo ""
+
+# Step 6: Run deployment verification
+echo -e "${YELLOW}Step 6: Running deployment verification...${NC}"
+if ./scripts/verify-deployment.sh "$NAMESPACE"; then
+    echo -e "${GREEN}✓ Deployment verification passed${NC}"
+else
+    echo -e "${RED}✗ Deployment verification failed${NC}"
+    echo -e "${YELLOW}Please check the errors above and resolve them${NC}"
+    exit 1
+fi
 echo ""
 
 echo -e "${GREEN}=== Deployment Complete ===${NC}"

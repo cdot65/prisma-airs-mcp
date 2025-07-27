@@ -42,6 +42,7 @@
         "k8s:rollout:restart": "kubectl rollout restart deployment/prisma-airs-mcp -n prisma-airs-mcp-server",
         "k8s:rollback": "./scripts/rollback.sh",
         "k8s:logs": "kubectl logs -f deployment/prisma-airs-mcp -n prisma-airs-mcp-server",
+        "k8s:verify": "./scripts/verify-deployment.sh",
         "comment:version": "=== Version Management Commands ===",
         "version:sync": "./scripts/sync-version.sh",
         "version:bump": "./scripts/bump-version.sh",
