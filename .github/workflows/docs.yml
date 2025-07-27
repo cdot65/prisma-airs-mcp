@@ -37,7 +37,7 @@ jobs:
             - name: Setup Ruby
               uses: ruby/setup-ruby@v1
               with:
-                  ruby-version: "3.1"
+                  ruby-version: "3.2"
                   bundler: "latest"
                   bundler-cache: true
                   working-directory: ./docs
@@ -89,7 +89,7 @@ jobs:
             - name: Setup Ruby
               uses: ruby/setup-ruby@v1
               with:
-                  ruby-version: "3.1"
+                  ruby-version: "3.2"
                   bundler: "latest"
                   bundler-cache: true
                   working-directory: ./docs
