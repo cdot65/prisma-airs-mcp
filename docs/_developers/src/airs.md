@@ -1,14 +1,13 @@
 ---
 layout: documentation
-title: AIRS Client Module (src/airs/)
+title: AIRS Client Module
 permalink: /developers/src/airs/
 category: developers
 ---
 
-# AIRS Client Module Documentation
+# AIRS Integration Layer (src/airs/)
 
-The AIRS module provides a production-ready client implementation for integrating with Prisma AI Runtime Security (AIRS)
-API. It features a layered architecture with caching, rate limiting, retry logic, and comprehensive error handling.
+The AIRS module provides a production-ready client implementation for integrating with Prisma AI Runtime Security (AIRS) API. It features a layered architecture with caching, rate limiting, retry logic, and comprehensive error handling.
 
 ## Module Structure
 
@@ -65,6 +64,7 @@ The foundation layer handling all HTTP communication with the AIRS API.
 #### Configuration
 
 ```typescript
+// Imported from '../types'
 interface AirsClientConfig {
     apiUrl: string;      // Base URL for AIRS API
     apiKey: string;      // Authentication token (x-pan-token)

@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resources Module (src/resources/) | Prisma AIRS MCP</title>
+  <title>Resources Module | Prisma AIRS MCP</title>
   <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
   
   <!-- SEO Tags -->
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Resources Module (src/resources/) | Prisma AIRS MCP</title>
+<title>Resources Module | Prisma AIRS MCP</title>
 <meta name="generator" content="Jekyll v3.9.5" />
-<meta property="og:title" content="Resources Module (src/resources/)" />
+<meta property="og:title" content="Resources Module" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Resources Module Documentation" />
-<meta property="og:description" content="Resources Module Documentation" />
+<meta name="description" content="Resource Handlers (src/resources/)" />
+<meta property="og:description" content="Resource Handlers (src/resources/)" />
 <link rel="canonical" href="http://localhost:4000/developers/src/resources/" />
 <meta property="og:url" content="http://localhost:4000/developers/src/resources/" />
 <meta property="og:site_name" content="Prisma AIRS MCP" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Resources Module (src/resources/)" />
+<meta property="twitter:title" content="Resources Module" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Resources Module Documentation","headline":"Resources Module (src/resources/)","url":"http://localhost:4000/developers/src/resources/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Resource Handlers (src/resources/)","headline":"Resources Module","url":"http://localhost:4000/developers/src/resources/"}</script>
 <!-- End Jekyll SEO tag -->
 
   
@@ -140,14 +140,15 @@
     
     <main class="documentation-content">
       <div class="content-header">
-        <h1>Resources Module (src/resources/)</h1>
+        <h1>Resources Module</h1>
         
       </div>
       
       <article class="content">
-        <h1 id="resources-module-documentation">Resources Module Documentation</h1>
+        <h1 id="resource-handlers-srcresources">Resource Handlers (src/resources/)</h1>
 
-<p>The resources module provides MCP resource handlers for accessing Prisma AIRS data. Resources represent external data sources that can be read by AI models, including scan results, threat reports, and system statistics.</p>
+<p>The resources module provides MCP resource handlers for accessing Prisma AIRS data. Resources represent external data
+sources that can be read by AI models, including scan results, threat reports, and system statistics.</p>
 
 <h2 id="module-structure">Module Structure</h2>
 
@@ -173,11 +174,11 @@
                   │
         ┌─────────┴─────────┬─────────────┬──────────────┐
         │                   │             │              │
-┌───────▼────────┐ ┌────────▼──────┐ ┌───▼────┐ ┌──────▼──────┐
-│ Scan Results   │ │ Threat Reports│ │Cache   │ │Rate Limit   │
-│ • Dynamic      │ │ • Dynamic     │ │Stats   │ │Status       │
-│ • By scan ID   │ │ • By report ID│ │• Static│ │• Static     │
-└───────┬────────┘ └────────┬──────┘ └───┬────┘ └──────┬──────┘
+┌───────▼────────┐ ┌────────▼──────┐ ┌────▼────┐ ┌───────▼──────┐
+│ Scan Results   │ │ Threat Reports│ │Cache    │ │Rate Limit    │
+│ • Dynamic      │ │ • Dynamic     │ │Stats    │ │Status        │
+│ • By scan ID   │ │ • By report ID│ │• Static │ │• Static      │
+└───────┬────────┘ └────────┬──────┘ └────┬────┘ └───────┬──────┘
         │                   │             │              │
         └─────────┬─────────┴─────────────┴──────────────┘
                   │
@@ -247,7 +248,8 @@
   </tbody>
 </table>
 
-<p><strong>Note</strong>: Dynamic resources (scan-results, threat-reports) are not listed by <code class="language-plaintext highlighter-rouge">listResources()</code> but can be accessed directly when their URIs are returned from tool operations.</p>
+<p><strong>Note</strong>: Dynamic resources (scan-results, threat-reports) are not listed by <code class="language-plaintext highlighter-rouge">listResources()</code> but can be accessed
+directly when their URIs are returned from tool operations.</p>
 
 <h2 id="implementation-details">Implementation Details</h2>
 
@@ -264,11 +266,11 @@
         <span class="na">CACHE_STATS</span><span class="p">:</span> <span class="dl">'</span><span class="s1">cache-stats</span><span class="dl">'</span><span class="p">,</span>
         <span class="na">RATE_LIMIT_STATUS</span><span class="p">:</span> <span class="dl">'</span><span class="s1">rate-limit-status</span><span class="dl">'</span><span class="p">,</span>
     <span class="p">}</span> <span class="k">as</span> <span class="kd">const</span><span class="p">;</span>
-    
+
     <span class="kd">constructor</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">logger</span> <span class="o">=</span> <span class="nx">getLogger</span><span class="p">();</span>
     <span class="p">}</span>
-    
+
     <span class="nx">listResources</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">McpResourcesListParams</span><span class="p">):</span> <span class="nx">McpResourcesListResult</span> <span class="p">{</span>
         <span class="kd">const</span> <span class="nx">resources</span><span class="p">:</span> <span class="nx">McpResource</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">{</span>
@@ -284,19 +286,19 @@
                 <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">];</span>
-        
-        <span class="k">return</span> <span class="p">{</span> <span class="nx">resources</span> <span class="p">};</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="nx">resources</span><span class="p">};</span>
     <span class="p">}</span>
-    
+
     <span class="k">async</span> <span class="nx">readResource</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">McpResourcesReadParams</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">McpResourcesReadResult</span><span class="o">&gt;</span> <span class="p">{</span>
         <span class="kd">const</span> <span class="nx">parsed</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">parseResourceUri</span><span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">uri</span><span class="p">);</span>
-        
+
         <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">parsed</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Invalid resource URI: </span><span class="p">${</span><span class="nx">params</span><span class="p">.</span><span class="nx">uri</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
         <span class="p">}</span>
-        
-        <span class="kd">const</span> <span class="p">{</span> <span class="kd">type</span><span class="p">,</span> <span class="nx">id</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">parsed</span><span class="p">;</span>
-        
+
+        <span class="kd">const</span> <span class="p">{</span><span class="kd">type</span><span class="p">,</span> <span class="nx">id</span><span class="p">}</span> <span class="o">=</span> <span class="nx">parsed</span><span class="p">;</span>
+
         <span class="k">switch</span> <span class="p">(</span><span class="kd">type</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">case</span> <span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">RESOURCE_TYPES</span><span class="p">.</span><span class="na">SCAN_RESULT</span><span class="p">:</span>
                 <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">readScanResult</span><span class="p">(</span><span class="nx">id</span><span class="p">);</span>
@@ -315,13 +317,24 @@
 
 <h3 id="uri-parsing">URI Parsing</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">parseResourceUri</span><span class="p">(</span><span class="nx">uri</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="p">{</span> <span class="nl">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span> <span class="nl">id</span><span class="p">:</span> <span class="kr">string</span> <span class="p">}</span> <span class="o">|</span> <span class="kc">null</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span>
+<span class="nx">parseResourceUri</span><span class="p">(</span><span class="nx">uri</span>
+<span class="p">:</span>
+<span class="kr">string</span>
+<span class="p">):</span>
+<span class="p">{</span>
+    <span class="nl">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">id</span><span class="p">:</span> <span class="kr">string</span>
+<span class="p">}</span>
+<span class="o">|</span>
+<span class="kc">null</span>
+<span class="p">{</span>
     <span class="kd">const</span> <span class="nx">match</span> <span class="o">=</span> <span class="nx">uri</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^airs:</span><span class="se">\/\/([^/]</span><span class="sr">+</span><span class="se">)\/(</span><span class="sr">.+</span><span class="se">)</span><span class="sr">$/</span><span class="p">);</span>
-    
+
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">match</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
     <span class="p">}</span>
-    
+
     <span class="k">return</span> <span class="p">{</span>
         <span class="na">type</span><span class="p">:</span> <span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">,</span>
         <span class="na">id</span><span class="p">:</span> <span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">,</span>
@@ -339,38 +352,48 @@
 
 <h4 id="implementation">Implementation</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">async</span> <span class="nx">readScanResult</span><span class="p">(</span><span class="nx">scanId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">McpResourcesReadResult</span><span class="o">&gt;</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">async</span>
+<span class="nx">readScanResult</span><span class="p">(</span><span class="nx">scanId</span>
+<span class="p">:</span>
+<span class="kr">string</span>
+<span class="p">):</span>
+<span class="nb">Promise</span> <span class="o">&lt;</span> <span class="nx">McpResourcesReadResult</span> <span class="o">&gt;</span> <span class="p">{</span>
     <span class="k">try</span> <span class="p">{</span>
         <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">airsClient</span><span class="p">.</span><span class="nx">getScanResults</span><span class="p">([</span><span class="nx">scanId</span><span class="p">]);</span>
-        
-        <span class="k">if</span> <span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Scan result not found: </span><span class="p">${</span><span class="nx">scanId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
-        <span class="p">}</span>
-        
-        <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">results</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-        <span class="kd">const</span> <span class="na">content</span><span class="p">:</span> <span class="nx">McpResourceContent</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="na">uri</span><span class="p">:</span> <span class="s2">`airs://</span><span class="p">${</span><span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">RESOURCE_TYPES</span><span class="p">.</span><span class="nx">SCAN_RESULT</span><span class="p">}</span><span class="s2">/</span><span class="p">${</span><span class="nx">scanId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
-            <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
-        <span class="p">};</span>
-        
-        <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">content</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-        <span class="p">}</span>
-        
-        <span class="k">return</span> <span class="p">{</span> <span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]</span> <span class="p">};</span>
-    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to read scan result</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-            <span class="nx">scanId</span><span class="p">,</span>
-            <span class="na">error</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Unknown error</span><span class="dl">'</span><span class="p">,</span>
-        <span class="p">});</span>
-        <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
-    <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span>
+<span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Scan result not found: </span><span class="p">${</span><span class="nx">scanId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">results</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="kd">const</span> <span class="na">content</span><span class="p">:</span> <span class="nx">McpResourceContent</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">uri</span><span class="p">:</span> <span class="s2">`airs://</span><span class="p">${</span><span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">RESOURCE_TYPES</span><span class="p">.</span><span class="nx">SCAN_RESULT</span><span class="p">}</span><span class="s2">/</span><span class="p">${</span><span class="nx">scanId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">content</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">return</span> <span class="p">{</span><span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]};</span>
+<span class="p">}</span> <span class="k">catch</span>
+<span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to read scan result</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">scanId</span><span class="p">,</span>
+        <span class="na">error</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Unknown error</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+<span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="content-structure">Content Structure</h4>
 
 <p>The scan result returns the complete <code class="language-plaintext highlighter-rouge">AirsScanIdResult</code> from the AIRS API, including:</p>
+
 <ul>
   <li>Scan status and metadata</li>
   <li>Detected threats in prompt/response</li>
@@ -386,38 +409,48 @@
 
 <h4 id="implementation-1">Implementation</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">async</span> <span class="nx">readThreatReport</span><span class="p">(</span><span class="nx">reportId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">McpResourcesReadResult</span><span class="o">&gt;</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">async</span>
+<span class="nx">readThreatReport</span><span class="p">(</span><span class="nx">reportId</span>
+<span class="p">:</span>
+<span class="kr">string</span>
+<span class="p">):</span>
+<span class="nb">Promise</span> <span class="o">&lt;</span> <span class="nx">McpResourcesReadResult</span> <span class="o">&gt;</span> <span class="p">{</span>
     <span class="k">try</span> <span class="p">{</span>
         <span class="kd">const</span> <span class="nx">reports</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">airsClient</span><span class="p">.</span><span class="nx">getThreatScanReports</span><span class="p">([</span><span class="nx">reportId</span><span class="p">]);</span>
-        
-        <span class="k">if</span> <span class="p">(</span><span class="nx">reports</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Threat report not found: </span><span class="p">${</span><span class="nx">reportId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
-        <span class="p">}</span>
-        
-        <span class="kd">const</span> <span class="nx">report</span> <span class="o">=</span> <span class="nx">reports</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-        <span class="kd">const</span> <span class="na">content</span><span class="p">:</span> <span class="nx">McpResourceContent</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="na">uri</span><span class="p">:</span> <span class="s2">`airs://</span><span class="p">${</span><span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">RESOURCE_TYPES</span><span class="p">.</span><span class="nx">THREAT_REPORT</span><span class="p">}</span><span class="s2">/</span><span class="p">${</span><span class="nx">reportId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
-            <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
-        <span class="p">};</span>
-        
-        <span class="k">if</span> <span class="p">(</span><span class="nx">report</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">content</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">report</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-        <span class="p">}</span>
-        
-        <span class="k">return</span> <span class="p">{</span> <span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]</span> <span class="p">};</span>
-    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to read threat report</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-            <span class="nx">reportId</span><span class="p">,</span>
-            <span class="na">error</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Unknown error</span><span class="dl">'</span><span class="p">,</span>
-        <span class="p">});</span>
-        <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
-    <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">reports</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span>
+<span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Threat report not found: </span><span class="p">${</span><span class="nx">reportId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="nx">report</span> <span class="o">=</span> <span class="nx">reports</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="kd">const</span> <span class="na">content</span><span class="p">:</span> <span class="nx">McpResourceContent</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="na">uri</span><span class="p">:</span> <span class="s2">`airs://</span><span class="p">${</span><span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">RESOURCE_TYPES</span><span class="p">.</span><span class="nx">THREAT_REPORT</span><span class="p">}</span><span class="s2">/</span><span class="p">${</span><span class="nx">reportId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">report</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">content</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">report</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">return</span> <span class="p">{</span><span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]};</span>
+<span class="p">}</span> <span class="k">catch</span>
+<span class="p">(</span><span class="nx">error</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to read threat report</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">reportId</span><span class="p">,</span>
+        <span class="na">error</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Unknown error</span><span class="dl">'</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+<span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="content-structure-1">Content Structure</h4>
 
 <p>The threat report returns the complete <code class="language-plaintext highlighter-rouge">AirsThreatScanReportObject</code> from the AIRS API, containing:</p>
+
 <ul>
   <li>Report metadata and scan associations</li>
   <li>Detailed threat analysis</li>
@@ -433,13 +466,17 @@
 
 <h4 id="implementation-2">Implementation</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">readCacheStats</span><span class="p">():</span> <span class="nx">McpResourcesReadResult</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span>
+<span class="nx">readCacheStats</span><span class="p">()</span>
+<span class="p">:</span>
+<span class="nx">McpResourcesReadResult</span>
+<span class="p">{</span>
     <span class="kd">const</span> <span class="nx">stats</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">airsClient</span><span class="p">.</span><span class="nx">getCacheStats</span><span class="p">()</span> <span class="o">||</span> <span class="p">{</span>
         <span class="na">size</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
         <span class="na">count</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
         <span class="na">enabled</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="p">};</span>
-    
+
     <span class="kd">const</span> <span class="nx">content</span><span class="p">:</span> <span class="nx">McpResourceContent</span> <span class="o">=</span> <span class="p">{</span>
         <span class="na">uri</span><span class="p">:</span> <span class="s2">`airs://</span><span class="p">${</span><span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">RESOURCE_TYPES</span><span class="p">.</span><span class="nx">CACHE_STATS</span><span class="p">}</span><span class="s2">/current`</span><span class="p">,</span>
         <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
@@ -452,14 +489,15 @@
             <span class="mi">2</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">};</span>
-    
-    <span class="k">return</span> <span class="p">{</span> <span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]</span> <span class="p">};</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]};</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="content-structure-2">Content Structure</h4>
 
 <p>The cache statistics include:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">size</code>: Current cache size in bytes</li>
   <li><code class="language-plaintext highlighter-rouge">count</code>: Number of cached entries</li>
@@ -475,12 +513,16 @@
 
 <h4 id="implementation-3">Implementation</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">readRateLimitStatus</span><span class="p">():</span> <span class="nx">McpResourcesReadResult</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span>
+<span class="nx">readRateLimitStatus</span><span class="p">()</span>
+<span class="p">:</span>
+<span class="nx">McpResourcesReadResult</span>
+<span class="p">{</span>
     <span class="kd">const</span> <span class="nx">stats</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">airsClient</span><span class="p">.</span><span class="nx">getRateLimiterStats</span><span class="p">()</span> <span class="o">||</span> <span class="p">{</span>
         <span class="na">bucketCount</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
         <span class="na">enabled</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="p">};</span>
-    
+
     <span class="kd">const</span> <span class="nx">content</span><span class="p">:</span> <span class="nx">McpResourceContent</span> <span class="o">=</span> <span class="p">{</span>
         <span class="na">uri</span><span class="p">:</span> <span class="s2">`airs://</span><span class="p">${</span><span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">RESOURCE_TYPES</span><span class="p">.</span><span class="nx">RATE_LIMIT_STATUS</span><span class="p">}</span><span class="s2">/current`</span><span class="p">,</span>
         <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
@@ -493,34 +535,45 @@
             <span class="mi">2</span><span class="p">,</span>
         <span class="p">),</span>
     <span class="p">};</span>
-    
-    <span class="k">return</span> <span class="p">{</span> <span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]</span> <span class="p">};</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]};</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="content-structure-3">Content Structure</h4>
 
 <p>The rate limit status includes:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">bucketCount</code>: Number of rate limit buckets</li>
   <li><code class="language-plaintext highlighter-rouge">enabled</code>: Whether rate limiting is enabled</li>
   <li><code class="language-plaintext highlighter-rouge">timestamp</code>: When the stats were generated</li>
 </ul>
 
-<p><strong>Note</strong>: The actual implementation returns simplified stats. For detailed bucket information, the AIRS client would need to expose per-bucket status.</p>
+<p><strong>Note</strong>: The actual implementation returns simplified stats. For detailed bucket information, the AIRS client would
+need to expose per-bucket status.</p>
 
 <h2 id="creating-resource-references">Creating Resource References</h2>
 
 <p>The module provides a static utility method for creating resource references in tool results:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="nx">createResourceReference</span><span class="p">(</span>
-    <span class="kd">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
-    <span class="nx">id</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
-    <span class="nx">_title</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>  <span class="c1">// Unused but available for future use</span>
-    <span class="nx">data</span><span class="p">?:</span> <span class="nx">unknown</span><span class="p">,</span>
-<span class="p">):</span> <span class="nx">McpResourceContent</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span>
+<span class="nx">createResourceReference</span><span class="p">(</span>
+    <span class="kd">type</span>
+<span class="p">:</span>
+<span class="kr">string</span><span class="p">,</span>
+    <span class="nx">id</span>
+<span class="p">:</span>
+<span class="kr">string</span><span class="p">,</span>
+    <span class="nx">_title</span>
+<span class="p">:</span>
+<span class="kr">string</span><span class="p">,</span>  <span class="c1">// Unused but available for future use</span>
+    <span class="nx">data</span> <span class="p">?</span> <span class="p">:</span> <span class="nx">unknown</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="nx">McpResourceContent</span>
+<span class="p">{</span>
     <span class="kd">const</span> <span class="nx">uri</span> <span class="o">=</span> <span class="s2">`airs://</span><span class="p">${</span><span class="kd">type</span><span class="p">}</span><span class="s2">/</span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
-    
+
     <span class="k">return</span> <span class="p">{</span>
         <span class="nx">uri</span><span class="p">,</span>
         <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
@@ -573,7 +626,9 @@
 <span class="p">});</span>
 </code></pre></div></div>
 
-<p><strong>Important Note</strong>: The tools use singular form (‘scan-result’, ‘threat-report’) when creating references, while the resource handler expects plural form (‘scan-results’, ‘threat-reports’). This is handled internally by the resource type constants.</p>
+<p><strong>Important Note</strong>: The tools use singular form (‘scan-result’, ‘threat-report’) when creating references, while the
+resource handler expects plural form (‘scan-results’, ‘threat-reports’). This is handled internally by the resource type
+constants.</p>
 
 <h2 id="error-handling">Error Handling</h2>
 
@@ -600,7 +655,7 @@
 <h3 id="unknown-resource-type">Unknown Resource Type</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">default</span><span class="p">:</span>
-    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Unknown resource type: </span><span class="p">${</span><span class="kd">type</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Unknown resource type: </span><span class="p">${</span><span class="kd">type</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
 </code></pre></div></div>
 
 <h3 id="error-logging">Error Logging</h3>
@@ -782,7 +837,9 @@
 
 <h2 id="summary">Summary</h2>
 
-<p>The resources module provides a clean URI-based abstraction for accessing AIRS data through the MCP protocol. It supports both static system resources and dynamic scan/report data, with proper error handling, logging, and type safety throughout.</p>
+<p>The resources module provides a clean URI-based abstraction for accessing AIRS data through the MCP protocol. It
+supports both static system resources and dynamic scan/report data, with proper error handling, logging, and type safety
+throughout.</p>
 
       </article>
       
@@ -798,7 +855,7 @@
           
           
           <a href="/developers/src/tools/" class="next">
-            Tools Module (src/tools/) <i class="fas fa-arrow-right"></i>
+            Tools Module <i class="fas fa-arrow-right"></i>
           </a>
           
         </div>

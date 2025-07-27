@@ -1,13 +1,14 @@
 ---
 layout: documentation
-title: Tools Module (src/tools/)
+title: Tools Module
 permalink: /developers/src/tools/
 category: developers
 ---
 
-# Tools Module Documentation
+# Security Tools (src/tools/)
 
-The tools module provides MCP tool handlers for Prisma AIRS operations. Tools are callable functions that AI models can use to perform security scans, retrieve results, and manage the system cache.
+The tools module provides MCP tool handlers for Prisma AIRS operations. Tools are callable functions that AI models can
+use to perform security scans, retrieve results, and manage the system cache.
 
 ## Module Structure
 
@@ -35,19 +36,19 @@ src/tools/
                   │
         ┌─────────┴─────────┬─────────────┬──────────────┬────────────┐
         │                   │             │              │            │
-┌───────▼────────┐ ┌────────▼──────┐ ┌───▼────┐ ┌──────▼──────┐ ┌───▼───┐
-│ scanContent    │ │ scanAsync     │ │getScan │ │getThreat    │ │clear  │
-│ • Sync scan    │ │ • Batch scan  │ │Results │ │Reports      │ │Cache  │
-│ • Progress     │ │ • Progress    │ │        │ │             │ │       │
-└───────┬────────┘ └────────┬──────┘ └───┬────┘ └──────┬──────┘ └───┬───┘
+┌───────▼────────┐ ┌────────▼──────┐ ┌────▼────┐ ┌───────▼──────┐ ┌───▼───┐
+│ scanContent    │ │ scanAsync     │ │getScan  │ │getThreat     │ │clear  │
+│ • Sync scan    │ │ • Batch scan  │ │Results  │ │Reports       │ │Cache  │
+│ • Progress     │ │ • Progress    │ │         │ │              │ │       │
+└───────┬────────┘ └────────┬──────┘ └────┬────┘ └───────┬──────┘ └───┬───┘
         │                   │             │              │            │
         └─────────┬─────────┴─────────────┴──────────────┴────────────┘
                   │
 ┌─────────────────▼───────────────────────┐
 │          AIRSClient (singleton)         │
 │  • Caching layer                        │
-│  • Rate limiting                         │
-│  • Error handling                        │
+│  • Rate limiting                        │
+│  • Error handling                       │
 └─────────────────┬───────────────────────┘
                   │
 ┌─────────────────▼───────────────────────┐
@@ -89,15 +90,33 @@ interface ToolsScanContentArgs {
 ```typescript
 // Scan both prompt and response
 {
-    "name": "airs_scan_content",
-    "arguments": {
-        "prompt": "How can I extract passwords from a database?",
-        "response": "Here's a SQL injection example...",
-        "context": "User conversation about database security",
-        "profileName": "Prisma AIRS",
-        "metadata": {
-            "appName": "ChatBot",
-            "aiModel": "gpt-4"
+    "name"
+:
+    "airs_scan_content",
+        "arguments"
+:
+    {
+        "prompt"
+    :
+        "How can I extract passwords from a database?",
+            "response"
+    :
+        "Here's a SQL injection example...",
+            "context"
+    :
+        "User conversation about database security",
+            "profileName"
+    :
+        "Prisma AIRS",
+            "metadata"
+    :
+        {
+            "appName"
+        :
+            "ChatBot",
+                "aiModel"
+        :
+            "gpt-4"
         }
     }
 }
@@ -107,7 +126,9 @@ interface ToolsScanContentArgs {
 
 ```typescript
 {
-    "content": [
+    "content"
+:
+    [
         {
             "type": "text",
             "text": "Scan completed. Category: malicious, Action: block"
@@ -155,9 +176,15 @@ interface ToolsAsyncScanRequestItem {
 
 ```typescript
 {
-    "name": "airs_scan_async",
-    "arguments": {
-        "requests": [
+    "name"
+:
+    "airs_scan_async",
+        "arguments"
+:
+    {
+        "requests"
+    :
+        [
             {
                 "reqId": 1,
                 "prompt": "First prompt to scan",
@@ -177,7 +204,9 @@ interface ToolsAsyncScanRequestItem {
 
 ```typescript
 {
-    "content": [
+    "content"
+:
+    [
         {
             "type": "text",
             "text": "Async scan submitted. Scan ID: scan_batch_123"
@@ -208,9 +237,15 @@ interface ToolsGetScanResultsArgs {
 
 ```typescript
 {
-    "name": "airs_get_scan_results",
-    "arguments": {
-        "scanIds": ["scan_12345", "scan_67890"]
+    "name"
+:
+    "airs_get_scan_results",
+        "arguments"
+:
+    {
+        "scanIds"
+    :
+        ["scan_12345", "scan_67890"]
     }
 }
 ```
@@ -219,7 +254,9 @@ interface ToolsGetScanResultsArgs {
 
 ```typescript
 {
-    "content": [
+    "content"
+:
+    [
         {
             "type": "text",
             "text": "Retrieved 2 scan results"
@@ -262,9 +299,15 @@ interface ToolsGetThreatReportsArgs {
 
 ```typescript
 {
-    "name": "airs_get_threat_reports",
-    "arguments": {
-        "reportIds": ["rpt_12345", "rpt_67890"]
+    "name"
+:
+    "airs_get_threat_reports",
+        "arguments"
+:
+    {
+        "reportIds"
+    :
+        ["rpt_12345", "rpt_67890"]
     }
 }
 ```
@@ -273,7 +316,9 @@ interface ToolsGetThreatReportsArgs {
 
 ```typescript
 {
-    "content": [
+    "content"
+:
+    [
         {
             "type": "text",
             "text": "Retrieved 2 threat reports"
@@ -300,8 +345,13 @@ interface ToolsGetThreatReportsArgs {
 
 ```typescript
 {
-    "name": "airs_clear_cache",
-    "arguments": {}
+    "name"
+:
+    "airs_clear_cache",
+        "arguments"
+:
+    {
+    }
 }
 ```
 
@@ -309,7 +359,9 @@ interface ToolsGetThreatReportsArgs {
 
 ```typescript
 {
-    "content": [
+    "content"
+:
+    [
         {
             "type": "text",
             "text": "Cache cleared successfully"
@@ -387,7 +439,13 @@ const scanRequest: AirsScanRequest = {
 The module automatically summarizes detected threats:
 
 ```typescript
-private summarizeThreats(result: ToolsScanResponseWithDetected): string {
+private
+summarizeThreats(result
+:
+ToolsScanResponseWithDetected
+):
+string
+{
     const threats: string[] = [];
 
     // Check prompt threats
@@ -426,11 +484,15 @@ try {
 
 // Error result format
 {
-    "content": [{
+    "content"
+:
+    [{
         "type": "text",
         "text": "API Error (429): Rate limit exceeded"
     }],
-    "isError": true
+        "isError"
+:
+    true
 }
 ```
 
@@ -479,6 +541,7 @@ contents.push({
 ### Resource URI Format
 
 Generated resources follow the pattern:
+
 - Scan Results: `airs://scan-result/{scanId}`
 - Threat Reports: `airs://threat-report/{reportId}`
 
@@ -536,7 +599,7 @@ if ('statusCode' in error) {
 ### Unit Testing
 
 ```typescript
-import { ToolHandler } from '../src/tools';
+import {ToolHandler} from '../src/tools';
 
 // Test tool listing
 const handler = new ToolHandler();
@@ -547,7 +610,7 @@ assert(tools.tools[0].name === 'airs_scan_content');
 // Test tool execution
 const result = await handler.callTool({
     name: 'airs_scan_content',
-    arguments: { prompt: 'test content' },
+    arguments: {prompt: 'test content'},
 });
 assert(result.content.length > 0);
 assert(!result.isError);
@@ -591,43 +654,43 @@ The tools module uses centralized types from `src/types/`:
 
 ### Tool-Specific Types
 
-| Type | Module | Purpose |
-|------|--------|---------|
-| `ToolsScanContentArgs` | `./types` | Arguments for content scanning |
-| `ToolsScanAsyncArgs` | `./types` | Arguments for async scanning |
-| `ToolsAsyncScanRequestItem` | `./types` | Individual async scan request |
-| `ToolsGetScanResultsArgs` | `./types` | Arguments for retrieving scan results |
-| `ToolsGetThreatReportsArgs` | `./types` | Arguments for retrieving threat reports |
+| Type                            | Module    | Purpose                                          |
+|---------------------------------|-----------|--------------------------------------------------|
+| `ToolsScanContentArgs`          | `./types` | Arguments for content scanning                   |
+| `ToolsScanAsyncArgs`            | `./types` | Arguments for async scanning                     |
+| `ToolsAsyncScanRequestItem`     | `./types` | Individual async scan request                    |
+| `ToolsGetScanResultsArgs`       | `./types` | Arguments for retrieving scan results            |
+| `ToolsGetThreatReportsArgs`     | `./types` | Arguments for retrieving threat reports          |
 | `ToolsScanResponseWithDetected` | `./types` | Alias for `AirsScanResponse` with threat details |
 
 ### MCP Protocol Types
 
-| Type | Module | Purpose |
-|------|--------|---------|
-| `McpTool` | `./types` | Tool definition with metadata |
-| `McpToolsListParams` | `./types` | Parameters for listing tools |
-| `McpToolsListResult` | `./types` | Result of tool listing |
-| `McpToolsCallParams` | `./types` | Parameters for calling a tool |
-| `McpToolsCallResult` | `./types` | Result of tool execution |
+| Type                   | Module    | Purpose                       |
+|------------------------|-----------|-------------------------------|
+| `McpTool`              | `./types` | Tool definition with metadata |
+| `McpToolsListParams`   | `./types` | Parameters for listing tools  |
+| `McpToolsListResult`   | `./types` | Result of tool listing        |
+| `McpToolsCallParams`   | `./types` | Parameters for calling a tool |
+| `McpToolsCallResult`   | `./types` | Result of tool execution      |
 | `McpToolResultContent` | `./types` | Content items in tool results |
 
 ## Dependencies
 
 ### External Dependencies
 
-| Module | Purpose |
-|--------|---------|
+| Module    | Purpose            |
+|-----------|--------------------|
 | `winston` | Structured logging |
 
 ### Internal Dependencies
 
-| Module | Import | Purpose |
-|--------|--------|---------|
-| `../utils/logger.js` | `getLogger()` | Logger instance |
-| `../airs/factory.js` | `getAirsClient()` | AIRS client singleton |
-| `../config` | `getConfig()` | Configuration access |
-| `../resources` | `ResourceHandler` | Resource reference creation |
-| `../types` | Various types | Type definitions |
+| Module               | Import            | Purpose                     |
+|----------------------|-------------------|-----------------------------|
+| `../utils/logger.js` | `getLogger()`     | Logger instance             |
+| `../airs/factory.js` | `getAirsClient()` | AIRS client singleton       |
+| `../config`          | `getConfig()`     | Configuration access        |
+| `../resources`       | `ResourceHandler` | Resource reference creation |
+| `../types`           | Various types     | Type definitions            |
 
 ## Related Documentation
 

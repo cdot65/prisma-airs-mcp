@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tools Module (src/tools/) | Prisma AIRS MCP</title>
+  <title>Tools Module | Prisma AIRS MCP</title>
   <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
   
   <!-- SEO Tags -->
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Tools Module (src/tools/) | Prisma AIRS MCP</title>
+<title>Tools Module | Prisma AIRS MCP</title>
 <meta name="generator" content="Jekyll v3.9.5" />
-<meta property="og:title" content="Tools Module (src/tools/)" />
+<meta property="og:title" content="Tools Module" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Tools Module Documentation" />
-<meta property="og:description" content="Tools Module Documentation" />
+<meta name="description" content="Security Tools (src/tools/)" />
+<meta property="og:description" content="Security Tools (src/tools/)" />
 <link rel="canonical" href="http://localhost:4000/developers/src/tools/" />
 <meta property="og:url" content="http://localhost:4000/developers/src/tools/" />
 <meta property="og:site_name" content="Prisma AIRS MCP" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Tools Module (src/tools/)" />
+<meta property="twitter:title" content="Tools Module" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Tools Module Documentation","headline":"Tools Module (src/tools/)","url":"http://localhost:4000/developers/src/tools/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Security Tools (src/tools/)","headline":"Tools Module","url":"http://localhost:4000/developers/src/tools/"}</script>
 <!-- End Jekyll SEO tag -->
 
   
@@ -140,14 +140,15 @@
     
     <main class="documentation-content">
       <div class="content-header">
-        <h1>Tools Module (src/tools/)</h1>
+        <h1>Tools Module</h1>
         
       </div>
       
       <article class="content">
-        <h1 id="tools-module-documentation">Tools Module Documentation</h1>
+        <h1 id="security-tools-srctools">Security Tools (src/tools/)</h1>
 
-<p>The tools module provides MCP tool handlers for Prisma AIRS operations. Tools are callable functions that AI models can use to perform security scans, retrieve results, and manage the system cache.</p>
+<p>The tools module provides MCP tool handlers for Prisma AIRS operations. Tools are callable functions that AI models can
+use to perform security scans, retrieve results, and manage the system cache.</p>
 
 <h2 id="module-structure">Module Structure</h2>
 
@@ -173,19 +174,19 @@
                   │
         ┌─────────┴─────────┬─────────────┬──────────────┬────────────┐
         │                   │             │              │            │
-┌───────▼────────┐ ┌────────▼──────┐ ┌───▼────┐ ┌──────▼──────┐ ┌───▼───┐
-│ scanContent    │ │ scanAsync     │ │getScan │ │getThreat    │ │clear  │
-│ • Sync scan    │ │ • Batch scan  │ │Results │ │Reports      │ │Cache  │
-│ • Progress     │ │ • Progress    │ │        │ │             │ │       │
-└───────┬────────┘ └────────┬──────┘ └───┬────┘ └──────┬──────┘ └───┬───┘
+┌───────▼────────┐ ┌────────▼──────┐ ┌────▼────┐ ┌───────▼──────┐ ┌───▼───┐
+│ scanContent    │ │ scanAsync     │ │getScan  │ │getThreat     │ │clear  │
+│ • Sync scan    │ │ • Batch scan  │ │Results  │ │Reports       │ │Cache  │
+│ • Progress     │ │ • Progress    │ │         │ │              │ │       │
+└───────┬────────┘ └────────┬──────┘ └────┬────┘ └───────┬──────┘ └───┬───┘
         │                   │             │              │            │
         └─────────┬─────────┴─────────────┴──────────────┴────────────┘
                   │
 ┌─────────────────▼───────────────────────┐
 │          AIRSClient (singleton)         │
 │  • Caching layer                        │
-│  • Rate limiting                         │
-│  • Error handling                        │
+│  • Rate limiting                        │
+│  • Error handling                       │
 └─────────────────┬───────────────────────┘
                   │
 ┌─────────────────▼───────────────────────┐
@@ -225,15 +226,33 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Scan both prompt and response</span>
 <span class="p">{</span>
-    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_scan_content</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="dl">"</span><span class="s2">prompt</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">How can I extract passwords from a database?</span><span class="dl">"</span><span class="p">,</span>
-        <span class="dl">"</span><span class="s2">response</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Here's a SQL injection example...</span><span class="dl">"</span><span class="p">,</span>
-        <span class="dl">"</span><span class="s2">context</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">User conversation about database security</span><span class="dl">"</span><span class="p">,</span>
-        <span class="dl">"</span><span class="s2">profileName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Prisma AIRS</span><span class="dl">"</span><span class="p">,</span>
-        <span class="dl">"</span><span class="s2">metadata</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="dl">"</span><span class="s2">appName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">ChatBot</span><span class="dl">"</span><span class="p">,</span>
-            <span class="dl">"</span><span class="s2">aiModel</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">gpt-4</span><span class="dl">"</span>
+    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="dl">"</span><span class="s2">airs_scan_content</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">prompt</span><span class="dl">"</span>
+    <span class="p">:</span>
+        <span class="dl">"</span><span class="s2">How can I extract passwords from a database?</span><span class="dl">"</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">response</span><span class="dl">"</span>
+    <span class="p">:</span>
+        <span class="dl">"</span><span class="s2">Here's a SQL injection example...</span><span class="dl">"</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">context</span><span class="dl">"</span>
+    <span class="p">:</span>
+        <span class="dl">"</span><span class="s2">User conversation about database security</span><span class="dl">"</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">profileName</span><span class="dl">"</span>
+    <span class="p">:</span>
+        <span class="dl">"</span><span class="s2">Prisma AIRS</span><span class="dl">"</span><span class="p">,</span>
+            <span class="dl">"</span><span class="s2">metadata</span><span class="dl">"</span>
+    <span class="p">:</span>
+        <span class="p">{</span>
+            <span class="dl">"</span><span class="s2">appName</span><span class="dl">"</span>
+        <span class="p">:</span>
+            <span class="dl">"</span><span class="s2">ChatBot</span><span class="dl">"</span><span class="p">,</span>
+                <span class="dl">"</span><span class="s2">aiModel</span><span class="dl">"</span>
+        <span class="p">:</span>
+            <span class="dl">"</span><span class="s2">gpt-4</span><span class="dl">"</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -242,7 +261,9 @@
 <h4 id="response-format">Response Format</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="p">[</span>
         <span class="p">{</span>
             <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
             <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Scan completed. Category: malicious, Action: block</span><span class="dl">"</span>
@@ -288,9 +309,15 @@
 <h4 id="example-usage-1">Example Usage</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_scan_async</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="dl">"</span><span class="s2">requests</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="dl">"</span><span class="s2">airs_scan_async</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">requests</span><span class="dl">"</span>
+    <span class="p">:</span>
+        <span class="p">[</span>
             <span class="p">{</span>
                 <span class="dl">"</span><span class="s2">reqId</span><span class="dl">"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
                 <span class="dl">"</span><span class="s2">prompt</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">First prompt to scan</span><span class="dl">"</span><span class="p">,</span>
@@ -309,7 +336,9 @@
 <h4 id="response-format-1">Response Format</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="p">[</span>
         <span class="p">{</span>
             <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
             <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Async scan submitted. Scan ID: scan_batch_123</span><span class="dl">"</span>
@@ -338,9 +367,15 @@
 <h4 id="example-usage-2">Example Usage</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_get_scan_results</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="dl">"</span><span class="s2">scanIds</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">scan_12345</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">scan_67890</span><span class="dl">"</span><span class="p">]</span>
+    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="dl">"</span><span class="s2">airs_get_scan_results</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">scanIds</span><span class="dl">"</span>
+    <span class="p">:</span>
+        <span class="p">[</span><span class="dl">"</span><span class="s2">scan_12345</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">scan_67890</span><span class="dl">"</span><span class="p">]</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -348,7 +383,9 @@
 <h4 id="response-format-2">Response Format</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="p">[</span>
         <span class="p">{</span>
             <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
             <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Retrieved 2 scan results</span><span class="dl">"</span>
@@ -389,9 +426,15 @@
 <h4 id="example-usage-3">Example Usage</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_get_threat_reports</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="dl">"</span><span class="s2">reportIds</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">rpt_12345</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">rpt_67890</span><span class="dl">"</span><span class="p">]</span>
+    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="dl">"</span><span class="s2">airs_get_threat_reports</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">reportIds</span><span class="dl">"</span>
+    <span class="p">:</span>
+        <span class="p">[</span><span class="dl">"</span><span class="s2">rpt_12345</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">rpt_67890</span><span class="dl">"</span><span class="p">]</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -399,7 +442,9 @@
 <h4 id="response-format-3">Response Format</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="p">[</span>
         <span class="p">{</span>
             <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
             <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Retrieved 2 threat reports</span><span class="dl">"</span>
@@ -425,15 +470,22 @@
 <h4 id="example-usage-4">Example Usage</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">airs_clear_cache</span><span class="dl">"</span><span class="p">,</span>
-    <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span><span class="p">:</span> <span class="p">{}</span>
+    <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="dl">"</span><span class="s2">airs_clear_cache</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">arguments</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="response-format-4">Response Format</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
-    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="p">[</span>
         <span class="p">{</span>
             <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
             <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Cache cleared successfully</span><span class="dl">"</span>
@@ -509,7 +561,13 @@
 
 <p>The module automatically summarizes detected threats:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">summarizeThreats</span><span class="p">(</span><span class="nx">result</span><span class="p">:</span> <span class="nx">ToolsScanResponseWithDetected</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span>
+<span class="nx">summarizeThreats</span><span class="p">(</span><span class="nx">result</span>
+<span class="p">:</span>
+<span class="nx">ToolsScanResponseWithDetected</span>
+<span class="p">):</span>
+<span class="kr">string</span>
+<span class="p">{</span>
     <span class="kd">const</span> <span class="nx">threats</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[];</span>
 
     <span class="c1">// Check prompt threats</span>
@@ -547,11 +605,15 @@
 
 <span class="c1">// Error result format</span>
 <span class="p">{</span>
-    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+    <span class="dl">"</span><span class="s2">content</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="p">[{</span>
         <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">,</span>
         <span class="dl">"</span><span class="s2">text</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">API Error (429): Rate limit exceeded</span><span class="dl">"</span>
     <span class="p">}],</span>
-    <span class="dl">"</span><span class="s2">isError</span><span class="dl">"</span><span class="p">:</span> <span class="kc">true</span>
+        <span class="dl">"</span><span class="s2">isError</span><span class="dl">"</span>
+<span class="p">:</span>
+    <span class="kc">true</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -602,6 +664,7 @@
 <h3 id="resource-uri-format">Resource URI Format</h3>
 
 <p>Generated resources follow the pattern:</p>
+
 <ul>
   <li>Scan Results: <code class="language-plaintext highlighter-rouge">airs://scan-result/{scanId}</code></li>
   <li>Threat Reports: <code class="language-plaintext highlighter-rouge">airs://threat-report/{reportId}</code></li>
@@ -658,7 +721,7 @@
 
 <h3 id="unit-testing">Unit Testing</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">ToolHandler</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../src/tools</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span><span class="nx">ToolHandler</span><span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../src/tools</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="c1">// Test tool listing</span>
 <span class="kd">const</span> <span class="nx">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ToolHandler</span><span class="p">();</span>
@@ -669,7 +732,7 @@
 <span class="c1">// Test tool execution</span>
 <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">handler</span><span class="p">.</span><span class="nx">callTool</span><span class="p">({</span>
     <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span>
-    <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span> <span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test content</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span><span class="na">prompt</span><span class="p">:</span> <span class="dl">'</span><span class="s1">test content</span><span class="dl">'</span><span class="p">},</span>
 <span class="p">});</span>
 <span class="nx">assert</span><span class="p">(</span><span class="nx">result</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
 <span class="nx">assert</span><span class="p">(</span><span class="o">!</span><span class="nx">result</span><span class="p">.</span><span class="nx">isError</span><span class="p">);</span>
@@ -884,7 +947,7 @@
           
           
           <a href="/developers/src/transport/" class="next">
-            Transport Module (src/transport/) <i class="fas fa-arrow-right"></i>
+            Transport Module <i class="fas fa-arrow-right"></i>
           </a>
           
         </div>

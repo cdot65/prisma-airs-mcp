@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prompts Module (src/prompts/) | Prisma AIRS MCP</title>
+  <title>Prompts Module | Prisma AIRS MCP</title>
   <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
   
   <!-- SEO Tags -->
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Prompts Module (src/prompts/) | Prisma AIRS MCP</title>
+<title>Prompts Module | Prisma AIRS MCP</title>
 <meta name="generator" content="Jekyll v3.9.5" />
-<meta property="og:title" content="Prompts Module (src/prompts/)" />
+<meta property="og:title" content="Prompts Module" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Prompts Module Documentation" />
-<meta property="og:description" content="Prompts Module Documentation" />
+<meta name="description" content="Security Workflows (src/prompts/)" />
+<meta property="og:description" content="Security Workflows (src/prompts/)" />
 <link rel="canonical" href="http://localhost:4000/developers/src/prompts/" />
 <meta property="og:url" content="http://localhost:4000/developers/src/prompts/" />
 <meta property="og:site_name" content="Prisma AIRS MCP" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Prompts Module (src/prompts/)" />
+<meta property="twitter:title" content="Prompts Module" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Prompts Module Documentation","headline":"Prompts Module (src/prompts/)","url":"http://localhost:4000/developers/src/prompts/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Security Workflows (src/prompts/)","headline":"Prompts Module","url":"http://localhost:4000/developers/src/prompts/"}</script>
 <!-- End Jekyll SEO tag -->
 
   
@@ -140,14 +140,16 @@
     
     <main class="documentation-content">
       <div class="content-header">
-        <h1>Prompts Module (src/prompts/)</h1>
+        <h1>Prompts Module</h1>
         
       </div>
       
       <article class="content">
-        <h1 id="prompts-module-documentation">Prompts Module Documentation</h1>
+        <h1 id="security-workflows-srcprompts">Security Workflows (src/prompts/)</h1>
 
-<p>The prompts module provides pre-defined conversation templates for common security workflows using Prisma AIRS. These prompts guide AI models through structured security analysis, threat investigation, compliance checking, and incident response procedures.</p>
+<p>The prompts module provides pre-defined conversation templates for common security workflows using Prisma AIRS. These
+prompts guide AI models through structured security analysis, threat investigation, compliance checking, and incident
+response procedures.</p>
 
 <h2 id="module-structure">Module Structure</h2>
 
@@ -173,10 +175,10 @@
                   │
         ┌─────────┴─────────┬─────────────┬──────────────┐
         │                   │             │              │
-┌───────▼────────┐ ┌────────▼──────┐ ┌───▼────┐ ┌──────▼──────┐
-│ Security       │ │ Threat        │ │Compliance│ │Incident    │
-│ Analysis       │ │ Investigation │ │Check     │ │Response    │
-└───────┬────────┘ └────────┬──────┘ └───┬────┘ └──────┬──────┘
+┌───────▼────────┐ ┌────────▼──────┐ ┌────▼─────┐ ┌──────▼──────┐
+│ Security       │ │ Threat        │ │Compliance│ │ Incident    │
+│ Analysis       │ │ Investigation │ │Check     │ │ Response    │
+└───────┬────────┘ └────────┬──────┘ └────┬─────┘ └──────┬──────┘
         │                   │             │              │
         └─────────┬─────────┴─────────────┴──────────────┘
                   │
@@ -254,18 +256,49 @@
 <h4 id="workflow-structure">Workflow Structure</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// User message includes:</span>
-<span class="o">-</span> <span class="nx">Content</span> <span class="nx">to</span> <span class="nx">analyze</span>
-<span class="o">-</span> <span class="nx">Context</span> <span class="nx">information</span>
-<span class="o">-</span> <span class="nx">Requirements</span><span class="p">:</span>
-  <span class="mi">1</span><span class="p">.</span> <span class="nx">Use</span> <span class="nx">airs_scan_content</span> <span class="nx">tool</span>
-  <span class="mi">2</span><span class="p">.</span> <span class="nx">Report</span> <span class="nx">threats</span> <span class="nx">at</span> <span class="nx">threshold</span> <span class="nx">or</span> <span class="nx">higher</span>
-  <span class="mi">3</span><span class="p">.</span> <span class="nx">Provide</span> <span class="nx">specific</span> <span class="nx">examples</span>
-  <span class="mi">4</span><span class="p">.</span> <span class="nx">Suggest</span> <span class="nx">remediation</span> <span class="nx">steps</span>
-  <span class="mi">5</span><span class="p">.</span> <span class="nx">Give</span> <span class="nx">overall</span> <span class="nx">risk</span> <span class="nx">score</span>
+<span class="o">-</span><span class="nx">Content</span>
+<span class="nx">to</span>
+<span class="nx">analyze</span>
+<span class="o">-</span> <span class="nx">Context</span>
+<span class="nx">information</span>
+<span class="o">-</span> <span class="nx">Requirements</span>
+<span class="p">:</span>
+<span class="mi">1</span><span class="p">.</span>
+<span class="nx">Use</span>
+<span class="nx">airs_scan_content</span>
+<span class="nx">tool</span>
+<span class="mi">2</span><span class="p">.</span>
+<span class="nx">Report</span>
+<span class="nx">threats</span>
+<span class="nx">at</span>
+<span class="nx">threshold</span>
+<span class="nx">or</span>
+<span class="nx">higher</span>
+<span class="mi">3</span><span class="p">.</span>
+<span class="nx">Provide</span>
+<span class="nx">specific</span>
+<span class="nx">examples</span>
+<span class="mi">4</span><span class="p">.</span>
+<span class="nx">Suggest</span>
+<span class="nx">remediation</span>
+<span class="nx">steps</span>
+<span class="mi">5</span><span class="p">.</span>
+<span class="nx">Give</span>
+<span class="nx">overall</span>
+<span class="nx">risk</span>
+<span class="nx">score</span>
 
 <span class="c1">// Assistant response:</span>
-<span class="o">-</span> <span class="nx">Acknowledges</span> <span class="nx">the</span> <span class="nx">request</span>
-<span class="o">-</span> <span class="nx">Indicates</span> <span class="nx">it</span> <span class="nx">will</span> <span class="nx">use</span> <span class="nx">Prisma</span> <span class="nx">AIRS</span> <span class="k">for</span> <span class="nx">analysis</span>
+<span class="o">-</span> <span class="nx">Acknowledges</span>
+<span class="nx">the</span>
+<span class="nx">request</span>
+<span class="o">-</span> <span class="nx">Indicates</span>
+<span class="nx">it</span>
+<span class="nx">will</span>
+<span class="nx">use</span>
+<span class="nx">Prisma</span>
+<span class="nx">AIRS</span>
+<span class="k">for</span> <span class="nx">analysis</span>
 </code></pre></div></div>
 
 <h3 id="2-threat-investigation-workflow">2. Threat Investigation Workflow</h3>
@@ -487,12 +520,12 @@
     <span class="nx">listPrompts</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">McpPromptsListParams</span><span class="p">):</span> <span class="nx">McpPromptsListResult</span> <span class="p">{</span>
         <span class="c1">// Returns static list of all available prompts</span>
         <span class="kd">const</span> <span class="nx">prompts</span><span class="p">:</span> <span class="nx">McpPrompt</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[...];</span>
-        <span class="k">return</span> <span class="p">{</span> <span class="nx">prompts</span> <span class="p">};</span>
+        <span class="k">return</span> <span class="p">{</span><span class="nx">prompts</span><span class="p">};</span>
     <span class="p">}</span>
 
     <span class="nx">getPrompt</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">McpPromptsGetParams</span><span class="p">):</span> <span class="nx">McpPromptsGetResult</span> <span class="p">{</span>
         <span class="kd">const</span> <span class="nx">args</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">arguments</span> <span class="o">||</span> <span class="p">{};</span>
-        
+
         <span class="k">switch</span> <span class="p">(</span><span class="nx">params</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">case</span> <span class="nx">PromptHandler</span><span class="p">.</span><span class="nx">PROMPTS</span><span class="p">.</span><span class="nx">SECURITY_ANALYSIS</span><span class="p">:</span>
                 <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getSecurityAnalysisPrompt</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
@@ -520,7 +553,13 @@
 
 <h4 id="example-security-analysis-generation">Example: Security Analysis Generation</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">getSecurityAnalysisPrompt</span><span class="p">(</span><span class="nx">args</span><span class="p">:</span> <span class="nb">Record</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">string</span><span class="o">&gt;</span><span class="p">):</span> <span class="nx">McpPromptsGetResult</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span>
+<span class="nx">getSecurityAnalysisPrompt</span><span class="p">(</span><span class="nx">args</span>
+<span class="p">:</span>
+<span class="nb">Record</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">string</span><span class="o">&gt;</span>
+<span class="p">):</span>
+<span class="nx">McpPromptsGetResult</span>
+<span class="p">{</span>
     <span class="kd">const</span> <span class="nx">content</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">content</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">[No content provided]</span><span class="dl">'</span><span class="p">;</span>
     <span class="kd">const</span> <span class="nx">context</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">context</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">No additional context</span><span class="dl">'</span><span class="p">;</span>
     <span class="kd">const</span> <span class="nx">threshold</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">severity_threshold</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">low</span><span class="dl">'</span><span class="p">;</span>
@@ -553,7 +592,7 @@
         <span class="p">},</span>
     <span class="p">];</span>
 
-    <span class="k">return</span> <span class="p">{</span> <span class="nx">messages</span> <span class="p">};</span>
+    <span class="k">return</span> <span class="p">{</span><span class="nx">messages</span><span class="p">};</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -562,11 +601,23 @@
 <h3 id="handling-prompt-requests">Handling Prompt Requests</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In transport/http.ts</span>
-<span class="k">private</span> <span class="nx">handlePromptsGet</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">unknown</span><span class="p">):</span> <span class="nx">unknown</span> <span class="p">{</span>
+<span class="k">private</span>
+<span class="nx">handlePromptsGet</span><span class="p">(</span><span class="nx">params</span>
+<span class="p">:</span>
+<span class="nx">unknown</span>
+<span class="p">):</span>
+<span class="nx">unknown</span>
+<span class="p">{</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">promptHandler</span><span class="p">.</span><span class="nx">getPrompt</span><span class="p">(</span><span class="nx">params</span> <span class="k">as</span> <span class="nx">McpPromptsGetParams</span><span class="p">);</span>
 <span class="p">}</span>
 
-<span class="k">private</span> <span class="nx">handlePromptsList</span><span class="p">(</span><span class="nx">params</span><span class="p">:</span> <span class="nx">unknown</span><span class="p">):</span> <span class="nx">unknown</span> <span class="p">{</span>
+<span class="k">private</span>
+<span class="nx">handlePromptsList</span><span class="p">(</span><span class="nx">params</span>
+<span class="p">:</span>
+<span class="nx">unknown</span>
+<span class="p">):</span>
+<span class="nx">unknown</span>
+<span class="p">{</span>
     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">promptHandler</span><span class="p">.</span><span class="nx">listPrompts</span><span class="p">(</span><span class="nx">params</span> <span class="k">as</span> <span class="nx">McpPromptsListParams</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -592,7 +643,7 @@
 <h3 id="client-usage">Client Usage</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// List available prompts</span>
-<span class="kd">const</span> <span class="p">{</span> <span class="nx">prompts</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">listPrompts</span><span class="p">();</span>
+<span class="kd">const</span> <span class="p">{</span><span class="nx">prompts</span><span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">listPrompts</span><span class="p">();</span>
 
 <span class="nx">prompts</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">prompt</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">prompt</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="s2">: </span><span class="p">${</span><span class="nx">prompt</span><span class="p">.</span><span class="nx">description</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
@@ -621,7 +672,7 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Execute threat investigation workflow</span>
 <span class="k">async</span> <span class="kd">function</span> <span class="nx">investigateThreat</span><span class="p">(</span><span class="nx">scanId</span><span class="p">:</span> <span class="kr">string</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="p">{</span> <span class="nx">messages</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">getPrompt</span><span class="p">({</span>
+    <span class="kd">const</span> <span class="p">{</span><span class="nx">messages</span><span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">getPrompt</span><span class="p">({</span>
         <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">threat_investigation</span><span class="dl">'</span><span class="p">,</span>
         <span class="na">arguments</span><span class="p">:</span> <span class="p">{</span>
             <span class="na">scan_id</span><span class="p">:</span> <span class="nx">scanId</span><span class="p">,</span>
@@ -629,7 +680,7 @@
             <span class="na">deep_analysis</span><span class="p">:</span> <span class="dl">'</span><span class="s1">true</span><span class="dl">'</span>
         <span class="p">}</span>
     <span class="p">});</span>
-    
+
     <span class="c1">// Process workflow messages</span>
     <span class="k">for</span> <span class="p">(</span><span class="kd">const</span> <span class="nx">message</span> <span class="k">of</span> <span class="nx">messages</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="kd">type</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
@@ -654,22 +705,69 @@
 
 <p>Each prompt includes clear, numbered instructions:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">**</span><span class="nx">Requirements</span><span class="p">:</span><span class="o">**</span>
-<span class="mi">1</span><span class="p">.</span> <span class="nx">Use</span> <span class="nx">the</span> <span class="nx">airs_scan_content</span> <span class="nx">tool</span> <span class="nx">to</span> <span class="nx">analyze</span> <span class="nx">the</span> <span class="nx">content</span>
-<span class="mi">2</span><span class="p">.</span> <span class="nx">Report</span> <span class="nx">all</span> <span class="nx">threats</span> <span class="kd">with</span> <span class="nx">severity</span> <span class="nx">$</span><span class="p">{</span><span class="nx">threshold</span><span class="p">}</span> <span class="nx">or</span> <span class="nx">higher</span>
-<span class="mi">3</span><span class="p">.</span> <span class="nx">Provide</span> <span class="nx">specific</span> <span class="nx">examples</span> <span class="k">from</span> <span class="nx">the</span> <span class="nx">content</span> <span class="k">for</span> <span class="nx">each</span> <span class="nx">threat</span> <span class="nx">found</span>
-<span class="mi">4</span><span class="p">.</span> <span class="nx">Suggest</span> <span class="nx">remediation</span> <span class="nx">steps</span> <span class="k">for</span> <span class="nx">each</span> <span class="nx">identified</span> <span class="nx">issue</span>
-<span class="mi">5</span><span class="p">.</span> <span class="nx">Give</span> <span class="nx">an</span> <span class="nx">overall</span> <span class="nx">security</span> <span class="nx">assessment</span> <span class="nx">and</span> <span class="nx">risk</span> <span class="nx">score</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">**</span>
+<span class="nx">Requirements</span><span class="p">:</span><span class="o">*</span>
+<span class="o">*</span>
+<span class="mi">1</span><span class="p">.</span>
+<span class="nx">Use</span>
+<span class="nx">the</span>
+<span class="nx">airs_scan_content</span>
+<span class="nx">tool</span>
+<span class="nx">to</span>
+<span class="nx">analyze</span>
+<span class="nx">the</span>
+<span class="nx">content</span>
+<span class="mi">2</span><span class="p">.</span>
+<span class="nx">Report</span>
+<span class="nx">all</span>
+<span class="nx">threats</span>
+<span class="kd">with</span> <span class="nx">severity</span> <span class="nx">$</span>
+<span class="p">{</span>
+    <span class="nx">threshold</span>
+<span class="p">}</span>
+<span class="nx">or</span>
+<span class="nx">higher</span>
+<span class="mi">3</span><span class="p">.</span>
+<span class="nx">Provide</span>
+<span class="nx">specific</span>
+<span class="nx">examples</span>
+<span class="k">from</span>
+<span class="nx">the</span>
+<span class="nx">content</span>
+<span class="k">for</span> <span class="nx">each</span> <span class="nx">threat</span>
+<span class="nx">found</span>
+<span class="mi">4</span><span class="p">.</span>
+<span class="nx">Suggest</span>
+<span class="nx">remediation</span>
+<span class="nx">steps</span>
+<span class="k">for</span> <span class="nx">each</span> <span class="nx">identified</span>
+<span class="nx">issue</span>
+<span class="mi">5</span><span class="p">.</span>
+<span class="nx">Give</span>
+<span class="nx">an</span>
+<span class="nx">overall</span>
+<span class="nx">security</span>
+<span class="nx">assessment</span>
+<span class="nx">and</span>
+<span class="nx">risk</span>
+<span class="nx">score</span>
 </code></pre></div></div>
 
 <h3 id="3-professional-formatting">3. Professional Formatting</h3>
 
 <p>Structure prompts to generate professional outputs:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Please</span> <span class="nx">structure</span> <span class="nx">your</span> <span class="nx">response</span> <span class="kd">with</span><span class="p">:</span>
-<span class="o">-</span> <span class="nx">Executive</span> <span class="nx">Summary</span>
-<span class="o">-</span> <span class="nx">Detailed</span> <span class="nx">Findings</span>
-<span class="o">-</span> <span class="nx">Risk</span> <span class="nx">Assessment</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Please</span>
+<span class="nx">structure</span>
+<span class="nx">your</span>
+<span class="nx">response</span>
+<span class="kd">with</span><span class="p">:</span>
+<span class="o">-</span><span class="nx">Executive</span>
+<span class="nx">Summary</span>
+<span class="o">-</span> <span class="nx">Detailed</span>
+<span class="nx">Findings</span>
+<span class="o">-</span> <span class="nx">Risk</span>
+<span class="nx">Assessment</span>
 <span class="o">-</span> <span class="nx">Recommendations</span>
 </code></pre></div></div>
 
@@ -689,7 +787,8 @@
   <li><strong>Add to PROMPTS constant</strong>:</li>
 </ol>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="nx">PROMPTS</span> <span class="o">=</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span>
+<span class="nx">PROMPTS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="c1">// ... existing prompts</span>
     <span class="na">CUSTOM_WORKFLOW</span><span class="p">:</span> <span class="dl">'</span><span class="s1">custom_workflow</span><span class="dl">'</span><span class="p">,</span>
 <span class="p">}</span> <span class="k">as</span> <span class="kd">const</span><span class="p">;</span>
@@ -701,9 +800,15 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span>
     <span class="nl">name</span><span class="p">:</span> <span class="nx">PromptHandler</span><span class="p">.</span><span class="nx">PROMPTS</span><span class="p">.</span><span class="nx">CUSTOM_WORKFLOW</span><span class="p">,</span>
-    <span class="nx">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Custom Workflow</span><span class="dl">'</span><span class="p">,</span>
-    <span class="nx">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Custom security workflow description</span><span class="dl">'</span><span class="p">,</span>
-    <span class="nx">arguments</span><span class="p">:</span> <span class="p">[</span>
+        <span class="nx">title</span>
+<span class="p">:</span>
+    <span class="dl">'</span><span class="s1">Custom Workflow</span><span class="dl">'</span><span class="p">,</span>
+        <span class="nx">description</span>
+<span class="p">:</span>
+    <span class="dl">'</span><span class="s1">Custom security workflow description</span><span class="dl">'</span><span class="p">,</span>
+        <span class="nx">arguments</span>
+<span class="p">:</span>
+    <span class="p">[</span>
         <span class="p">{</span>
             <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">param1</span><span class="dl">'</span><span class="p">,</span>
             <span class="na">description</span><span class="p">:</span> <span class="dl">'</span><span class="s1">First parameter</span><span class="dl">'</span><span class="p">,</span>
@@ -717,23 +822,31 @@
   <li><strong>Add case to getPrompt() switch</strong>:</li>
 </ol>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">case</span> <span class="nx">PromptHandler</span><span class="p">.</span><span class="nx">PROMPTS</span><span class="p">.</span><span class="nx">CUSTOM_WORKFLOW</span><span class="p">:</span>
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCustomWorkflowPrompt</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">case</span>
+<span class="nx">PromptHandler</span><span class="p">.</span><span class="nx">PROMPTS</span><span class="p">.</span><span class="nx">CUSTOM_WORKFLOW</span>
+<span class="p">:</span>
+<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getCustomWorkflowPrompt</span><span class="p">(</span><span class="nx">args</span><span class="p">);</span>
 </code></pre></div></div>
 
 <ol>
   <li><strong>Implement prompt method</strong>:</li>
 </ol>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">getCustomWorkflowPrompt</span><span class="p">(</span><span class="nx">args</span><span class="p">:</span> <span class="nb">Record</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">string</span><span class="o">&gt;</span><span class="p">):</span> <span class="nx">McpPromptsGetResult</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span>
+<span class="nx">getCustomWorkflowPrompt</span><span class="p">(</span><span class="nx">args</span>
+<span class="p">:</span>
+<span class="nb">Record</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="kr">string</span><span class="o">&gt;</span>
+<span class="p">):</span>
+<span class="nx">McpPromptsGetResult</span>
+<span class="p">{</span>
     <span class="kd">const</span> <span class="nx">param1</span> <span class="o">=</span> <span class="nx">args</span><span class="p">.</span><span class="nx">param1</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">[No value provided]</span><span class="dl">'</span><span class="p">;</span>
-    
+
     <span class="kd">const</span> <span class="nx">messages</span><span class="p">:</span> <span class="nx">McpPromptMessage</span><span class="p">[]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="c1">// User instructions</span>
         <span class="c1">// Assistant acknowledgment</span>
     <span class="p">];</span>
-    
-    <span class="k">return</span> <span class="p">{</span> <span class="nx">messages</span> <span class="p">};</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="nx">messages</span><span class="p">};</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -862,7 +975,9 @@
 
 <h2 id="summary">Summary</h2>
 
-<p>The prompts module provides pre-configured security workflows that guide AI models through complex security analysis tasks. Each prompt generates structured conversations with clear instructions, tool references, and professional formatting to ensure consistent, high-quality security assessments.</p>
+<p>The prompts module provides pre-configured security workflows that guide AI models through complex security analysis
+tasks. Each prompt generates structured conversations with clear instructions, tool references, and professional
+formatting to ensure consistent, high-quality security assessments.</p>
 
       </article>
       
@@ -878,7 +993,7 @@
           
           
           <a href="/developers/src/resources/" class="next">
-            Resources Module (src/resources/) <i class="fas fa-arrow-right"></i>
+            Resources Module <i class="fas fa-arrow-right"></i>
           </a>
           
         </div>

@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIRS Client Module (src/airs/) | Prisma AIRS MCP</title>
+  <title>AIRS Client Module | Prisma AIRS MCP</title>
   <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
   
   <!-- SEO Tags -->
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>AIRS Client Module (src/airs/) | Prisma AIRS MCP</title>
+<title>AIRS Client Module | Prisma AIRS MCP</title>
 <meta name="generator" content="Jekyll v3.9.5" />
-<meta property="og:title" content="AIRS Client Module (src/airs/)" />
+<meta property="og:title" content="AIRS Client Module" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="AIRS Client Module Documentation" />
-<meta property="og:description" content="AIRS Client Module Documentation" />
+<meta name="description" content="AIRS Integration Layer (src/airs/)" />
+<meta property="og:description" content="AIRS Integration Layer (src/airs/)" />
 <link rel="canonical" href="http://localhost:4000/developers/src/airs/" />
 <meta property="og:url" content="http://localhost:4000/developers/src/airs/" />
 <meta property="og:site_name" content="Prisma AIRS MCP" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="AIRS Client Module (src/airs/)" />
+<meta property="twitter:title" content="AIRS Client Module" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"AIRS Client Module Documentation","headline":"AIRS Client Module (src/airs/)","url":"http://localhost:4000/developers/src/airs/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"AIRS Integration Layer (src/airs/)","headline":"AIRS Client Module","url":"http://localhost:4000/developers/src/airs/"}</script>
 <!-- End Jekyll SEO tag -->
 
   
@@ -140,15 +140,14 @@
     
     <main class="documentation-content">
       <div class="content-header">
-        <h1>AIRS Client Module (src/airs/)</h1>
+        <h1>AIRS Client Module</h1>
         
       </div>
       
       <article class="content">
-        <h1 id="airs-client-module-documentation">AIRS Client Module Documentation</h1>
+        <h1 id="airs-integration-layer-srcairs">AIRS Integration Layer (src/airs/)</h1>
 
-<p>The AIRS module provides a production-ready client implementation for integrating with Prisma AI Runtime Security (AIRS)
-API. It features a layered architecture with caching, rate limiting, retry logic, and comprehensive error handling.</p>
+<p>The AIRS module provides a production-ready client implementation for integrating with Prisma AI Runtime Security (AIRS) API. It features a layered architecture with caching, rate limiting, retry logic, and comprehensive error handling.</p>
 
 <h2 id="module-structure">Module Structure</h2>
 
@@ -204,7 +203,8 @@ API. It features a layered architecture with caching, rate limiting, retry logic
 
 <h4 id="configuration">Configuration</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">AirsClientConfig</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Imported from '../types'</span>
+<span class="kr">interface</span> <span class="nx">AirsClientConfig</span> <span class="p">{</span>
     <span class="nl">apiUrl</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>      <span class="c1">// Base URL for AIRS API</span>
     <span class="nl">apiKey</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>      <span class="c1">// Authentication token (x-pan-token)</span>
     <span class="nl">timeout</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>    <span class="c1">// Request timeout in ms (default: 30000)</span>

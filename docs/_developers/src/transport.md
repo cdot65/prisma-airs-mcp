@@ -1,14 +1,13 @@
 ---
 layout: documentation
-title: Transport Module (src/transport/)
+title: Transport Module
 permalink: /developers/src/transport/
 category: developers
 ---
 
-# Transport Module Documentation
+# HTTP Transport Layer (src/transport/)
 
-The transport module implements the HTTP and Server-Sent Events (SSE) transport layer for the MCP server. It handles
-JSON-RPC 2.0 protocol communication, request routing, session management, and optional streaming responses.
+The transport module implements the HTTP and Server-Sent Events (SSE) transport layer for the MCP server. It handles JSON-RPC 2.0 protocol communication, request routing, session management, and optional streaming responses.
 
 ## Module Structure
 

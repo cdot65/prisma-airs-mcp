@@ -1,13 +1,15 @@
 ---
 layout: documentation
-title: Types Module (src/types/)
+title: Types Module
 permalink: /developers/src/types/
 category: developers
 ---
 
-# Types Module Documentation
+# Type Definitions (src/types/)
 
-The Types module provides a centralized location for all TypeScript type definitions used throughout the Prisma AIRS MCP server. This architectural decision ensures type consistency, prevents circular dependencies, and provides a single source of truth for all type definitions.
+The Types module provides a centralized location for all TypeScript type definitions used throughout the Prisma AIRS MCP
+server. This architectural decision ensures type consistency, prevents circular dependencies, and provides a single
+source of truth for all type definitions.
 
 ## Module Structure
 
@@ -38,10 +40,10 @@ src/types/
                   │
         ┌─────────┴─────────┬─────────────┬──────────────┬────────────┐
         │                   │             │              │            │
-┌───────▼────────┐ ┌────────▼──────┐ ┌───▼────┐ ┌──────▼──────┐ ┌───▼────┐
-│   airs.ts      │ │  config.ts    │ │mcp.ts  │ │ tools.ts    │ │transport│
-│ • Airs* types  │ │ • Config*     │ │• Mcp*  │ │ • Tools*    │ │• Transport*│
-└────────────────┘ └───────────────┘ └────────┘ └─────────────┘ └────────┘
+┌───────▼────────┐ ┌────────▼──────┐ ┌────▼────┐ ┌───────▼──────┐ ┌───▼────────┐
+│   airs.ts      │ │  config.ts    │ │mcp.ts   │ │ tools.ts     │ │transport   │
+│ • Airs* types  │ │ • Config*     │ │• Mcp*   │ │ • Tools*     │ │• Transport*│
+└────────────────┘ └───────────────┘ └─────────┘ └──────────────┘ └────────────┘
 ```
 
 ## Naming Conventions
@@ -393,7 +395,7 @@ Always use type imports for better tree-shaking:
 
 ```typescript
 // Import specific types
-import type { AirsScanRequest, AirsScanResponse } from '../types';
+import type {AirsScanRequest, AirsScanResponse} from '../types';
 
 // Import namespaced types
 import type * as Types from '../types';
@@ -410,7 +412,7 @@ const request: AirsScanRequest = {
 Create type guards for runtime type checking:
 
 ```typescript
-import type { AirsScanResponse } from '../types';
+import type {AirsScanResponse} from '../types';
 
 function isAirsScanResponse(obj: unknown): obj is AirsScanResponse {
     return (
@@ -457,17 +459,17 @@ function isAirsScanResponse(obj: unknown): obj is AirsScanResponse {
 ### Using AIRS Types
 
 ```typescript
-import type { AirsScanRequest, AirsScanResponse } from '../types';
-import { EnhancedPrismaAirsClient } from '../airs';
+import type {AirsScanRequest, AirsScanResponse} from '../types';
+import {EnhancedPrismaAirsClient} from '../airs';
 
 async function scanContent(content: string): Promise<AirsScanResponse> {
     const client = new EnhancedPrismaAirsClient(config);
-    
+
     const request: AirsScanRequest = {
         prompt: content,
         profile_name: 'strict'
     };
-    
+
     return await client.scanSync(request);
 }
 ```
@@ -475,7 +477,7 @@ async function scanContent(content: string): Promise<AirsScanResponse> {
 ### Implementing MCP Tools
 
 ```typescript
-import type { McpTool, McpToolsCallParams, McpToolsCallResult } from '../types';
+import type {McpTool, McpToolsCallParams, McpToolsCallResult} from '../types';
 
 const scanTool: McpTool = {
     name: 'airs_scan_content',
@@ -483,8 +485,8 @@ const scanTool: McpTool = {
     inputSchema: {
         type: 'object',
         properties: {
-            prompt: { type: 'string' },
-            response: { type: 'string' }
+            prompt: {type: 'string'},
+            response: {type: 'string'}
         },
         additionalProperties: false
     }
@@ -498,10 +500,10 @@ async function callTool(params: McpToolsCallParams): Promise<McpToolsCallResult>
 ### Transport Layer Usage
 
 ```typescript
-import type { 
-    TransportJsonRpcRequest, 
+import type {
+    TransportJsonRpcRequest,
     TransportJsonRpcResponse,
-    TransportStreamableRequest 
+    TransportStreamableRequest
 } from '../types';
 
 class HttpServerTransport {
@@ -509,8 +511,8 @@ class HttpServerTransport {
         req: TransportStreamableRequest,
         res: Response<TransportJsonRpcResponse>
     ): Promise<void> {
-        const { method, params, id } = req.body as TransportJsonRpcRequest;
-        
+        const {method, params, id} = req.body as TransportJsonRpcRequest;
+
         try {
             const result = await this.routeRequest(method, params);
             res.json({
@@ -543,6 +545,7 @@ class HttpServerTransport {
 5. **Document complex types** - add JSDoc comments
 
 Example:
+
 ```typescript
 // In airs.ts
 /**
@@ -575,7 +578,7 @@ export interface AirsNewFeature {
 ### Using Type Guards
 
 ```typescript
-import type { AirsScanResponse } from '../types';
+import type {AirsScanResponse} from '../types';
 
 function isAirsScanResponse(obj: unknown): obj is AirsScanResponse {
     return (
@@ -592,7 +595,7 @@ function isAirsScanResponse(obj: unknown): obj is AirsScanResponse {
 
 ```typescript
 // In transport.ts
-export type TransportMessage = 
+export type TransportMessage =
     | { type: 'request'; data: TransportJsonRpcRequest }
     | { type: 'response'; data: TransportJsonRpcResponse }
     | { type: 'error'; data: TransportJsonRpcError };
@@ -615,10 +618,10 @@ export type PublicAirsConfig = Omit<AirsClientConfig, 'apiKey'>;
 
 The types module has no runtime dependencies and only development dependencies:
 
-| Module | Purpose |
-|--------|---------|
-| TypeScript | Type checking and compilation |
-| @types/node | Node.js type definitions |
+| Module         | Purpose                                        |
+|----------------|------------------------------------------------|
+| TypeScript     | Type checking and compilation                  |
+| @types/node    | Node.js type definitions                       |
 | @types/express | Express type definitions (for transport types) |
 
 ## Related Documentation
@@ -632,4 +635,6 @@ The types module has no runtime dependencies and only development dependencies:
 
 ## Summary
 
-The centralized types module is a critical architectural component that ensures type safety, consistency, and maintainability across the entire Prisma AIRS MCP server codebase. By following the established naming conventions and import patterns, developers can easily work with strongly-typed interfaces throughout the application.
+The centralized types module is a critical architectural component that ensures type safety, consistency, and
+maintainability across the entire Prisma AIRS MCP server codebase. By following the established naming conventions and
+import patterns, developers can easily work with strongly-typed interfaces throughout the application.

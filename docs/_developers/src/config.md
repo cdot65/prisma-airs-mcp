@@ -1,15 +1,15 @@
 ---
 layout: documentation
-title: Configuration Module (src/config/)
+title: Configuration Module
 permalink: /developers/src/config/
 category: developers
 ---
 
-# Configuration Module Documentation
+# Configuration Management (src/config/)
 
 The configuration module provides centralized, type-safe configuration management for the Prisma AIRS MCP server. It uses Zod for runtime validation, implements a singleton pattern, and supports environment-based configuration with sensible defaults.
 
-## Module Overview
+## Module Structure
 
 ```
 src/config/

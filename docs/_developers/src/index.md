@@ -1,15 +1,19 @@
 ---
 layout: documentation
-title: Application Entry Point (src/index.ts)
+title: Application Entry Point
 permalink: /developers/src/
 category: developers
 ---
 
-# Application Entry Point Documentation
+# Server Bootstrap (src/index.ts)
 
-The `src/index.ts` file serves as the main entry point for the Prisma AIRS MCP server. It bootstraps the Express HTTP
-server, configures middleware, sets up MCP protocol handling, and establishes health check endpoints for production
-deployments.
+The `src/index.ts` file serves as the main entry point for the Prisma AIRS MCP server. It bootstraps the Express HTTP server, configures middleware, sets up MCP protocol handling, and establishes health check endpoints for production deployments.
+
+## Module Structure
+
+```
+src/index.ts          # Main application entry point
+```
 
 ## File Overview
 
@@ -407,7 +411,7 @@ The application uses centralized types from `./types` with consistent prefixing:
 ### Core Types Used
 
 | Type | Module | Purpose |
-|------|--------|---------||
+|------|--------|---------|
 | `TransportJsonRpcRequest` | `./types` | JSON-RPC 2.0 request format |
 | `TransportJsonRpcResponse` | `./types` | JSON-RPC 2.0 response format |
 | `TransportStreamableRequest` | `./types` | Express Request with SSE headers |
@@ -540,7 +544,7 @@ Client → GET / (SSE) → HttpServerTransport → SSE Manager → Event Stream
 ## Key Integration Points
 
 | Component | Integration | Purpose |
-|-----------|-------------|----------||
+|-----------|-------------|---------|
 | Transport Layer | `HttpServerTransport` | Protocol handling |
 | Configuration | `getConfig()` singleton | Settings management |
 | Logging | `getLogger()` singleton | Structured logging |

@@ -1,11 +1,11 @@
 ---
 layout: documentation
-title: Utils Module (src/utils/)
+title: Utils Module
 permalink: /developers/src/utils/
 category: developers
 ---
 
-# Utils Module Documentation
+# Utilities (src/utils/)
 
 The utils module provides utility functions used throughout the Prisma AIRS MCP server. Currently, it contains the logging system implementation using Winston.
 

@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Types Module (src/types/) | Prisma AIRS MCP</title>
+  <title>Types Module | Prisma AIRS MCP</title>
   <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
   
   <!-- SEO Tags -->
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Types Module (src/types/) | Prisma AIRS MCP</title>
+<title>Types Module | Prisma AIRS MCP</title>
 <meta name="generator" content="Jekyll v3.9.5" />
-<meta property="og:title" content="Types Module (src/types/)" />
+<meta property="og:title" content="Types Module" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Types Module Documentation" />
-<meta property="og:description" content="Types Module Documentation" />
+<meta name="description" content="Type Definitions (src/types/)" />
+<meta property="og:description" content="Type Definitions (src/types/)" />
 <link rel="canonical" href="http://localhost:4000/developers/src/types/" />
 <meta property="og:url" content="http://localhost:4000/developers/src/types/" />
 <meta property="og:site_name" content="Prisma AIRS MCP" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Types Module (src/types/)" />
+<meta property="twitter:title" content="Types Module" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Types Module Documentation","headline":"Types Module (src/types/)","url":"http://localhost:4000/developers/src/types/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Type Definitions (src/types/)","headline":"Types Module","url":"http://localhost:4000/developers/src/types/"}</script>
 <!-- End Jekyll SEO tag -->
 
   
@@ -140,14 +140,16 @@
     
     <main class="documentation-content">
       <div class="content-header">
-        <h1>Types Module (src/types/)</h1>
+        <h1>Types Module</h1>
         
       </div>
       
       <article class="content">
-        <h1 id="types-module-documentation">Types Module Documentation</h1>
+        <h1 id="type-definitions-srctypes">Type Definitions (src/types/)</h1>
 
-<p>The Types module provides a centralized location for all TypeScript type definitions used throughout the Prisma AIRS MCP server. This architectural decision ensures type consistency, prevents circular dependencies, and provides a single source of truth for all type definitions.</p>
+<p>The Types module provides a centralized location for all TypeScript type definitions used throughout the Prisma AIRS MCP
+server. This architectural decision ensures type consistency, prevents circular dependencies, and provides a single
+source of truth for all type definitions.</p>
 
 <h2 id="module-structure">Module Structure</h2>
 
@@ -176,10 +178,10 @@
                   │
         ┌─────────┴─────────┬─────────────┬──────────────┬────────────┐
         │                   │             │              │            │
-┌───────▼────────┐ ┌────────▼──────┐ ┌───▼────┐ ┌──────▼──────┐ ┌───▼────┐
-│   airs.ts      │ │  config.ts    │ │mcp.ts  │ │ tools.ts    │ │transport│
-│ • Airs* types  │ │ • Config*     │ │• Mcp*  │ │ • Tools*    │ │• Transport*│
-└────────────────┘ └───────────────┘ └────────┘ └─────────────┘ └────────┘
+┌───────▼────────┐ ┌────────▼──────┐ ┌────▼────┐ ┌───────▼──────┐ ┌───▼────────┐
+│   airs.ts      │ │  config.ts    │ │mcp.ts   │ │ tools.ts     │ │transport   │
+│ • Airs* types  │ │ • Config*     │ │• Mcp*   │ │ • Tools*     │ │• Transport*│
+└────────────────┘ └───────────────┘ └─────────┘ └──────────────┘ └────────────┘
 </code></pre></div></div>
 
 <h2 id="naming-conventions">Naming Conventions</h2>
@@ -522,7 +524,7 @@
 <p>Always use type imports for better tree-shaking:</p>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Import specific types</span>
-<span class="k">import</span> <span class="kd">type</span> <span class="p">{</span> <span class="nx">AirsScanRequest</span><span class="p">,</span> <span class="nx">AirsScanResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="kd">type</span> <span class="p">{</span><span class="nx">AirsScanRequest</span><span class="p">,</span> <span class="nx">AirsScanResponse</span><span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="c1">// Import namespaced types</span>
 <span class="k">import</span> <span class="kd">type</span> <span class="o">*</span> <span class="k">as</span> <span class="nx">Types</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
@@ -538,7 +540,7 @@
 
 <p>Create type guards for runtime type checking:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span> <span class="nx">AirsScanResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span><span class="nx">AirsScanResponse</span><span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="kd">function</span> <span class="nx">isAirsScanResponse</span><span class="p">(</span><span class="nx">obj</span><span class="p">:</span> <span class="nx">unknown</span><span class="p">):</span> <span class="nx">obj</span> <span class="k">is</span> <span class="nx">AirsScanResponse</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">(</span>
@@ -592,24 +594,24 @@
 
 <h3 id="using-airs-types">Using AIRS Types</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span> <span class="nx">AirsScanRequest</span><span class="p">,</span> <span class="nx">AirsScanResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">EnhancedPrismaAirsClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../airs</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span><span class="nx">AirsScanRequest</span><span class="p">,</span> <span class="nx">AirsScanResponse</span><span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">EnhancedPrismaAirsClient</span><span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../airs</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="k">async</span> <span class="kd">function</span> <span class="nx">scanContent</span><span class="p">(</span><span class="nx">content</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AirsScanResponse</span><span class="o">&gt;</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EnhancedPrismaAirsClient</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
-    
+
     <span class="kd">const</span> <span class="na">request</span><span class="p">:</span> <span class="nx">AirsScanRequest</span> <span class="o">=</span> <span class="p">{</span>
         <span class="na">prompt</span><span class="p">:</span> <span class="nx">content</span><span class="p">,</span>
         <span class="na">profile_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">strict</span><span class="dl">'</span>
     <span class="p">};</span>
-    
+
     <span class="k">return</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">scanSync</span><span class="p">(</span><span class="nx">request</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h3 id="implementing-mcp-tools">Implementing MCP Tools</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span> <span class="nx">McpTool</span><span class="p">,</span> <span class="nx">McpToolsCallParams</span><span class="p">,</span> <span class="nx">McpToolsCallResult</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span><span class="nx">McpTool</span><span class="p">,</span> <span class="nx">McpToolsCallParams</span><span class="p">,</span> <span class="nx">McpToolsCallResult</span><span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">scanTool</span><span class="p">:</span> <span class="nx">McpTool</span> <span class="o">=</span> <span class="p">{</span>
     <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">airs_scan_content</span><span class="dl">'</span><span class="p">,</span>
@@ -617,8 +619,8 @@
     <span class="na">inputSchema</span><span class="p">:</span> <span class="p">{</span>
         <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">object</span><span class="dl">'</span><span class="p">,</span>
         <span class="na">properties</span><span class="p">:</span> <span class="p">{</span>
-            <span class="na">prompt</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span> <span class="p">},</span>
-            <span class="na">response</span><span class="p">:</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span> <span class="p">}</span>
+            <span class="na">prompt</span><span class="p">:</span> <span class="p">{</span><span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">},</span>
+            <span class="na">response</span><span class="p">:</span> <span class="p">{</span><span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">}</span>
         <span class="p">},</span>
         <span class="na">additionalProperties</span><span class="p">:</span> <span class="kc">false</span>
     <span class="p">}</span>
@@ -631,10 +633,10 @@
 
 <h3 id="transport-layer-usage">Transport Layer Usage</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span> 
-    <span class="nx">TransportJsonRpcRequest</span><span class="p">,</span> 
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span>
+    <span class="nx">TransportJsonRpcRequest</span><span class="p">,</span>
     <span class="nx">TransportJsonRpcResponse</span><span class="p">,</span>
-    <span class="nx">TransportStreamableRequest</span> 
+    <span class="nx">TransportStreamableRequest</span>
 <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="kd">class</span> <span class="nx">HttpServerTransport</span> <span class="p">{</span>
@@ -642,8 +644,8 @@
         <span class="nx">req</span><span class="p">:</span> <span class="nx">TransportStreamableRequest</span><span class="p">,</span>
         <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="o">&lt;</span><span class="nx">TransportJsonRpcResponse</span><span class="o">&gt;</span>
     <span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="k">void</span><span class="o">&gt;</span> <span class="p">{</span>
-        <span class="kd">const</span> <span class="p">{</span> <span class="nx">method</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="nx">id</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span> <span class="k">as</span> <span class="nx">TransportJsonRpcRequest</span><span class="p">;</span>
-        
+        <span class="kd">const</span> <span class="p">{</span><span class="nx">method</span><span class="p">,</span> <span class="nx">params</span><span class="p">,</span> <span class="nx">id</span><span class="p">}</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span> <span class="k">as</span> <span class="nx">TransportJsonRpcRequest</span><span class="p">;</span>
+
         <span class="k">try</span> <span class="p">{</span>
             <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">routeRequest</span><span class="p">(</span><span class="nx">method</span><span class="p">,</span> <span class="nx">params</span><span class="p">);</span>
             <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
@@ -678,6 +680,7 @@
 </ol>
 
 <p>Example:</p>
+
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In airs.ts</span>
 <span class="cm">/**
  * New feature configuration
@@ -712,7 +715,7 @@
 
 <h3 id="using-type-guards">Using Type Guards</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span> <span class="nx">AirsScanResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span><span class="nx">AirsScanResponse</span><span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="kd">function</span> <span class="nx">isAirsScanResponse</span><span class="p">(</span><span class="nx">obj</span><span class="p">:</span> <span class="nx">unknown</span><span class="p">):</span> <span class="nx">obj</span> <span class="k">is</span> <span class="nx">AirsScanResponse</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">(</span>
@@ -728,7 +731,7 @@
 <h3 id="discriminated-unions">Discriminated Unions</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In transport.ts</span>
-<span class="k">export</span> <span class="kd">type</span> <span class="nx">TransportMessage</span> <span class="o">=</span> 
+<span class="k">export</span> <span class="kd">type</span> <span class="nx">TransportMessage</span> <span class="o">=</span>
     <span class="o">|</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">request</span><span class="dl">'</span><span class="p">;</span> <span class="nl">data</span><span class="p">:</span> <span class="nx">TransportJsonRpcRequest</span> <span class="p">}</span>
     <span class="o">|</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">response</span><span class="dl">'</span><span class="p">;</span> <span class="nl">data</span><span class="p">:</span> <span class="nx">TransportJsonRpcResponse</span> <span class="p">}</span>
     <span class="o">|</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">error</span><span class="dl">'</span><span class="p">;</span> <span class="nl">data</span><span class="p">:</span> <span class="nx">TransportJsonRpcError</span> <span class="p">};</span>
@@ -786,7 +789,9 @@
 
 <h2 id="summary">Summary</h2>
 
-<p>The centralized types module is a critical architectural component that ensures type safety, consistency, and maintainability across the entire Prisma AIRS MCP server codebase. By following the established naming conventions and import patterns, developers can easily work with strongly-typed interfaces throughout the application.</p>
+<p>The centralized types module is a critical architectural component that ensures type safety, consistency, and
+maintainability across the entire Prisma AIRS MCP server codebase. By following the established naming conventions and
+import patterns, developers can easily work with strongly-typed interfaces throughout the application.</p>
 
       </article>
       
@@ -802,7 +807,7 @@
           
           
           <a href="/developers/src/utils/" class="next">
-            Utils Module (src/utils/) <i class="fas fa-arrow-right"></i>
+            Utils Module <i class="fas fa-arrow-right"></i>
           </a>
           
         </div>
