@@ -83,6 +83,17 @@ EXPOSE 3000
 # Set production environment
 ENV NODE_ENV=production
 
+# Add metadata labels
+LABEL org.opencontainers.image.title="Prisma AIRS MCP Server"
+LABEL org.opencontainers.image.description="MCP server for integrating with Palo Alto Networks Prisma AIRS"
+LABEL org.opencontainers.image.version="${VERSION}"
+LABEL org.opencontainers.image.created="${BUILD_DATE}"
+LABEL org.opencontainers.image.source="https://github.com/cdot65/prisma-airs-mcp"
+LABEL org.opencontainers.image.url="https://cdot65.github.io/prisma-airs-mcp/"
+LABEL org.opencontainers.image.documentation="https://cdot65.github.io/prisma-airs-mcp/"
+LABEL org.opencontainers.image.vendor="cdot65"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "require('http').get('http://localhost:' + (process.env.PORT || 3000) + '/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); });"

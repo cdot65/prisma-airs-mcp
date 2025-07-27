@@ -2,6 +2,10 @@
 
 > Bring enterprise-grade AI security to your MCP-enabled applications
 
+[![Version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/cdot65/prisma-airs-mcp/releases)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/cdot65/prisma-airs-mcp/ci.yml?branch=main)](https://github.com/cdot65/prisma-airs-mcp/actions)
+[![Docker Pulls](https://img.shields.io/docker/pulls/cdot65/prisma-airs-mcp)](https://hub.docker.com/r/cdot65/prisma-airs-mcp)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green)](https://github.com/cdot65/prisma-airs-mcp/blob/main/LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-cdot65.github.io-blue)](https://cdot65.github.io/prisma-airs-mcp/)
 [![MCP Compatible](https://img.shields.io/badge/MCP-Compatible-green)](https://modelcontextprotocol.io)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)](https://www.typescriptlang.org/)
