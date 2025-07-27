@@ -1,80 +1,73 @@
 ---
 layout: documentation
-title: Root Module (src/)
+title: Application Entry Point (src/index.ts)
 permalink: /developers/src/
 category: developers
 ---
 
-# Root Module Documentation
+# Application Entry Point Documentation
 
-The root module contains the main entry point for the MCP server application. This documentation covers the `src/index.ts` file which initializes and starts the Express HTTP server.
+The `src/index.ts` file serves as the main entry point for the Prisma AIRS MCP server. It bootstraps the Express HTTP
+server, configures middleware, sets up MCP protocol handling, and establishes health check endpoints for production
+deployments.
 
-## src/index.ts
+## File Overview
 
-The main entry point that creates and configures the Express server with MCP capabilities.
+**Location**: `src/index.ts`  
+**Purpose**: Application bootstrap and server initialization  
+**Key Responsibilities**:
 
-### File Location
+1. Express server configuration with middleware stack
+2. MCP server instantiation with protocol capabilities
+3. HTTP transport handler setup for JSON-RPC 2.0
+4. Health and readiness endpoints for container orchestration
+5. Dual-mode endpoint supporting both REST and SSE
+6. Global error handling and graceful startup
 
-`src/index.ts`
+## Architecture Flow
 
-### Purpose
-
-This file serves as the application's entry point, responsible for:
-
-1. Initializing the Express HTTP server
-2. Setting up middleware for CORS, JSON parsing, and logging
-3. Creating health check endpoints for Kubernetes deployments
-4. Configuring the MCP server with transport handlers
-5. Handling both standard HTTP and SSE connections
-6. Implementing comprehensive error handling
-
-### Overview
-
-This file sets up:
-
-- Express HTTP server with middleware
-- Health and readiness endpoints
-- MCP server instance with transport handler
-- JSON-RPC 2.0 message handling
-- Server-Sent Events (SSE) support
-- Error handling and logging
-
-### Dependencies
-
-```typescript
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import type { Request, Response } from 'express';
-import express from 'express';
-import type {
-    JsonRpcRequest,
-    JsonRpcResponse,
-    StreamableRequest,
-} from './transport/http.js';
-import { HttpServerTransport } from './transport/http.js';
-import cors from 'cors';
-import { getConfig } from './config';
-import { getLogger } from './utils/logger.js';
+```
+Application Start
+       ↓
+createServer() Function
+       ↓
+Configuration & Logger Init
+       ↓
+Express App + Middleware
+       ↓
+MCP Server Instance
+       ↓
+HTTP Transport Handler
+       ↓
+Route Registration
+       ↓
+Server Listen on Port
 ```
 
-**External Dependencies:**
+## Dependencies
 
-- `@modelcontextprotocol/sdk` - Official MCP SDK for server implementation
-- `express` - Web framework for HTTP server
-- `cors` - CORS middleware for cross-origin support
+### External Dependencies
 
-**Internal Dependencies:**
+| Package                     | Purpose                     | Usage                             |
+|-----------------------------|-----------------------------|-----------------------------------|
+| `@modelcontextprotocol/sdk` | MCP protocol implementation | Server class for MCP capabilities |
+| `express`                   | Web framework               | HTTP server and routing           |
+| `cors`                      | CORS middleware             | Enable cross-origin requests      |
 
-- `./transport/http.js` - HTTP transport implementation
-    - `HttpServerTransport` - Main transport handler class
-    - `JsonRpcRequest` - Request type definition
-    - `JsonRpcResponse` - Response type definition
-    - `StreamableRequest` - Extended request type for SSE
-- `./config` - Configuration management
-- `./utils/logger.js` - Winston logger wrapper
+### Internal Dependencies
 
-### Main Function: createServer()
+| Module                | Import                                                                              | Purpose                    |
+|-----------------------|-------------------------------------------------------------------------------------|----------------------------|
+| `./types`             | `TransportJsonRpcRequest`, `TransportJsonRpcResponse`, `TransportStreamableRequest` | Type definitions           |
+| `./transport/http.js` | `HttpServerTransport`                                                               | HTTP/SSE transport handler |
+| `./config`            | `getConfig()`                                                                       | Configuration singleton    |
+| `./utils/logger.js`   | `getLogger()`                                                                       | Logger instance            |
 
-The `createServer` function orchestrates the entire server setup:
+> **Note**: The codebase has migrated to centralized types in `./types` with prefixed naming
+
+## Main Function: createServer()
+
+The `createServer` function orchestrates the entire server initialization:
 
 ```typescript
 const createServer = (): void => {
@@ -82,52 +75,67 @@ const createServer = (): void => {
     const logger = getLogger();
     const app = express();
 
-    // Server initialization...
+    // Log startup configuration
+    logger.info('Starting MCP server', {
+        environment: config.server.environment,
+        port: config.server.port,
+        version: config.mcp.serverVersion,
+    });
+
+    // ... middleware and route setup
 };
 ```
 
-**Note**: The codebase uses 4-space indentation throughout.
+**Key Steps**:
 
-### Middleware Configuration
+1. Retrieve configuration singleton
+2. Initialize logger instance
+3. Create Express application
+4. Log startup information
+5. Configure middleware pipeline
+6. Register endpoints
+7. Start HTTP listener
 
-The server uses several Express middleware components in a specific order:
+## Middleware Stack
 
-1. **CORS Middleware**
+The server configures middleware in this specific order:
 
-    ```typescript
-    app.use(cors());
-    ```
+### 1. CORS Middleware
 
-    - Enables Cross-Origin Resource Sharing
-    - Allows MCP clients from different origins
-    - Essential for browser-based MCP clients
+```typescript
+app.use(cors());
+```
 
-2. **JSON Body Parser**
+- **Purpose**: Enable cross-origin requests
+- **Configuration**: Default (all origins allowed)
+- **Use Case**: Browser-based MCP clients
 
-    ```typescript
-    app.use(express.json({ limit: '10mb' }));
-    ```
+### 2. JSON Body Parser
 
-    - Parses JSON request bodies
-    - 10MB limit accommodates large scan requests
-    - Required for JSON-RPC 2.0 message parsing
+```typescript
+app.use(express.json({limit: '10mb'}));
+```
 
-3. **Request Logging Middleware**
+- **Purpose**: Parse JSON-RPC 2.0 payloads
+- **Limit**: 10MB (supports large batch scans)
+- **Content-Type**: `application/json`
 
-    ```typescript
-    app.use((req, _res, next) => {
-        logger.debug('Incoming request', {
-            method: req.method,
-            path: req.path,
-            ip: req.ip,
-        });
-        next();
+### 3. Request Logger
+
+```typescript
+app.use((req, _res, next) => {
+    logger.debug('Incoming request', {
+        method: req.method,
+        path: req.path,
+        ip: req.ip,
     });
-    ```
+    next();
+});
+```
 
-    - Logs all incoming requests
-    - Debug level for development
-    - Includes method, path, and client IP
+- **Level**: Debug (development visibility)
+- **Fields**: HTTP method, path, client IP
+- **Purpose**: Request tracing and debugging
 
 ### Endpoints
 
@@ -150,9 +158,9 @@ app.get('/health', (_req: Request, res: Response) => {
 
 ```json
 {
-    "status": "healthy",
-    "timestamp": "2024-01-01T12:00:00.000Z",
-    "version": "1.0.0"
+  "status": "healthy",
+  "timestamp": "2024-01-01T12:00:00.000Z",
+  "version": "1.0.0"
 }
 ```
 
@@ -176,65 +184,65 @@ app.get('/ready', (_req: Request, res: Response) => {
 **TODO**: Add AIRS connectivity checks  
 **Note**: Currently returns ready immediately - should verify AIRS API connectivity
 
-#### Main MCP Endpoint (POST /)
+### Main MCP Endpoint (POST /)
 
 ```typescript
 app.post(
     '/',
-    async (
-        req: Request<unknown, unknown, JsonRpcRequest>,
-        res: Response<JsonRpcResponse>,
-    ) => {
-        await transport.handleRequest(req as StreamableRequest, res);
+    async (req: Request<unknown, unknown, TransportJsonRpcRequest>,
+           res: Response<TransportJsonRpcResponse>) => {
+        await transport.handleRequest(req as TransportStreamableRequest, res);
     },
 );
 ```
 
-**Purpose**: Handles JSON-RPC 2.0 MCP messages  
-**Method**: POST  
-**Path**: `/`  
-**Content-Type**: `application/json`
+**Endpoint Details**:
 
-**Request Type**: `JsonRpcRequest`
+- **Method**: POST
+- **Path**: `/`
+- **Purpose**: JSON-RPC 2.0 message handling
+- **Request Type**: `TransportJsonRpcRequest`
+- **Response Type**: `TransportJsonRpcResponse`
+- **Handler**: Delegates to `HttpServerTransport`
 
-```typescript
-interface JsonRpcRequest {
-    jsonrpc: '2.0';
-    method: string;
-    params?: unknown;
-    id: string | number | null;
-}
-```
-
-**Example Request**:
+**Example JSON-RPC Request**:
 
 ```json
 {
-    "jsonrpc": "2.0",
-    "method": "tools/call",
-    "params": {
-        "name": "airs_scan_content",
-        "arguments": {
-            "prompt": "Check this content"
-        }
-    },
-    "id": 1
+  "jsonrpc": "2.0",
+  "method": "tools/call",
+  "params": {
+    "name": "airs_scan_content",
+    "arguments": {
+      "prompt": "Check this content for security threats",
+      "profile": "strict"
+    }
+  },
+  "id": 1
 }
 ```
 
-**Delegation**: All requests are forwarded to `HttpServerTransport.handleRequest()`
+**Supported Methods**:
 
-#### SSE/Info Endpoint (GET /)
+- `initialize` - MCP session initialization
+- `tools/list` - List available tools
+- `tools/call` - Execute a tool
+- `resources/list` - List resources
+- `resources/read` - Read a resource
+- `prompts/list` - List prompt templates
+- `prompts/get` - Get prompt details
+
+### Dual-Mode Root Endpoint (GET /)
 
 ```typescript
 app.get('/', (req: Request, res: Response) => {
     const acceptHeader = req.headers.accept || '';
 
     if (acceptHeader.includes('text/event-stream')) {
-        // Handle SSE connection
-        transport.handleSSEConnection(req as StreamableRequest, res);
+        // SSE mode for streaming
+        transport.handleSSEConnection(req as TransportStreamableRequest, res);
     } else {
-        // Return server information for non-SSE requests
+        // Info mode for discovery
         res.json({
             name: config.mcp.serverName,
             version: config.mcp.serverVersion,
@@ -249,35 +257,29 @@ app.get('/', (req: Request, res: Response) => {
 });
 ```
 
-**Purpose**: Dual-purpose endpoint based on Accept header  
-**Method**: GET  
-**Path**: `/`
+**Mode Selection**:
 
-**Behavior 1 - SSE Mode** (Accept: text/event-stream):
+| Accept Header       | Response Type | Purpose            |
+|---------------------|---------------|--------------------|
+| `text/event-stream` | SSE stream    | Real-time updates  |
+| Any other           | JSON          | Server information |
 
-- Establishes Server-Sent Events connection
-- Used for streaming responses
-- Delegates to `transport.handleSSEConnection()`
-
-**Behavior 2 - Info Mode** (Standard GET):
-
-- Returns server metadata
-- Example response:
+**Info Response Example**:
 
 ```json
 {
-    "name": "prisma-airs-mcp",
-    "version": "1.0.0",
-    "protocolVersion": "0.1.0",
-    "endpoints": {
-        "messages": "/",
-        "health": "/health",
-        "ready": "/ready"
-    }
+  "name": "prisma-airs-mcp-server",
+  "version": "1.0.0",
+  "protocolVersion": "2024-11-05",
+  "endpoints": {
+    "messages": "/",
+    "health": "/health",
+    "ready": "/ready"
+  }
 }
 ```
 
-### MCP Server Configuration
+## MCP Server Configuration
 
 ```typescript
 const mcpServer = new Server(
@@ -295,24 +297,24 @@ const mcpServer = new Server(
 );
 ```
 
-**Server Metadata**:
+### Server Identity
 
-- `name`: Server identifier from config (e.g., "prisma-airs-mcp")
-- `version`: Server version from config (e.g., "1.0.0")
+- **Name**: Retrieved from `config.mcp.serverName`
+- **Version**: Retrieved from `config.mcp.serverVersion`
+- **Protocol**: MCP version `2024-11-05`
 
-**Capabilities Declaration**:
+### Capability Registration
 
-- `resources: {}` - Enables resource listing and reading
-    - Static: cache stats, rate limit status
-    - Dynamic: scan results, threat reports
-- `tools: {}` - Enables tool discovery and execution
-    - 5 security scanning tools
-- `prompts: {}` - Enables prompt templates
-    - 4 security workflow prompts
+| Capability  | Description                        | Handler Module   |
+|-------------|------------------------------------|------------------|
+| `resources` | Static and dynamic resource access | `src/resources/` |
+| `tools`     | Security scanning tools            | `src/tools/`     |
+| `prompts`   | Workflow templates                 | `src/prompts/`   |
 
-**Note**: The actual handlers are registered by the transport layer
+> **Note**: Empty objects `{}` indicate the capability is enabled. The transport layer connects these to actual
+> handlers.
 
-### Transport Handler
+## Transport Layer Integration
 
 ```typescript
 const transport = new HttpServerTransport({
@@ -321,37 +323,50 @@ const transport = new HttpServerTransport({
 });
 ```
 
-The transport handler:
+**HttpServerTransport Responsibilities**:
 
-- Routes JSON-RPC requests to MCP handlers
-- Manages SSE connections
-- Handles session management
+1. JSON-RPC 2.0 protocol handling
+2. Request routing to MCP handlers
+3. SSE connection management
+4. Session state tracking
+5. Error response formatting
 
-### Error Handling
+See [Transport Documentation]({{ site.baseurl }}/developers/src/transport/) for implementation details.
 
-#### 404 Handler
+## Error Handling Strategy
+
+### 404 Not Found Handler
 
 ```typescript
 app.use((_req: Request, res: Response) => {
-    res.status(404).json({ error: 'Not found' });
+    res.status(404).json({error: 'Not found'});
 });
 ```
 
-#### Global Error Handler
+- Catches all unmatched routes
+- Returns JSON error response
+- HTTP status 404
+
+### Global Error Handler
 
 ```typescript
-app.use(
-    (err: Error, _req: Request, res: Response, _next: express.NextFunction) => {
-        logger.error('Unhandled error', {
-            error: err.message,
-            stack: err.stack,
-        });
-        res.status(500).json({ error: 'Internal server error' });
-    },
-);
+app.use((err: Error, _req: Request, res: Response, _next: express.NextFunction) => {
+    logger.error('Unhandled error', {
+        error: err.message,
+        stack: err.stack,
+    });
+    res.status(500).json({error: 'Internal server error'});
+});
 ```
 
-### Server Startup
+- Catches all unhandled errors
+- Logs full error details
+- Returns generic error to client
+- Prevents stack trace exposure
+
+## Server Lifecycle
+
+### HTTP Server Start
 
 ```typescript
 app.listen(config.server.port, () => {
@@ -360,6 +375,12 @@ app.listen(config.server.port, () => {
     logger.info(`Ready check: http://localhost:${config.server.port}/ready`);
 });
 ```
+
+**Startup Logs**:
+
+- Port binding confirmation
+- Health endpoint URL
+- Ready endpoint URL
 
 ### Startup Error Handling
 
@@ -372,16 +393,42 @@ try {
 }
 ```
 
-Ensures clean exit on startup failures.
+**Behavior**:
 
-## Type Definitions
+- Catches synchronous initialization errors
+- Logs to stderr (bypasses logger)
+- Exits with code 1 (failure)
+- Ensures container restart in orchestration
 
-### StreamableRequest
+## Type System
 
-Extended Express Request type supporting SSE headers:
+The application uses centralized types from `./types` with consistent prefixing:
+
+### Core Types Used
+
+| Type | Module | Purpose |
+|------|--------|---------||
+| `TransportJsonRpcRequest` | `./types` | JSON-RPC 2.0 request format |
+| `TransportJsonRpcResponse` | `./types` | JSON-RPC 2.0 response format |
+| `TransportStreamableRequest` | `./types` | Express Request with SSE headers |
+
+### Type Definitions
+
+**TransportJsonRpcRequest**:
 
 ```typescript
-interface StreamableRequest extends Request {
+interface TransportJsonRpcRequest {
+    jsonrpc: '2.0';
+    method: string;
+    params?: unknown;
+    id: string | number | null;
+}
+```
+
+**TransportStreamableRequest**:
+
+```typescript
+interface TransportStreamableRequest extends Request {
     headers: {
         accept?: string;
         'last-event-id'?: string;
@@ -390,36 +437,33 @@ interface StreamableRequest extends Request {
 }
 ```
 
-### JsonRpcResponse
+## Configuration Usage
 
-Standard JSON-RPC 2.0 response format:
+The server retrieves configuration via `getConfig()` singleton:
 
-```typescript
-interface JsonRpcResponse {
-    jsonrpc: '2.0';
-    result?: unknown;
-    error?: JsonRpcError;
-    id: string | number | null;
-}
-```
+### Server Configuration
 
-## Configuration Dependencies
+| Key         | Path                        | Default     | Usage              |
+|-------------|-----------------------------|-------------|--------------------|
+| Port        | `config.server.port`        | 3000        | HTTP listener port |
+| Environment | `config.server.environment` | development | Runtime mode       |
 
-The server relies on configuration from:
+### MCP Configuration
 
-- `config.server.port` - HTTP port (default: 3000)
-- `config.server.environment` - Runtime environment
-- `config.mcp.serverName` - MCP server name
-- `config.mcp.serverVersion` - Server version
-- `config.mcp.protocolVersion` - MCP protocol version
+| Key         | Path                         | Default                | Usage          |
+|-------------|------------------------------|------------------------|----------------|
+| Server Name | `config.mcp.serverName`      | prisma-airs-mcp-server | Identity       |
+| Version     | `config.mcp.serverVersion`   | 1.0.0                  | Server version |
+| Protocol    | `config.mcp.protocolVersion` | 2024-11-05             | MCP version    |
 
-## Logging
+## Logging Strategy
 
-Uses Winston logger with structured logging:
+Structured logging via Winston:
 
-- Server startup information
-- Request debugging
-- Error tracking
+- **Info Level**: Server lifecycle events
+- **Debug Level**: Request details
+- **Error Level**: Unhandled exceptions
+- **Format**: JSON in production, colorized in development
 
 ## Best Practices
 
@@ -429,72 +473,107 @@ Uses Winston logger with structured logging:
 4. **Clean Startup**: Exits cleanly on initialization failure
 5. **Type Safety**: Full TypeScript typing throughout
 
-## Practical Examples
+## Testing & Development
 
-### Testing the Server
+### Quick Tests
 
-1. **Check Server Health**:
+**1. Health Check**:
 
-    ```bash
-    curl http://localhost:3000/health
-    ```
+```bash
+curl http://localhost:3000/health
+# Expected: {"status":"healthy","timestamp":"...","version":"1.0.0"}
+```
 
-2. **Check Server Info**:
+**2. Server Info**:
 
-    ```bash
-    curl http://localhost:3000/
-    ```
+```bash
+curl http://localhost:3000/
+# Returns server metadata and endpoints
+```
 
-3. **Send MCP Request**:
+**3. List Available Tools**:
 
-    ```bash
-    curl -X POST http://localhost:3000/ \
-      -H "Content-Type: application/json" \
-      -d '{
-        "jsonrpc": "2.0",
-        "method": "tools/list",
-        "id": 1
-      }'
-    ```
+```bash
+curl -X POST http://localhost:3000/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "tools/list",
+    "id": 1
+  }'
+```
 
-4. **Connect via SSE**:
-    ```bash
-    curl -H "Accept: text/event-stream" \
-         http://localhost:3000/
-    ```
+**4. SSE Connection Test**:
 
-### Common Request Flows
+```bash
+curl -H "Accept: text/event-stream" \
+     -H "Cache-Control: no-cache" \
+     http://localhost:3000/
+```
 
-1. **Tool Execution Flow**:
-    - Client sends POST to `/` with `tools/call` method
-    - Transport handler routes to ToolHandler
-    - Tool executes AIRS API call
-    - Response returned as JSON-RPC result
+### Request Flow Examples
 
-2. **SSE Streaming Flow**:
-    - Client connects with `Accept: text/event-stream`
-    - Server establishes SSE connection
-    - Long-running operations can stream updates
-    - Connection remains open for multiple messages
+#### 1. Security Scan Flow
 
-## Integration Points
+```
+Client → POST / → HttpServerTransport → ToolHandler → AIRS Client → Response
+```
 
-- **Transport Layer**: `HttpServerTransport` handles all MCP routing
-- **Configuration**: Centralized via `getConfig()`
-- **Logging**: Structured logging via `getLogger()`
-- **MCP SDK**: Official `@modelcontextprotocol/sdk`
+1. Client sends `tools/call` with `airs_scan_content`
+2. Transport validates JSON-RPC format
+3. Routes to tool handler
+4. AIRS API call executed
+5. Results returned in JSON-RPC response
+
+#### 2. SSE Streaming Flow
+
+```
+Client → GET / (SSE) → HttpServerTransport → SSE Manager → Event Stream
+```
+
+1. Client connects with `Accept: text/event-stream`
+2. Transport establishes SSE connection
+3. Server can push multiple events
+4. Connection remains open
+5. Client reconnects on disconnect
+
+## Key Integration Points
+
+| Component | Integration | Purpose |
+|-----------|-------------|----------||
+| Transport Layer | `HttpServerTransport` | Protocol handling |
+| Configuration | `getConfig()` singleton | Settings management |
+| Logging | `getLogger()` singleton | Structured logging |
+| MCP SDK | `Server` class | Protocol implementation |
+| Type System | `./types` module | Type safety |
 
 ## Environment Variables
 
-Key environment variables used:
+### Direct Usage
 
-- `PORT` - Server port (default: 3000)
-- `NODE_ENV` - Environment (development/production)
+- `PORT` - Server port (overrides config)
+- `NODE_ENV` - Runtime environment
 - `LOG_LEVEL` - Logging verbosity
-- See [Configuration]({{ site.baseurl }}/developers/src/config/) for full list
 
-## Next Steps
+### Indirect (via Config)
 
-- [Transport Layer]({{ site.baseurl }}/developers/src/transport/) - HTTP and SSE transport implementation
-- [Configuration]({{ site.baseurl }}/developers/src/config/) - Server configuration management
-- [AIRS Module]({{ site.baseurl }}/developers/src/airs/) - AIRS API client integration
+- `AIRS_API_KEY` - Prisma AIRS authentication
+- `AIRS_API_URL` - API endpoint
+- See [Configuration Module]({{ site.baseurl }}/developers/src/config/) for complete list
+
+## Related Documentation
+
+- [Transport Module]({{ site.baseurl }}/developers/src/transport/) - HTTP/SSE implementation details
+- [Configuration Module]({{ site.baseurl }}/developers/src/config/) - Settings and environment
+- [Types Module]({{ site.baseurl }}/developers/src/types/) - Type definitions
+- [Tools Module]({{ site.baseurl }}/developers/src/tools/) - Security tool implementations
+
+## Summary
+
+The `src/index.ts` file provides a clean, well-structured entry point that:
+
+- Initializes all server components in the correct order
+- Provides comprehensive error handling
+- Supports both REST and streaming protocols
+- Includes production-ready health checks
+- Maintains clear separation of concerns

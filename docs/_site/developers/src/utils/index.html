@@ -149,13 +149,43 @@
 
 <p>The utils module provides utility functions used throughout the Prisma AIRS MCP server. Currently, it contains the logging system implementation using Winston.</p>
 
-<h2 id="module-overview">Module Overview</h2>
+<h2 id="module-structure">Module Structure</h2>
 
-<p>The utils module consists of a single file:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>src/utils/
+└── logger.ts    # Winston logger configuration and initialization
+</code></pre></div></div>
 
-<ul>
-  <li><strong>logger.ts</strong> - Winston logger configuration and initialization</li>
-</ul>
+<h2 id="architecture-overview">Architecture Overview</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────┐
+│         Application Module              │
+│    (any module in the codebase)         │
+└─────────────────┬───────────────────────┘
+                  │
+                  │ getLogger()
+                  ▼
+┌─────────────────────────────────────────┐
+│          Logger Singleton               │
+│  • Lazy initialization                  │
+│  • Environment-aware formatting         │
+│  • Configured log levels                │
+└─────────────────┬───────────────────────┘
+                  │
+┌─────────────────▼───────────────────────┐
+│         Winston Logger                  │
+│  • Timestamp formatting                 │
+│  • Error stack traces                   │
+│  • Default metadata                     │
+└─────────────────┬───────────────────────┘
+                  │
+        ┌─────────┴─────────┐
+        │                   │
+┌───────▼────────┐ ┌────────▼──────┐
+│  Development   │ │  Production   │
+│  • Colorized   │ │  • JSON       │
+│  • Simple      │ │  • Structured │
+└────────────────┘ └───────────────┘
+</code></pre></div></div>
 
 <h2 id="logger-implementation">Logger Implementation</h2>
 
@@ -240,7 +270,41 @@
 
 <p>Creates and configures a Winston logger instance:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">createLogger</span><span class="p">():</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">Logger</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">createLogger</span><span class="p">():</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">Logger</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">logger</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">logger</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">environment</span><span class="p">,</span> <span class="nx">logLevel</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">;</span>
+    
+    <span class="kd">const</span> <span class="nx">formats</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">timestamp</span><span class="p">(),</span>
+        <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">errors</span><span class="p">({</span> <span class="na">stack</span><span class="p">:</span> <span class="kc">true</span> <span class="p">})</span>
+    <span class="p">];</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">environment</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">formats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">colorize</span><span class="p">(),</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">simple</span><span class="p">());</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">formats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span>
+    <span class="p">}</span>
+    
+    <span class="nx">logger</span> <span class="o">=</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">createLogger</span><span class="p">({</span>
+        <span class="na">level</span><span class="p">:</span> <span class="nx">logLevel</span><span class="p">,</span>
+        <span class="na">format</span><span class="p">:</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">combine</span><span class="p">(...</span><span class="nx">formats</span><span class="p">),</span>
+        <span class="na">defaultMeta</span><span class="p">:</span> <span class="p">{</span>
+            <span class="na">service</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">mcp</span><span class="p">.</span><span class="nx">serverName</span><span class="p">,</span>
+            <span class="na">version</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">mcp</span><span class="p">.</span><span class="nx">serverVersion</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="na">transports</span><span class="p">:</span> <span class="p">[</span>
+            <span class="k">new</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">transports</span><span class="p">.</span><span class="nx">Console</span><span class="p">({</span>
+                <span class="na">silent</span><span class="p">:</span> <span class="nx">environment</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span><span class="p">,</span>
+            <span class="p">}),</span>
+        <span class="p">],</span>
+    <span class="p">});</span>
+    
+    <span class="k">return</span> <span class="nx">logger</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <p><strong>Features:</strong></p>
@@ -253,19 +317,16 @@
   <li>Includes timestamp and error stack traces</li>
 </ul>
 
-<p><strong>Usage:</strong></p>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">createLogger</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./utils/logger</span><span class="dl">'</span><span class="p">;</span>
-
-<span class="kd">const</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nx">createLogger</span><span class="p">();</span>
-<span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Application started</span><span class="dl">'</span><span class="p">);</span>
-</code></pre></div></div>
-
 <h3 id="getlogger">getLogger()</h3>
 
 <p>Gets the logger instance, creating it if necessary:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">getLogger</span><span class="p">():</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">Logger</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">getLogger</span><span class="p">():</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">Logger</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">logger</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">createLogger</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">logger</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <p><strong>Features:</strong></p>
@@ -273,12 +334,12 @@
 <ul>
   <li>Lazy initialization</li>
   <li>Ensures logger is always available</li>
-  <li>Most commonly used function</li>
+  <li>Most commonly used function throughout the codebase</li>
 </ul>
 
-<p><strong>Usage:</strong></p>
+<p><strong>Usage Example:</strong></p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">getLogger</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./utils/logger</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">getLogger</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../utils/logger</span><span class="dl">'</span><span class="p">;</span>
 
 <span class="kd">const</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nx">getLogger</span><span class="p">();</span>
 <span class="nx">logger</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span><span class="dl">'</span><span class="s1">Processing request</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="na">requestId</span><span class="p">:</span> <span class="dl">'</span><span class="s1">123</span><span class="dl">'</span> <span class="p">});</span>
@@ -548,25 +609,107 @@
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Environment:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span><span class="p">);</span>
 </code></pre></div></div>
 
+<h2 id="type-system">Type System</h2>
+
+<p>The logger module uses standard Winston types:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Module</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">winston.Logger</code></td>
+      <td><code class="language-plaintext highlighter-rouge">winston</code></td>
+      <td>Logger instance type</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">winston.LoggerOptions</code></td>
+      <td><code class="language-plaintext highlighter-rouge">winston</code></td>
+      <td>Logger configuration options</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="dependencies">Dependencies</h2>
+
+<h3 id="external-dependencies">External Dependencies</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Module</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">winston</code></td>
+      <td>Logging framework</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="internal-dependencies">Internal Dependencies</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Module</th>
+      <th>Import</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">../config</code></td>
+      <td><code class="language-plaintext highlighter-rouge">getConfig()</code></td>
+      <td>Configuration access</td>
+    </tr>
+  </tbody>
+</table>
+
 <h2 id="future-enhancements">Future Enhancements</h2>
 
 <p>Potential additions to the utils module:</p>
 
 <ol>
-  <li><strong>File Rotation</strong> - Add file transport with rotation</li>
-  <li><strong>External Services</strong> - Send logs to CloudWatch, Datadog, etc.</li>
-  <li><strong>Request ID Tracking</strong> - Automatic request ID propagation</li>
-  <li><strong>Performance Metrics</strong> - Built-in performance logging</li>
-  <li><strong>Audit Logging</strong> - Separate audit log transport</li>
+  <li><strong>Additional Utilities</strong>:
+    <ul>
+      <li>Error helpers and custom error classes</li>
+      <li>Validation utilities</li>
+      <li>Data sanitization functions</li>
+      <li>Retry helpers</li>
+      <li>Async utilities</li>
+    </ul>
+  </li>
+  <li><strong>Logger Enhancements</strong>:
+    <ul>
+      <li>File rotation transport</li>
+      <li>External service integration (CloudWatch, Datadog)</li>
+      <li>Request ID tracking</li>
+      <li>Performance metrics logging</li>
+      <li>Separate audit log transport</li>
+    </ul>
+  </li>
 </ol>
 
-<h2 id="next-steps">Next Steps</h2>
+<h2 id="related-documentation">Related Documentation</h2>
 
 <ul>
   <li><a href="/developers/src/config/">Configuration Module</a> - How logger gets its configuration</li>
-  <li><a href="/developers/src/">Server Root</a> - Logger initialization on startup</li>
-  <li><a href="/developers/src/airs/">AIRS Module</a> - Example logger usage</li>
+  <li><a href="/developers/src/">Application Entry Point</a> - Logger initialization on startup</li>
+  <li><a href="/developers/src/airs/">AIRS Module</a> - Example logger usage in production</li>
+  <li><a href="/developers/src/tools/">Tools Module</a> - Logger usage patterns</li>
 </ul>
+
+<h2 id="summary">Summary</h2>
+
+<p>The utils module currently provides a simple but powerful logging system that adapts to different environments. The singleton pattern ensures consistent logging throughout the application, while environment-specific formatting makes logs suitable for both development debugging and production monitoring.</p>
 
       </article>
       

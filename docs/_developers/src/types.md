@@ -9,19 +9,39 @@ category: developers
 
 The Types module provides a centralized location for all TypeScript type definitions used throughout the Prisma AIRS MCP server. This architectural decision ensures type consistency, prevents circular dependencies, and provides a single source of truth for all type definitions.
 
-## Module Overview
-
-The types module is organized into several files, each containing types for a specific domain:
+## Module Structure
 
 ```
 src/types/
-├── index.ts      # Central export point
+├── index.ts      # Central export point (re-exports all types)
 ├── airs.ts       # AIRS API types (Airs* prefix)
 ├── config.ts     # Configuration types (Config* prefix)
 ├── mcp.ts        # MCP protocol types (Mcp* prefix)
 ├── tools.ts      # Tool handler types (Tools* prefix)
-├── transport.ts  # HTTP/SSE transport types (Transport* prefix)
-└── README.md     # Type naming conventions
+└── transport.ts  # HTTP/SSE transport types (Transport* prefix)
+```
+
+## Architecture Overview
+
+```
+┌─────────────────────────────────────────┐
+│        Application Modules              │
+│  (tools, resources, transport, etc.)    │
+└─────────────────┬───────────────────────┘
+                  │
+                  │ import type {...} from '../types'
+                  ▼
+┌─────────────────────────────────────────┐
+│         src/types/index.ts              │
+│    Central re-export of all types       │
+└─────────────────┬───────────────────────┘
+                  │
+        ┌─────────┴─────────┬─────────────┬──────────────┬────────────┐
+        │                   │             │              │            │
+┌───────▼────────┐ ┌────────▼──────┐ ┌───▼────┐ ┌──────▼──────┐ ┌───▼────┐
+│   airs.ts      │ │  config.ts    │ │mcp.ts  │ │ tools.ts    │ │transport│
+│ • Airs* types  │ │ • Config*     │ │• Mcp*  │ │ • Tools*    │ │• Transport*│
+└────────────────┘ └───────────────┘ └────────┘ └─────────────┘ └────────┘
 ```
 
 ## Naming Conventions
@@ -45,28 +65,39 @@ Types for interacting with the Prisma AIRS security API.
 ```typescript
 // Synchronous scan request
 export interface AirsScanRequest {
+    tr_id?: string;                    // Transaction ID
+    ai_profile: AirsAiProfile;         // Security profile
+    metadata?: AirsMetadata;           // Request metadata
+    contents: AirsContentItem[];       // Content to scan
+}
+
+// AI Profile configuration
+export interface AirsAiProfile {
+    profile_id?: string;
+    profile_name?: string;
+}
+
+// Content item for scanning
+export interface AirsContentItem {
     prompt?: string;
     response?: string;
-    profile_name?: string;
-    scan_uuid?: string;
+    code_prompt?: string;
+    code_response?: string;
+    context?: string;
 }
 
 // Scan response with security findings
 export interface AirsScanResponse {
+    report_id: string;
     scan_id: string;
-    scan_type: 'Prompt' | 'Response';
-    scanned_text?: string;
-    detected: boolean;
-    findings?: AirsSecurityFinding[];
-}
-
-// Individual security finding
-export interface AirsSecurityFinding {
-    metric: string;
-    severity: AirsSeverity;
-    score: number;
-    violated: boolean;
-    findings_metadata?: AirsFindingMetadata[];
+    tr_id?: string;
+    profile_id?: string;
+    profile_name?: string;
+    category: 'malicious' | 'benign';
+    action: 'block' | 'allow';
+    prompt_detected?: AirsPromptDetected;
+    response_detected?: AirsResponseDetected;
+    ml_metadata?: AirsMlMetadata;
 }
 ```
 
@@ -253,37 +284,55 @@ export interface TransportSSEMessage {
 
 ### Configuration Types (`config.ts`)
 
-Types for application configuration.
+Types for application configuration with comprehensive settings.
 
 ```typescript
 // Main configuration structure
 export interface Config {
-    server: ConfigServerOptions;
-    mcp: ConfigMcpOptions;
-    airs: ConfigAirsOptions;
+    server: ConfigServer;
+    airs: ConfigAirs;
+    cache: ConfigCache;
+    rateLimit: ConfigRateLimit;
+    mcp: ConfigMcp;
 }
 
 // Server configuration
-export interface ConfigServerOptions {
+export interface ConfigServer {
     port: number;
-    environment: 'development' | 'production';
-    corsOrigin: string;
+    environment: 'development' | 'production' | 'test';
+    logLevel: 'error' | 'warn' | 'info' | 'debug';
 }
 
-// MCP configuration
-export interface ConfigMcpOptions {
-    serverName: string;
-    serverVersion: string;
-    protocolVersion: string;
-}
-
-// AIRS API configuration
-export interface ConfigAirsOptions {
+// Prisma AIRS configuration
+export interface ConfigAirs {
     apiUrl: string;
     apiKey: string;
     timeout: number;
     retryAttempts: number;
     retryDelay: number;
+    defaultProfileId?: string;
+    defaultProfileName?: string;
+}
+
+// Cache configuration
+export interface ConfigCache {
+    ttlSeconds: number;
+    maxSize: number;
+    enabled: boolean;
+}
+
+// Rate limiting configuration
+export interface ConfigRateLimit {
+    maxRequests: number;
+    windowMs: number;
+    enabled: boolean;
+}
+
+// MCP protocol configuration
+export interface ConfigMcp {
+    serverName: string;
+    serverVersion: string;
+    protocolVersion: string;
 }
 ```
 
@@ -297,7 +346,24 @@ export interface ToolsScanContentArgs {
     prompt?: string;
     response?: string;
     context?: string;
-    profile?: string;
+    profileName?: string;
+    profileId?: string;
+    metadata?: {
+        appName?: string;
+        appUser?: string;
+        aiModel?: string;
+        userIp?: string;
+    };
+}
+
+// Async scan request item
+export interface ToolsAsyncScanRequestItem {
+    reqId: number;
+    prompt?: string;
+    response?: string;
+    context?: string;
+    profileName?: string;
+    profileId?: string;
 }
 
 // Async scan arguments
@@ -305,18 +371,18 @@ export interface ToolsScanAsyncArgs {
     requests: ToolsAsyncScanRequestItem[];
 }
 
-// Scan request item
-export interface ToolsAsyncScanRequestItem {
-    type: 'prompt' | 'response';
-    text: string;
-    context?: string;
-    profile?: string;
-}
-
-// Result retrieval arguments
+// Get scan results arguments
 export interface ToolsGetScanResultsArgs {
     scanIds: string[];
 }
+
+// Get threat reports arguments
+export interface ToolsGetThreatReportsArgs {
+    reportIds: string[];
+}
+
+// Type alias for scan responses with threat detection
+export type ToolsScanResponseWithDetected = AirsScanResponse;
 ```
 
 ## Import Patterns
@@ -470,23 +536,100 @@ class HttpServerTransport {
 
 ### Adding New Types
 
-1. Add to appropriate module file
-2. Follow naming conventions
-3. Export from module file
-4. Re-export from index.ts if public
-5. Document complex types
+1. **Choose the correct file** based on module domain
+2. **Follow naming conventions** - prefix with module name
+3. **Export from module file** - add export statement
+4. **Update index.ts** - already re-exports with `export *`
+5. **Document complex types** - add JSDoc comments
+
+Example:
+```typescript
+// In airs.ts
+/**
+ * New feature configuration
+ */
+export interface AirsNewFeature {
+    enabled: boolean;
+    options: Record<string, unknown>;
+}
+```
 
 ### Modifying Existing Types
 
-1. Consider backward compatibility
-2. Update all usages
-3. Run type checking
-4. Update documentation
-5. Test thoroughly
+1. **Check usage** - search for all references
+2. **Consider compatibility** - avoid breaking changes
+3. **Update incrementally** - use optional properties
+4. **Run type checking** - `npm run typecheck`
+5. **Test thoroughly** - ensure no runtime errors
 
-## Next Steps
+## Benefits of Centralized Types
+
+1. **Single Source of Truth** - All types in one location
+2. **Prevents Circular Dependencies** - Modules import from types, not each other
+3. **Consistent Naming** - Enforced prefixing prevents conflicts
+4. **Easy Discovery** - All types accessible via single import
+5. **Better Refactoring** - Change once, update everywhere
+
+## Type Safety Patterns
+
+### Using Type Guards
+
+```typescript
+import type { AirsScanResponse } from '../types';
+
+function isAirsScanResponse(obj: unknown): obj is AirsScanResponse {
+    return (
+        typeof obj === 'object' &&
+        obj !== null &&
+        'scan_id' in obj &&
+        'category' in obj &&
+        'action' in obj
+    );
+}
+```
+
+### Discriminated Unions
+
+```typescript
+// In transport.ts
+export type TransportMessage = 
+    | { type: 'request'; data: TransportJsonRpcRequest }
+    | { type: 'response'; data: TransportJsonRpcResponse }
+    | { type: 'error'; data: TransportJsonRpcError };
+```
+
+### Utility Types
+
+```typescript
+// Making all properties optional
+export type PartialAirsConfig = Partial<AirsClientConfig>;
+
+// Picking specific properties
+export type AirsCredentials = Pick<AirsClientConfig, 'apiUrl' | 'apiKey'>;
+
+// Omitting properties
+export type PublicAirsConfig = Omit<AirsClientConfig, 'apiKey'>;
+```
+
+## Dependencies
+
+The types module has no runtime dependencies and only development dependencies:
+
+| Module | Purpose |
+|--------|---------|
+| TypeScript | Type checking and compilation |
+| @types/node | Node.js type definitions |
+| @types/express | Express type definitions (for transport types) |
+
+## Related Documentation
 
 - [AIRS Module]({{ site.baseurl }}/developers/src/airs/) - AIRS client implementation
 - [Transport Module]({{ site.baseurl }}/developers/src/transport/) - HTTP/SSE transport
 - [Tools Module]({{ site.baseurl }}/developers/src/tools/) - Tool implementations
 - [Config Module]({{ site.baseurl }}/developers/src/config/) - Configuration management
+- [Resources Module]({{ site.baseurl }}/developers/src/resources/) - Resource handlers
+- [Prompts Module]({{ site.baseurl }}/developers/src/prompts/) - Prompt templates
+
+## Summary
+
+The centralized types module is a critical architectural component that ensures type safety, consistency, and maintainability across the entire Prisma AIRS MCP server codebase. By following the established naming conventions and import patterns, developers can easily work with strongly-typed interfaces throughout the application.

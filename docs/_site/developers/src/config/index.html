@@ -147,396 +147,550 @@
       <article class="content">
         <h1 id="configuration-module-documentation">Configuration Module Documentation</h1>
 
-<p>The configuration module provides centralized environment configuration management for the Prisma AIRS MCP server. It implements a singleton pattern with Zod schema validation, ensuring type-safe configuration access and runtime validation of all environment variables.</p>
+<p>The configuration module provides centralized, type-safe configuration management for the Prisma AIRS MCP server. It uses Zod for runtime validation, implements a singleton pattern, and supports environment-based configuration with sensible defaults.</p>
 
 <h2 id="module-overview">Module Overview</h2>
 
-<p>The configuration module handles:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>src/config/
+└── index.ts    # Configuration parser, validator, and singleton
+</code></pre></div></div>
 
+<p><strong>Key Features</strong>:</p>
 <ul>
-  <li>Environment variable parsing with defaults</li>
-  <li>Runtime validation using Zod schemas</li>
-  <li>Type-safe configuration access</li>
-  <li>Singleton pattern for consistent configuration</li>
-  <li>Version detection from package.json</li>
+  <li>🔒 Type-safe configuration with TypeScript interfaces</li>
+  <li>✅ Runtime validation using Zod schemas</li>
+  <li>🔧 Environment variable support with defaults</li>
+  <li>📦 Singleton pattern for consistent access</li>
+  <li>🚀 Fast-fail on invalid configuration</li>
+  <li>📊 Automatic version detection</li>
 </ul>
 
 <h2 id="architecture">Architecture</h2>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/**
- * Configuration Management Module
- * 
- * This module is responsible for:
- * 1. Loading configuration values from environment variables
- * 2. Applying sensible defaults when environment variables are not set
- * 3. Validating all configuration values at runtime using Zod schemas
- * 4. Providing type-safe access to configuration throughout the application
- */</span>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────┐
+│         Environment Variables           │
+│  (process.env, .env file via dotenv)    │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────▼────────────────────────┐
+│          parseConfig()                  │
+│  • Reads environment variables          │
+│  • Applies defaults                     │
+│  • Parses numeric values                │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────▼────────────────────────┐
+│       Zod Schema Validation             │
+│  • Type checking                        │
+│  • Range validation                     │
+│  • Required field checks                │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────▼────────────────────────┐
+│      Singleton Config Instance          │
+│  • Cached after first load              │
+│  • Type-safe Config object              │
+│  • Accessed via getConfig()             │
+└─────────────────────────────────────────┘
 </code></pre></div></div>
 
-<h2 id="type-system">Type System</h2>
+<h2 id="configuration-structure">Configuration Structure</h2>
 
-<p>All configuration types are defined in <code class="language-plaintext highlighter-rouge">src/types/config.ts</code> with the <code class="language-plaintext highlighter-rouge">Config</code> prefix:</p>
+<p>The complete configuration is defined in <code class="language-plaintext highlighter-rouge">src/types/config.ts</code>:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span> <span class="nx">Config</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
-
-<span class="c1">// Configuration structure</span>
-<span class="k">export</span> <span class="kr">interface</span> <span class="nx">Config</span> <span class="p">{</span>
-    <span class="nl">server</span><span class="p">:</span> <span class="nx">ConfigServerOptions</span><span class="p">;</span>
-    <span class="nl">mcp</span><span class="p">:</span> <span class="nx">ConfigMcpOptions</span><span class="p">;</span>
-    <span class="nl">airs</span><span class="p">:</span> <span class="nx">ConfigAirsOptions</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h2 id="configuration-schema">Configuration Schema</h2>
-
-<h3 id="complete-configuration-structure">Complete Configuration Structure</h3>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kr">interface</span> <span class="nx">Config</span> <span class="p">{</span>
-    <span class="nl">server</span><span class="p">:</span> <span class="nx">ConfigServerOptions</span><span class="p">;</span>
-    <span class="nl">mcp</span><span class="p">:</span> <span class="nx">ConfigMcpOptions</span><span class="p">;</span>
-    <span class="nl">airs</span><span class="p">:</span> <span class="nx">ConfigAirsOptions</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ConfigServerOptions</span> <span class="p">{</span>
-    <span class="nl">port</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
-    <span class="nl">environment</span><span class="p">:</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">;</span>
-    <span class="nl">corsOrigin</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ConfigMcpOptions</span> <span class="p">{</span>
-    <span class="nl">serverName</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">serverVersion</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">protocolVersion</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ConfigAirsOptions</span> <span class="p">{</span>
-    <span class="nl">apiUrl</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">apiKey</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">timeout</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
-    <span class="nl">retryAttempts</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
-    <span class="nl">retryDelay</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">Config</span> <span class="p">{</span>
+    <span class="nl">server</span><span class="p">:</span> <span class="nx">ConfigServer</span><span class="p">;</span>
+    <span class="nl">airs</span><span class="p">:</span> <span class="nx">ConfigAirs</span><span class="p">;</span>
+    <span class="nl">cache</span><span class="p">:</span> <span class="nx">ConfigCache</span><span class="p">;</span>
+    <span class="nl">rateLimit</span><span class="p">:</span> <span class="nx">ConfigRateLimit</span><span class="p">;</span>
+    <span class="nl">mcp</span><span class="p">:</span> <span class="nx">ConfigMcp</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="zod-schema-validation">Zod Schema Validation</h2>
+<h3 id="server-configuration-configserver">Server Configuration (<code class="language-plaintext highlighter-rouge">ConfigServer</code>)</h3>
 
-<p>The module uses Zod schemas for runtime validation:</p>
+<p>Controls the HTTP server behavior:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">configSchema</span> <span class="o">=</span> <span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
-    <span class="na">server</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
-        <span class="na">port</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">coerce</span><span class="p">.</span><span class="kr">number</span><span class="p">().</span><span class="nx">int</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">max</span><span class="p">(</span><span class="mi">65535</span><span class="p">),</span>
-        <span class="na">environment</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">enum</span><span class="p">([</span><span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">]),</span>
-        <span class="na">corsOrigin</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-    <span class="p">}),</span>
-    <span class="na">mcp</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
-        <span class="na">serverName</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-        <span class="na">serverVersion</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-        <span class="na">protocolVersion</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-    <span class="p">}),</span>
-    <span class="na">airs</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
-        <span class="na">apiUrl</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">url</span><span class="p">(),</span>
-        <span class="na">apiKey</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">string</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
-        <span class="na">timeout</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">coerce</span><span class="p">.</span><span class="kr">number</span><span class="p">().</span><span class="nx">int</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span>
-        <span class="na">retryAttempts</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">coerce</span><span class="p">.</span><span class="kr">number</span><span class="p">().</span><span class="nx">int</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
-        <span class="na">retryDelay</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">coerce</span><span class="p">.</span><span class="kr">number</span><span class="p">().</span><span class="nx">int</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
-    <span class="p">}),</span>
-<span class="p">});</span>
-</code></pre></div></div>
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Environment Variable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">port</code></td>
+      <td>number</td>
+      <td>3000</td>
+      <td><code class="language-plaintext highlighter-rouge">PORT</code></td>
+      <td>HTTP server port (1-65535)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">environment</code></td>
+      <td>enum</td>
+      <td>development</td>
+      <td><code class="language-plaintext highlighter-rouge">NODE_ENV</code></td>
+      <td>Runtime environment</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">logLevel</code></td>
+      <td>enum</td>
+      <td>info</td>
+      <td><code class="language-plaintext highlighter-rouge">LOG_LEVEL</code></td>
+      <td>Logging verbosity</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Environment Values</strong>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">development</code>, <code class="language-plaintext highlighter-rouge">production</code>, <code class="language-plaintext highlighter-rouge">test</code></li>
+</ul>
+
+<p><strong>Log Levels</strong> (in order of verbosity):</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">error</code>, <code class="language-plaintext highlighter-rouge">warn</code>, <code class="language-plaintext highlighter-rouge">info</code>, <code class="language-plaintext highlighter-rouge">debug</code></li>
+</ul>
+
+<h3 id="airs-configuration-configairs">AIRS Configuration (<code class="language-plaintext highlighter-rouge">ConfigAirs</code>)</h3>
+
+<p>Prisma AIRS API integration settings:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Environment Variable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">apiUrl</code></td>
+      <td>string</td>
+      <td>[production URL]</td>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_API_URL</code></td>
+      <td>AIRS API endpoint</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">apiKey</code></td>
+      <td>string</td>
+      <td>(required)</td>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_API_KEY</code></td>
+      <td>Authentication token</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">timeout</code></td>
+      <td>number</td>
+      <td>30000</td>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_TIMEOUT</code></td>
+      <td>Request timeout (ms)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">retryAttempts</code></td>
+      <td>number</td>
+      <td>3</td>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_RETRY_ATTEMPTS</code></td>
+      <td>Max retry attempts</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">retryDelay</code></td>
+      <td>number</td>
+      <td>1000</td>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_RETRY_DELAY</code></td>
+      <td>Initial retry delay (ms)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">defaultProfileId</code></td>
+      <td>string?</td>
+      <td>undefined</td>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_DEFAULT_PROFILE_ID</code></td>
+      <td>Default scan profile ID</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">defaultProfileName</code></td>
+      <td>string?</td>
+      <td>undefined</td>
+      <td><code class="language-plaintext highlighter-rouge">AIRS_DEFAULT_PROFILE_NAME</code></td>
+      <td>Default scan profile name</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Default API URL</strong>: <code class="language-plaintext highlighter-rouge">https://service.api.aisecurity.paloaltonetworks.com</code></p>
+
+<h3 id="cache-configuration-configcache">Cache Configuration (<code class="language-plaintext highlighter-rouge">ConfigCache</code>)</h3>
+
+<p>In-memory caching behavior:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Environment Variable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ttlSeconds</code></td>
+      <td>number</td>
+      <td>300</td>
+      <td><code class="language-plaintext highlighter-rouge">CACHE_TTL_SECONDS</code></td>
+      <td>Cache TTL (seconds)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">maxSize</code></td>
+      <td>number</td>
+      <td>1000</td>
+      <td><code class="language-plaintext highlighter-rouge">CACHE_MAX_SIZE</code></td>
+      <td>Max cache entries</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">enabled</code></td>
+      <td>boolean</td>
+      <td>true</td>
+      <td><code class="language-plaintext highlighter-rouge">CACHE_ENABLED</code></td>
+      <td>Enable/disable cache</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="rate-limit-configuration-configratelimit">Rate Limit Configuration (<code class="language-plaintext highlighter-rouge">ConfigRateLimit</code>)</h3>
+
+<p>API rate limiting settings:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Environment Variable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">maxRequests</code></td>
+      <td>number</td>
+      <td>100</td>
+      <td><code class="language-plaintext highlighter-rouge">RATE_LIMIT_MAX_REQUESTS</code></td>
+      <td>Max requests per window</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">windowMs</code></td>
+      <td>number</td>
+      <td>60000</td>
+      <td><code class="language-plaintext highlighter-rouge">RATE_LIMIT_WINDOW_MS</code></td>
+      <td>Time window (ms)</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">enabled</code></td>
+      <td>boolean</td>
+      <td>true</td>
+      <td><code class="language-plaintext highlighter-rouge">RATE_LIMIT_ENABLED</code></td>
+      <td>Enable/disable rate limiting</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="mcp-configuration-configmcp">MCP Configuration (<code class="language-plaintext highlighter-rouge">ConfigMcp</code>)</h3>
+
+<p>Model Context Protocol settings:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Type</th>
+      <th>Default</th>
+      <th>Environment Variable</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">serverName</code></td>
+      <td>string</td>
+      <td>prisma-airs-mcp</td>
+      <td><code class="language-plaintext highlighter-rouge">MCP_SERVER_NAME</code></td>
+      <td>Server identifier</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">serverVersion</code></td>
+      <td>string</td>
+      <td>[auto-detected]</td>
+      <td><code class="language-plaintext highlighter-rouge">MCP_SERVER_VERSION</code></td>
+      <td>Server version</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">protocolVersion</code></td>
+      <td>string</td>
+      <td>2024-11-05</td>
+      <td><code class="language-plaintext highlighter-rouge">MCP_PROTOCOL_VERSION</code></td>
+      <td>MCP protocol version</td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="environment-variables">Environment Variables</h2>
 
-<h3 id="server-configuration">Server Configuration</h3>
+<h3 id="complete-example-env-file">Complete Example (.env file)</h3>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Server port (default: 3000)</span>
-<span class="c"># Valid range: 1-65535</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Server Configuration</span>
 <span class="nv">PORT</span><span class="o">=</span>3000
-
-<span class="c"># Environment mode (default: development)</span>
-<span class="c"># Options: development, production</span>
 <span class="nv">NODE_ENV</span><span class="o">=</span>production
+<span class="nv">LOG_LEVEL</span><span class="o">=</span>info
 
-<span class="c"># CORS origin (default: *)</span>
-<span class="c"># Use specific origin in production</span>
-<span class="nv">CORS_ORIGIN</span><span class="o">=</span>https://app.example.com
-</code></pre></div></div>
+<span class="c"># Prisma AIRS API</span>
+<span class="nv">AIRS_API_URL</span><span class="o">=</span>https://service.api.aisecurity.paloaltonetworks.com
+<span class="nv">AIRS_API_KEY</span><span class="o">=</span>your-api-key-here
+<span class="nv">AIRS_TIMEOUT</span><span class="o">=</span>30000
+<span class="nv">AIRS_RETRY_ATTEMPTS</span><span class="o">=</span>3
+<span class="nv">AIRS_RETRY_DELAY</span><span class="o">=</span>1000
+<span class="nv">AIRS_DEFAULT_PROFILE_NAME</span><span class="o">=</span>Prisma AIRS
 
-<h3 id="mcp-configuration">MCP Configuration</h3>
+<span class="c"># Cache Settings</span>
+<span class="nv">CACHE_TTL_SECONDS</span><span class="o">=</span>300
+<span class="nv">CACHE_MAX_SIZE</span><span class="o">=</span>1000
+<span class="nv">CACHE_ENABLED</span><span class="o">=</span><span class="nb">true</span>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># MCP server name (default: prisma-airs-mcp-server)</span>
-<span class="nv">MCP_SERVER_NAME</span><span class="o">=</span>my-custom-server
+<span class="c"># Rate Limiting</span>
+<span class="nv">RATE_LIMIT_MAX_REQUESTS</span><span class="o">=</span>100
+<span class="nv">RATE_LIMIT_WINDOW_MS</span><span class="o">=</span>60000
+<span class="nv">RATE_LIMIT_ENABLED</span><span class="o">=</span><span class="nb">true</span>
 
-<span class="c"># MCP protocol version (default: 2024-11-05)</span>
-<span class="c"># Should match MCP specification version</span>
+<span class="c"># MCP Protocol</span>
+<span class="nv">MCP_SERVER_NAME</span><span class="o">=</span>prisma-airs-mcp
 <span class="nv">MCP_PROTOCOL_VERSION</span><span class="o">=</span>2024-11-05
 </code></pre></div></div>
 
-<h3 id="airs-configuration">AIRS Configuration</h3>
+<h3 id="minimal-configuration">Minimal Configuration</h3>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Required: Prisma AIRS API endpoint</span>
-<span class="c"># Default: https://service.api.aisecurity.paloaltonetworks.com</span>
-<span class="nv">AIRS_API_URL</span><span class="o">=</span>https://service.api.aisecurity.paloaltonetworks.com
+<p>Only one environment variable is required:</p>
 
-<span class="c"># Required: API authentication key</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Required</span>
 <span class="nv">AIRS_API_KEY</span><span class="o">=</span>your-api-key-here
-
-<span class="c"># Request timeout in milliseconds (default: 30000)</span>
-<span class="c"># Minimum: 1000ms</span>
-<span class="nv">AIRS_TIMEOUT</span><span class="o">=</span>30000
-
-<span class="c"># Number of retry attempts (default: 3)</span>
-<span class="c"># Minimum: 0 (no retries)</span>
-<span class="nv">AIRS_RETRY_ATTEMPTS</span><span class="o">=</span>3
-
-<span class="c"># Initial retry delay in milliseconds (default: 1000)</span>
-<span class="c"># Minimum: 100ms</span>
-<span class="nv">AIRS_RETRY_DELAY</span><span class="o">=</span>1000
 </code></pre></div></div>
+
+<p>All other values have sensible defaults.</p>
 
 <h2 id="implementation-details">Implementation Details</h2>
 
 <h3 id="singleton-pattern">Singleton Pattern</h3>
 
-<p>The configuration uses a singleton pattern to ensure consistent configuration across the application:</p>
-
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">config</span><span class="p">:</span> <span class="nx">Config</span> <span class="o">|</span> <span class="kc">null</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
 
 <span class="k">export</span> <span class="kd">function</span> <span class="nx">getConfig</span><span class="p">():</span> <span class="nx">Config</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">config</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">config</span> <span class="o">=</span> <span class="nx">parseConfig</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="nx">config</span> <span class="o">=</span> <span class="nx">parseConfig</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// Handle validation errors</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nx">z</span><span class="p">.</span><span class="nx">ZodError</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Configuration validation failed:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">issues</span><span class="p">);</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span>
+                    <span class="s2">`Invalid configuration: </span><span class="p">${</span><span class="nx">error</span><span class="p">.</span><span class="nx">issues</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">).</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">, </span><span class="dl">'</span><span class="p">)}</span><span class="s2">`</span>
+                <span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+        <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="nx">config</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h3 id="configuration-parser">Configuration Parser</h3>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">parseConfig</span><span class="p">():</span> <span class="nx">Config</span> <span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="na">server</span><span class="p">:</span> <span class="p">{</span>
-            <span class="na">port</span><span class="p">:</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">3000</span><span class="dl">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="na">environment</span><span class="p">:</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">)</span> <span class="k">as</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span>
-            <span class="na">corsOrigin</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CORS_ORIGIN</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">*</span><span class="dl">'</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="na">mcp</span><span class="p">:</span> <span class="p">{</span>
-            <span class="na">serverName</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">MCP_SERVER_NAME</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">prisma-airs-mcp-server</span><span class="dl">'</span><span class="p">,</span>
-            <span class="na">serverVersion</span><span class="p">:</span> <span class="nx">getVersion</span><span class="p">(),</span>
-            <span class="na">protocolVersion</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">MCP_PROTOCOL_VERSION</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">2024-11-05</span><span class="dl">'</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="na">airs</span><span class="p">:</span> <span class="p">{</span>
-            <span class="na">apiUrl</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_API_URL</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">https://service.api.aisecurity.paloaltonetworks.com</span><span class="dl">'</span><span class="p">,</span>
-            <span class="na">apiKey</span><span class="p">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_API_KEY</span> <span class="o">||</span> <span class="dl">''</span><span class="p">,</span>
-            <span class="na">timeout</span><span class="p">:</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_TIMEOUT</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">30000</span><span class="dl">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="na">retryAttempts</span><span class="p">:</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_RETRY_ATTEMPTS</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">3</span><span class="dl">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-            <span class="na">retryDelay</span><span class="p">:</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_RETRY_DELAY</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">1000</span><span class="dl">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
-        <span class="p">},</span>
-    <span class="p">};</span>
-
-    <span class="k">try</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">configSchema</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nx">z</span><span class="p">.</span><span class="nx">ZodError</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Configuration validation failed:</span><span class="dl">'</span><span class="p">);</span>
-            <span class="nx">error</span><span class="p">.</span><span class="nx">errors</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-                <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">`  </span><span class="p">${</span><span class="nx">err</span><span class="p">.</span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">.</span><span class="dl">'</span><span class="p">)}</span><span class="s2">: </span><span class="p">${</span><span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
-            <span class="p">});</span>
-            <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
 <h3 id="version-detection">Version Detection</h3>
 
-<p>The module automatically detects the server version from package.json:</p>
+<p>The module automatically detects version from <code class="language-plaintext highlighter-rouge">version.json</code>:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">getVersion</span><span class="p">():</span> <span class="kr">string</span> <span class="p">{</span>
-    <span class="k">try</span> <span class="p">{</span>
-        <span class="kd">const</span> <span class="nx">packageJson</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span>
-            <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="dl">'</span><span class="s1">../../package.json</span><span class="dl">'</span><span class="p">),</span> <span class="dl">'</span><span class="s1">utf-8</span><span class="dl">'</span><span class="p">)</span>
-        <span class="p">);</span>
-        <span class="k">return</span> <span class="nx">packageJson</span><span class="p">.</span><span class="nx">version</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">1.0.0</span><span class="dl">'</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="dl">'</span><span class="s1">1.0.0</span><span class="dl">'</span><span class="p">;</span>
-    <span class="p">}</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">let</span> <span class="nx">versionFromFile</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">1.0.0</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">try</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">versionJson</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span>
+        <span class="nx">readFileSync</span><span class="p">(</span><span class="nx">join</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">cwd</span><span class="p">(),</span> <span class="dl">'</span><span class="s1">version.json</span><span class="dl">'</span><span class="p">),</span> <span class="dl">'</span><span class="s1">utf-8</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">)</span> <span class="k">as</span> <span class="p">{</span> <span class="na">version</span><span class="p">:</span> <span class="kr">string</span> <span class="p">};</span>
+    <span class="nx">versionFromFile</span> <span class="o">=</span> <span class="nx">versionJson</span><span class="p">.</span><span class="nx">version</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+    <span class="c1">// Fall back to default if file doesn't exist</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="usage-examples">Usage Examples</h2>
+<h3 id="validation-schema">Validation Schema</h3>
+
+<p>Uses Zod for comprehensive validation:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">configSchema</span> <span class="o">=</span> <span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+    <span class="na">server</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="nx">object</span><span class="p">({</span>
+        <span class="na">port</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">number</span><span class="p">().</span><span class="nx">min</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="nx">max</span><span class="p">(</span><span class="mi">65535</span><span class="p">),</span>
+        <span class="na">environment</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">enum</span><span class="p">([</span><span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span><span class="p">]),</span>
+        <span class="na">logLevel</span><span class="p">:</span> <span class="nx">z</span><span class="p">.</span><span class="kr">enum</span><span class="p">([</span><span class="dl">'</span><span class="s1">error</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">warn</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">info</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">debug</span><span class="dl">'</span><span class="p">]),</span>
+    <span class="p">}),</span>
+    <span class="c1">// ... other schemas</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="usage-patterns">Usage Patterns</h2>
 
 <h3 id="basic-usage">Basic Usage</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">getConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./config</span><span class="dl">'</span><span class="p">;</span>
 
-<span class="c1">// Get configuration singleton</span>
+<span class="c1">// Get configuration (validated and cached)</span>
 <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
 
-<span class="c1">// Access configuration values</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Server port:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">);</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">API URL:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">);</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Environment:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">environment</span><span class="p">);</span>
+<span class="c1">// Type-safe access</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Server running on port </span><span class="p">${</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Environment: </span><span class="p">${</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">environment</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
 </code></pre></div></div>
 
-<h3 id="using-in-express-server">Using in Express Server</h3>
+<h3 id="conditional-logic">Conditional Logic</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">express</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">getConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./config</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
 
-<span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
-<span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
-
-<span class="c1">// Use configuration for server setup</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Server running on port </span><span class="p">${</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`Environment: </span><span class="p">${</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">environment</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
-<span class="p">});</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">environment</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Production-specific logic</span>
+    <span class="nx">logger</span><span class="p">.</span><span class="nx">setLevel</span><span class="p">(</span><span class="dl">'</span><span class="s1">error</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// Development logic</span>
+    <span class="nx">logger</span><span class="p">.</span><span class="nx">setLevel</span><span class="p">(</span><span class="dl">'</span><span class="s1">debug</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
-<h3 id="using-in-airs-client">Using in AIRS Client</h3>
+<h3 id="feature-flags">Feature Flags</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">EnhancedPrismaAirsClient</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./airs</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">getConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./config</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
 
-<span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+<span class="c1">// Enable/disable features based on config</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">cache</span><span class="p">.</span><span class="nx">enabled</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">cacheMiddleware</span><span class="p">);</span>
+<span class="p">}</span>
 
-<span class="c1">// Create AIRS client with configuration</span>
-<span class="kd">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EnhancedPrismaAirsClient</span><span class="p">({</span>
-    <span class="na">apiUrl</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">,</span>
-    <span class="na">apiKey</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">,</span>
-    <span class="na">timeout</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">timeout</span><span class="p">,</span>
-    <span class="na">maxRetries</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">retryAttempts</span><span class="p">,</span>
-    <span class="na">retryDelay</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">retryDelay</span><span class="p">,</span>
-<span class="p">});</span>
-</code></pre></div></div>
-
-<h2 id="configuration-validation">Configuration Validation</h2>
-
-<h3 id="required-fields">Required Fields</h3>
-
-<p>The following fields are required and will cause startup failure if not provided:</p>
-
-<ol>
-  <li><strong>AIRS_API_KEY</strong> - Must be a non-empty string</li>
-  <li><strong>AIRS_API_URL</strong> - Must be a valid URL (defaults provided)</li>
-</ol>
-
-<h3 id="validation-examples">Validation Examples</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Missing required API key</span>
-<span class="nv">$ </span>node dist/index.js
-Configuration validation failed:
-  airs.apiKey: String must contain at least 1 character<span class="o">(</span>s<span class="o">)</span>
-
-<span class="c"># Invalid port number</span>
-<span class="nv">$ PORT</span><span class="o">=</span>70000 node dist/index.js
-Configuration validation failed:
-  server.port: Number must be less than or equal to 65535
-
-<span class="c"># Invalid URL format</span>
-<span class="nv">$ AIRS_API_URL</span><span class="o">=</span>not-a-url node dist/index.js
-Configuration validation failed:
-  airs.apiUrl: Invalid url
-</code></pre></div></div>
-
-<h2 id="best-practices">Best Practices</h2>
-
-<h3 id="1-environment-specific-configuration">1. Environment-Specific Configuration</h3>
-
-<p>Use <code class="language-plaintext highlighter-rouge">.env</code> files for different environments:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># .env.development</span>
-<span class="nv">NODE_ENV</span><span class="o">=</span>development
-<span class="nv">LOG_LEVEL</span><span class="o">=</span>debug
-<span class="nv">AIRS_API_URL</span><span class="o">=</span>https://dev-api.airs.example.com
-
-<span class="c"># .env.production</span>
-<span class="nv">NODE_ENV</span><span class="o">=</span>production
-<span class="nv">LOG_LEVEL</span><span class="o">=</span>error
-<span class="nv">AIRS_API_URL</span><span class="o">=</span>https://api.airs.example.com
-</code></pre></div></div>
-
-<h3 id="2-secure-api-keys">2. Secure API Keys</h3>
-
-<p>Never commit API keys to version control:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># .env.example (commit this)</span>
-<span class="nv">AIRS_API_KEY</span><span class="o">=</span>your-api-key-here
-
-<span class="c"># .env (don't commit this)</span>
-<span class="nv">AIRS_API_KEY</span><span class="o">=</span>actual-secret-key
-</code></pre></div></div>
-
-<h3 id="3-validate-early">3. Validate Early</h3>
-
-<p>Configuration is validated on first access, ensuring failures happen at startup:</p>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// This will validate configuration immediately</span>
-<span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
-</code></pre></div></div>
-
-<h3 id="4-type-safety">4. Type Safety</h3>
-
-<p>Always use the typed configuration object:</p>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Good - type safe</span>
-<span class="kd">const</span> <span class="nx">port</span><span class="p">:</span> <span class="kr">number</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">;</span>
-
-<span class="c1">// Bad - no type safety</span>
-<span class="kd">const</span> <span class="nx">port</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span><span class="p">;</span> <span class="c1">// string | undefined</span>
-</code></pre></div></div>
-
-<h3 id="5-default-values">5. Default Values</h3>
-
-<p>Provide sensible defaults for optional configuration:</p>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Defaults are applied in parseConfig()</span>
-<span class="nx">timeout</span><span class="p">:</span> <span class="nb">parseInt</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_TIMEOUT</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">30000</span><span class="dl">'</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">rateLimit</span><span class="p">.</span><span class="nx">enabled</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">rateLimitMiddleware</span><span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <h2 id="error-handling">Error Handling</h2>
 
-<h3 id="validation-errors">Validation Errors</h3>
+<h3 id="validation-failures">Validation Failures</h3>
 
-<p>Configuration validation errors are logged and cause immediate exit:</p>
+<p>Configuration errors fail fast with clear messages:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">try</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">configSchema</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
-<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nx">z</span><span class="p">.</span><span class="nx">ZodError</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Configuration validation failed:</span><span class="dl">'</span><span class="p">);</span>
-        <span class="nx">error</span><span class="p">.</span><span class="nx">errors</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">`  </span><span class="p">${</span><span class="nx">err</span><span class="p">.</span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">.</span><span class="dl">'</span><span class="p">)}</span><span class="s2">: </span><span class="p">${</span><span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
-        <span class="p">});</span>
-        <span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Missing required field</span>
+<span class="nv">$ </span>node dist/index.js
+Configuration validation failed: <span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">"code"</span>: <span class="s2">"too_small"</span>,
+    <span class="s2">"minimum"</span>: 1,
+    <span class="s2">"path"</span>: <span class="o">[</span><span class="s2">"airs"</span>, <span class="s2">"apiKey"</span><span class="o">]</span>,
+    <span class="s2">"message"</span>: <span class="s2">"String must contain at least 1 character(s)"</span>
+  <span class="o">}</span>
+<span class="o">]</span>
+
+<span class="c"># Invalid value</span>
+<span class="nv">$ PORT</span><span class="o">=</span>99999 node dist/index.js
+Configuration validation failed: <span class="o">[</span>
+  <span class="o">{</span>
+    <span class="s2">"code"</span>: <span class="s2">"too_big"</span>,
+    <span class="s2">"maximum"</span>: 65535,
+    <span class="s2">"path"</span>: <span class="o">[</span><span class="s2">"server"</span>, <span class="s2">"port"</span><span class="o">]</span>,
+    <span class="s2">"message"</span>: <span class="s2">"Number must be less than or equal to 65535"</span>
+  <span class="o">}</span>
+<span class="o">]</span>
 </code></pre></div></div>
 
-<h3 id="missing-configuration">Missing Configuration</h3>
+<h3 id="common-issues">Common Issues</h3>
 
-<p>The singleton pattern ensures configuration is loaded once:</p>
+<ol>
+  <li><strong>Invalid URL Format</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">AIRS_API_URL</span><span class="o">=</span>not-a-url
+<span class="c"># Error: Invalid URL</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Out of Range Values</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">CACHE_TTL_SECONDS</span><span class="o">=</span><span class="nt">-1</span>
+<span class="c"># Error: Number must be greater than or equal to 0</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Invalid Enum Values</strong>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">NODE_ENV</span><span class="o">=</span>staging
+<span class="c"># Error: Invalid enum value. Expected 'development' | 'production' | 'test'</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">function</span> <span class="nx">getConfig</span><span class="p">():</span> <span class="nx">Config</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">config</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">config</span> <span class="o">=</span> <span class="nx">parseConfig</span><span class="p">();</span> <span class="c1">// Validates here</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">config</span><span class="p">;</span> <span class="c1">// Always returns valid config</span>
-<span class="p">}</span>
+<h2 id="best-practices">Best Practices</h2>
+
+<h3 id="1-use-environment-files">1. Use Environment Files</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Development</span>
+<span class="nb">cp</span> .env.example .env.development
+dotenv <span class="nt">-e</span> .env.development <span class="nt">--</span> npm run dev
+
+<span class="c"># Production</span>
+dotenv <span class="nt">-e</span> .env.production <span class="nt">--</span> npm start
 </code></pre></div></div>
 
-<h2 id="testing-configuration">Testing Configuration</h2>
+<h3 id="2-validate-early">2. Validate Early</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In your main entry point</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">getConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./config</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// This validates immediately</span>
+<span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+
+<span class="c1">// Now start your application</span>
+<span class="nx">startServer</span><span class="p">(</span><span class="nx">config</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="3-dont-access-processenv-directly">3. Don’t Access process.env Directly</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ❌ Bad - No validation, no defaults</span>
+<span class="kd">const</span> <span class="nx">port</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">||</span> <span class="dl">'</span><span class="s1">3000</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="c1">// ✅ Good - Validated, typed, with defaults</span>
+<span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">port</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="4-log-configuration-safely">4. Log Configuration (Safely)</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+<span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Configuration loaded</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+    <span class="na">server</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">,</span>
+    <span class="na">mcp</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">mcp</span><span class="p">,</span>
+    <span class="na">cache</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">cache</span><span class="p">,</span>
+    <span class="na">rateLimit</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">rateLimit</span><span class="p">,</span>
+    <span class="na">airs</span><span class="p">:</span> <span class="p">{</span>
+        <span class="na">apiUrl</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">,</span>
+        <span class="na">hasApiKey</span><span class="p">:</span> <span class="o">!!</span><span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">,</span> <span class="c1">// Don't log secrets!</span>
+        <span class="na">timeout</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">timeout</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h2 id="testing">Testing</h2>
 
 <h3 id="unit-testing">Unit Testing</h3>
 
-<p>Mock environment variables for testing:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">getConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./config</span><span class="dl">'</span><span class="p">;</span>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">Configuration</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+<span class="nx">describe</span><span class="p">(</span><span class="dl">'</span><span class="s1">Configuration</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">originalEnv</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">;</span>
 
     <span class="nx">beforeEach</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="c1">// Reset module cache</span>
         <span class="nx">jest</span><span class="p">.</span><span class="nx">resetModules</span><span class="p">();</span>
+        <span class="c1">// Clone environment</span>
         <span class="nx">process</span><span class="p">.</span><span class="nx">env</span> <span class="o">=</span> <span class="p">{</span> <span class="p">...</span><span class="nx">originalEnv</span> <span class="p">};</span>
     <span class="p">});</span>
 
@@ -544,62 +698,121 @@ Configuration validation failed:
         <span class="nx">process</span><span class="p">.</span><span class="nx">env</span> <span class="o">=</span> <span class="nx">originalEnv</span><span class="p">;</span>
     <span class="p">});</span>
 
-    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should parse valid configuration</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should load default configuration</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_API_KEY</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">test-key</span><span class="dl">'</span><span class="p">;</span>
-        <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">8080</span><span class="dl">'</span><span class="p">;</span>
         
         <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+        
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">environment</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should override with environment variables</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">8080</span><span class="dl">'</span><span class="p">;</span>
+        <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">;</span>
+        <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_API_KEY</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">test-key</span><span class="dl">'</span><span class="p">;</span>
+        
+        <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+        
         <span class="nx">expect</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">8080</span><span class="p">);</span>
-        <span class="nx">expect</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="dl">'</span><span class="s1">test-key</span><span class="dl">'</span><span class="p">);</span>
+        <span class="nx">expect</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">environment</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">);</span>
     <span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
 <h3 id="integration-testing">Integration Testing</h3>
 
-<p>Test with actual environment files:</p>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">dotenv</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">dotenv</span><span class="dl">'</span><span class="p">;</span>
-
-<span class="c1">// Load test environment</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Load test environment</span>
+<span class="k">import</span> <span class="nx">dotenv</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">dotenv</span><span class="dl">'</span><span class="p">;</span>
 <span class="nx">dotenv</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span> <span class="na">path</span><span class="p">:</span> <span class="dl">'</span><span class="s1">.env.test</span><span class="dl">'</span> <span class="p">});</span>
 
+<span class="k">import</span> <span class="p">{</span> <span class="nx">getConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./config</span><span class="dl">'</span><span class="p">;</span>
+
 <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
-<span class="c1">// Test with real configuration</span>
+<span class="c1">// Use config in integration tests</span>
 </code></pre></div></div>
 
-<h2 id="monitoring-configuration">Monitoring Configuration</h2>
+<h2 id="docker-configuration">Docker Configuration</h2>
 
-<p>Log configuration at startup (excluding secrets):</p>
+<h3 id="using-environment-variables">Using Environment Variables</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">getLogger</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./utils/logger</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> node:18-alpine</span>
+<span class="k">WORKDIR</span><span class="s"> /app</span>
 
-<span class="kd">const</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nx">getLogger</span><span class="p">();</span>
-<span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
+<span class="c"># Configuration via environment</span>
+<span class="k">ENV</span><span class="s"> NODE_ENV=production</span>
+<span class="k">ENV</span><span class="s"> LOG_LEVEL=error</span>
 
-<span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Server configuration loaded</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-    <span class="na">server</span><span class="p">:</span> <span class="p">{</span>
-        <span class="na">port</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">,</span>
-        <span class="na">environment</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">environment</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="na">mcp</span><span class="p">:</span> <span class="p">{</span>
-        <span class="na">serverName</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">mcp</span><span class="p">.</span><span class="nx">serverName</span><span class="p">,</span>
-        <span class="na">version</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">mcp</span><span class="p">.</span><span class="nx">serverVersion</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="na">airs</span><span class="p">:</span> <span class="p">{</span>
-        <span class="na">apiUrl</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">,</span>
-        <span class="c1">// Don't log sensitive data</span>
-        <span class="na">hasApiKey</span><span class="p">:</span> <span class="o">!!</span><span class="nx">config</span><span class="p">.</span><span class="nx">airs</span><span class="p">.</span><span class="nx">apiKey</span><span class="p">,</span>
-    <span class="p">},</span>
-<span class="p">});</span>
+<span class="c"># API key must be provided at runtime</span>
+<span class="c"># docker run -e AIRS_API_KEY=xxx myimage</span>
 </code></pre></div></div>
 
-<h2 id="next-steps">Next Steps</h2>
+<h3 id="using-env-file">Using .env File</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run with env file</span>
+docker run <span class="nt">--env-file</span> .env.production myimage
+</code></pre></div></div>
+
+<h2 id="kubernetes-configuration">Kubernetes Configuration</h2>
+
+<h3 id="configmap-example">ConfigMap Example</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">ConfigMap</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-config</span>
+<span class="na">data</span><span class="pi">:</span>
+  <span class="na">PORT</span><span class="pi">:</span> <span class="s2">"</span><span class="s">3000"</span>
+  <span class="na">NODE_ENV</span><span class="pi">:</span> <span class="s2">"</span><span class="s">production"</span>
+  <span class="na">LOG_LEVEL</span><span class="pi">:</span> <span class="s2">"</span><span class="s">info"</span>
+  <span class="na">CACHE_TTL_SECONDS</span><span class="pi">:</span> <span class="s2">"</span><span class="s">300"</span>
+  <span class="na">RATE_LIMIT_MAX_REQUESTS</span><span class="pi">:</span> <span class="s2">"</span><span class="s">100"</span>
+</code></pre></div></div>
+
+<h3 id="secret-example">Secret Example</h3>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Secret</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">prisma-airs-secrets</span>
+<span class="na">type</span><span class="pi">:</span> <span class="s">Opaque</span>
+<span class="na">stringData</span><span class="pi">:</span>
+  <span class="na">AIRS_API_KEY</span><span class="pi">:</span> <span class="s2">"</span><span class="s">your-api-key-here"</span>
+</code></pre></div></div>
+
+<h2 id="troubleshooting">Troubleshooting</h2>
+
+<h3 id="debug-configuration-loading">Debug Configuration Loading</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Add debug logging</span>
+<span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">parseConfig</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Loaded configuration:</span><span class="dl">'</span><span class="p">,</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">));</span>
+</code></pre></div></div>
+
+<h3 id="check-environment-variables">Check Environment Variables</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># List all environment variables</span>
+<span class="nb">env</span> | <span class="nb">grep</span> <span class="nt">-E</span> <span class="s1">'^(AIRS_|MCP_|CACHE_|RATE_)'</span>
+
+<span class="c"># Check specific variable</span>
+<span class="nb">echo</span> <span class="nv">$AIRS_API_KEY</span>
+</code></pre></div></div>
+
+<h3 id="common-solutions">Common Solutions</h3>
+
+<ol>
+  <li><strong>Configuration not updating</strong>: Module caches config - restart application</li>
+  <li><strong>Boolean parsing</strong>: Use <code class="language-plaintext highlighter-rouge">!== 'false'</code> pattern for proper parsing</li>
+  <li><strong>Number parsing</strong>: Always use <code class="language-plaintext highlighter-rouge">parseInt()</code> with radix 10</li>
+  <li><strong>URL validation</strong>: Ensure protocol is included (https://)</li>
+</ol>
+
+<h2 id="related-documentation">Related Documentation</h2>
 
 <ul>
   <li><a href="/developers/src/types/">Types Module</a> - Configuration type definitions</li>
-  <li><a href="/developers/src/index/">Server Module</a> - Server initialization</li>
-  <li><a href="/developers/src/airs/">AIRS Module</a> - AIRS client configuration</li>
+  <li><a href="/developers/src/">Application Entry Point</a> - How configuration is used at startup</li>
+  <li><a href="/developers/src/airs/">AIRS Module</a> - AIRS client configuration usage</li>
 </ul>
 
       </article>
@@ -616,7 +829,7 @@ Configuration validation failed:
           
           
           <a href="/developers/src/" class="next">
-            Root Module (src/) <i class="fas fa-arrow-right"></i>
+            Application Entry Point (src/index.ts) <i class="fas fa-arrow-right"></i>
           </a>
           
         </div>

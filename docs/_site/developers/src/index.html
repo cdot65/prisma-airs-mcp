@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Root Module (src/) | Prisma AIRS MCP</title>
+  <title>Application Entry Point (src/index.ts) | Prisma AIRS MCP</title>
   <meta name="description" content="AI Runtime Security through Model Context Protocol - Secure your AI applications with enterprise-grade threat detection">
   
   <!-- SEO Tags -->
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Root Module (src/) | Prisma AIRS MCP</title>
+<title>Application Entry Point (src/index.ts) | Prisma AIRS MCP</title>
 <meta name="generator" content="Jekyll v3.9.5" />
-<meta property="og:title" content="Root Module (src/)" />
+<meta property="og:title" content="Application Entry Point (src/index.ts)" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Root Module Documentation" />
-<meta property="og:description" content="Root Module Documentation" />
+<meta name="description" content="Application Entry Point Documentation" />
+<meta property="og:description" content="Application Entry Point Documentation" />
 <link rel="canonical" href="http://localhost:4000/developers/src/" />
 <meta property="og:url" content="http://localhost:4000/developers/src/" />
 <meta property="og:site_name" content="Prisma AIRS MCP" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Root Module (src/)" />
+<meta property="twitter:title" content="Application Entry Point (src/index.ts)" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebPage","description":"Root Module Documentation","headline":"Root Module (src/)","url":"http://localhost:4000/developers/src/"}</script>
+{"@context":"https://schema.org","@type":"WebPage","description":"Application Entry Point Documentation","headline":"Application Entry Point (src/index.ts)","url":"http://localhost:4000/developers/src/"}</script>
 <!-- End Jekyll SEO tag -->
 
   
@@ -140,152 +140,195 @@
     
     <main class="documentation-content">
       <div class="content-header">
-        <h1>Root Module (src/)</h1>
+        <h1>Application Entry Point (src/index.ts)</h1>
         
       </div>
       
       <article class="content">
-        <h1 id="root-module-documentation">Root Module Documentation</h1>
+        <h1 id="application-entry-point-documentation">Application Entry Point Documentation</h1>
 
-<p>The root module contains the main entry point for the MCP server application. This documentation covers the <code class="language-plaintext highlighter-rouge">src/index.ts</code> file which initializes and starts the Express HTTP server.</p>
+<p>The <code class="language-plaintext highlighter-rouge">src/index.ts</code> file serves as the main entry point for the Prisma AIRS MCP server. It bootstraps the Express HTTP
+server, configures middleware, sets up MCP protocol handling, and establishes health check endpoints for production
+deployments.</p>
 
-<h2 id="srcindexts">src/index.ts</h2>
+<h2 id="file-overview">File Overview</h2>
 
-<p>The main entry point that creates and configures the Express server with MCP capabilities.</p>
-
-<h3 id="file-location">File Location</h3>
-
-<p><code class="language-plaintext highlighter-rouge">src/index.ts</code></p>
-
-<h3 id="purpose">Purpose</h3>
-
-<p>This file serves as the application’s entry point, responsible for:</p>
+<p><strong>Location</strong>: <code class="language-plaintext highlighter-rouge">src/index.ts</code><br />
+<strong>Purpose</strong>: Application bootstrap and server initialization<br />
+<strong>Key Responsibilities</strong>:</p>
 
 <ol>
-  <li>Initializing the Express HTTP server</li>
-  <li>Setting up middleware for CORS, JSON parsing, and logging</li>
-  <li>Creating health check endpoints for Kubernetes deployments</li>
-  <li>Configuring the MCP server with transport handlers</li>
-  <li>Handling both standard HTTP and SSE connections</li>
-  <li>Implementing comprehensive error handling</li>
+  <li>Express server configuration with middleware stack</li>
+  <li>MCP server instantiation with protocol capabilities</li>
+  <li>HTTP transport handler setup for JSON-RPC 2.0</li>
+  <li>Health and readiness endpoints for container orchestration</li>
+  <li>Dual-mode endpoint supporting both REST and SSE</li>
+  <li>Global error handling and graceful startup</li>
 </ol>
 
-<h3 id="overview">Overview</h3>
+<h2 id="architecture-flow">Architecture Flow</h2>
 
-<p>This file sets up:</p>
-
-<ul>
-  <li>Express HTTP server with middleware</li>
-  <li>Health and readiness endpoints</li>
-  <li>MCP server instance with transport handler</li>
-  <li>JSON-RPC 2.0 message handling</li>
-  <li>Server-Sent Events (SSE) support</li>
-  <li>Error handling and logging</li>
-</ul>
-
-<h3 id="dependencies">Dependencies</h3>
-
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">Server</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@modelcontextprotocol/sdk/server/index.js</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="kd">type</span> <span class="p">{</span> <span class="nx">Request</span><span class="p">,</span> <span class="nx">Response</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">express</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">express</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="kd">type</span> <span class="p">{</span>
-    <span class="nx">JsonRpcRequest</span><span class="p">,</span>
-    <span class="nx">JsonRpcResponse</span><span class="p">,</span>
-    <span class="nx">StreamableRequest</span><span class="p">,</span>
-<span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./transport/http.js</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">HttpServerTransport</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./transport/http.js</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="nx">cors</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">cors</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">getConfig</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./config</span><span class="dl">'</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">getLogger</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">./utils/logger.js</span><span class="dl">'</span><span class="p">;</span>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Application Start
+       ↓
+createServer() Function
+       ↓
+Configuration &amp; Logger Init
+       ↓
+Express App + Middleware
+       ↓
+MCP Server Instance
+       ↓
+HTTP Transport Handler
+       ↓
+Route Registration
+       ↓
+Server Listen on Port
 </code></pre></div></div>
 
-<p><strong>External Dependencies:</strong></p>
+<h2 id="dependencies">Dependencies</h2>
 
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">@modelcontextprotocol/sdk</code> - Official MCP SDK for server implementation</li>
-  <li><code class="language-plaintext highlighter-rouge">express</code> - Web framework for HTTP server</li>
-  <li><code class="language-plaintext highlighter-rouge">cors</code> - CORS middleware for cross-origin support</li>
-</ul>
+<h3 id="external-dependencies">External Dependencies</h3>
 
-<p><strong>Internal Dependencies:</strong></p>
+<table>
+  <thead>
+    <tr>
+      <th>Package</th>
+      <th>Purpose</th>
+      <th>Usage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">@modelcontextprotocol/sdk</code></td>
+      <td>MCP protocol implementation</td>
+      <td>Server class for MCP capabilities</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">express</code></td>
+      <td>Web framework</td>
+      <td>HTTP server and routing</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">cors</code></td>
+      <td>CORS middleware</td>
+      <td>Enable cross-origin requests</td>
+    </tr>
+  </tbody>
+</table>
 
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">./transport/http.js</code> - HTTP transport implementation
-    <ul>
-      <li><code class="language-plaintext highlighter-rouge">HttpServerTransport</code> - Main transport handler class</li>
-      <li><code class="language-plaintext highlighter-rouge">JsonRpcRequest</code> - Request type definition</li>
-      <li><code class="language-plaintext highlighter-rouge">JsonRpcResponse</code> - Response type definition</li>
-      <li><code class="language-plaintext highlighter-rouge">StreamableRequest</code> - Extended request type for SSE</li>
-    </ul>
-  </li>
-  <li><code class="language-plaintext highlighter-rouge">./config</code> - Configuration management</li>
-  <li><code class="language-plaintext highlighter-rouge">./utils/logger.js</code> - Winston logger wrapper</li>
-</ul>
+<h3 id="internal-dependencies">Internal Dependencies</h3>
 
-<h3 id="main-function-createserver">Main Function: createServer()</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Module</th>
+      <th>Import</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td><code class="language-plaintext highlighter-rouge">TransportJsonRpcRequest</code>, <code class="language-plaintext highlighter-rouge">TransportJsonRpcResponse</code>, <code class="language-plaintext highlighter-rouge">TransportStreamableRequest</code></td>
+      <td>Type definitions</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">./transport/http.js</code></td>
+      <td><code class="language-plaintext highlighter-rouge">HttpServerTransport</code></td>
+      <td>HTTP/SSE transport handler</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">./config</code></td>
+      <td><code class="language-plaintext highlighter-rouge">getConfig()</code></td>
+      <td>Configuration singleton</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">./utils/logger.js</code></td>
+      <td><code class="language-plaintext highlighter-rouge">getLogger()</code></td>
+      <td>Logger instance</td>
+    </tr>
+  </tbody>
+</table>
 
-<p>The <code class="language-plaintext highlighter-rouge">createServer</code> function orchestrates the entire server setup:</p>
+<blockquote>
+  <p><strong>Note</strong>: The codebase has migrated to centralized types in <code class="language-plaintext highlighter-rouge">./types</code> with prefixed naming</p>
+</blockquote>
+
+<h2 id="main-function-createserver">Main Function: createServer()</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">createServer</code> function orchestrates the entire server initialization:</p>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">createServer</span> <span class="o">=</span> <span class="p">():</span> <span class="k">void</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
     <span class="kd">const</span> <span class="nx">logger</span> <span class="o">=</span> <span class="nx">getLogger</span><span class="p">();</span>
     <span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
 
-    <span class="c1">// Server initialization...</span>
+    <span class="c1">// Log startup configuration</span>
+    <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Starting MCP server</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">environment</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">environment</span><span class="p">,</span>
+        <span class="na">port</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">,</span>
+        <span class="na">version</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">mcp</span><span class="p">.</span><span class="nx">serverVersion</span><span class="p">,</span>
+    <span class="p">});</span>
+
+    <span class="c1">// ... middleware and route setup</span>
 <span class="p">};</span>
 </code></pre></div></div>
 
-<p><strong>Note</strong>: The codebase uses 4-space indentation throughout.</p>
-
-<h3 id="middleware-configuration">Middleware Configuration</h3>
-
-<p>The server uses several Express middleware components in a specific order:</p>
+<p><strong>Key Steps</strong>:</p>
 
 <ol>
-  <li>
-    <p><strong>CORS Middleware</strong></p>
-
-    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">cors</span><span class="p">());</span>
-</code></pre></div>    </div>
-
-    <ul>
-      <li>Enables Cross-Origin Resource Sharing</li>
-      <li>Allows MCP clients from different origins</li>
-      <li>Essential for browser-based MCP clients</li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>JSON Body Parser</strong></p>
-
-    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span> <span class="na">limit</span><span class="p">:</span> <span class="dl">'</span><span class="s1">10mb</span><span class="dl">'</span> <span class="p">}));</span>
-</code></pre></div>    </div>
-
-    <ul>
-      <li>Parses JSON request bodies</li>
-      <li>10MB limit accommodates large scan requests</li>
-      <li>Required for JSON-RPC 2.0 message parsing</li>
-    </ul>
-  </li>
-  <li>
-    <p><strong>Request Logging Middleware</strong></p>
-
-    <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span> <span class="nx">_res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-     <span class="nx">logger</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span><span class="dl">'</span><span class="s1">Incoming request</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-         <span class="na">method</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="p">,</span>
-         <span class="na">path</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">path</span><span class="p">,</span>
-         <span class="na">ip</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">ip</span><span class="p">,</span>
-     <span class="p">});</span>
-     <span class="nx">next</span><span class="p">();</span>
- <span class="p">});</span>
-</code></pre></div>    </div>
-
-    <ul>
-      <li>Logs all incoming requests</li>
-      <li>Debug level for development</li>
-      <li>Includes method, path, and client IP</li>
-    </ul>
-  </li>
+  <li>Retrieve configuration singleton</li>
+  <li>Initialize logger instance</li>
+  <li>Create Express application</li>
+  <li>Log startup information</li>
+  <li>Configure middleware pipeline</li>
+  <li>Register endpoints</li>
+  <li>Start HTTP listener</li>
 </ol>
+
+<h2 id="middleware-stack">Middleware Stack</h2>
+
+<p>The server configures middleware in this specific order:</p>
+
+<h3 id="1-cors-middleware">1. CORS Middleware</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">cors</span><span class="p">());</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Purpose</strong>: Enable cross-origin requests</li>
+  <li><strong>Configuration</strong>: Default (all origins allowed)</li>
+  <li><strong>Use Case</strong>: Browser-based MCP clients</li>
+</ul>
+
+<h3 id="2-json-body-parser">2. JSON Body Parser</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span><span class="na">limit</span><span class="p">:</span> <span class="dl">'</span><span class="s1">10mb</span><span class="dl">'</span><span class="p">}));</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Purpose</strong>: Parse JSON-RPC 2.0 payloads</li>
+  <li><strong>Limit</strong>: 10MB (supports large batch scans)</li>
+  <li><strong>Content-Type</strong>: <code class="language-plaintext highlighter-rouge">application/json</code></li>
+</ul>
+
+<h3 id="3-request-logger">3. Request Logger</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span> <span class="nx">_res</span><span class="p">,</span> <span class="nx">next</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">logger</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span><span class="dl">'</span><span class="s1">Incoming request</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">method</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="p">,</span>
+        <span class="na">path</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">path</span><span class="p">,</span>
+        <span class="na">ip</span><span class="p">:</span> <span class="nx">req</span><span class="p">.</span><span class="nx">ip</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="nx">next</span><span class="p">();</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<ul>
+  <li><strong>Level</strong>: Debug (development visibility)</li>
+  <li><strong>Fields</strong>: HTTP method, path, client IP</li>
+  <li><strong>Purpose</strong>: Request tracing and debugging</li>
+</ul>
 
 <h3 id="endpoints">Endpoints</h3>
 
@@ -306,9 +349,9 @@
 <strong>Response Example</strong>:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"healthy"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-01-01T12:00:00.000Z"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="w">
+  </span><span class="nl">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"healthy"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-01-01T12:00:00.000Z"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
@@ -331,61 +374,66 @@
 <strong>TODO</strong>: Add AIRS connectivity checks<br />
 <strong>Note</strong>: Currently returns ready immediately - should verify AIRS API connectivity</p>
 
-<h4 id="main-mcp-endpoint-post-">Main MCP Endpoint (POST /)</h4>
+<h3 id="main-mcp-endpoint-post-">Main MCP Endpoint (POST /)</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span>
     <span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span>
-    <span class="k">async</span> <span class="p">(</span>
-        <span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="o">&lt;</span><span class="nx">unknown</span><span class="p">,</span> <span class="nx">unknown</span><span class="p">,</span> <span class="nx">JsonRpcRequest</span><span class="o">&gt;</span><span class="p">,</span>
-        <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="o">&lt;</span><span class="nx">JsonRpcResponse</span><span class="o">&gt;</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="k">await</span> <span class="nx">transport</span><span class="p">.</span><span class="nx">handleRequest</span><span class="p">(</span><span class="nx">req</span> <span class="k">as</span> <span class="nx">StreamableRequest</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
+    <span class="k">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="o">&lt;</span><span class="nx">unknown</span><span class="p">,</span> <span class="nx">unknown</span><span class="p">,</span> <span class="nx">TransportJsonRpcRequest</span><span class="o">&gt;</span><span class="p">,</span>
+           <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="o">&lt;</span><span class="nx">TransportJsonRpcResponse</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">await</span> <span class="nx">transport</span><span class="p">.</span><span class="nx">handleRequest</span><span class="p">(</span><span class="nx">req</span> <span class="k">as</span> <span class="nx">TransportStreamableRequest</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
     <span class="p">},</span>
 <span class="p">);</span>
 </code></pre></div></div>
 
-<p><strong>Purpose</strong>: Handles JSON-RPC 2.0 MCP messages<br />
-<strong>Method</strong>: POST<br />
-<strong>Path</strong>: <code class="language-plaintext highlighter-rouge">/</code><br />
-<strong>Content-Type</strong>: <code class="language-plaintext highlighter-rouge">application/json</code></p>
+<p><strong>Endpoint Details</strong>:</p>
 
-<p><strong>Request Type</strong>: <code class="language-plaintext highlighter-rouge">JsonRpcRequest</code></p>
+<ul>
+  <li><strong>Method</strong>: POST</li>
+  <li><strong>Path</strong>: <code class="language-plaintext highlighter-rouge">/</code></li>
+  <li><strong>Purpose</strong>: JSON-RPC 2.0 message handling</li>
+  <li><strong>Request Type</strong>: <code class="language-plaintext highlighter-rouge">TransportJsonRpcRequest</code></li>
+  <li><strong>Response Type</strong>: <code class="language-plaintext highlighter-rouge">TransportJsonRpcResponse</code></li>
+  <li><strong>Handler</strong>: Delegates to <code class="language-plaintext highlighter-rouge">HttpServerTransport</code></li>
+</ul>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">JsonRpcRequest</span> <span class="p">{</span>
-    <span class="nl">jsonrpc</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2.0</span><span class="dl">'</span><span class="p">;</span>
-    <span class="nl">method</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">params</span><span class="p">?:</span> <span class="nx">unknown</span><span class="p">;</span>
-    <span class="nl">id</span><span class="p">:</span> <span class="kr">string</span> <span class="o">|</span> <span class="kr">number</span> <span class="o">|</span> <span class="kc">null</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p><strong>Example Request</strong>:</p>
+<p><strong>Example JSON-RPC Request</strong>:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airs_scan_content"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Check this content"</span><span class="w">
-        </span><span class="p">}</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="nl">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tools/call"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"params"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airs_scan_content"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Check this content for security threats"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"profile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"strict"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<p><strong>Delegation</strong>: All requests are forwarded to <code class="language-plaintext highlighter-rouge">HttpServerTransport.handleRequest()</code></p>
+<p><strong>Supported Methods</strong>:</p>
 
-<h4 id="sseinfo-endpoint-get-">SSE/Info Endpoint (GET /)</h4>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">initialize</code> - MCP session initialization</li>
+  <li><code class="language-plaintext highlighter-rouge">tools/list</code> - List available tools</li>
+  <li><code class="language-plaintext highlighter-rouge">tools/call</code> - Execute a tool</li>
+  <li><code class="language-plaintext highlighter-rouge">resources/list</code> - List resources</li>
+  <li><code class="language-plaintext highlighter-rouge">resources/read</code> - Read a resource</li>
+  <li><code class="language-plaintext highlighter-rouge">prompts/list</code> - List prompt templates</li>
+  <li><code class="language-plaintext highlighter-rouge">prompts/get</code> - Get prompt details</li>
+</ul>
+
+<h3 id="dual-mode-root-endpoint-get-">Dual-Mode Root Endpoint (GET /)</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="kd">get</span><span class="p">(</span><span class="dl">'</span><span class="s1">/</span><span class="dl">'</span><span class="p">,</span> <span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">acceptHeader</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="nx">accept</span> <span class="o">||</span> <span class="dl">''</span><span class="p">;</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="nx">acceptHeader</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="dl">'</span><span class="s1">text/event-stream</span><span class="dl">'</span><span class="p">))</span> <span class="p">{</span>
-        <span class="c1">// Handle SSE connection</span>
-        <span class="nx">transport</span><span class="p">.</span><span class="nx">handleSSEConnection</span><span class="p">(</span><span class="nx">req</span> <span class="k">as</span> <span class="nx">StreamableRequest</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
+        <span class="c1">// SSE mode for streaming</span>
+        <span class="nx">transport</span><span class="p">.</span><span class="nx">handleSSEConnection</span><span class="p">(</span><span class="nx">req</span> <span class="k">as</span> <span class="nx">TransportStreamableRequest</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="c1">// Return server information for non-SSE requests</span>
+        <span class="c1">// Info mode for discovery</span>
         <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span>
             <span class="na">name</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">mcp</span><span class="p">.</span><span class="nx">serverName</span><span class="p">,</span>
             <span class="na">version</span><span class="p">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">mcp</span><span class="p">.</span><span class="nx">serverVersion</span><span class="p">,</span>
@@ -400,38 +448,45 @@
 <span class="p">});</span>
 </code></pre></div></div>
 
-<p><strong>Purpose</strong>: Dual-purpose endpoint based on Accept header<br />
-<strong>Method</strong>: GET<br />
-<strong>Path</strong>: <code class="language-plaintext highlighter-rouge">/</code></p>
+<p><strong>Mode Selection</strong>:</p>
 
-<p><strong>Behavior 1 - SSE Mode</strong> (Accept: text/event-stream):</p>
+<table>
+  <thead>
+    <tr>
+      <th>Accept Header</th>
+      <th>Response Type</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">text/event-stream</code></td>
+      <td>SSE stream</td>
+      <td>Real-time updates</td>
+    </tr>
+    <tr>
+      <td>Any other</td>
+      <td>JSON</td>
+      <td>Server information</td>
+    </tr>
+  </tbody>
+</table>
 
-<ul>
-  <li>Establishes Server-Sent Events connection</li>
-  <li>Used for streaming responses</li>
-  <li>Delegates to <code class="language-plaintext highlighter-rouge">transport.handleSSEConnection()</code></li>
-</ul>
-
-<p><strong>Behavior 2 - Info Mode</strong> (Standard GET):</p>
-
-<ul>
-  <li>Returns server metadata</li>
-  <li>Example response:</li>
-</ul>
+<p><strong>Info Response Example</strong>:</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prisma-airs-mcp"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"protocolVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.1.0"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nl">"messages"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"health"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/health"</span><span class="p">,</span><span class="w">
-        </span><span class="nl">"ready"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ready"</span><span class="w">
-    </span><span class="p">}</span><span class="w">
+  </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"prisma-airs-mcp-server"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"protocolVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-11-05"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"endpoints"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"messages"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"health"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/health"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"ready"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/ready"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
 
-<h3 id="mcp-server-configuration">MCP Server Configuration</h3>
+<h2 id="mcp-server-configuration">MCP Server Configuration</h2>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">mcpServer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Server</span><span class="p">(</span>
     <span class="p">{</span>
@@ -448,37 +503,49 @@
 <span class="p">);</span>
 </code></pre></div></div>
 
-<p><strong>Server Metadata</strong>:</p>
+<h3 id="server-identity">Server Identity</h3>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">name</code>: Server identifier from config (e.g., “prisma-airs-mcp”)</li>
-  <li><code class="language-plaintext highlighter-rouge">version</code>: Server version from config (e.g., “1.0.0”)</li>
+  <li><strong>Name</strong>: Retrieved from <code class="language-plaintext highlighter-rouge">config.mcp.serverName</code></li>
+  <li><strong>Version</strong>: Retrieved from <code class="language-plaintext highlighter-rouge">config.mcp.serverVersion</code></li>
+  <li><strong>Protocol</strong>: MCP version <code class="language-plaintext highlighter-rouge">2024-11-05</code></li>
 </ul>
 
-<p><strong>Capabilities Declaration</strong>:</p>
+<h3 id="capability-registration">Capability Registration</h3>
 
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">resources: {}</code> - Enables resource listing and reading
-    <ul>
-      <li>Static: cache stats, rate limit status</li>
-      <li>Dynamic: scan results, threat reports</li>
-    </ul>
-  </li>
-  <li><code class="language-plaintext highlighter-rouge">tools: {}</code> - Enables tool discovery and execution
-    <ul>
-      <li>5 security scanning tools</li>
-    </ul>
-  </li>
-  <li><code class="language-plaintext highlighter-rouge">prompts: {}</code> - Enables prompt templates
-    <ul>
-      <li>4 security workflow prompts</li>
-    </ul>
-  </li>
-</ul>
+<table>
+  <thead>
+    <tr>
+      <th>Capability</th>
+      <th>Description</th>
+      <th>Handler Module</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">resources</code></td>
+      <td>Static and dynamic resource access</td>
+      <td><code class="language-plaintext highlighter-rouge">src/resources/</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">tools</code></td>
+      <td>Security scanning tools</td>
+      <td><code class="language-plaintext highlighter-rouge">src/tools/</code></td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">prompts</code></td>
+      <td>Workflow templates</td>
+      <td><code class="language-plaintext highlighter-rouge">src/prompts/</code></td>
+    </tr>
+  </tbody>
+</table>
 
-<p><strong>Note</strong>: The actual handlers are registered by the transport layer</p>
+<blockquote>
+  <p><strong>Note</strong>: Empty objects <code class="language-plaintext highlighter-rouge">{}</code> indicate the capability is enabled. The transport layer connects these to actual
+handlers.</p>
+</blockquote>
 
-<h3 id="transport-handler">Transport Handler</h3>
+<h2 id="transport-layer-integration">Transport Layer Integration</h2>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">transport</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HttpServerTransport</span><span class="p">({</span>
     <span class="na">server</span><span class="p">:</span> <span class="nx">mcpServer</span><span class="p">,</span>
@@ -486,37 +553,54 @@
 <span class="p">});</span>
 </code></pre></div></div>
 
-<p>The transport handler:</p>
+<p><strong>HttpServerTransport Responsibilities</strong>:</p>
 
-<ul>
-  <li>Routes JSON-RPC requests to MCP handlers</li>
-  <li>Manages SSE connections</li>
-  <li>Handles session management</li>
-</ul>
+<ol>
+  <li>JSON-RPC 2.0 protocol handling</li>
+  <li>Request routing to MCP handlers</li>
+  <li>SSE connection management</li>
+  <li>Session state tracking</li>
+  <li>Error response formatting</li>
+</ol>
 
-<h3 id="error-handling">Error Handling</h3>
+<p>See <a href="/developers/src/transport/">Transport Documentation</a> for implementation details.</p>
 
-<h4 id="404-handler">404 Handler</h4>
+<h2 id="error-handling-strategy">Error Handling Strategy</h2>
+
+<h3 id="404-not-found-handler">404 Not Found Handler</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">((</span><span class="nx">_req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Not found</span><span class="dl">'</span> <span class="p">});</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Not found</span><span class="dl">'</span><span class="p">});</span>
 <span class="p">});</span>
 </code></pre></div></div>
 
-<h4 id="global-error-handler">Global Error Handler</h4>
+<ul>
+  <li>Catches all unmatched routes</li>
+  <li>Returns JSON error response</li>
+  <li>HTTP status 404</li>
+</ul>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span>
-    <span class="p">(</span><span class="nx">err</span><span class="p">:</span> <span class="nb">Error</span><span class="p">,</span> <span class="nx">_req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="p">,</span> <span class="nx">_next</span><span class="p">:</span> <span class="nx">express</span><span class="p">.</span><span class="nx">NextFunction</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-        <span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Unhandled error</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-            <span class="na">error</span><span class="p">:</span> <span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
-            <span class="na">stack</span><span class="p">:</span> <span class="nx">err</span><span class="p">.</span><span class="nx">stack</span><span class="p">,</span>
-        <span class="p">});</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Internal server error</span><span class="dl">'</span> <span class="p">});</span>
-    <span class="p">},</span>
-<span class="p">);</span>
+<h3 id="global-error-handler">Global Error Handler</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">((</span><span class="nx">err</span><span class="p">:</span> <span class="nb">Error</span><span class="p">,</span> <span class="nx">_req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">,</span> <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="p">,</span> <span class="nx">_next</span><span class="p">:</span> <span class="nx">express</span><span class="p">.</span><span class="nx">NextFunction</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Unhandled error</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+        <span class="na">error</span><span class="p">:</span> <span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="p">,</span>
+        <span class="na">stack</span><span class="p">:</span> <span class="nx">err</span><span class="p">.</span><span class="nx">stack</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="na">error</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Internal server error</span><span class="dl">'</span><span class="p">});</span>
+<span class="p">});</span>
 </code></pre></div></div>
 
-<h3 id="server-startup">Server Startup</h3>
+<ul>
+  <li>Catches all unhandled errors</li>
+  <li>Logs full error details</li>
+  <li>Returns generic error to client</li>
+  <li>Prevents stack trace exposure</li>
+</ul>
+
+<h2 id="server-lifecycle">Server Lifecycle</h2>
+
+<h3 id="http-server-start">HTTP Server Start</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s2">`MCP server listening on port </span><span class="p">${</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
@@ -524,6 +608,14 @@
     <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="s2">`Ready check: http://localhost:</span><span class="p">${</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">}</span><span class="s2">/ready`</span><span class="p">);</span>
 <span class="p">});</span>
 </code></pre></div></div>
+
+<p><strong>Startup Logs</strong>:</p>
+
+<ul>
+  <li>Port binding confirmation</li>
+  <li>Health endpoint URL</li>
+  <li>Ready endpoint URL</li>
+</ul>
 
 <h3 id="startup-error-handling">Startup Error Handling</h3>
 
@@ -535,15 +627,63 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>Ensures clean exit on startup failures.</p>
+<p><strong>Behavior</strong>:</p>
 
-<h2 id="type-definitions">Type Definitions</h2>
+<ul>
+  <li>Catches synchronous initialization errors</li>
+  <li>Logs to stderr (bypasses logger)</li>
+  <li>Exits with code 1 (failure)</li>
+  <li>Ensures container restart in orchestration</li>
+</ul>
 
-<h3 id="streamablerequest">StreamableRequest</h3>
+<h2 id="type-system">Type System</h2>
 
-<p>Extended Express Request type supporting SSE headers:</p>
+<p>The application uses centralized types from <code class="language-plaintext highlighter-rouge">./types</code> with consistent prefixing:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">StreamableRequest</span> <span class="kd">extends</span> <span class="nx">Request</span> <span class="p">{</span>
+<h3 id="core-types-used">Core Types Used</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Module</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TransportJsonRpcRequest</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>JSON-RPC 2.0 request format</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TransportJsonRpcResponse</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>JSON-RPC 2.0 response format</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">TransportStreamableRequest</code></td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code></td>
+      <td>Express Request with SSE headers</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="type-definitions">Type Definitions</h3>
+
+<p><strong>TransportJsonRpcRequest</strong>:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">TransportJsonRpcRequest</span> <span class="p">{</span>
+    <span class="nl">jsonrpc</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2.0</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nl">method</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">params</span><span class="p">?:</span> <span class="nx">unknown</span><span class="p">;</span>
+    <span class="nl">id</span><span class="p">:</span> <span class="kr">string</span> <span class="o">|</span> <span class="kr">number</span> <span class="o">|</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>TransportStreamableRequest</strong>:</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">TransportStreamableRequest</span> <span class="kd">extends</span> <span class="nx">Request</span> <span class="p">{</span>
     <span class="nl">headers</span><span class="p">:</span> <span class="p">{</span>
         <span class="nx">accept</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
         <span class="dl">'</span><span class="s1">last-event-id</span><span class="dl">'</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
@@ -552,38 +692,79 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h3 id="jsonrpcresponse">JsonRpcResponse</h3>
+<h2 id="configuration-usage">Configuration Usage</h2>
 
-<p>Standard JSON-RPC 2.0 response format:</p>
+<p>The server retrieves configuration via <code class="language-plaintext highlighter-rouge">getConfig()</code> singleton:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">JsonRpcResponse</span> <span class="p">{</span>
-    <span class="nl">jsonrpc</span><span class="p">:</span> <span class="dl">'</span><span class="s1">2.0</span><span class="dl">'</span><span class="p">;</span>
-    <span class="nl">result</span><span class="p">?:</span> <span class="nx">unknown</span><span class="p">;</span>
-    <span class="nl">error</span><span class="p">?:</span> <span class="nx">JsonRpcError</span><span class="p">;</span>
-    <span class="nl">id</span><span class="p">:</span> <span class="kr">string</span> <span class="o">|</span> <span class="kr">number</span> <span class="o">|</span> <span class="kc">null</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<h3 id="server-configuration">Server Configuration</h3>
 
-<h2 id="configuration-dependencies">Configuration Dependencies</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Path</th>
+      <th>Default</th>
+      <th>Usage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Port</td>
+      <td><code class="language-plaintext highlighter-rouge">config.server.port</code></td>
+      <td>3000</td>
+      <td>HTTP listener port</td>
+    </tr>
+    <tr>
+      <td>Environment</td>
+      <td><code class="language-plaintext highlighter-rouge">config.server.environment</code></td>
+      <td>development</td>
+      <td>Runtime mode</td>
+    </tr>
+  </tbody>
+</table>
 
-<p>The server relies on configuration from:</p>
+<h3 id="mcp-configuration">MCP Configuration</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Path</th>
+      <th>Default</th>
+      <th>Usage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Server Name</td>
+      <td><code class="language-plaintext highlighter-rouge">config.mcp.serverName</code></td>
+      <td>prisma-airs-mcp-server</td>
+      <td>Identity</td>
+    </tr>
+    <tr>
+      <td>Version</td>
+      <td><code class="language-plaintext highlighter-rouge">config.mcp.serverVersion</code></td>
+      <td>1.0.0</td>
+      <td>Server version</td>
+    </tr>
+    <tr>
+      <td>Protocol</td>
+      <td><code class="language-plaintext highlighter-rouge">config.mcp.protocolVersion</code></td>
+      <td>2024-11-05</td>
+      <td>MCP version</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="logging-strategy">Logging Strategy</h2>
+
+<p>Structured logging via Winston:</p>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">config.server.port</code> - HTTP port (default: 3000)</li>
-  <li><code class="language-plaintext highlighter-rouge">config.server.environment</code> - Runtime environment</li>
-  <li><code class="language-plaintext highlighter-rouge">config.mcp.serverName</code> - MCP server name</li>
-  <li><code class="language-plaintext highlighter-rouge">config.mcp.serverVersion</code> - Server version</li>
-  <li><code class="language-plaintext highlighter-rouge">config.mcp.protocolVersion</code> - MCP protocol version</li>
-</ul>
-
-<h2 id="logging">Logging</h2>
-
-<p>Uses Winston logger with structured logging:</p>
-
-<ul>
-  <li>Server startup information</li>
-  <li>Request debugging</li>
-  <li>Error tracking</li>
+  <li><strong>Info Level</strong>: Server lifecycle events</li>
+  <li><strong>Debug Level</strong>: Request details</li>
+  <li><strong>Error Level</strong>: Unhandled exceptions</li>
+  <li><strong>Format</strong>: JSON in production, colorized in development</li>
 </ul>
 
 <h2 id="best-practices">Best Practices</h2>
@@ -596,90 +777,144 @@
   <li><strong>Type Safety</strong>: Full TypeScript typing throughout</li>
 </ol>
 
-<h2 id="practical-examples">Practical Examples</h2>
+<h2 id="testing--development">Testing &amp; Development</h2>
 
-<h3 id="testing-the-server">Testing the Server</h3>
+<h3 id="quick-tests">Quick Tests</h3>
+
+<p><strong>1. Health Check</strong>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:3000/health
+<span class="c"># Expected: {"status":"healthy","timestamp":"...","version":"1.0.0"}</span>
+</code></pre></div></div>
+
+<p><strong>2. Server Info</strong>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:3000/
+<span class="c"># Returns server metadata and endpoints</span>
+</code></pre></div></div>
+
+<p><strong>3. List Available Tools</strong>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:3000/ <span class="se">\</span>
+  <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+  <span class="nt">-d</span> <span class="s1">'{
+    "jsonrpc": "2.0",
+    "method": "tools/list",
+    "id": 1
+  }'</span>
+</code></pre></div></div>
+
+<p><strong>4. SSE Connection Test</strong>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-H</span> <span class="s2">"Accept: text/event-stream"</span> <span class="se">\</span>
+     <span class="nt">-H</span> <span class="s2">"Cache-Control: no-cache"</span> <span class="se">\</span>
+     http://localhost:3000/
+</code></pre></div></div>
+
+<h3 id="request-flow-examples">Request Flow Examples</h3>
+
+<h4 id="1-security-scan-flow">1. Security Scan Flow</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Client → POST / → HttpServerTransport → ToolHandler → AIRS Client → Response
+</code></pre></div></div>
 
 <ol>
-  <li>
-    <p><strong>Check Server Health</strong>:</p>
-
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> curl http://localhost:3000/health
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p><strong>Check Server Info</strong>:</p>
-
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> curl http://localhost:3000/
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p><strong>Send MCP Request</strong>:</p>
-
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> curl <span class="nt">-X</span> POST http://localhost:3000/ <span class="se">\</span>
-   <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
-   <span class="nt">-d</span> <span class="s1">'{
-     "jsonrpc": "2.0",
-     "method": "tools/list",
-     "id": 1
-   }'</span>
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p><strong>Connect via SSE</strong>:</p>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> curl <span class="nt">-H</span> <span class="s2">"Accept: text/event-stream"</span> <span class="se">\</span>
-      http://localhost:3000/
-</code></pre></div>    </div>
-  </li>
+  <li>Client sends <code class="language-plaintext highlighter-rouge">tools/call</code> with <code class="language-plaintext highlighter-rouge">airs_scan_content</code></li>
+  <li>Transport validates JSON-RPC format</li>
+  <li>Routes to tool handler</li>
+  <li>AIRS API call executed</li>
+  <li>Results returned in JSON-RPC response</li>
 </ol>
 
-<h3 id="common-request-flows">Common Request Flows</h3>
+<h4 id="2-sse-streaming-flow">2. SSE Streaming Flow</h4>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Client → GET / (SSE) → HttpServerTransport → SSE Manager → Event Stream
+</code></pre></div></div>
 
 <ol>
-  <li><strong>Tool Execution Flow</strong>:
-    <ul>
-      <li>Client sends POST to <code class="language-plaintext highlighter-rouge">/</code> with <code class="language-plaintext highlighter-rouge">tools/call</code> method</li>
-      <li>Transport handler routes to ToolHandler</li>
-      <li>Tool executes AIRS API call</li>
-      <li>Response returned as JSON-RPC result</li>
-    </ul>
-  </li>
-  <li><strong>SSE Streaming Flow</strong>:
-    <ul>
-      <li>Client connects with <code class="language-plaintext highlighter-rouge">Accept: text/event-stream</code></li>
-      <li>Server establishes SSE connection</li>
-      <li>Long-running operations can stream updates</li>
-      <li>Connection remains open for multiple messages</li>
-    </ul>
-  </li>
+  <li>Client connects with <code class="language-plaintext highlighter-rouge">Accept: text/event-stream</code></li>
+  <li>Transport establishes SSE connection</li>
+  <li>Server can push multiple events</li>
+  <li>Connection remains open</li>
+  <li>Client reconnects on disconnect</li>
 </ol>
 
-<h2 id="integration-points">Integration Points</h2>
+<h2 id="key-integration-points">Key Integration Points</h2>
 
-<ul>
-  <li><strong>Transport Layer</strong>: <code class="language-plaintext highlighter-rouge">HttpServerTransport</code> handles all MCP routing</li>
-  <li><strong>Configuration</strong>: Centralized via <code class="language-plaintext highlighter-rouge">getConfig()</code></li>
-  <li><strong>Logging</strong>: Structured logging via <code class="language-plaintext highlighter-rouge">getLogger()</code></li>
-  <li><strong>MCP SDK</strong>: Official <code class="language-plaintext highlighter-rouge">@modelcontextprotocol/sdk</code></li>
-</ul>
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Integration</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Transport Layer</td>
+      <td><code class="language-plaintext highlighter-rouge">HttpServerTransport</code></td>
+      <td>Protocol handling</td>
+    </tr>
+    <tr>
+      <td>Configuration</td>
+      <td><code class="language-plaintext highlighter-rouge">getConfig()</code> singleton</td>
+      <td>Settings management</td>
+    </tr>
+    <tr>
+      <td>Logging</td>
+      <td><code class="language-plaintext highlighter-rouge">getLogger()</code> singleton</td>
+      <td>Structured logging</td>
+    </tr>
+    <tr>
+      <td>MCP SDK</td>
+      <td><code class="language-plaintext highlighter-rouge">Server</code> class</td>
+      <td>Protocol implementation</td>
+    </tr>
+    <tr>
+      <td>Type System</td>
+      <td><code class="language-plaintext highlighter-rouge">./types</code> module</td>
+      <td>Type safety</td>
+    </tr>
+  </tbody>
+</table>
 
 <h2 id="environment-variables">Environment Variables</h2>
 
-<p>Key environment variables used:</p>
+<h3 id="direct-usage">Direct Usage</h3>
 
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">PORT</code> - Server port (default: 3000)</li>
-  <li><code class="language-plaintext highlighter-rouge">NODE_ENV</code> - Environment (development/production)</li>
+  <li><code class="language-plaintext highlighter-rouge">PORT</code> - Server port (overrides config)</li>
+  <li><code class="language-plaintext highlighter-rouge">NODE_ENV</code> - Runtime environment</li>
   <li><code class="language-plaintext highlighter-rouge">LOG_LEVEL</code> - Logging verbosity</li>
-  <li>See <a href="/developers/src/config/">Configuration</a> for full list</li>
 </ul>
 
-<h2 id="next-steps">Next Steps</h2>
+<h3 id="indirect-via-config">Indirect (via Config)</h3>
 
 <ul>
-  <li><a href="/developers/src/transport/">Transport Layer</a> - HTTP and SSE transport implementation</li>
-  <li><a href="/developers/src/config/">Configuration</a> - Server configuration management</li>
-  <li><a href="/developers/src/airs/">AIRS Module</a> - AIRS API client integration</li>
+  <li><code class="language-plaintext highlighter-rouge">AIRS_API_KEY</code> - Prisma AIRS authentication</li>
+  <li><code class="language-plaintext highlighter-rouge">AIRS_API_URL</code> - API endpoint</li>
+  <li>See <a href="/developers/src/config/">Configuration Module</a> for complete list</li>
+</ul>
+
+<h2 id="related-documentation">Related Documentation</h2>
+
+<ul>
+  <li><a href="/developers/src/transport/">Transport Module</a> - HTTP/SSE implementation details</li>
+  <li><a href="/developers/src/config/">Configuration Module</a> - Settings and environment</li>
+  <li><a href="/developers/src/types/">Types Module</a> - Type definitions</li>
+  <li><a href="/developers/src/tools/">Tools Module</a> - Security tool implementations</li>
+</ul>
+
+<h2 id="summary">Summary</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">src/index.ts</code> file provides a clean, well-structured entry point that:</p>
+
+<ul>
+  <li>Initializes all server components in the correct order</li>
+  <li>Provides comprehensive error handling</li>
+  <li>Supports both REST and streaming protocols</li>
+  <li>Includes production-ready health checks</li>
+  <li>Maintains clear separation of concerns</li>
 </ul>
 
       </article>

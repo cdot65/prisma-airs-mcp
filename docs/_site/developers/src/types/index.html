@@ -149,18 +149,37 @@
 
 <p>The Types module provides a centralized location for all TypeScript type definitions used throughout the Prisma AIRS MCP server. This architectural decision ensures type consistency, prevents circular dependencies, and provides a single source of truth for all type definitions.</p>
 
-<h2 id="module-overview">Module Overview</h2>
-
-<p>The types module is organized into several files, each containing types for a specific domain:</p>
+<h2 id="module-structure">Module Structure</h2>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>src/types/
-├── index.ts      # Central export point
+├── index.ts      # Central export point (re-exports all types)
 ├── airs.ts       # AIRS API types (Airs* prefix)
 ├── config.ts     # Configuration types (Config* prefix)
 ├── mcp.ts        # MCP protocol types (Mcp* prefix)
 ├── tools.ts      # Tool handler types (Tools* prefix)
-├── transport.ts  # HTTP/SSE transport types (Transport* prefix)
-└── README.md     # Type naming conventions
+└── transport.ts  # HTTP/SSE transport types (Transport* prefix)
+</code></pre></div></div>
+
+<h2 id="architecture-overview">Architecture Overview</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─────────────────────────────────────────┐
+│        Application Modules              │
+│  (tools, resources, transport, etc.)    │
+└─────────────────┬───────────────────────┘
+                  │
+                  │ import type {...} from '../types'
+                  ▼
+┌─────────────────────────────────────────┐
+│         src/types/index.ts              │
+│    Central re-export of all types       │
+└─────────────────┬───────────────────────┘
+                  │
+        ┌─────────┴─────────┬─────────────┬──────────────┬────────────┐
+        │                   │             │              │            │
+┌───────▼────────┐ ┌────────▼──────┐ ┌───▼────┐ ┌──────▼──────┐ ┌───▼────┐
+│   airs.ts      │ │  config.ts    │ │mcp.ts  │ │ tools.ts    │ │transport│
+│ • Airs* types  │ │ • Config*     │ │• Mcp*  │ │ • Tools*    │ │• Transport*│
+└────────────────┘ └───────────────┘ └────────┘ └─────────────┘ └────────┘
 </code></pre></div></div>
 
 <h2 id="naming-conventions">Naming Conventions</h2>
@@ -185,28 +204,39 @@
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Synchronous scan request</span>
 <span class="k">export</span> <span class="kr">interface</span> <span class="nx">AirsScanRequest</span> <span class="p">{</span>
+    <span class="nl">tr_id</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>                    <span class="c1">// Transaction ID</span>
+    <span class="nl">ai_profile</span><span class="p">:</span> <span class="nx">AirsAiProfile</span><span class="p">;</span>         <span class="c1">// Security profile</span>
+    <span class="nl">metadata</span><span class="p">?:</span> <span class="nx">AirsMetadata</span><span class="p">;</span>           <span class="c1">// Request metadata</span>
+    <span class="nl">contents</span><span class="p">:</span> <span class="nx">AirsContentItem</span><span class="p">[];</span>       <span class="c1">// Content to scan</span>
+<span class="p">}</span>
+
+<span class="c1">// AI Profile configuration</span>
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">AirsAiProfile</span> <span class="p">{</span>
+    <span class="nl">profile_id</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">profile_name</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Content item for scanning</span>
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">AirsContentItem</span> <span class="p">{</span>
     <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
     <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">profile_name</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">scan_uuid</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">code_prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">code_response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="c1">// Scan response with security findings</span>
 <span class="k">export</span> <span class="kr">interface</span> <span class="nx">AirsScanResponse</span> <span class="p">{</span>
+    <span class="nl">report_id</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
     <span class="nl">scan_id</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">scan_type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">Prompt</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">Response</span><span class="dl">'</span><span class="p">;</span>
-    <span class="nl">scanned_text</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">detected</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>
-    <span class="nl">findings</span><span class="p">?:</span> <span class="nx">AirsSecurityFinding</span><span class="p">[];</span>
-<span class="p">}</span>
-
-<span class="c1">// Individual security finding</span>
-<span class="k">export</span> <span class="kr">interface</span> <span class="nx">AirsSecurityFinding</span> <span class="p">{</span>
-    <span class="nl">metric</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">severity</span><span class="p">:</span> <span class="nx">AirsSeverity</span><span class="p">;</span>
-    <span class="nl">score</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
-    <span class="nl">violated</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>
-    <span class="nl">findings_metadata</span><span class="p">?:</span> <span class="nx">AirsFindingMetadata</span><span class="p">[];</span>
+    <span class="nl">tr_id</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">profile_id</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">profile_name</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">category</span><span class="p">:</span> <span class="dl">'</span><span class="s1">malicious</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">benign</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nl">action</span><span class="p">:</span> <span class="dl">'</span><span class="s1">block</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">allow</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nl">prompt_detected</span><span class="p">?:</span> <span class="nx">AirsPromptDetected</span><span class="p">;</span>
+    <span class="nl">response_detected</span><span class="p">?:</span> <span class="nx">AirsResponseDetected</span><span class="p">;</span>
+    <span class="nl">ml_metadata</span><span class="p">?:</span> <span class="nx">AirsMlMetadata</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -386,36 +416,54 @@
 
 <h3 id="configuration-types-configts">Configuration Types (<code class="language-plaintext highlighter-rouge">config.ts</code>)</h3>
 
-<p>Types for application configuration.</p>
+<p>Types for application configuration with comprehensive settings.</p>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Main configuration structure</span>
 <span class="k">export</span> <span class="kr">interface</span> <span class="nx">Config</span> <span class="p">{</span>
-    <span class="nl">server</span><span class="p">:</span> <span class="nx">ConfigServerOptions</span><span class="p">;</span>
-    <span class="nl">mcp</span><span class="p">:</span> <span class="nx">ConfigMcpOptions</span><span class="p">;</span>
-    <span class="nl">airs</span><span class="p">:</span> <span class="nx">ConfigAirsOptions</span><span class="p">;</span>
+    <span class="nl">server</span><span class="p">:</span> <span class="nx">ConfigServer</span><span class="p">;</span>
+    <span class="nl">airs</span><span class="p">:</span> <span class="nx">ConfigAirs</span><span class="p">;</span>
+    <span class="nl">cache</span><span class="p">:</span> <span class="nx">ConfigCache</span><span class="p">;</span>
+    <span class="nl">rateLimit</span><span class="p">:</span> <span class="nx">ConfigRateLimit</span><span class="p">;</span>
+    <span class="nl">mcp</span><span class="p">:</span> <span class="nx">ConfigMcp</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="c1">// Server configuration</span>
-<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ConfigServerOptions</span> <span class="p">{</span>
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ConfigServer</span> <span class="p">{</span>
     <span class="nl">port</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
-    <span class="nl">environment</span><span class="p">:</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">;</span>
-    <span class="nl">corsOrigin</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">environment</span><span class="p">:</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">test</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nl">logLevel</span><span class="p">:</span> <span class="dl">'</span><span class="s1">error</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">warn</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">info</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">debug</span><span class="dl">'</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="c1">// MCP configuration</span>
-<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ConfigMcpOptions</span> <span class="p">{</span>
-    <span class="nl">serverName</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">serverVersion</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">protocolVersion</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="c1">// AIRS API configuration</span>
-<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ConfigAirsOptions</span> <span class="p">{</span>
+<span class="c1">// Prisma AIRS configuration</span>
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ConfigAirs</span> <span class="p">{</span>
     <span class="nl">apiUrl</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
     <span class="nl">apiKey</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
     <span class="nl">timeout</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
     <span class="nl">retryAttempts</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
     <span class="nl">retryDelay</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">defaultProfileId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">defaultProfileName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Cache configuration</span>
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ConfigCache</span> <span class="p">{</span>
+    <span class="nl">ttlSeconds</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">maxSize</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">enabled</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Rate limiting configuration</span>
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ConfigRateLimit</span> <span class="p">{</span>
+    <span class="nl">maxRequests</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">windowMs</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">enabled</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// MCP protocol configuration</span>
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ConfigMcp</span> <span class="p">{</span>
+    <span class="nl">serverName</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">serverVersion</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">protocolVersion</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -428,7 +476,24 @@
     <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
     <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
     <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">profile</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">profileName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">profileId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">metadata</span><span class="p">?:</span> <span class="p">{</span>
+        <span class="nx">appName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+        <span class="nl">appUser</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+        <span class="nl">aiModel</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+        <span class="nl">userIp</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">// Async scan request item</span>
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ToolsAsyncScanRequestItem</span> <span class="p">{</span>
+    <span class="nl">reqId</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>
+    <span class="nl">prompt</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">response</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">profileName</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
+    <span class="nl">profileId</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="c1">// Async scan arguments</span>
@@ -436,18 +501,18 @@
     <span class="nl">requests</span><span class="p">:</span> <span class="nx">ToolsAsyncScanRequestItem</span><span class="p">[];</span>
 <span class="p">}</span>
 
-<span class="c1">// Scan request item</span>
-<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ToolsAsyncScanRequestItem</span> <span class="p">{</span>
-    <span class="nl">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">prompt</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">response</span><span class="dl">'</span><span class="p">;</span>
-    <span class="nl">text</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">context</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">profile</span><span class="p">?:</span> <span class="kr">string</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="c1">// Result retrieval arguments</span>
+<span class="c1">// Get scan results arguments</span>
 <span class="k">export</span> <span class="kr">interface</span> <span class="nx">ToolsGetScanResultsArgs</span> <span class="p">{</span>
     <span class="nl">scanIds</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span>
 <span class="p">}</span>
+
+<span class="c1">// Get threat reports arguments</span>
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">ToolsGetThreatReportsArgs</span> <span class="p">{</span>
+    <span class="nl">reportIds</span><span class="p">:</span> <span class="kr">string</span><span class="p">[];</span>
+<span class="p">}</span>
+
+<span class="c1">// Type alias for scan responses with threat detection</span>
+<span class="k">export</span> <span class="kd">type</span> <span class="nx">ToolsScanResponseWithDetected</span> <span class="o">=</span> <span class="nx">AirsScanResponse</span><span class="p">;</span>
 </code></pre></div></div>
 
 <h2 id="import-patterns">Import Patterns</h2>
@@ -605,31 +670,123 @@
 <h3 id="adding-new-types">Adding New Types</h3>
 
 <ol>
-  <li>Add to appropriate module file</li>
-  <li>Follow naming conventions</li>
-  <li>Export from module file</li>
-  <li>Re-export from index.ts if public</li>
-  <li>Document complex types</li>
+  <li><strong>Choose the correct file</strong> based on module domain</li>
+  <li><strong>Follow naming conventions</strong> - prefix with module name</li>
+  <li><strong>Export from module file</strong> - add export statement</li>
+  <li><strong>Update index.ts</strong> - already re-exports with <code class="language-plaintext highlighter-rouge">export *</code></li>
+  <li><strong>Document complex types</strong> - add JSDoc comments</li>
 </ol>
+
+<p>Example:</p>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In airs.ts</span>
+<span class="cm">/**
+ * New feature configuration
+ */</span>
+<span class="k">export</span> <span class="kr">interface</span> <span class="nx">AirsNewFeature</span> <span class="p">{</span>
+    <span class="nl">enabled</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>
+    <span class="nl">options</span><span class="p">:</span> <span class="nb">Record</span><span class="o">&lt;</span><span class="kr">string</span><span class="p">,</span> <span class="nx">unknown</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
 <h3 id="modifying-existing-types">Modifying Existing Types</h3>
 
 <ol>
-  <li>Consider backward compatibility</li>
-  <li>Update all usages</li>
-  <li>Run type checking</li>
-  <li>Update documentation</li>
-  <li>Test thoroughly</li>
+  <li><strong>Check usage</strong> - search for all references</li>
+  <li><strong>Consider compatibility</strong> - avoid breaking changes</li>
+  <li><strong>Update incrementally</strong> - use optional properties</li>
+  <li><strong>Run type checking</strong> - <code class="language-plaintext highlighter-rouge">npm run typecheck</code></li>
+  <li><strong>Test thoroughly</strong> - ensure no runtime errors</li>
 </ol>
 
-<h2 id="next-steps">Next Steps</h2>
+<h2 id="benefits-of-centralized-types">Benefits of Centralized Types</h2>
+
+<ol>
+  <li><strong>Single Source of Truth</strong> - All types in one location</li>
+  <li><strong>Prevents Circular Dependencies</strong> - Modules import from types, not each other</li>
+  <li><strong>Consistent Naming</strong> - Enforced prefixing prevents conflicts</li>
+  <li><strong>Easy Discovery</strong> - All types accessible via single import</li>
+  <li><strong>Better Refactoring</strong> - Change once, update everywhere</li>
+</ol>
+
+<h2 id="type-safety-patterns">Type Safety Patterns</h2>
+
+<h3 id="using-type-guards">Using Type Guards</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="kd">type</span> <span class="p">{</span> <span class="nx">AirsScanResponse</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../types</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">isAirsScanResponse</span><span class="p">(</span><span class="nx">obj</span><span class="p">:</span> <span class="nx">unknown</span><span class="p">):</span> <span class="nx">obj</span> <span class="k">is</span> <span class="nx">AirsScanResponse</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+        <span class="k">typeof</span> <span class="nx">obj</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">object</span><span class="dl">'</span> <span class="o">&amp;&amp;</span>
+        <span class="nx">obj</span> <span class="o">!==</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span>
+        <span class="dl">'</span><span class="s1">scan_id</span><span class="dl">'</span> <span class="k">in</span> <span class="nx">obj</span> <span class="o">&amp;&amp;</span>
+        <span class="dl">'</span><span class="s1">category</span><span class="dl">'</span> <span class="k">in</span> <span class="nx">obj</span> <span class="o">&amp;&amp;</span>
+        <span class="dl">'</span><span class="s1">action</span><span class="dl">'</span> <span class="k">in</span> <span class="nx">obj</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="discriminated-unions">Discriminated Unions</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// In transport.ts</span>
+<span class="k">export</span> <span class="kd">type</span> <span class="nx">TransportMessage</span> <span class="o">=</span> 
+    <span class="o">|</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">request</span><span class="dl">'</span><span class="p">;</span> <span class="nl">data</span><span class="p">:</span> <span class="nx">TransportJsonRpcRequest</span> <span class="p">}</span>
+    <span class="o">|</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">response</span><span class="dl">'</span><span class="p">;</span> <span class="nl">data</span><span class="p">:</span> <span class="nx">TransportJsonRpcResponse</span> <span class="p">}</span>
+    <span class="o">|</span> <span class="p">{</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">error</span><span class="dl">'</span><span class="p">;</span> <span class="nl">data</span><span class="p">:</span> <span class="nx">TransportJsonRpcError</span> <span class="p">};</span>
+</code></pre></div></div>
+
+<h3 id="utility-types">Utility Types</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Making all properties optional</span>
+<span class="k">export</span> <span class="kd">type</span> <span class="nx">PartialAirsConfig</span> <span class="o">=</span> <span class="nb">Partial</span><span class="o">&lt;</span><span class="nx">AirsClientConfig</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="c1">// Picking specific properties</span>
+<span class="k">export</span> <span class="kd">type</span> <span class="nx">AirsCredentials</span> <span class="o">=</span> <span class="nb">Pick</span><span class="o">&lt;</span><span class="nx">AirsClientConfig</span><span class="p">,</span> <span class="dl">'</span><span class="s1">apiUrl</span><span class="dl">'</span> <span class="o">|</span> <span class="dl">'</span><span class="s1">apiKey</span><span class="dl">'</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="c1">// Omitting properties</span>
+<span class="k">export</span> <span class="kd">type</span> <span class="nx">PublicAirsConfig</span> <span class="o">=</span> <span class="nx">Omit</span><span class="o">&lt;</span><span class="nx">AirsClientConfig</span><span class="p">,</span> <span class="dl">'</span><span class="s1">apiKey</span><span class="dl">'</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h2 id="dependencies">Dependencies</h2>
+
+<p>The types module has no runtime dependencies and only development dependencies:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Module</th>
+      <th>Purpose</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>TypeScript</td>
+      <td>Type checking and compilation</td>
+    </tr>
+    <tr>
+      <td>@types/node</td>
+      <td>Node.js type definitions</td>
+    </tr>
+    <tr>
+      <td>@types/express</td>
+      <td>Express type definitions (for transport types)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="related-documentation">Related Documentation</h2>
 
 <ul>
   <li><a href="/developers/src/airs/">AIRS Module</a> - AIRS client implementation</li>
   <li><a href="/developers/src/transport/">Transport Module</a> - HTTP/SSE transport</li>
   <li><a href="/developers/src/tools/">Tools Module</a> - Tool implementations</li>
   <li><a href="/developers/src/config/">Config Module</a> - Configuration management</li>
+  <li><a href="/developers/src/resources/">Resources Module</a> - Resource handlers</li>
+  <li><a href="/developers/src/prompts/">Prompts Module</a> - Prompt templates</li>
 </ul>
+
+<h2 id="summary">Summary</h2>
+
+<p>The centralized types module is a critical architectural component that ensures type safety, consistency, and maintainability across the entire Prisma AIRS MCP server codebase. By following the established naming conventions and import patterns, developers can easily work with strongly-typed interfaces throughout the application.</p>
 
       </article>
       
