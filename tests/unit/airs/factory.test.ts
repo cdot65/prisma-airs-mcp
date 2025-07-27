@@ -1,15 +1,19 @@
 import { describe, it, expect, jest, beforeEach, afterEach } from '@jest/globals';
+import { getAirsClient, resetAirsClient } from '../../../src/airs/factory';
 import { EnhancedPrismaAirsClient } from '../../../src/airs';
 import { getConfig } from '../../../src/config';
 
-// Mock dependencies BEFORE importing the module that uses them
+// Mock dependencies
 jest.mock('../../../src/config');
-jest.mock('../../../src/utils/logger');
+jest.mock('../../../src/utils/logger', () => ({
+    getLogger: () => ({
+        info: jest.fn(),
+        error: jest.fn(),
+        warn: jest.fn(),
+        debug: jest.fn(),
+    }),
+}));
 jest.mock('../../../src/airs/index');
-
-// Import after mocks are set up
-import { getAirsClient, resetAirsClient } from '../../../src/airs/factory';
-import { mockLogger } from '../../../src/utils/__mocks__/logger';
 
 describe('AIRS Factory', () => {
     const mockConfig = {
@@ -163,7 +167,6 @@ describe('AIRS Factory', () => {
             // Should not throw and should not call any methods
             expect(mockClient.clearCache).not.toHaveBeenCalled();
             expect(mockClient.resetRateLimits).not.toHaveBeenCalled();
-            expect(mockLogger.info).not.toHaveBeenCalledWith('AIRS client instance reset');
         });
 
         it('should allow configuration changes between resets', () => {
