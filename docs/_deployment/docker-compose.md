@@ -37,47 +37,33 @@ nano .env
 ### 3. Start the Service
 
 ```bash
-# For production
-docker compose --profile prod up -d
+# Start the service (uses dev image)
+pnpm run compose:up
 
-# For development
-docker compose --profile dev up -d
+# Or with docker compose directly
+docker compose up -d
 ```
 
-## Understanding Profiles
+## Docker Compose Setup
 
-The project uses Docker Compose profiles to separate environments:
+The Docker Compose configuration has been simplified to use a single service with the development image (multi-platform support). For production deployments, we recommend using Kubernetes.
 
-| Profile | Purpose     | Features                                        | Use Case              |
-| ------- | ----------- | ----------------------------------------------- | --------------------- |
-| `dev`   | Development | Hot reloading, debug logs, source mounting      | Local development     |
-| `prod`  | Production  | Optimized build, resource limits, health checks | Production deployment |
+## Container Management
 
-> **Note**: Only one profile can run at a time as both use port 3000.
-
-## Development Profile
-
-### Features
-
-- **Hot Reloading**: Source code mounted for live updates
-- **Debug Logging**: Detailed logs for troubleshooting
-- **No Resource Limits**: Full system resources available
-- **Development Tools**: Shell access and debugging utilities
-
-### Starting Development
+### Starting the Service
 
 ```bash
-# Start in background
-docker compose --profile dev up -d
-
-# Start with logs
-docker compose --profile dev up
+# Start the container
+pnpm run compose:up
 
 # View logs
-docker compose logs -f dev
+pnpm run compose:logs
 
-# Access shell
-docker compose --profile dev exec dev sh
+# Restart the service
+pnpm run compose:restart
+
+# Stop the service
+pnpm run compose:down
 ```
 
 ### Development docker-compose.yml
@@ -107,30 +93,14 @@ services:
         restart: unless-stopped
 ```
 
-## Production Profile
-
-### Features
-
-- **Optimized Image**: Minimal size (149MB)
-- **Resource Limits**: CPU and memory constraints
-- **Health Checks**: Automatic container monitoring
-- **Security Hardening**: Read-only filesystem options
-- **Auto-restart**: Ensures high availability
-
-### Starting Production
+### Building the Image
 
 ```bash
-# Start in background
-docker compose --profile prod up -d
+# Build the image locally
+pnpm run compose:build
 
-# Start with logs
-docker compose --profile prod up
-
-# View logs
-docker compose logs -f prod
-
-# Check health
-docker compose ps
+# Or pull the pre-built image
+docker compose pull
 ```
 
 ### Production docker-compose.yml

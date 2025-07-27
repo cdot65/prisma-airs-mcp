@@ -35,31 +35,39 @@ kubectl create namespace prisma-airs-mcp-server
 ### 3. Create Secret
 
 ```bash
-# Create secret with API key and profile
-kubectl create secret generic prisma-airs-secret \
-  --from-literal=api-key=your-api-key-here \
-  --from-literal=profile-name="Prisma AIRS" \
+# Create secret using the manage-secrets script
+./k8s/scripts/manage-secrets.sh create prisma-airs-mcp-server 'your-api-key-here'
+
+# Or create manually
+kubectl create secret generic prisma-airs-mcp-secrets \
+  --from-literal=airs.api.key='your-api-key-here' \
   -n prisma-airs-mcp-server
 ```
 
 ### 4. Deploy Application
 
 ```bash
-# Deploy using Kustomize
+# Deploy using the deployment script
+pnpm run k8s:deploy:latest
+
+# Or deploy manually with Kustomize
 kubectl apply -k k8s/overlays/production
 
 # Check deployment status
-kubectl get pods -n prisma-airs-mcp-server
+pnpm run k8s:status
 
-# Get service details
-kubectl get svc -n prisma-airs-mcp-server
+# View rollout status
+pnpm run k8s:rollout:status
 ```
 
 ### 5. Verify Deployment
 
 ```bash
+# Verify deployment is successful
+pnpm run k8s:verify
+
 # Check pod logs
-kubectl logs -l app=prisma-airs-mcp -n prisma-airs-mcp-server
+pnpm run k8s:logs
 
 # Port-forward to test locally
 kubectl port-forward -n prisma-airs-mcp-server svc/prisma-airs-mcp 3000:3000
@@ -276,19 +284,26 @@ kubectl autoscale deployment prisma-airs-mcp \
 The project includes deployment scripts:
 
 ```bash
-# Development deployment
-./k8s/scripts/deploy.sh dev
+# Production deployment (latest tag)
+pnpm run k8s:deploy:latest
 
-# Staging deployment
-./k8s/scripts/deploy.sh staging
+# Versioned deployment
+pnpm run k8s:deploy:version
 
-# Production deployment
-./k8s/scripts/deploy.sh prod
+# Or use the deploy script directly
+./k8s/scripts/deploy.sh deploy production
+
+# Check deployment status
+./k8s/scripts/deploy.sh status prisma-airs-mcp-server
 ```
 
 ### Rollback
 
 ```bash
+# Rollback using script
+pnpm run k8s:rollback
+
+# Or manually:
 # View deployment history
 kubectl rollout history deployment/prisma-airs-mcp -n prisma-airs-mcp-server
 
@@ -312,6 +327,9 @@ The deployment includes:
 ### View Logs
 
 ```bash
+# View logs using pnpm script
+pnpm run k8s:logs
+
 # All pods
 kubectl logs -l app=prisma-airs-mcp -n prisma-airs-mcp-server -f
 
@@ -394,7 +412,10 @@ kubectl get middleware -n prisma-airs-mcp-server
 
 ```bash
 # Verify secret exists
-kubectl get secret prisma-airs-secret -n prisma-airs-mcp-server
+kubectl get secret prisma-airs-mcp-secrets -n prisma-airs-mcp-server
+
+# Verify secret using script
+./k8s/scripts/manage-secrets.sh verify prisma-airs-mcp-server
 
 # Check secret content (base64 encoded)
 kubectl get secret prisma-airs-secret -n prisma-airs-mcp-server -o yaml

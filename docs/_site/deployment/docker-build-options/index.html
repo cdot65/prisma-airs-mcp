@@ -186,48 +186,32 @@
 
 <h3 id="quick-reference">Quick Reference</h3>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Local development (native platform)</span>
-pnpm run docker:build:local
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Development build (multi-platform)</span>
+pnpm run docker:build:dev      <span class="c"># Builds for linux/amd64,linux/arm64</span>
 
-<span class="c"># Platform-specific builds</span>
-pnpm run docker:build:arm      <span class="c"># ARM64 only</span>
-pnpm run docker:build:amd64    <span class="c"># AMD64 only</span>
+<span class="c"># Production build (AMD64 only)</span>
+pnpm run docker:build:prod     <span class="c"># Builds for linux/amd64 only</span>
 
-<span class="c"># Multi-platform builds</span>
-pnpm run docker:build:dev      <span class="c"># Development (local load)</span>
-pnpm run docker:build:dev:multi <span class="c"># Development (registry push)</span>
-pnpm run docker:build:prod     <span class="c"># Production (AMD64 only)</span>
+<span class="c"># Run containers</span>
+pnpm run docker:run:dev        <span class="c"># Run dev image on port 3000</span>
+pnpm run docker:run:dev:3100   <span class="c"># Run dev image on port 3100</span>
 </code></pre></div></div>
 
 <h3 id="development-builds">Development Builds</h3>
 
-<h4 id="native-platform-build">Native Platform Build</h4>
+<h4 id="development-build">Development Build</h4>
 
-<p>Fastest for local development:</p>
+<p>Multi-platform build supporting both ARM64 and AMD64:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Builds for your current platform</span>
-pnpm run docker:build:local
-
-<span class="c"># Equivalent to:</span>
-docker build <span class="nt">-t</span> ghcr.io/cdot65/prisma-airs-mcp:local <span class="nb">.</span>
-</code></pre></div></div>
-
-<h4 id="multi-platform-dev-build">Multi-Platform Dev Build</h4>
-
-<p>Supports both architectures but requires registry push:</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build and push multi-platform image</span>
-pnpm run docker:build:dev:multi
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build dev image</span>
+pnpm run docker:build:dev
 
 <span class="c"># Equivalent to:</span>
-docker buildx build <span class="se">\</span>
-  <span class="nt">--platform</span> linux/amd64,linux/arm64 <span class="se">\</span>
-  <span class="nt">-t</span> ghcr.io/cdot65/prisma-airs-mcp:dev <span class="se">\</span>
-  <span class="nt">--push</span> <span class="nb">.</span>
+./scripts/docker-build.sh <span class="nt">--platforms</span> linux/amd64,linux/arm64 <span class="nt">--tag</span> dev
 </code></pre></div></div>
 
 <blockquote>
-  <p><strong>Note</strong>: Multi-platform images cannot be loaded directly into your local Docker daemon. They must be pushed to a registry.</p>
+  <p><strong>Note</strong>: When building for multiple platforms with <code class="language-plaintext highlighter-rouge">--platforms linux/amd64,linux/arm64</code>, the image can only be loaded to local Docker if building for a single platform. For multi-platform images, use <code class="language-plaintext highlighter-rouge">--push</code> flag to push to registry.</p>
 </blockquote>
 
 <h3 id="production-builds">Production Builds</h3>
@@ -238,7 +222,7 @@ docker buildx build <span class="se">\</span>
 pnpm run docker:build:prod
 
 <span class="c"># Equivalent to:</span>
-./scripts/docker-build-k8s.sh <span class="nt">--platforms</span> linux/amd64 <span class="nt">--load</span>
+./scripts/docker-build.sh <span class="nt">--platforms</span> linux/amd64 <span class="nt">--tag</span> latest
 </code></pre></div></div>
 
 <h2 id="platform-specific-considerations">Platform-Specific Considerations</h2>
@@ -251,8 +235,11 @@ pnpm run docker:build:prod
   <li>
     <p><strong>Local Development</strong>:</p>
 
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Use native ARM64 build for best performance</span>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Build dev image (supports both platforms)</span>
  pnpm run docker:build:dev
+    
+ <span class="c"># Run locally</span>
+ pnpm run docker:run:dev
 </code></pre></div>    </div>
   </li>
   <li>
@@ -275,8 +262,8 @@ pnpm run docker:build:prod
 <p>For developers on x86_64 systems:</p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># All builds are native, no emulation needed</span>
-pnpm run docker:build:local
-pnpm run docker:build:prod
+pnpm run docker:build:dev   <span class="c"># Multi-platform dev build</span>
+pnpm run docker:build:prod  <span class="c"># AMD64 production build</span>
 </code></pre></div></div>
 
 <h2 id="docker-buildx-setup">Docker Buildx Setup</h2>
@@ -401,13 +388,13 @@ docker build <span class="se">\</span>
 <h3 id="publishing-images">Publishing Images</h3>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Development (multi-platform)</span>
-pnpm run docker:publish:dev
+pnpm run docker:push:dev
 
 <span class="c"># Production (AMD64)</span>
-pnpm run docker:publish:prod
+pnpm run docker:push:prod
 
 <span class="c"># Versioned release</span>
-pnpm run docker:publish:version
+pnpm run docker:push:version
 </code></pre></div></div>
 
 <h3 id="registry-authentication">Registry Authentication</h3>

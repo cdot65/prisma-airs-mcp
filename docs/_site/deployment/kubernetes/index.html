@@ -181,29 +181,37 @@ git clone https://github.com/cdot65/prisma-airs-mcp.git
 
 <h3 id="3-create-secret">3. Create Secret</h3>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create secret with API key and profile</span>
-kubectl create secret generic prisma-airs-secret <span class="se">\</span>
-  <span class="nt">--from-literal</span><span class="o">=</span>api-key<span class="o">=</span>your-api-key-here <span class="se">\</span>
-  <span class="nt">--from-literal</span><span class="o">=</span>profile-name<span class="o">=</span><span class="s2">"Prisma AIRS"</span> <span class="se">\</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create secret using the manage-secrets script</span>
+./k8s/scripts/manage-secrets.sh create prisma-airs-mcp-server <span class="s1">'your-api-key-here'</span>
+
+<span class="c"># Or create manually</span>
+kubectl create secret generic prisma-airs-mcp-secrets <span class="se">\</span>
+  <span class="nt">--from-literal</span><span class="o">=</span>airs.api.key<span class="o">=</span><span class="s1">'your-api-key-here'</span> <span class="se">\</span>
   <span class="nt">-n</span> prisma-airs-mcp-server
 </code></pre></div></div>
 
 <h3 id="4-deploy-application">4. Deploy Application</h3>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Deploy using Kustomize</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Deploy using the deployment script</span>
+pnpm run k8s:deploy:latest
+
+<span class="c"># Or deploy manually with Kustomize</span>
 kubectl apply <span class="nt">-k</span> k8s/overlays/production
 
 <span class="c"># Check deployment status</span>
-kubectl get pods <span class="nt">-n</span> prisma-airs-mcp-server
+pnpm run k8s:status
 
-<span class="c"># Get service details</span>
-kubectl get svc <span class="nt">-n</span> prisma-airs-mcp-server
+<span class="c"># View rollout status</span>
+pnpm run k8s:rollout:status
 </code></pre></div></div>
 
 <h3 id="5-verify-deployment">5. Verify Deployment</h3>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check pod logs</span>
-kubectl logs <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>prisma-airs-mcp <span class="nt">-n</span> prisma-airs-mcp-server
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Verify deployment is successful</span>
+pnpm run k8s:verify
+
+<span class="c"># Check pod logs</span>
+pnpm run k8s:logs
 
 <span class="c"># Port-forward to test locally</span>
 kubectl port-forward <span class="nt">-n</span> prisma-airs-mcp-server svc/prisma-airs-mcp 3000:3000
@@ -418,19 +426,26 @@ kubectl autoscale deployment prisma-airs-mcp <span class="se">\</span>
 
 <p>The project includes deployment scripts:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Development deployment</span>
-./k8s/scripts/deploy.sh dev
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Production deployment (latest tag)</span>
+pnpm run k8s:deploy:latest
 
-<span class="c"># Staging deployment</span>
-./k8s/scripts/deploy.sh staging
+<span class="c"># Versioned deployment</span>
+pnpm run k8s:deploy:version
 
-<span class="c"># Production deployment</span>
-./k8s/scripts/deploy.sh prod
+<span class="c"># Or use the deploy script directly</span>
+./k8s/scripts/deploy.sh deploy production
+
+<span class="c"># Check deployment status</span>
+./k8s/scripts/deploy.sh status prisma-airs-mcp-server
 </code></pre></div></div>
 
 <h3 id="rollback">Rollback</h3>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># View deployment history</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Rollback using script</span>
+pnpm run k8s:rollback
+
+<span class="c"># Or manually:</span>
+<span class="c"># View deployment history</span>
 kubectl rollout <span class="nb">history </span>deployment/prisma-airs-mcp <span class="nt">-n</span> prisma-airs-mcp-server
 
 <span class="c"># Rollback to previous version</span>
@@ -454,7 +469,10 @@ kubectl rollout undo deployment/prisma-airs-mcp <span class="nt">-n</span> prism
 
 <h3 id="view-logs">View Logs</h3>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># All pods</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># View logs using pnpm script</span>
+pnpm run k8s:logs
+
+<span class="c"># All pods</span>
 kubectl logs <span class="nt">-l</span> <span class="nv">app</span><span class="o">=</span>prisma-airs-mcp <span class="nt">-n</span> prisma-airs-mcp-server <span class="nt">-f</span>
 
 <span class="c"># Specific pod</span>
@@ -535,7 +553,10 @@ kubectl get middleware <span class="nt">-n</span> prisma-airs-mcp-server
 <p><strong>Secret Issues</strong></p>
 
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Verify secret exists</span>
-kubectl get secret prisma-airs-secret <span class="nt">-n</span> prisma-airs-mcp-server
+kubectl get secret prisma-airs-mcp-secrets <span class="nt">-n</span> prisma-airs-mcp-server
+
+<span class="c"># Verify secret using script</span>
+./k8s/scripts/manage-secrets.sh verify prisma-airs-mcp-server
 
 <span class="c"># Check secret content (base64 encoded)</span>
 kubectl get secret prisma-airs-secret <span class="nt">-n</span> prisma-airs-mcp-server <span class="nt">-o</span> yaml
