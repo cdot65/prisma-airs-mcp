@@ -84,11 +84,62 @@ This project is open source and welcomes contributions. See [CONTRIBUTING.md](ht
 
 ---
 
+## Version 1.0.2 (2025-01-27)
+
+**Dependency Update Release**
+
+This release updates the Model Context Protocol SDK to the latest version, ensuring compatibility with the newest MCP features and improvements.
+
+### Changes
+
+- **Dependencies**
+    - Updated `@modelcontextprotocol/sdk` from 1.15.1 to 1.17.0
+    - All tests pass successfully with the updated dependency
+
+### Testing
+
+All validation tests continue to pass:
+- TypeScript compilation checks
+- ESLint and Prettier formatting
+- Unit test suite (25 tests)
+
+---
+
+## Version 1.0.1 (2025-01-27)
+
+**Bug Fix and Enhancement Release**
+
+This release introduces the ability to reset the AIRS client instance, addressing issues with stale connections and improving resource management.
+
+### Features
+
+- **AIRS Client Reset Functionality**
+    - Added `resetAirsClient()` method to clear cache, reset rate limits, and destroy the current client instance
+    - Enables graceful recovery from connection issues
+    - Allows dynamic configuration changes without server restart
+    - Improves test isolation by providing clean state between test runs
+
+### Bug Fixes
+
+- Fixed issues with cached client instances persisting stale connections
+- Resolved rate limiter state persistence across client resets
+- Improved memory management by properly cleaning up client resources
+
+### Developer Experience
+
+- Enhanced factory pattern implementation with reset capabilities
+- Better support for integration testing with proper cleanup methods
+- Improved error recovery mechanisms
+
+---
+
 ## Version History
 
-| Version | Date       | Description                                    |
-| ------- | ---------- | ---------------------------------------------- |
-| 1.0.0   | 2025-01-27 | Initial release with full MCP protocol support |
+| Version | Date       | Description                                        |
+| ------- | ---------- | -------------------------------------------------- |
+| 1.0.2   | 2025-01-27 | Dependency update (@modelcontextprotocol/sdk)      |
+| 1.0.1   | 2025-01-27 | Added AIRS client reset functionality              |
+| 1.0.0   | 2025-01-27 | Initial release with full MCP protocol support     |
 
 ---
 

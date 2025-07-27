@@ -1,6 +1,6 @@
 {
-    "version": "1.0.1",
-    "description": "Version bump: patch",
+    "version": "1.0.2",
+    "description": "Version bump: specific",
     "date": "2025-07-27",
     "changes": [
         "Initial release with full MCP protocol support",

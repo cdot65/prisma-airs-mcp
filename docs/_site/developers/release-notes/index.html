@@ -253,6 +253,71 @@
 
 <hr />
 
+<h2 id="version-102-2025-01-27">Version 1.0.2 (2025-01-27)</h2>
+
+<p><strong>Dependency Update Release</strong></p>
+
+<p>This release updates the Model Context Protocol SDK to the latest version, ensuring compatibility with the newest MCP features and improvements.</p>
+
+<h3 id="changes">Changes</h3>
+
+<ul>
+  <li><strong>Dependencies</strong>
+    <ul>
+      <li>Updated <code class="language-plaintext highlighter-rouge">@modelcontextprotocol/sdk</code> from 1.15.1 to 1.17.0</li>
+      <li>All tests pass successfully with the updated dependency</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="testing">Testing</h3>
+
+<p>All validation tests continue to pass:</p>
+<ul>
+  <li>TypeScript compilation checks</li>
+  <li>ESLint and Prettier formatting</li>
+  <li>Unit test suite (25 tests)</li>
+</ul>
+
+<hr />
+
+<h2 id="version-101-2025-01-27">Version 1.0.1 (2025-01-27)</h2>
+
+<p><strong>Bug Fix and Enhancement Release</strong></p>
+
+<p>This release introduces the ability to reset the AIRS client instance, addressing issues with stale connections and improving resource management.</p>
+
+<h3 id="features-1">Features</h3>
+
+<ul>
+  <li><strong>AIRS Client Reset Functionality</strong>
+    <ul>
+      <li>Added <code class="language-plaintext highlighter-rouge">resetAirsClient()</code> method to clear cache, reset rate limits, and destroy the current client instance</li>
+      <li>Enables graceful recovery from connection issues</li>
+      <li>Allows dynamic configuration changes without server restart</li>
+      <li>Improves test isolation by providing clean state between test runs</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="bug-fixes">Bug Fixes</h3>
+
+<ul>
+  <li>Fixed issues with cached client instances persisting stale connections</li>
+  <li>Resolved rate limiter state persistence across client resets</li>
+  <li>Improved memory management by properly cleaning up client resources</li>
+</ul>
+
+<h3 id="developer-experience">Developer Experience</h3>
+
+<ul>
+  <li>Enhanced factory pattern implementation with reset capabilities</li>
+  <li>Better support for integration testing with proper cleanup methods</li>
+  <li>Improved error recovery mechanisms</li>
+</ul>
+
+<hr />
+
 <h2 id="version-history">Version History</h2>
 
 <table>
@@ -264,6 +329,16 @@
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td>1.0.2</td>
+      <td>2025-01-27</td>
+      <td>Dependency update (@modelcontextprotocol/sdk)</td>
+    </tr>
+    <tr>
+      <td>1.0.1</td>
+      <td>2025-01-27</td>
+      <td>Added AIRS client reset functionality</td>
+    </tr>
     <tr>
       <td>1.0.0</td>
       <td>2025-01-27</td>

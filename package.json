@@ -1,6 +1,6 @@
 {
     "name": "prisma-airs-mcp",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "HTTP-based Model Context Protocol server for Palo Alto Networks Prisma AIRS integration",
     "main": "dist/index.js",
     "scripts": {
@@ -100,7 +100,7 @@
         "typescript": "^5.8.3"
     },
     "dependencies": {
-        "@modelcontextprotocol/sdk": "^1.15.1",
+        "@modelcontextprotocol/sdk": "^1.17.0",
         "cors": "^2.8.5",
         "dotenv": "^17.2.0",
         "express": "^5.1.0",
