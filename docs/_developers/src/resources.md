@@ -152,18 +152,10 @@ export class ResourceHandler {
 ### URI Parsing
 
 ```typescript
-private
-parseResourceUri(uri
-:
-string
-):
-{
+private parseResourceUri(uri: string): {
     type: string;
     id: string
-}
-|
-null
-{
+} | null {
     const match = uri.match(/^airs:\/\/([^/]+)\/(.+)$/);
 
     if (!match) {
@@ -188,18 +180,11 @@ null
 #### Implementation
 
 ```typescript
-private async
-readScanResult(scanId
-:
-string
-):
-Promise < McpResourcesReadResult > {
+private async readScanResult(scanId: string): Promise<McpResourcesReadResult> {
     try {
         const results = await this.airsClient.getScanResults([scanId]);
 
-        if(results.length === 0
-)
-{
+        if (results.length === 0) {
     throw new Error(`Scan result not found: ${scanId}`);
 }
 
@@ -214,9 +199,7 @@ if (result) {
 }
 
 return {contents: [content]};
-} catch
-(error)
-{
+} catch (error) {
     this.logger.error('Failed to read scan result', {
         scanId,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -244,18 +227,11 @@ The scan result returns the complete `AirsScanIdResult` from the AIRS API, inclu
 #### Implementation
 
 ```typescript
-private async
-readThreatReport(reportId
-:
-string
-):
-Promise < McpResourcesReadResult > {
+private async readThreatReport(reportId: string): Promise<McpResourcesReadResult> {
     try {
         const reports = await this.airsClient.getThreatScanReports([reportId]);
 
-        if(reports.length === 0
-)
-{
+        if (reports.length === 0) {
     throw new Error(`Threat report not found: ${reportId}`);
 }
 
@@ -270,9 +246,7 @@ if (report) {
 }
 
 return {contents: [content]};
-} catch
-(error)
-{
+} catch (error) {
     this.logger.error('Failed to read threat report', {
         reportId,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -300,11 +274,7 @@ The threat report returns the complete `AirsThreatScanReportObject` from the AIR
 #### Implementation
 
 ```typescript
-private
-readCacheStats()
-:
-McpResourcesReadResult
-{
+private readCacheStats(): McpResourcesReadResult {
     const stats = this.airsClient.getCacheStats() || {
         size: 0,
         count: 0,
@@ -346,11 +316,7 @@ The cache statistics include:
 #### Implementation
 
 ```typescript
-private
-readRateLimitStatus()
-:
-McpResourcesReadResult
-{
+private readRateLimitStatus(): McpResourcesReadResult {
     const stats = this.airsClient.getRateLimiterStats() || {
         bucketCount: 0,
         enabled: false,
@@ -389,21 +355,12 @@ need to expose per-bucket status.
 The module provides a static utility method for creating resource references in tool results:
 
 ```typescript
-static
-createResourceReference(
-    type
-:
-string,
-    id
-:
-string,
-    _title
-:
-string,  // Unused but available for future use
-    data ? : unknown,
-):
-McpResourceContent
-{
+static createResourceReference(
+    type: string,
+    id: string,
+    _title: string,  // Unused but available for future use
+    data?: unknown,
+): McpResourceContent {
     const uri = `airs://${type}/${id}`;
 
     return {

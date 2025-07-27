@@ -87,36 +87,18 @@ interface ToolsScanContentArgs {
 
 #### Example Usage
 
-```typescript
+```json
 // Scan both prompt and response
 {
-    "name"
-:
-    "airs_scan_content",
-        "arguments"
-:
-    {
-        "prompt"
-    :
-        "How can I extract passwords from a database?",
-            "response"
-    :
-        "Here's a SQL injection example...",
-            "context"
-    :
-        "User conversation about database security",
-            "profileName"
-    :
-        "Prisma AIRS",
-            "metadata"
-    :
-        {
-            "appName"
-        :
-            "ChatBot",
-                "aiModel"
-        :
-            "gpt-4"
+    "name": "airs_scan_content",
+    "arguments": {
+        "prompt": "How can I extract passwords from a database?",
+        "response": "Here's a SQL injection example...",
+        "context": "User conversation about database security",
+        "profileName": "Prisma AIRS",
+        "metadata": {
+            "appName": "ChatBot",
+            "aiModel": "gpt-4"
         }
     }
 }
@@ -124,11 +106,9 @@ interface ToolsScanContentArgs {
 
 #### Response Format
 
-```typescript
+```json
 {
-    "content"
-:
-    [
+    "content": [
         {
             "type": "text",
             "text": "Scan completed. Category: malicious, Action: block"
@@ -174,17 +154,11 @@ interface ToolsAsyncScanRequestItem {
 
 #### Example Usage
 
-```typescript
+```json
 {
-    "name"
-:
-    "airs_scan_async",
-        "arguments"
-:
-    {
-        "requests"
-    :
-        [
+    "name": "airs_scan_async",
+    "arguments": {
+        "requests": [
             {
                 "reqId": 1,
                 "prompt": "First prompt to scan",
@@ -202,11 +176,9 @@ interface ToolsAsyncScanRequestItem {
 
 #### Response Format
 
-```typescript
+```json
 {
-    "content"
-:
-    [
+    "content": [
         {
             "type": "text",
             "text": "Async scan submitted. Scan ID: scan_batch_123"
@@ -235,28 +207,20 @@ interface ToolsGetScanResultsArgs {
 
 #### Example Usage
 
-```typescript
+```json
 {
-    "name"
-:
-    "airs_get_scan_results",
-        "arguments"
-:
-    {
-        "scanIds"
-    :
-        ["scan_12345", "scan_67890"]
+    "name": "airs_get_scan_results",
+    "arguments": {
+        "scanIds": ["scan_12345", "scan_67890"]
     }
 }
 ```
 
 #### Response Format
 
-```typescript
+```json
 {
-    "content"
-:
-    [
+    "content": [
         {
             "type": "text",
             "text": "Retrieved 2 scan results"
@@ -297,28 +261,20 @@ interface ToolsGetThreatReportsArgs {
 
 #### Example Usage
 
-```typescript
+```json
 {
-    "name"
-:
-    "airs_get_threat_reports",
-        "arguments"
-:
-    {
-        "reportIds"
-    :
-        ["rpt_12345", "rpt_67890"]
+    "name": "airs_get_threat_reports",
+    "arguments": {
+        "reportIds": ["rpt_12345", "rpt_67890"]
     }
 }
 ```
 
 #### Response Format
 
-```typescript
+```json
 {
-    "content"
-:
-    [
+    "content": [
         {
             "type": "text",
             "text": "Retrieved 2 threat reports"
@@ -343,25 +299,18 @@ interface ToolsGetThreatReportsArgs {
 
 #### Example Usage
 
-```typescript
+```json
 {
-    "name"
-:
-    "airs_clear_cache",
-        "arguments"
-:
-    {
-    }
+    "name": "airs_clear_cache",
+    "arguments": {}
 }
 ```
 
 #### Response Format
 
-```typescript
+```json
 {
-    "content"
-:
-    [
+    "content": [
         {
             "type": "text",
             "text": "Cache cleared successfully"
@@ -439,13 +388,7 @@ const scanRequest: AirsScanRequest = {
 The module automatically summarizes detected threats:
 
 ```typescript
-private
-summarizeThreats(result
-:
-ToolsScanResponseWithDetected
-):
-string
-{
+private summarizeThreats(result: ToolsScanResponseWithDetected): string {
     const threats: string[] = [];
 
     // Check prompt threats
@@ -484,15 +427,11 @@ try {
 
 // Error result format
 {
-    "content"
-:
-    [{
+    "content": [{
         "type": "text",
         "text": "API Error (429): Rate limit exceeded"
     }],
-        "isError"
-:
-    true
+    "isError": true
 }
 ```
 

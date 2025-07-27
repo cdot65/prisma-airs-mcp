@@ -203,13 +203,7 @@ interface TransportStreamableRequest extends Request {
 Sessions enable stateful connections for streaming responses:
 
 ```typescript
-private
-getOrCreateSession(req
-:
-TransportStreamableRequest
-):
-string
-{
+private getOrCreateSession(req: TransportStreamableRequest): string {
     const existingSessionId = req.headers['mcp-session-id'];
 
     if (existingSessionId && this.sessions.has(existingSessionId)) {
@@ -234,15 +228,7 @@ string
 The transport automatically selects the appropriate response mode:
 
 ```typescript
-private
-shouldStreamResponse(method
-:
-string, result
-:
-unknown
-):
-boolean
-{
+private shouldStreamResponse(method: string, result: unknown): boolean {
     // Currently returns false for all methods
     // Can be extended for long-running operations
     return false;
@@ -356,10 +342,7 @@ Promise < unknown > {
 ### Resource Templates Handler
 
 ```typescript
-private async
-handleResourceTemplatesList()
-:
-Promise < unknown > {
+private async handleResourceTemplatesList(): Promise<unknown> {
     return {
         resourceTemplates: [
             {

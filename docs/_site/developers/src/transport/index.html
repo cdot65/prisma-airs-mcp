@@ -416,13 +416,7 @@
 
 <p>Sessions enable stateful connections for streaming responses:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span>
-<span class="nx">getOrCreateSession</span><span class="p">(</span><span class="nx">req</span>
-<span class="p">:</span>
-<span class="nx">TransportStreamableRequest</span>
-<span class="p">):</span>
-<span class="kr">string</span>
-<span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">getOrCreateSession</span><span class="p">(</span><span class="nx">req</span><span class="p">:</span> <span class="nx">TransportStreamableRequest</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">existingSessionId</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="dl">'</span><span class="s1">mcp-session-id</span><span class="dl">'</span><span class="p">];</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="nx">existingSessionId</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">sessions</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">existingSessionId</span><span class="p">))</span> <span class="p">{</span>
@@ -448,15 +442,7 @@
 
 <p>The transport automatically selects the appropriate response mode:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span>
-<span class="nx">shouldStreamResponse</span><span class="p">(</span><span class="nx">method</span>
-<span class="p">:</span>
-<span class="kr">string</span><span class="p">,</span> <span class="nx">result</span>
-<span class="p">:</span>
-<span class="nx">unknown</span>
-<span class="p">):</span>
-<span class="nx">boolean</span>
-<span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">shouldStreamResponse</span><span class="p">(</span><span class="nx">method</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">result</span><span class="p">:</span> <span class="nx">unknown</span><span class="p">):</span> <span class="nx">boolean</span> <span class="p">{</span>
     <span class="c1">// Currently returns false for all methods</span>
     <span class="c1">// Can be extended for long-running operations</span>
     <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
@@ -619,10 +605,7 @@ data: {"jsonrpc":"2.0","method":"tools/list_changed"}
 
 <h3 id="resource-templates-handler">Resource Templates Handler</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">async</span>
-<span class="nx">handleResourceTemplatesList</span><span class="p">()</span>
-<span class="p">:</span>
-<span class="nb">Promise</span> <span class="o">&lt;</span> <span class="nx">unknown</span> <span class="o">&gt;</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">async</span> <span class="nx">handleResourceTemplatesList</span><span class="p">():</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">unknown</span><span class="o">&gt;</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="na">resourceTemplates</span><span class="p">:</span> <span class="p">[</span>
             <span class="p">{</span>
@@ -862,7 +845,7 @@ data: <span class="o">{</span><span class="s2">"connected"</span>:true<span clas
           
           
           <a href="/developers/src/types/" class="next">
-            Types Module (src/types/) <i class="fas fa-arrow-right"></i>
+            Types Module <i class="fas fa-arrow-right"></i>
           </a>
           
         </div>

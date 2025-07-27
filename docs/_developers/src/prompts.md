@@ -97,49 +97,18 @@ The prompt generates a structured security analysis that includes:
 
 ```typescript
 // User message includes:
--Content
-to
-analyze
-- Context
-information
-- Requirements
-:
-1.
-Use
-airs_scan_content
-tool
-2.
-Report
-threats
-at
-threshold
-or
-higher
-3.
-Provide
-specific
-examples
-4.
-Suggest
-remediation
-steps
-5.
-Give
-overall
-risk
-score
+- Content to analyze
+- Context information
+- Requirements:
+  1. Use airs_scan_content tool
+  2. Report threats at threshold or higher
+  3. Provide specific examples
+  4. Suggest remediation steps
+  5. Give overall risk score
 
 // Assistant response:
-- Acknowledges
-the
-request
-- Indicates
-it
-will
-use
-Prisma
-AIRS
-for analysis
+- Acknowledges the request
+- Indicates it will use Prisma AIRS for analysis
 ```
 
 ### 2. Threat Investigation Workflow
@@ -309,13 +278,7 @@ Each prompt handler method generates a conversation structure with:
 #### Example: Security Analysis Generation
 
 ```typescript
-private
-getSecurityAnalysisPrompt(args
-:
-Record<string, string>
-):
-McpPromptsGetResult
-{
+private getSecurityAnalysisPrompt(args: Record<string, string>): McpPromptsGetResult {
     const content = args.content || '[No content provided]';
     const context = args.context || 'No additional context';
     const threshold = args.severity_threshold || 'low';
@@ -358,23 +321,11 @@ ${context}
 
 ```typescript
 // In transport/http.ts
-private
-handlePromptsGet(params
-:
-unknown
-):
-unknown
-{
+private handlePromptsGet(params: unknown): unknown {
     return this.promptHandler.getPrompt(params as McpPromptsGetParams);
 }
 
-private
-handlePromptsList(params
-:
-unknown
-):
-unknown
-{
+private handlePromptsList(params: unknown): unknown {
     return this.promptHandler.listPrompts(params as McpPromptsListParams);
 }
 ```
@@ -467,52 +418,12 @@ const threshold = args.severity_threshold || 'low';
 Each prompt includes clear, numbered instructions:
 
 ```typescript
-**
-Requirements:*
-*
-1.
-Use
-the
-airs_scan_content
-tool
-to
-analyze
-the
-content
-2.
-Report
-all
-threats
-with severity $
-{
-    threshold
-}
-or
-higher
-3.
-Provide
-specific
-examples
-from
-the
-content
-for each threat
-found
-4.
-Suggest
-remediation
-steps
-for each identified
-issue
-5.
-Give
-an
-overall
-security
-assessment
-and
-risk
-score
+**Requirements:**
+1. Use the airs_scan_content tool to analyze the content
+2. Report all threats with severity ${threshold} or higher
+3. Provide specific examples from the content for each threat found
+4. Suggest remediation steps for each identified issue
+5. Give an overall security assessment and risk score
 ```
 
 ### 3. Professional Formatting
@@ -520,17 +431,10 @@ score
 Structure prompts to generate professional outputs:
 
 ```typescript
-Please
-structure
-your
-response
-with:
--Executive
-Summary
-- Detailed
-Findings
-- Risk
-Assessment
+Please structure your response with:
+- Executive Summary
+- Detailed Findings
+- Risk Assessment
 - Recommendations
 ```
 
@@ -550,8 +454,7 @@ Explicitly mention which tools to use:
 1. **Add to PROMPTS constant**:
 
 ```typescript
-private static readonly
-PROMPTS = {
+private static readonly PROMPTS = {
     // ... existing prompts
     CUSTOM_WORKFLOW: 'custom_workflow',
 } as const;
@@ -562,15 +465,9 @@ PROMPTS = {
 ```typescript
 {
     name: PromptHandler.PROMPTS.CUSTOM_WORKFLOW,
-        title
-:
-    'Custom Workflow',
-        description
-:
-    'Custom security workflow description',
-        arguments
-:
-    [
+    title: 'Custom Workflow',
+    description: 'Custom security workflow description',
+    arguments: [
         {
             name: 'param1',
             description: 'First parameter',
@@ -583,22 +480,14 @@ PROMPTS = {
 3. **Add case to getPrompt() switch**:
 
 ```typescript
-case
-PromptHandler.PROMPTS.CUSTOM_WORKFLOW
-:
-return this.getCustomWorkflowPrompt(args);
+case PromptHandler.PROMPTS.CUSTOM_WORKFLOW:
+    return this.getCustomWorkflowPrompt(args);
 ```
 
 4. **Implement prompt method**:
 
 ```typescript
-private
-getCustomWorkflowPrompt(args
-:
-Record<string, string>
-):
-McpPromptsGetResult
-{
+private getCustomWorkflowPrompt(args: Record<string, string>): McpPromptsGetResult {
     const param1 = args.param1 || '[No value provided]';
 
     const messages: McpPromptMessage[] = [
