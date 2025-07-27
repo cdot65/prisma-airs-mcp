@@ -332,6 +332,7 @@ notepad %APPDATA%<span class="se">\C</span>laude<span class="se">\c</span>laude_
 </span></code></pre></div></div>
 
 <p><strong>Advantages:</strong></p>
+
 <ul>
   <li>Zero installation required</li>
   <li>Automatically uses latest version</li>
@@ -339,6 +340,7 @@ notepad %APPDATA%<span class="se">\C</span>laude<span class="se">\c</span>laude_
 </ul>
 
 <p><strong>Considerations:</strong></p>
+
 <ul>
   <li>First run downloads the package (~2-3 seconds)</li>
   <li>Cached for subsequent uses</li>
@@ -364,12 +366,14 @@ mcp-remote <span class="nt">--version</span>
 </span></code></pre></div></div>
 
 <p><strong>Advantages:</strong></p>
+
 <ul>
   <li>Faster startup time</li>
   <li>No network required after installation</li>
 </ul>
 
 <p><strong>Considerations:</strong></p>
+
 <ul>
   <li>Requires manual updates</li>
   <li>Additional installation step</li>
@@ -380,16 +384,19 @@ mcp-remote <span class="nt">--version</span>
 <h3 id="example-conversations">Example Conversations</h3>
 
 <p><strong>Security Analysis:</strong></p>
+
 <blockquote>
   <p>“Can you analyze this code snippet for security vulnerabilities?”</p>
 </blockquote>
 
 <p><strong>Threat Detection:</strong></p>
+
 <blockquote>
   <p>“Please scan this user input for potential injection attacks.”</p>
 </blockquote>
 
 <p><strong>Compliance Check:</strong></p>
+
 <blockquote>
   <p>“Check if this document contains any sensitive data that should be masked.”</p>
 </blockquote>
@@ -418,19 +425,24 @@ mcp-remote <span class="nt">--version</span>
 <p><strong>Solutions:</strong></p>
 
 <ol>
-  <li><strong>Validate JSON syntax:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># macOS</span>
-<span class="nb">cat</span> ~/Library/Application<span class="se">\ </span>Support/Claude/claude_desktop_config.json | jq <span class="nb">.</span>
-   
-<span class="c"># Windows</span>
-<span class="nb">type</span> %APPDATA%<span class="se">\C</span>laude<span class="se">\c</span>laude_desktop_config.json | jq <span class="nb">.</span>
+  <li>
+    <p><strong>Validate JSON syntax:</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># macOS</span>
+ <span class="nb">cat</span> ~/Library/Application<span class="se">\ </span>Support/Claude/claude_desktop_config.json | jq <span class="nb">.</span>
+
+ <span class="c"># Windows</span>
+ <span class="nb">type</span> %APPDATA%<span class="se">\C</span>laude<span class="se">\c</span>laude_desktop_config.json | jq <span class="nb">.</span>
 </code></pre></div>    </div>
   </li>
-  <li><strong>Check server health:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl http://localhost:3000/health
+  <li>
+    <p><strong>Check server health:</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> curl http://localhost:3000/health
 </code></pre></div>    </div>
   </li>
-  <li><strong>Verify complete restart:</strong>
+  <li>
+    <p><strong>Verify complete restart:</strong></p>
     <ul>
       <li>Ensure Claude Desktop was fully quit (not just closed)</li>
       <li>Check system tray/menu bar for running instances</li>
@@ -445,15 +457,18 @@ mcp-remote <span class="nt">--version</span>
 <p><strong>Solutions:</strong></p>
 
 <ol>
-  <li><strong>For local servers:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check if server is running</span>
-docker ps | <span class="nb">grep </span>prisma-airs
-   
-<span class="c"># Test connection</span>
-curl <span class="nt">-I</span> http://localhost:3000
+  <li>
+    <p><strong>For local servers:</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Check if server is running</span>
+ docker ps | <span class="nb">grep </span>prisma-airs
+
+ <span class="c"># Test connection</span>
+ curl <span class="nt">-I</span> http://localhost:3000
 </code></pre></div>    </div>
   </li>
-  <li><strong>For remote servers:</strong>
+  <li>
+    <p><strong>For remote servers:</strong></p>
     <ul>
       <li>Verify URL is accessible</li>
       <li>Check firewall rules</li>
@@ -469,25 +484,30 @@ curl <span class="nt">-I</span> http://localhost:3000
 <p><strong>Solutions:</strong></p>
 
 <ol>
-  <li><strong>Check npm registry:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm config get registry
-<span class="c"># Should be: https://registry.npmjs.org/</span>
+  <li>
+    <p><strong>Check npm registry:</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> npm config get registry
+ <span class="c"># Should be: https://registry.npmjs.org/</span>
 </code></pre></div>    </div>
   </li>
-  <li><strong>Clear npm cache:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm cache clean <span class="nt">--force</span>
+  <li>
+    <p><strong>Clear npm cache:</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> npm cache clean <span class="nt">--force</span>
 </code></pre></div>    </div>
   </li>
-  <li><strong>Use explicit registry:</strong>
-    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
-    </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
-    </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"--registry=https://registry.npmjs.org/"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"-y"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"@modelcontextprotocol/mcp-remote"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"http://localhost:3000"</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
+  <li>
+    <p><strong>Use explicit registry:</strong></p>
+    <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="w"> </span><span class="p">{</span><span class="w">
+     </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"npx"</span><span class="p">,</span><span class="w">
+     </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+         </span><span class="s2">"--registry=https://registry.npmjs.org/"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"-y"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"@modelcontextprotocol/mcp-remote"</span><span class="p">,</span><span class="w">
+         </span><span class="s2">"http://localhost:3000"</span><span class="w">
+     </span><span class="p">]</span><span class="w">
+ </span><span class="p">}</span><span class="w">
 </span></code></pre></div>    </div>
   </li>
 </ol>
@@ -516,6 +536,7 @@ curl <span class="nt">-I</span> http://localhost:3000
 <h3 id="1-environment-management">1. Environment Management</h3>
 
 <p><strong>Use descriptive server names:</strong></p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nl">"prisma-airs-dev"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="err">/*</span><span class="w"> </span><span class="err">dev</span><span class="w"> </span><span class="err">config</span><span class="w"> </span><span class="err">*/</span><span class="w"> </span><span class="p">},</span><span class="w">

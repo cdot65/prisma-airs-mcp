@@ -53,7 +53,7 @@ Server Listen on Port
 ### External Dependencies
 
 | Package                     | Purpose                     | Usage                             |
-|-----------------------------|-----------------------------|-----------------------------------|
+| --------------------------- | --------------------------- | --------------------------------- |
 | `@modelcontextprotocol/sdk` | MCP protocol implementation | Server class for MCP capabilities |
 | `express`                   | Web framework               | HTTP server and routing           |
 | `cors`                      | CORS middleware             | Enable cross-origin requests      |
@@ -61,7 +61,7 @@ Server Listen on Port
 ### Internal Dependencies
 
 | Module                | Import                                                                              | Purpose                    |
-|-----------------------|-------------------------------------------------------------------------------------|----------------------------|
+| --------------------- | ----------------------------------------------------------------------------------- | -------------------------- |
 | `./types`             | `TransportJsonRpcRequest`, `TransportJsonRpcResponse`, `TransportStreamableRequest` | Type definitions           |
 | `./transport/http.js` | `HttpServerTransport`                                                               | HTTP/SSE transport handler |
 | `./config`            | `getConfig()`                                                                       | Configuration singleton    |
@@ -264,7 +264,7 @@ app.get('/', (req: Request, res: Response) => {
 **Mode Selection**:
 
 | Accept Header       | Response Type | Purpose            |
-|---------------------|---------------|--------------------|
+| ------------------- | ------------- | ------------------ |
 | `text/event-stream` | SSE stream    | Real-time updates  |
 | Any other           | JSON          | Server information |
 
@@ -310,7 +310,7 @@ const mcpServer = new Server(
 ### Capability Registration
 
 | Capability  | Description                        | Handler Module   |
-|-------------|------------------------------------|------------------|
+| ----------- | ---------------------------------- | ---------------- |
 | `resources` | Static and dynamic resource access | `src/resources/` |
 | `tools`     | Security scanning tools            | `src/tools/`     |
 | `prompts`   | Workflow templates                 | `src/prompts/`   |
@@ -410,10 +410,10 @@ The application uses centralized types from `./types` with consistent prefixing:
 
 ### Core Types Used
 
-| Type | Module | Purpose |
-|------|--------|---------|
-| `TransportJsonRpcRequest` | `./types` | JSON-RPC 2.0 request format |
-| `TransportJsonRpcResponse` | `./types` | JSON-RPC 2.0 response format |
+| Type                         | Module    | Purpose                          |
+| ---------------------------- | --------- | -------------------------------- |
+| `TransportJsonRpcRequest`    | `./types` | JSON-RPC 2.0 request format      |
+| `TransportJsonRpcResponse`   | `./types` | JSON-RPC 2.0 response format     |
 | `TransportStreamableRequest` | `./types` | Express Request with SSE headers |
 
 ### Type Definitions
@@ -448,14 +448,14 @@ The server retrieves configuration via `getConfig()` singleton:
 ### Server Configuration
 
 | Key         | Path                        | Default     | Usage              |
-|-------------|-----------------------------|-------------|--------------------|
+| ----------- | --------------------------- | ----------- | ------------------ |
 | Port        | `config.server.port`        | 3000        | HTTP listener port |
 | Environment | `config.server.environment` | development | Runtime mode       |
 
 ### MCP Configuration
 
 | Key         | Path                         | Default                | Usage          |
-|-------------|------------------------------|------------------------|----------------|
+| ----------- | ---------------------------- | ---------------------- | -------------- |
 | Server Name | `config.mcp.serverName`      | prisma-airs-mcp-server | Identity       |
 | Version     | `config.mcp.serverVersion`   | 1.0.0                  | Server version |
 | Protocol    | `config.mcp.protocolVersion` | 2024-11-05             | MCP version    |
@@ -543,13 +543,13 @@ Client → GET / (SSE) → HttpServerTransport → SSE Manager → Event Stream
 
 ## Key Integration Points
 
-| Component | Integration | Purpose |
-|-----------|-------------|---------|
-| Transport Layer | `HttpServerTransport` | Protocol handling |
-| Configuration | `getConfig()` singleton | Settings management |
-| Logging | `getLogger()` singleton | Structured logging |
-| MCP SDK | `Server` class | Protocol implementation |
-| Type System | `./types` module | Type safety |
+| Component       | Integration             | Purpose                 |
+| --------------- | ----------------------- | ----------------------- |
+| Transport Layer | `HttpServerTransport`   | Protocol handling       |
+| Configuration   | `getConfig()` singleton | Settings management     |
+| Logging         | `getLogger()` singleton | Structured logging      |
+| MCP SDK         | `Server` class          | Protocol implementation |
+| Type System     | `./types` module        | Type safety             |
 
 ## Environment Variables
 

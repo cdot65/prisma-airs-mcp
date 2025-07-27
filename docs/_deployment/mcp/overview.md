@@ -131,7 +131,7 @@ When configuring MCP clients:
 Select your MCP client based on your workflow:
 
 | Use Case              | Recommended Client | Why                               |
-|-----------------------|--------------------|-----------------------------------|
+| --------------------- | ------------------ | --------------------------------- |
 | IDE-based development | VS Code            | Integrated development experience |
 | General AI assistance | Claude Desktop     | Natural conversation interface    |
 | Web-based development | Claude Code        | No installation required          |
@@ -159,10 +159,11 @@ Once connected, all MCP clients provide access to these Prisma AIRS security too
 Common issues across all clients:
 
 1. **Server Not Reachable**
-   ```bash
-   # Test server health
-   curl http://localhost:3000/health
-   ```
+
+    ```bash
+    # Test server health
+    curl http://localhost:3000/health
+    ```
 
 2. **Invalid Configuration**
     - Check JSON syntax in configuration files

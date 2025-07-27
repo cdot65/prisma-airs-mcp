@@ -594,7 +594,7 @@ The tools module uses centralized types from `src/types/`:
 ### Tool-Specific Types
 
 | Type                            | Module    | Purpose                                          |
-|---------------------------------|-----------|--------------------------------------------------|
+| ------------------------------- | --------- | ------------------------------------------------ |
 | `ToolsScanContentArgs`          | `./types` | Arguments for content scanning                   |
 | `ToolsScanAsyncArgs`            | `./types` | Arguments for async scanning                     |
 | `ToolsAsyncScanRequestItem`     | `./types` | Individual async scan request                    |
@@ -605,7 +605,7 @@ The tools module uses centralized types from `src/types/`:
 ### MCP Protocol Types
 
 | Type                   | Module    | Purpose                       |
-|------------------------|-----------|-------------------------------|
+| ---------------------- | --------- | ----------------------------- |
 | `McpTool`              | `./types` | Tool definition with metadata |
 | `McpToolsListParams`   | `./types` | Parameters for listing tools  |
 | `McpToolsListResult`   | `./types` | Result of tool listing        |
@@ -618,13 +618,13 @@ The tools module uses centralized types from `src/types/`:
 ### External Dependencies
 
 | Module    | Purpose            |
-|-----------|--------------------|
+| --------- | ------------------ |
 | `winston` | Structured logging |
 
 ### Internal Dependencies
 
 | Module               | Import            | Purpose                     |
-|----------------------|-------------------|-----------------------------|
+| -------------------- | ----------------- | --------------------------- |
 | `../utils/logger.js` | `getLogger()`     | Logger instance             |
 | `../airs/factory.js` | `getAirsClient()` | AIRS client singleton       |
 | `../config`          | `getConfig()`     | Configuration access        |

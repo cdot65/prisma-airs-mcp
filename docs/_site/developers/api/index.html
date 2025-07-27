@@ -349,6 +349,7 @@ Development: http://localhost:3000
 <p>Synchronously scan content for security threats.</p>
 
 <p><strong>Input Schema:</strong></p>
+
 <div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"prompt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">     </span><span class="c1">// Optional: The prompt to scan</span><span class="w">
     </span><span class="nl">"response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">   </span><span class="c1">// Optional: The response to scan</span><span class="w">
@@ -362,6 +363,7 @@ Development: http://localhost:3000
 <p>Asynchronously scan multiple content items.</p>
 
 <p><strong>Input Schema:</strong></p>
+
 <div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"requests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
@@ -379,6 +381,7 @@ Development: http://localhost:3000
 <p>Retrieve results for async scan operations.</p>
 
 <p><strong>Input Schema:</strong></p>
+
 <div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"scanIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"string"</span><span class="p">]</span><span class="w">  </span><span class="c1">// Array of scan IDs</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -389,6 +392,7 @@ Development: http://localhost:3000
 <p>Get detailed threat analysis reports.</p>
 
 <p><strong>Input Schema:</strong></p>
+
 <div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"reportIds"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"string"</span><span class="p">]</span><span class="w">  </span><span class="c1">// Array of report IDs</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -399,6 +403,7 @@ Development: http://localhost:3000
 <p>Clear the server-side response cache.</p>
 
 <p><strong>Input Schema:</strong></p>
+
 <div class="language-jsonc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{}</span><span class="w">  </span><span class="c1">// No parameters required</span><span class="w">
 </span></code></pre></div></div>
 
@@ -425,6 +430,7 @@ Development: http://localhost:3000
 <p>Comprehensive security analysis workflow.</p>
 
 <p><strong>Arguments:</strong></p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">content</code> (required) - Content to analyze</li>
   <li><code class="language-plaintext highlighter-rouge">context</code> (optional) - Additional context</li>
@@ -436,6 +442,7 @@ Development: http://localhost:3000
 <p>Detailed threat investigation workflow.</p>
 
 <p><strong>Arguments:</strong></p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">scan_id</code> (required) - Scan ID to investigate</li>
   <li><code class="language-plaintext highlighter-rouge">threat_type</code> (optional) - Specific threat type</li>
@@ -447,6 +454,7 @@ Development: http://localhost:3000
 <p>Regulatory compliance checking workflow.</p>
 
 <p><strong>Arguments:</strong></p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">content</code> (required) - Content to check</li>
   <li><code class="language-plaintext highlighter-rouge">regulations</code> (required) - Regulations to check against</li>
@@ -458,6 +466,7 @@ Development: http://localhost:3000
 <p>Security incident response guide.</p>
 
 <p><strong>Arguments:</strong></p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">incident_type</code> (required) - Type of incident</li>
   <li><code class="language-plaintext highlighter-rouge">severity</code> (required) - Incident severity</li>
@@ -477,6 +486,7 @@ Development: http://localhost:3000
 </ul>
 
 <p>To check current rate limit status:</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:3000 <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   <span class="nt">-d</span> <span class="s1">'{
@@ -500,6 +510,7 @@ Development: http://localhost:3000
 </ul>
 
 <p>To check cache statistics:</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-X</span> POST http://localhost:3000 <span class="se">\</span>
   <span class="nt">-H</span> <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
   <span class="nt">-d</span> <span class="s1">'{
@@ -669,10 +680,10 @@ Development: http://localhost:3000
 </span>    <span class="k">async</span> <span class="k">with</span> <span class="n">Client</span><span class="p">(</span><span class="s">"my-app"</span><span class="p">,</span> <span class="s">"1.0.0"</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
         <span class="c1"># Connect to server
 </span>        <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="n">connect</span><span class="p">(</span><span class="s">"http://localhost:3000"</span><span class="p">)</span>
-        
+
         <span class="c1"># List available tools
 </span>        <span class="n">tools</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="n">list_tools</span><span class="p">()</span>
-        
+
         <span class="c1"># Scan content
 </span>        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="p">.</span><span class="n">call_tool</span><span class="p">(</span>
             <span class="s">"airs_scan_content"</span><span class="p">,</span>

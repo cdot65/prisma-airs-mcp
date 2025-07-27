@@ -92,19 +92,19 @@ notepad %APPDATA%\Claude\claude_desktop_config.json
 
 Add the Prisma AIRS server to your configuration. Choose based on your deployment:
 
-| Environment | Server URL |
-|-------------|------------|
-| Local Development | `http://localhost:3000` |
-| Docker (default) | `http://localhost:3000` |
-| Docker (custom port) | `http://localhost:3100` |
-| Production | `https://airs.example.com` |
+| Environment          | Server URL                 |
+| -------------------- | -------------------------- |
+| Local Development    | `http://localhost:3000`    |
+| Docker (default)     | `http://localhost:3000`    |
+| Docker (custom port) | `http://localhost:3100`    |
+| Production           | `https://airs.example.com` |
 
 ### Step 3: Save and Restart
 
 1. Save the configuration file
 2. **Completely quit** Claude Desktop (not just close the window):
-   - **macOS**: `Cmd+Q` or Claude → Quit Claude
-   - **Windows**: `Alt+F4` or File → Exit
+    - **macOS**: `Cmd+Q` or Claude → Quit Claude
+    - **Windows**: `Alt+F4` or File → Exit
 3. Launch Claude Desktop again
 
 ### Step 4: Verify Connection
@@ -115,13 +115,13 @@ Test the integration by asking Claude:
 
 Claude should list these Prisma AIRS tools:
 
-| Tool Name | Description |
-|-----------|-------------|
-| `airs_scan_content` | Real-time security scanning |
-| `airs_scan_async` | Batch content scanning |
-| `airs_get_scan_results` | Retrieve scan results |
-| `airs_get_threat_reports` | Detailed threat analysis |
-| `airs_clear_cache` | Clear server cache |
+| Tool Name                 | Description                 |
+| ------------------------- | --------------------------- |
+| `airs_scan_content`       | Real-time security scanning |
+| `airs_scan_async`         | Batch content scanning      |
+| `airs_get_scan_results`   | Retrieve scan results       |
+| `airs_get_threat_reports` | Detailed threat analysis    |
+| `airs_clear_cache`        | Clear server cache          |
 
 ## Connection Methods
 
@@ -137,11 +137,13 @@ Uses `npx` to run mcp-remote without installation:
 ```
 
 **Advantages:**
+
 - Zero installation required
 - Automatically uses latest version
 - Works immediately
 
 **Considerations:**
+
 - First run downloads the package (~2-3 seconds)
 - Cached for subsequent uses
 
@@ -167,10 +169,12 @@ Then use direct command:
 ```
 
 **Advantages:**
+
 - Faster startup time
 - No network required after installation
 
 **Considerations:**
+
 - Requires manual updates
 - Additional installation step
 
@@ -179,12 +183,15 @@ Then use direct command:
 ### Example Conversations
 
 **Security Analysis:**
+
 > "Can you analyze this code snippet for security vulnerabilities?"
 
 **Threat Detection:**
+
 > "Please scan this user input for potential injection attacks."
 
 **Compliance Check:**
+
 > "Check if this document contains any sensitive data that should be masked."
 
 ### Tool Capabilities
@@ -209,22 +216,24 @@ Prisma AIRS tools in Claude Desktop can:
 **Solutions:**
 
 1. **Validate JSON syntax:**
-   ```bash
-   # macOS
-   cat ~/Library/Application\ Support/Claude/claude_desktop_config.json | jq .
-   
-   # Windows
-   type %APPDATA%\Claude\claude_desktop_config.json | jq .
-   ```
+
+    ```bash
+    # macOS
+    cat ~/Library/Application\ Support/Claude/claude_desktop_config.json | jq .
+
+    # Windows
+    type %APPDATA%\Claude\claude_desktop_config.json | jq .
+    ```
 
 2. **Check server health:**
-   ```bash
-   curl http://localhost:3000/health
-   ```
+
+    ```bash
+    curl http://localhost:3000/health
+    ```
 
 3. **Verify complete restart:**
-   - Ensure Claude Desktop was fully quit (not just closed)
-   - Check system tray/menu bar for running instances
+    - Ensure Claude Desktop was fully quit (not just closed)
+    - Check system tray/menu bar for running instances
 
 #### Connection Failed
 
@@ -233,18 +242,19 @@ Prisma AIRS tools in Claude Desktop can:
 **Solutions:**
 
 1. **For local servers:**
-   ```bash
-   # Check if server is running
-   docker ps | grep prisma-airs
-   
-   # Test connection
-   curl -I http://localhost:3000
-   ```
+
+    ```bash
+    # Check if server is running
+    docker ps | grep prisma-airs
+
+    # Test connection
+    curl -I http://localhost:3000
+    ```
 
 2. **For remote servers:**
-   - Verify URL is accessible
-   - Check firewall rules
-   - Ensure HTTPS certificate is valid
+    - Verify URL is accessible
+    - Check firewall rules
+    - Ensure HTTPS certificate is valid
 
 #### npx Download Issues
 
@@ -253,28 +263,30 @@ Prisma AIRS tools in Claude Desktop can:
 **Solutions:**
 
 1. **Check npm registry:**
-   ```bash
-   npm config get registry
-   # Should be: https://registry.npmjs.org/
-   ```
+
+    ```bash
+    npm config get registry
+    # Should be: https://registry.npmjs.org/
+    ```
 
 2. **Clear npm cache:**
-   ```bash
-   npm cache clean --force
-   ```
+
+    ```bash
+    npm cache clean --force
+    ```
 
 3. **Use explicit registry:**
-   ```json
-   {
-       "command": "npx",
-       "args": [
-           "--registry=https://registry.npmjs.org/",
-           "-y",
-           "@modelcontextprotocol/mcp-remote",
-           "http://localhost:3000"
-       ]
-   }
-   ```
+    ```json
+    {
+        "command": "npx",
+        "args": [
+            "--registry=https://registry.npmjs.org/",
+            "-y",
+            "@modelcontextprotocol/mcp-remote",
+            "http://localhost:3000"
+        ]
+    }
+    ```
 
 ### Debug Mode
 
@@ -301,6 +313,7 @@ Enable verbose logging for troubleshooting:
 ### 1. Environment Management
 
 **Use descriptive server names:**
+
 ```json
 {
     "mcpServers": {
@@ -337,20 +350,20 @@ Enable verbose logging for troubleshooting:
 
 1. Configure Claude Desktop with Prisma AIRS
 2. Before committing code, ask:
-   > "Scan my recent changes for security vulnerabilities"
+    > "Scan my recent changes for security vulnerabilities"
 3. Address any findings before pushing
 
 ### Document Review Workflow
 
 1. Open sensitive document
 2. Ask Claude:
-   > "Check this document for data that should be redacted"
+    > "Check this document for data that should be redacted"
 3. Apply recommended masking
 
 ### Incident Response
 
 1. During security incident, ask:
-   > "Analyze this log file for signs of compromise"
+    > "Analyze this log file for signs of compromise"
 2. Use threat reports for detailed analysis
 3. Document findings for post-mortem
 

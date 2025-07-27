@@ -123,7 +123,7 @@ Client → GET / (Accept: text/event-stream) → handleSSEConnection() → SSE S
 ### Resource Methods
 
 | Method                     | Handler                         | Purpose                  |
-|----------------------------|---------------------------------|--------------------------|
+| -------------------------- | ------------------------------- | ------------------------ |
 | `resources/list`           | `handleResourcesList()`         | List available resources |
 | `resources/read`           | `handleResourcesRead()`         | Read resource content    |
 | `resources/templates/list` | `handleResourceTemplatesList()` | List URI templates       |
@@ -131,21 +131,21 @@ Client → GET / (Accept: text/event-stream) → handleSSEConnection() → SSE S
 ### Tool Methods
 
 | Method       | Handler             | Purpose              |
-|--------------|---------------------|----------------------|
+| ------------ | ------------------- | -------------------- |
 | `tools/list` | `handleToolsList()` | List available tools |
 | `tools/call` | `handleToolsCall()` | Execute a tool       |
 
 ### Prompt Methods
 
 | Method         | Handler               | Purpose                   |
-|----------------|-----------------------|---------------------------|
+| -------------- | --------------------- | ------------------------- |
 | `prompts/list` | `handlePromptsList()` | List available prompts    |
 | `prompts/get`  | `handlePromptsGet()`  | Get prompt with arguments |
 
 ### System Methods
 
 | Method                      | Handler                            | Purpose                     |
-|-----------------------------|------------------------------------|-----------------------------|
+| --------------------------- | ---------------------------------- | --------------------------- |
 | `initialize`                | `handleInitialize()`               | Initialize MCP session      |
 | `ping`                      | `handlePing()`                     | Health check                |
 | `notifications/initialized` | `handleNotificationsInitialized()` | Client ready notification   |
@@ -273,7 +273,7 @@ data: {"jsonrpc":"2.0","method":"tools/list_changed"}
 ### Event Types
 
 | Event          | Purpose              | Payload                     |
-|----------------|----------------------|-----------------------------|
+| -------------- | -------------------- | --------------------------- |
 | `connect`      | Initial connection   | `{ connected: true }`       |
 | `endpoint`     | Legacy compatibility | `{ endpoint: '/messages' }` |
 | `message`      | JSON-RPC response    | Full JSON-RPC response      |
@@ -284,7 +284,7 @@ data: {"jsonrpc":"2.0","method":"tools/list_changed"}
 ### JSON-RPC Error Codes
 
 | Code   | Constant         | Description            |
-|--------|------------------|------------------------|
+| ------ | ---------------- | ---------------------- |
 | -32700 | Parse error      | Invalid JSON           |
 | -32600 | Invalid Request  | Missing/invalid method |
 | -32601 | Method not found | Unknown method         |

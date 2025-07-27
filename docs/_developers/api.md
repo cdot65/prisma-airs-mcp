@@ -151,6 +151,7 @@ curl -X POST http://localhost:3000 \
 Synchronously scan content for security threats.
 
 **Input Schema:**
+
 ```jsonc
 {
     "prompt": "string",     // Optional: The prompt to scan
@@ -165,6 +166,7 @@ Synchronously scan content for security threats.
 Asynchronously scan multiple content items.
 
 **Input Schema:**
+
 ```jsonc
 {
     "requests": [
@@ -183,6 +185,7 @@ Asynchronously scan multiple content items.
 Retrieve results for async scan operations.
 
 **Input Schema:**
+
 ```jsonc
 {
     "scanIds": ["string"]  // Array of scan IDs
@@ -194,6 +197,7 @@ Retrieve results for async scan operations.
 Get detailed threat analysis reports.
 
 **Input Schema:**
+
 ```jsonc
 {
     "reportIds": ["string"]  // Array of report IDs
@@ -205,6 +209,7 @@ Get detailed threat analysis reports.
 Clear the server-side response cache.
 
 **Input Schema:**
+
 ```jsonc
 {}  // No parameters required
 ```
@@ -228,6 +233,7 @@ Clear the server-side response cache.
 Comprehensive security analysis workflow.
 
 **Arguments:**
+
 - `content` (required) - Content to analyze
 - `context` (optional) - Additional context
 - `severity_threshold` (optional) - Minimum severity level
@@ -237,6 +243,7 @@ Comprehensive security analysis workflow.
 Detailed threat investigation workflow.
 
 **Arguments:**
+
 - `scan_id` (required) - Scan ID to investigate
 - `threat_type` (optional) - Specific threat type
 - `deep_analysis` (optional) - Enable deep analysis
@@ -246,6 +253,7 @@ Detailed threat investigation workflow.
 Regulatory compliance checking workflow.
 
 **Arguments:**
+
 - `content` (required) - Content to check
 - `regulations` (required) - Regulations to check against
 - `region` (optional) - Geographic region
@@ -255,6 +263,7 @@ Regulatory compliance checking workflow.
 Security incident response guide.
 
 **Arguments:**
+
 - `incident_type` (required) - Type of incident
 - `severity` (required) - Incident severity
 - `affected_systems` (optional) - Affected systems
@@ -270,6 +279,7 @@ The API implements rate limiting to ensure fair usage:
 - **Headers**: Rate limit information available via resources
 
 To check current rate limit status:
+
 ```bash
 curl -X POST http://localhost:3000 \
   -H "Content-Type: application/json" \
@@ -292,6 +302,7 @@ Responses are cached to improve performance:
 - **Cache Invalidation**: Via `airs_clear_cache` tool
 
 To check cache statistics:
+
 ```bash
 curl -X POST http://localhost:3000 \
   -H "Content-Type: application/json" \
@@ -339,12 +350,12 @@ eventSource.addEventListener('endpoint', (event) => {
 
 ### Custom MCP Errors
 
-| Code   | Message             | Description                      |
-| ------ | ------------------- | -------------------------------- |
-| -32001 | Resource not found  | Requested resource doesn't exist |
-| -32002 | Tool not found      | Requested tool doesn't exist     |
-| -32003 | Prompt not found    | Requested prompt doesn't exist   |
-| -32004 | Invalid URI         | Invalid resource URI format      |
+| Code   | Message            | Description                      |
+| ------ | ------------------ | -------------------------------- |
+| -32001 | Resource not found | Requested resource doesn't exist |
+| -32002 | Tool not found     | Requested tool doesn't exist     |
+| -32003 | Prompt not found   | Requested prompt doesn't exist   |
+| -32004 | Invalid URI        | Invalid resource URI format      |
 
 ## Environment Configuration
 
@@ -412,10 +423,10 @@ async def main():
     async with Client("my-app", "1.0.0") as client:
         # Connect to server
         await client.connect("http://localhost:3000")
-        
+
         # List available tools
         tools = await client.list_tools()
-        
+
         # Scan content
         result = await client.call_tool(
             "airs_scan_content",

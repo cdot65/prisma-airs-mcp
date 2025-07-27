@@ -17,6 +17,7 @@ src/config/
 ```
 
 **Key Features**:
+
 - 🔒 Type-safe configuration with TypeScript interfaces
 - ✅ Runtime validation using Zod schemas
 - 🔧 Environment variable support with defaults
@@ -72,31 +73,33 @@ interface Config {
 
 Controls the HTTP server behavior:
 
-| Field | Type | Default | Environment Variable | Description |
-|-------|------|---------|---------------------|-------------|
-| `port` | number | 3000 | `PORT` | HTTP server port (1-65535) |
-| `environment` | enum | development | `NODE_ENV` | Runtime environment |
-| `logLevel` | enum | info | `LOG_LEVEL` | Logging verbosity |
+| Field         | Type   | Default     | Environment Variable | Description                |
+| ------------- | ------ | ----------- | -------------------- | -------------------------- |
+| `port`        | number | 3000        | `PORT`               | HTTP server port (1-65535) |
+| `environment` | enum   | development | `NODE_ENV`           | Runtime environment        |
+| `logLevel`    | enum   | info        | `LOG_LEVEL`          | Logging verbosity          |
 
 **Environment Values**:
+
 - `development`, `production`, `test`
 
 **Log Levels** (in order of verbosity):
+
 - `error`, `warn`, `info`, `debug`
 
 ### AIRS Configuration (`ConfigAirs`)
 
 Prisma AIRS API integration settings:
 
-| Field | Type | Default | Environment Variable | Description |
-|-------|------|---------|---------------------|-------------|
-| `apiUrl` | string | [production URL] | `AIRS_API_URL` | AIRS API endpoint |
-| `apiKey` | string | (required) | `AIRS_API_KEY` | Authentication token |
-| `timeout` | number | 30000 | `AIRS_TIMEOUT` | Request timeout (ms) |
-| `retryAttempts` | number | 3 | `AIRS_RETRY_ATTEMPTS` | Max retry attempts |
-| `retryDelay` | number | 1000 | `AIRS_RETRY_DELAY` | Initial retry delay (ms) |
-| `defaultProfileId` | string? | undefined | `AIRS_DEFAULT_PROFILE_ID` | Default scan profile ID |
-| `defaultProfileName` | string? | undefined | `AIRS_DEFAULT_PROFILE_NAME` | Default scan profile name |
+| Field                | Type    | Default          | Environment Variable        | Description               |
+| -------------------- | ------- | ---------------- | --------------------------- | ------------------------- |
+| `apiUrl`             | string  | [production URL] | `AIRS_API_URL`              | AIRS API endpoint         |
+| `apiKey`             | string  | (required)       | `AIRS_API_KEY`              | Authentication token      |
+| `timeout`            | number  | 30000            | `AIRS_TIMEOUT`              | Request timeout (ms)      |
+| `retryAttempts`      | number  | 3                | `AIRS_RETRY_ATTEMPTS`       | Max retry attempts        |
+| `retryDelay`         | number  | 1000             | `AIRS_RETRY_DELAY`          | Initial retry delay (ms)  |
+| `defaultProfileId`   | string? | undefined        | `AIRS_DEFAULT_PROFILE_ID`   | Default scan profile ID   |
+| `defaultProfileName` | string? | undefined        | `AIRS_DEFAULT_PROFILE_NAME` | Default scan profile name |
 
 **Default API URL**: `https://service.api.aisecurity.paloaltonetworks.com`
 
@@ -104,31 +107,31 @@ Prisma AIRS API integration settings:
 
 In-memory caching behavior:
 
-| Field | Type | Default | Environment Variable | Description |
-|-------|------|---------|---------------------|-------------|
-| `ttlSeconds` | number | 300 | `CACHE_TTL_SECONDS` | Cache TTL (seconds) |
-| `maxSize` | number | 1000 | `CACHE_MAX_SIZE` | Max cache entries |
-| `enabled` | boolean | true | `CACHE_ENABLED` | Enable/disable cache |
+| Field        | Type    | Default | Environment Variable | Description          |
+| ------------ | ------- | ------- | -------------------- | -------------------- |
+| `ttlSeconds` | number  | 300     | `CACHE_TTL_SECONDS`  | Cache TTL (seconds)  |
+| `maxSize`    | number  | 1000    | `CACHE_MAX_SIZE`     | Max cache entries    |
+| `enabled`    | boolean | true    | `CACHE_ENABLED`      | Enable/disable cache |
 
 ### Rate Limit Configuration (`ConfigRateLimit`)
 
 API rate limiting settings:
 
-| Field | Type | Default | Environment Variable | Description |
-|-------|------|---------|---------------------|-------------|
-| `maxRequests` | number | 100 | `RATE_LIMIT_MAX_REQUESTS` | Max requests per window |
-| `windowMs` | number | 60000 | `RATE_LIMIT_WINDOW_MS` | Time window (ms) |
-| `enabled` | boolean | true | `RATE_LIMIT_ENABLED` | Enable/disable rate limiting |
+| Field         | Type    | Default | Environment Variable      | Description                  |
+| ------------- | ------- | ------- | ------------------------- | ---------------------------- |
+| `maxRequests` | number  | 100     | `RATE_LIMIT_MAX_REQUESTS` | Max requests per window      |
+| `windowMs`    | number  | 60000   | `RATE_LIMIT_WINDOW_MS`    | Time window (ms)             |
+| `enabled`     | boolean | true    | `RATE_LIMIT_ENABLED`      | Enable/disable rate limiting |
 
 ### MCP Configuration (`ConfigMcp`)
 
 Model Context Protocol settings:
 
-| Field | Type | Default | Environment Variable | Description |
-|-------|------|---------|---------------------|-------------|
-| `serverName` | string | prisma-airs-mcp | `MCP_SERVER_NAME` | Server identifier |
-| `serverVersion` | string | [auto-detected] | `MCP_SERVER_VERSION` | Server version |
-| `protocolVersion` | string | 2024-11-05 | `MCP_PROTOCOL_VERSION` | MCP protocol version |
+| Field             | Type   | Default         | Environment Variable   | Description          |
+| ----------------- | ------ | --------------- | ---------------------- | -------------------- |
+| `serverName`      | string | prisma-airs-mcp | `MCP_SERVER_NAME`      | Server identifier    |
+| `serverVersion`   | string | [auto-detected] | `MCP_SERVER_VERSION`   | Server version       |
+| `protocolVersion` | string | 2024-11-05      | `MCP_PROTOCOL_VERSION` | MCP protocol version |
 
 ## Environment Variables
 
@@ -308,22 +311,24 @@ Configuration validation failed: [
 ### Common Issues
 
 1. **Invalid URL Format**
-   ```bash
-   AIRS_API_URL=not-a-url
-   # Error: Invalid URL
-   ```
+
+    ```bash
+    AIRS_API_URL=not-a-url
+    # Error: Invalid URL
+    ```
 
 2. **Out of Range Values**
-   ```bash
-   CACHE_TTL_SECONDS=-1
-   # Error: Number must be greater than or equal to 0
-   ```
+
+    ```bash
+    CACHE_TTL_SECONDS=-1
+    # Error: Number must be greater than or equal to 0
+    ```
 
 3. **Invalid Enum Values**
-   ```bash
-   NODE_ENV=staging
-   # Error: Invalid enum value. Expected 'development' | 'production' | 'test'
-   ```
+    ```bash
+    NODE_ENV=staging
+    # Error: Invalid enum value. Expected 'development' | 'production' | 'test'
+    ```
 
 ## Best Practices
 
@@ -402,9 +407,9 @@ describe('Configuration', () => {
 
     it('should load default configuration', () => {
         process.env.AIRS_API_KEY = 'test-key';
-        
+
         const config = getConfig();
-        
+
         expect(config.server.port).toBe(3000);
         expect(config.server.environment).toBe('development');
     });
@@ -413,9 +418,9 @@ describe('Configuration', () => {
         process.env.PORT = '8080';
         process.env.NODE_ENV = 'production';
         process.env.AIRS_API_KEY = 'test-key';
-        
+
         const config = getConfig();
-        
+
         expect(config.server.port).toBe(8080);
         expect(config.server.environment).toBe('production');
     });

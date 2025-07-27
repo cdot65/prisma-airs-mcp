@@ -51,7 +51,7 @@ describe('AIRS Factory', () => {
 
     const mockClearCache = jest.fn();
     const mockResetRateLimits = jest.fn();
-    
+
     const mockClient = {
         clearCache: mockClearCache,
         resetRateLimits: mockResetRateLimits,
@@ -66,12 +66,14 @@ describe('AIRS Factory', () => {
     beforeEach(() => {
         // Reset all mocks
         jest.clearAllMocks();
-        
+
         // Setup mock implementations
         (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(mockConfig);
-        
+
         // Mock the EnhancedPrismaAirsClient constructor
-        const MockedClient = EnhancedPrismaAirsClient as jest.MockedClass<typeof EnhancedPrismaAirsClient>;
+        const MockedClient = EnhancedPrismaAirsClient as jest.MockedClass<
+            typeof EnhancedPrismaAirsClient
+        >;
         MockedClient.mockClear();
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         MockedClient.mockImplementation(() => mockClient as any);
@@ -124,14 +126,16 @@ describe('AIRS Factory', () => {
                 ...mockConfig,
                 cache: { ...mockConfig.cache, enabled: false },
             };
-            (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(configWithoutCache);
+            (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(
+                configWithoutCache,
+            );
 
             getAirsClient();
 
             expect(EnhancedPrismaAirsClient).toHaveBeenCalledWith(
                 expect.objectContaining({
                     cache: undefined,
-                })
+                }),
             );
         });
 
@@ -140,14 +144,16 @@ describe('AIRS Factory', () => {
                 ...mockConfig,
                 rateLimit: { ...mockConfig.rateLimit, enabled: false },
             };
-            (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(configWithoutRateLimit);
+            (getConfig as jest.MockedFunction<typeof getConfig>).mockReturnValue(
+                configWithoutRateLimit,
+            );
 
             getAirsClient();
 
             expect(EnhancedPrismaAirsClient).toHaveBeenCalledWith(
                 expect.objectContaining({
                     rateLimiter: undefined,
-                })
+                }),
             );
         });
     });
@@ -217,7 +223,7 @@ describe('AIRS Factory', () => {
                 expect.objectContaining({
                     apiUrl: 'https://new.api.com',
                     apiKey: 'new-key',
-                })
+                }),
             );
         });
     });
@@ -228,13 +234,13 @@ describe('AIRS Factory', () => {
             const client1 = getAirsClient();
             expect(client1).toBeDefined();
             expect(EnhancedPrismaAirsClient).toHaveBeenCalledTimes(1);
-            
+
             // Simulate afterEach
             resetAirsClient();
-            
+
             // Clear mock counts (simulating new test)
             jest.clearAllMocks();
-            
+
             // Simulate test 2
             const client2 = getAirsClient();
             expect(client2).toBeDefined();

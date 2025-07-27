@@ -143,21 +143,21 @@ export function createLogger(): winston.Logger {
     if (logger) {
         return logger;
     }
-    
+
     const config = getConfig();
     const { environment, logLevel } = config.server;
-    
+
     const formats = [
         winston.format.timestamp(),
         winston.format.errors({ stack: true })
     ];
-    
+
     if (environment === 'development') {
         formats.push(winston.format.colorize(), winston.format.simple());
     } else {
         formats.push(winston.format.json());
     }
-    
+
     logger = winston.createLogger({
         level: logLevel,
         format: winston.format.combine(...formats),
@@ -171,7 +171,7 @@ export function createLogger(): winston.Logger {
             }),
         ],
     });
-    
+
     return logger;
 }
 ```
@@ -455,23 +455,23 @@ console.log('Environment:', process.env.NODE_ENV);
 
 The logger module uses standard Winston types:
 
-| Type | Module | Purpose |
-|------|--------|---------|
-| `winston.Logger` | `winston` | Logger instance type |
+| Type                    | Module    | Purpose                      |
+| ----------------------- | --------- | ---------------------------- |
+| `winston.Logger`        | `winston` | Logger instance type         |
 | `winston.LoggerOptions` | `winston` | Logger configuration options |
 
 ## Dependencies
 
 ### External Dependencies
 
-| Module | Purpose |
-|--------|---------|
+| Module    | Purpose           |
+| --------- | ----------------- |
 | `winston` | Logging framework |
 
 ### Internal Dependencies
 
-| Module | Import | Purpose |
-|--------|--------|---------|
+| Module      | Import        | Purpose              |
+| ----------- | ------------- | -------------------- |
 | `../config` | `getConfig()` | Configuration access |
 
 ## Future Enhancements
@@ -479,18 +479,18 @@ The logger module uses standard Winston types:
 Potential additions to the utils module:
 
 1. **Additional Utilities**:
-   - Error helpers and custom error classes
-   - Validation utilities
-   - Data sanitization functions
-   - Retry helpers
-   - Async utilities
+    - Error helpers and custom error classes
+    - Validation utilities
+    - Data sanitization functions
+    - Retry helpers
+    - Async utilities
 
 2. **Logger Enhancements**:
-   - File rotation transport
-   - External service integration (CloudWatch, Datadog)
-   - Request ID tracking
-   - Performance metrics logging
-   - Separate audit log transport
+    - File rotation transport
+    - External service integration (CloudWatch, Datadog)
+    - Request ID tracking
+    - Performance metrics logging
+    - Separate audit log transport
 
 ## Related Documentation
 

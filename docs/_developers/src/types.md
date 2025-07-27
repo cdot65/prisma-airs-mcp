@@ -619,7 +619,7 @@ export type PublicAirsConfig = Omit<AirsClientConfig, 'apiKey'>;
 The types module has no runtime dependencies and only development dependencies:
 
 | Module         | Purpose                                        |
-|----------------|------------------------------------------------|
+| -------------- | ---------------------------------------------- |
 | TypeScript     | Type checking and compilation                  |
 | @types/node    | Node.js type definitions                       |
 | @types/express | Express type definitions (for transport types) |

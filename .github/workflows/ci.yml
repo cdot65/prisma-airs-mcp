@@ -1,43 +1,43 @@
 name: CI
 
 on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
+    push:
+        branches: [main, develop]
+    pull_request:
+        branches: [main]
 
 jobs:
-  lint-and-test:
-    runs-on: ubuntu-latest
-    
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-    
-    - name: Install pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 10.6.5
-    
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
-    
-    - name: Run linter
-      run: pnpm lint
-    
-    - name: Run type check
-      run: pnpm typecheck
-    
-    - name: Run tests
-      run: pnpm test
-    
-    - name: Build
-      run: pnpm build
+    lint-and-test:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node-version: [18.x, 20.x]
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 10.6.5
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Run linter
+              run: pnpm lint
+
+            - name: Run type check
+              run: pnpm typecheck
+
+            - name: Run tests
+              run: pnpm test
+
+            - name: Build
+              run: pnpm build

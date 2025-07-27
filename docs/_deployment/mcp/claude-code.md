@@ -55,6 +55,7 @@ claude mcp list
 ```
 
 **Example output:**
+
 ```
 MCP Servers:
 ┌──────────────────┬───────────┬──────────────────────┬─────────┬────────────┐
@@ -73,6 +74,7 @@ claude mcp get prisma-airs-dev
 ```
 
 **Output includes:**
+
 - Available tools
 - Resources
 - Prompts
@@ -93,11 +95,11 @@ claude mcp remove prisma-airs-prod --confirm
 
 ### Understanding Scopes
 
-| Scope | Visibility | Storage Location | Use Case |
-|-------|-----------|------------------|----------|
-| Local | Current project only | `.claude/local.mcp.json` | Personal testing |
-| Project | All team members | `.mcp.json` (in repo) | Team collaboration |
-| User | All your projects | `~/.claude/mcp.json` | Personal servers |
+| Scope   | Visibility           | Storage Location         | Use Case           |
+| ------- | -------------------- | ------------------------ | ------------------ |
+| Local   | Current project only | `.claude/local.mcp.json` | Personal testing   |
+| Project | All team members     | `.mcp.json` (in repo)    | Team collaboration |
+| User    | All your projects    | `~/.claude/mcp.json`     | Personal servers   |
 
 ### Local Scope (Default)
 
@@ -119,6 +121,7 @@ claude mcp add -s project --transport http prisma-airs http://localhost:3000
 ```
 
 **Generated `.mcp.json`:**
+
 ```json
 {
     "servers": {
@@ -145,13 +148,13 @@ claude mcp add -s user --transport http prisma-airs-personal https://my-airs.com
 
 Once connected, these Prisma AIRS tools are available:
 
-| Tool Name | Description | Usage |
-|-----------|-------------|-------|
-| `airs_scan_content` | Real-time security scanning | Immediate threat detection |
-| `airs_scan_async` | Batch content scanning | Large-scale analysis |
-| `airs_get_scan_results` | Retrieve scan results | Check async scan status |
-| `airs_get_threat_reports` | Detailed threat analysis | Deep dive into threats |
-| `airs_clear_cache` | Clear server cache | Performance management |
+| Tool Name                 | Description                 | Usage                      |
+| ------------------------- | --------------------------- | -------------------------- |
+| `airs_scan_content`       | Real-time security scanning | Immediate threat detection |
+| `airs_scan_async`         | Batch content scanning      | Large-scale analysis       |
+| `airs_get_scan_results`   | Retrieve scan results       | Check async scan status    |
+| `airs_get_threat_reports` | Detailed threat analysis    | Deep dive into threats     |
+| `airs_clear_cache`        | Clear server cache          | Performance management     |
 
 ### Checking Tool Availability
 
@@ -162,6 +165,7 @@ In Claude Code, use the `/mcp` command:
 ```
 
 **Output shows:**
+
 - Connected servers and their status
 - Available tools with descriptions
 - Resources and prompts
@@ -208,30 +212,33 @@ User: Check if this code handles PII data according to GDPR requirements.
 **Solutions:**
 
 1. **Verify server is running:**
-   ```bash
-   # Check health endpoint
-   curl http://localhost:3000/health
-   ```
+
+    ```bash
+    # Check health endpoint
+    curl http://localhost:3000/health
+    ```
 
 2. **Check Claude Code CLI:**
-   ```bash
-   # Verify CLI is working
-   claude --version
-   
-   # Check authentication
-   claude auth status
-   ```
+
+    ```bash
+    # Verify CLI is working
+    claude --version
+
+    # Check authentication
+    claude auth status
+    ```
 
 3. **Test with verbose mode:**
-   ```bash
-   claude mcp add --transport http --verbose prisma-airs http://localhost:3000
-   ```
+    ```bash
+    claude mcp add --transport http --verbose prisma-airs http://localhost:3000
+    ```
 
 #### Scope Conflicts
 
 **Error:** "Server name already exists in different scope"
 
 **Solution:** Use unique names per scope:
+
 ```bash
 # Remove conflicting server
 claude mcp remove prisma-airs --scope project
@@ -247,15 +254,16 @@ claude mcp add -s project --transport http prisma-airs-team http://localhost:300
 **Solutions:**
 
 1. **Check file permissions:**
-   ```bash
-   ls -la .mcp.json
-   chmod 644 .mcp.json
-   ```
+
+    ```bash
+    ls -la .mcp.json
+    chmod 644 .mcp.json
+    ```
 
 2. **Use user scope instead:**
-   ```bash
-   claude mcp add -s user --transport http prisma-airs http://localhost:3000
-   ```
+    ```bash
+    claude mcp add -s user --transport http prisma-airs http://localhost:3000
+    ```
 
 ### Debug Mode
 
@@ -274,11 +282,12 @@ claude mcp add --transport http --debug prisma-airs http://localhost:3000
 ### 1. Naming Conventions
 
 **Use environment-specific names:**
+
 ```bash
 # Development
 claude mcp add --transport http prisma-airs-dev http://localhost:3000
 
-# Staging  
+# Staging
 claude mcp add --transport http prisma-airs-staging https://staging.airs.example.com
 
 # Production
@@ -290,22 +299,24 @@ claude mcp add --transport http prisma-airs-prod https://airs.example.com
 **Share configurations via project scope:**
 
 1. Add server to project scope:
-   ```bash
-   claude mcp add -s project --transport http prisma-airs-team http://team-server:3000
-   ```
+
+    ```bash
+    claude mcp add -s project --transport http prisma-airs-team http://team-server:3000
+    ```
 
 2. Commit `.mcp.json` to version control:
-   ```bash
-   git add .mcp.json
-   git commit -m "Add Prisma AIRS MCP configuration"
-   ```
+
+    ```bash
+    git add .mcp.json
+    git commit -m "Add Prisma AIRS MCP configuration"
+    ```
 
 3. Document in README:
-   ```markdown
-   ## Security Tools
-   This project uses Prisma AIRS for security scanning.
-   MCP configuration is in `.mcp.json`.
-   ```
+    ```markdown
+    ## Security Tools
+    This project uses Prisma AIRS for security scanning.
+    MCP configuration is in `.mcp.json`.
+    ```
 
 ### 3. Security Considerations
 
@@ -366,4 +377,7 @@ jobs:
 - [Claude Code Documentation](https://claude.ai/docs/code)
 - [MCP CLI Reference](https://github.com/anthropics/claude-cli)
 - [Prisma AIRS Security Features]({{ site.baseurl }}/prisma-airs/overview/)
+
+```
+
 ```

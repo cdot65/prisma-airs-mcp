@@ -18,34 +18,34 @@ This is the first official release of the Prisma AIRS MCP Server, bringing enter
 ### Features
 
 - **Full MCP Protocol Support**
-  - Tools for security scanning and threat detection
-  - Resources for accessing scan results and reports
-  - Pre-configured security workflow prompts
-  - Server-Sent Events (SSE) support for streaming
+    - Tools for security scanning and threat detection
+    - Resources for accessing scan results and reports
+    - Pre-configured security workflow prompts
+    - Server-Sent Events (SSE) support for streaming
 
 - **Prisma AIRS Integration**
-  - Synchronous content scanning for immediate results
-  - Asynchronous batch scanning for multiple requests
-  - Comprehensive threat detection across multiple categories
-  - Support for custom security profiles
+    - Synchronous content scanning for immediate results
+    - Asynchronous batch scanning for multiple requests
+    - Comprehensive threat detection across multiple categories
+    - Support for custom security profiles
 
 - **Performance & Reliability**
-  - Built-in LRU caching to reduce API calls
-  - Token bucket rate limiting for API protection
-  - Automatic retry logic with exponential backoff
-  - Connection pooling for efficient resource usage
+    - Built-in LRU caching to reduce API calls
+    - Token bucket rate limiting for API protection
+    - Automatic retry logic with exponential backoff
+    - Connection pooling for efficient resource usage
 
 - **Deployment Options**
-  - Docker containers with multi-architecture support
-  - Kubernetes manifests with Kustomize overlays
-  - Local development with hot-reload
-  - Environment-based configuration
+    - Docker containers with multi-architecture support
+    - Kubernetes manifests with Kustomize overlays
+    - Local development with hot-reload
+    - Environment-based configuration
 
 - **Developer Experience**
-  - Comprehensive TypeScript type definitions
-  - Structured logging with Winston
-  - Health and readiness endpoints
-  - Extensive documentation and examples
+    - Comprehensive TypeScript type definitions
+    - Structured logging with Winston
+    - Health and readiness endpoints
+    - Extensive documentation and examples
 
 ### Security Features
 
@@ -82,8 +82,8 @@ This project is open source and welcomes contributions. See [CONTRIBUTING.md](ht
 
 ## Version History
 
-| Version | Date       | Description |
-|---------|------------|-------------|
+| Version | Date       | Description                                    |
+| ------- | ---------- | ---------------------------------------------- |
 | 1.0.0   | 2025-01-27 | Initial release with full MCP protocol support |
 
 ---
@@ -101,6 +101,7 @@ If you were using a pre-release version (e.g., 1.3.x development builds), please
 ### Version Management
 
 The server version is managed through:
+
 - `version.json` - Source of truth for version information
 - `package.json` - NPM package version (synchronized)
 - Docker image tags - Follows semantic versioning
