@@ -57,7 +57,7 @@ The centralized type system providing TypeScript definitions for the entire appl
 
 - **Purpose**: Single source of truth for all type definitions
 - **Key Features**:
-    - Module-prefixed naming convention (Airs*, Mcp*, Config*, etc.)
+    - Module-prefixed naming convention (Airs*, Mcp*, Config\*, etc.)
     - Prevents circular dependencies
     - Enables type-safe development across all modules
 - **Components**:

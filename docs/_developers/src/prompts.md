@@ -79,7 +79,7 @@ import type {
 #### Arguments
 
 | Name                 | Description                                          | Required |
-|----------------------|------------------------------------------------------|----------|
+| -------------------- | ---------------------------------------------------- | -------- |
 | `content`            | The content to analyze (prompt, response, or both)   | Yes      |
 | `context`            | Additional context about the content source          | No       |
 | `severity_threshold` | Minimum severity level to report (low, medium, high) | No       |
@@ -120,7 +120,7 @@ The prompt generates a structured security analysis that includes:
 #### Arguments
 
 | Name         | Description                                                            | Required |
-|--------------|------------------------------------------------------------------------|----------|
+| ------------ | ---------------------------------------------------------------------- | -------- |
 | `scan_id`    | The scan ID to investigate                                             | Yes      |
 | `focus_area` | Specific threat type to focus on (e.g., injection, dlp, toxic_content) | No       |
 
@@ -151,7 +151,7 @@ The investigation is formatted as a professional security report with structured
 #### Arguments
 
 | Name           | Description                                                           | Required                                |
-|----------------|-----------------------------------------------------------------------|-----------------------------------------|
+| -------------- | --------------------------------------------------------------------- | --------------------------------------- |
 | `content`      | The content to check for compliance                                   | Yes                                     |
 | `regulations`  | Comma-separated list of regulations to check (e.g., GDPR, HIPAA, PCI) | No (defaults to "GDPR, HIPAA, PCI-DSS") |
 | `profile_name` | Security profile to use for compliance checking                       | No                                      |
@@ -159,6 +159,7 @@ The investigation is formatted as a professional security report with structured
 #### Compliance Analysis Steps
 
 1. **Data Identification** - Using `airs_scan_content` to find:
+
     - Personal Identifiable Information (PII)
     - Protected Health Information (PHI)
     - Payment Card Information (PCI)
@@ -187,7 +188,7 @@ The investigation is formatted as a professional security report with structured
 #### Arguments
 
 | Name            | Description                                                           | Required                  |
-|-----------------|-----------------------------------------------------------------------|---------------------------|
+| --------------- | --------------------------------------------------------------------- | ------------------------- |
 | `incident_type` | Type of incident (e.g., data_leak, injection_attempt, malicious_code) | Yes                       |
 | `report_id`     | Threat report ID if available                                         | No                        |
 | `urgency`       | Incident urgency level (low, medium, high, critical)                  | No (defaults to "medium") |
@@ -197,21 +198,25 @@ The investigation is formatted as a professional security report with structured
 The prompt provides time-boxed incident response guidance:
 
 1. **Immediate Actions (0-15 minutes)**:
+
     - Containment steps
     - Evidence preservation
     - Initial assessment
 
 2. **Investigation (15-60 minutes)**:
+
     - Use `airs_get_threat_reports` if report_id provided
     - Identify affected systems/data
     - Determine attack vector
 
 3. **Mitigation (1-4 hours)**:
+
     - Stop the threat
     - Patch vulnerabilities
     - Update security controls
 
 4. **Recovery (4-24 hours)**:
+
     - Restore normal operations
     - Verify security posture
     - Monitor for recurrence
@@ -289,7 +294,7 @@ private getSecurityAnalysisPrompt(args: Record<string, string>): McpPromptsGetRe
             content: {
                 type: 'text',
                 text: `Please perform a comprehensive security analysis...
-                
+
 **Content to Analyze:**
 ${content}
 
@@ -506,7 +511,7 @@ The prompts module uses centralized types from `src/types/`:
 ### MCP Prompt Types
 
 | Type                   | Module    | Purpose                          |
-|------------------------|-----------|----------------------------------|
+| ---------------------- | --------- | -------------------------------- |
 | `McpPrompt`            | `./types` | Prompt definition with arguments |
 | `McpPromptArgument`    | `./types` | Individual argument definition   |
 | `McpPromptMessage`     | `./types` | Conversation message structure   |
@@ -520,13 +525,13 @@ The prompts module uses centralized types from `src/types/`:
 ### External Dependencies
 
 | Module    | Purpose            |
-|-----------|--------------------|
+| --------- | ------------------ |
 | `winston` | Structured logging |
 
 ### Internal Dependencies
 
 | Module            | Import        | Purpose          |
-|-------------------|---------------|------------------|
+| ----------------- | ------------- | ---------------- |
 | `../utils/logger` | `getLogger()` | Logger instance  |
 | `../types`        | Various types | Type definitions |
 

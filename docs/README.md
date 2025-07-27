@@ -41,6 +41,7 @@ The site automatically builds and deploys to GitHub Pages through GitHub Actions
 ### Automated CI/CD Process
 
 1. **Pull Request**: When you create a PR that modifies the `docs/` directory:
+
     - Jekyll site is built and tested
     - HTML is validated
     - Broken links are checked

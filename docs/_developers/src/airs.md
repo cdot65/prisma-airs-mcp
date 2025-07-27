@@ -77,7 +77,7 @@ interface AirsClientConfig {
 #### API Methods
 
 | Method               | Endpoint                      | Purpose                    |
-|----------------------|-------------------------------|----------------------------|
+| -------------------- | ----------------------------- | -------------------------- |
 | `scanSync()`         | `POST /v1/scan/sync/request`  | Real-time content scanning |
 | `scanAsync()`        | `POST /v1/scan/async/request` | Batch scanning             |
 | `getScanResults()`   | `GET /v1/scan/results`        | Retrieve scan results      |
@@ -183,7 +183,7 @@ interface AirsRateLimiterConfig {
 #### Operation Types
 
 | Operation | Default Limit | Use Case         |
-|-----------|---------------|------------------|
+| --------- | ------------- | ---------------- |
 | `scan`    | 100/min       | Content scanning |
 | `report`  | 50/min        | Threat reports   |
 | `result`  | 200/min       | Result retrieval |
@@ -262,7 +262,7 @@ All types are centralized in `src/types/airs.ts` with consistent `Airs` prefixin
 ### Request Types
 
 | Type                  | Purpose                |
-|-----------------------|------------------------|
+| --------------------- | ---------------------- |
 | `AirsScanRequest`     | Synchronous scan input |
 | `AirsAsyncScanObject` | Async scan item        |
 | `AirsRequestOptions`  | Request configuration  |
@@ -270,7 +270,7 @@ All types are centralized in `src/types/airs.ts` with consistent `Airs` prefixin
 ### Response Types
 
 | Type                         | Purpose                |
-|------------------------------|------------------------|
+| ---------------------------- | ---------------------- |
 | `AirsScanResponse`           | Scan results           |
 | `AirsAsyncScanResponse`      | Async operation status |
 | `AirsScanIdResult`           | Retrieved scan result  |
@@ -279,7 +279,7 @@ All types are centralized in `src/types/airs.ts` with consistent `Airs` prefixin
 ### Configuration Types
 
 | Type                       | Purpose                |
-|----------------------------|------------------------|
+| -------------------------- | ---------------------- |
 | `AirsClientConfig`         | Base client settings   |
 | `AirsCacheConfig`          | Cache settings         |
 | `AirsRateLimiterConfig`    | Rate limit settings    |
@@ -407,16 +407,19 @@ const config: AirsEnhancedClientConfig = {
 ### Common Issues
 
 1. **Authentication Failures**
+
     - Verify `AIRS_API_KEY` is set correctly
     - Check API key permissions
     - Ensure `x-pan-token` header is sent
 
 2. **Rate Limiting**
+
     - Monitor rate limit status
     - Adjust limits based on quota
     - Implement backoff strategies
 
 3. **Cache Misses**
+
     - Check TTL configuration
     - Monitor cache size
     - Verify key generation

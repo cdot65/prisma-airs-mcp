@@ -70,10 +70,12 @@ MCP clients connect to the Prisma AIRS MCP server through different mechanisms:
 ### Connection Methods
 
 1. **Direct HTTP Connection** (VS Code)
+
     - Client connects directly to the MCP server's HTTP endpoint
     - Configuration via JSON files in the project or user settings
 
 2. **MCP Remote Proxy** (Claude Desktop)
+
     - Uses `mcp-remote` as a bridge between the desktop app and HTTP server
     - Configuration in the application's config directory
 
@@ -110,14 +112,17 @@ A unique name to identify the server in the client:
 When configuring MCP clients:
 
 1. **Use HTTPS in Production**
+
     - Always use encrypted connections for remote servers
     - Example: `https://airs.example.com`
 
 2. **Network Security**
+
     - Ensure firewall rules allow client-to-server communication
     - Consider VPN for sensitive deployments
 
 3. **Authentication**
+
     - The MCP server relies on API key authentication to Prisma AIRS
     - API keys are configured server-side, not in client configurations
 
@@ -131,7 +136,7 @@ When configuring MCP clients:
 Select your MCP client based on your workflow:
 
 | Use Case              | Recommended Client | Why                               |
-|-----------------------|--------------------|-----------------------------------|
+| --------------------- | ------------------ | --------------------------------- |
 | IDE-based development | VS Code            | Integrated development experience |
 | General AI assistance | Claude Desktop     | Natural conversation interface    |
 | Web-based development | Claude Code        | No installation required          |
@@ -159,16 +164,19 @@ Once connected, all MCP clients provide access to these Prisma AIRS security too
 Common issues across all clients:
 
 1. **Server Not Reachable**
-   ```bash
-   # Test server health
-   curl http://localhost:3000/health
-   ```
+
+    ```bash
+    # Test server health
+    curl http://localhost:3000/health
+    ```
 
 2. **Invalid Configuration**
+
     - Check JSON syntax in configuration files
     - Verify server URL format
 
 3. **Port Conflicts**
+
     - Ensure the server port is not in use
     - Check Docker port mappings
 

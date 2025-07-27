@@ -279,21 +279,21 @@
     <span class="k">if</span> <span class="p">(</span><span class="nx">logger</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">return</span> <span class="nx">logger</span><span class="p">;</span>
     <span class="p">}</span>
-    
+
     <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
     <span class="kd">const</span> <span class="p">{</span> <span class="nx">environment</span><span class="p">,</span> <span class="nx">logLevel</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">;</span>
-    
+
     <span class="kd">const</span> <span class="nx">formats</span> <span class="o">=</span> <span class="p">[</span>
         <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">timestamp</span><span class="p">(),</span>
         <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">errors</span><span class="p">({</span> <span class="na">stack</span><span class="p">:</span> <span class="kc">true</span> <span class="p">})</span>
     <span class="p">];</span>
-    
+
     <span class="k">if</span> <span class="p">(</span><span class="nx">environment</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">formats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">colorize</span><span class="p">(),</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">simple</span><span class="p">());</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
         <span class="nx">formats</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span>
     <span class="p">}</span>
-    
+
     <span class="nx">logger</span> <span class="o">=</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">createLogger</span><span class="p">({</span>
         <span class="na">level</span><span class="p">:</span> <span class="nx">logLevel</span><span class="p">,</span>
         <span class="na">format</span><span class="p">:</span> <span class="nx">winston</span><span class="p">.</span><span class="nx">format</span><span class="p">.</span><span class="nx">combine</span><span class="p">(...</span><span class="nx">formats</span><span class="p">),</span>
@@ -307,7 +307,7 @@
             <span class="p">}),</span>
         <span class="p">],</span>
     <span class="p">});</span>
-    
+
     <span class="k">return</span> <span class="nx">logger</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
@@ -583,21 +583,26 @@
 <h3 id="common-issues">Common Issues</h3>
 
 <ol>
-  <li><strong>No Log Output</strong>
+  <li>
+    <p><strong>No Log Output</strong></p>
+
     <ul>
       <li>Check <code class="language-plaintext highlighter-rouge">LOG_LEVEL</code> environment variable</li>
       <li>Verify <code class="language-plaintext highlighter-rouge">NODE_ENV</code> is set correctly</li>
       <li>Ensure logger is initialized</li>
     </ul>
   </li>
-  <li><strong>Wrong Format</strong>
+  <li>
+    <p><strong>Wrong Format</strong></p>
+
     <ul>
       <li>Development uses colorized simple format</li>
       <li>Production uses JSON format</li>
       <li>Check <code class="language-plaintext highlighter-rouge">NODE_ENV</code> setting</li>
     </ul>
   </li>
-  <li><strong>Missing Metadata</strong>
+  <li>
+    <p><strong>Missing Metadata</strong></p>
     <ul>
       <li>Default metadata comes from config</li>
       <li>Ensure config is loaded before logger</li>
@@ -683,7 +688,9 @@
 <p>Potential additions to the utils module:</p>
 
 <ol>
-  <li><strong>Additional Utilities</strong>:
+  <li>
+    <p><strong>Additional Utilities</strong>:</p>
+
     <ul>
       <li>Error helpers and custom error classes</li>
       <li>Validation utilities</li>
@@ -692,7 +699,8 @@
       <li>Async utilities</li>
     </ul>
   </li>
-  <li><strong>Logger Enhancements</strong>:
+  <li>
+    <p><strong>Logger Enhancements</strong>:</p>
     <ul>
       <li>File rotation transport</li>
       <li>External service integration (CloudWatch, Datadog)</li>

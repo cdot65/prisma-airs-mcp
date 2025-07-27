@@ -1,12 +1,9 @@
 #!/bin/bash
-# Complete production deployment script with versioning
-# This script handles the entire deployment workflow:
-# 1. Validates code
-# 2. Updates version
-# 3. Builds Docker image
-# 4. Pushes to registry
-# 5. Deploys to Kubernetes
-# 6. Monitors rollout
+# deploy-production.sh - Complete production deployment with version management
+# This script handles the full production deployment cycle including:
+# - Building versioned container images
+# - Pushing to GitHub Container Registry
+# - Updating Kubernetes deployment with new version
 
 set -euo pipefail
 
@@ -15,7 +12,6 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
-CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Configuration
@@ -23,203 +19,138 @@ REGISTRY="ghcr.io"
 USERNAME="cdot65"
 IMAGE_NAME="prisma-airs-mcp"
 FULL_IMAGE_BASE="${REGISTRY}/${USERNAME}/${IMAGE_NAME}"
-NAMESPACE="prisma-airs"
+NAMESPACE="prisma-airs-mcp-server"
 
-# Read current version from version.json
-CURRENT_VERSION=$(jq -r '.version' version.json)
+# Get version from version.json
+VERSION=$(jq -r '.version' version.json)
+if [ -z "$VERSION" ]; then
+    echo -e "${RED}Error: Could not read version from version.json${NC}"
+    exit 1
+fi
 
-# Function to print colored output
-print_color() {
-    color=$1
-    message=$2
-    echo -e "${color}${message}${NC}"
-}
+echo -e "${BLUE}=== Production Deployment v${VERSION} ===${NC}"
+echo ""
 
-# Function to update version in package.json
-update_package_version() {
-    local version=$1
-    print_color $YELLOW "Updating package.json version to ${version}..."
-    jq ".version = \"${version}\"" package.json > package.json.tmp && mv package.json.tmp package.json
-}
+# Step 1: Validate the codebase
+echo -e "${YELLOW}Step 1: Validating codebase...${NC}"
+pnpm run local:lint:fix
+pnpm run local:format
+pnpm run local:typecheck
+pnpm run local:build
+echo -e "${GREEN}✓ Validation complete${NC}"
+echo ""
 
-# Function to check if user wants to proceed
-confirm_deployment() {
-    local version=$1
-    print_color $CYAN "=== Production Deployment Confirmation ==="
-    print_color $YELLOW "Current version: ${CURRENT_VERSION}"
-    print_color $YELLOW "New version: ${version}"
-    print_color $YELLOW "Image: ${FULL_IMAGE_BASE}:${version}"
-    print_color $YELLOW "Namespace: ${NAMESPACE}"
-    echo ""
-    read -p "Do you want to proceed with deployment? (y/N) " -n 1 -r
-    echo ""
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        print_color $RED "Deployment cancelled."
-        exit 1
-    fi
-}
+# Step 2: Build production images
+echo -e "${YELLOW}Step 2: Building production images...${NC}"
+echo "Building AMD64 image for Kubernetes production..."
+docker buildx build \
+    --platform linux/amd64 \
+    --tag "${FULL_IMAGE_BASE}:latest" \
+    --tag "${FULL_IMAGE_BASE}:v${VERSION}" \
+    --build-arg VERSION="${VERSION}" \
+    --build-arg BUILD_DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    --load \
+    -f docker/Dockerfile \
+    --target production \
+    .
+echo -e "${GREEN}✓ AMD64 production image built${NC}"
+echo ""
 
-# Function to check prerequisites
-check_prerequisites() {
-    print_color $BLUE "Checking prerequisites..."
-    
-    local missing=false
-    
-    # Check required commands
-    for cmd in jq kubectl docker; do
-        if ! command -v $cmd &> /dev/null; then
-            print_color $RED "❌ $cmd is not installed"
-            missing=true
-        else
-            print_color $GREEN "✅ $cmd is available"
-        fi
-    done
-    
-    # Check Docker daemon
-    if ! docker info &> /dev/null; then
-        print_color $RED "❌ Docker daemon is not running"
-        missing=true
-    else
-        print_color $GREEN "✅ Docker daemon is running"
-    fi
-    
-    # Check kubectl connection
-    if ! kubectl cluster-info &> /dev/null; then
-        print_color $RED "❌ Cannot connect to Kubernetes cluster"
-        missing=true
-    else
-        print_color $GREEN "✅ Kubernetes cluster connection OK"
-    fi
-    
-    # Check GitHub token
-    TOKEN="${CR_PAT:-${GITHUB_TOKEN:-}}"
-    if [ -z "$TOKEN" ]; then
-        print_color $RED "❌ Neither CR_PAT nor GITHUB_TOKEN is set"
-        missing=true
-    else
-        print_color $GREEN "✅ GitHub token is set (using ${CR_PAT:+CR_PAT}${GITHUB_TOKEN:+GITHUB_TOKEN})"
-    fi
-    
-    if [ "$missing" = true ]; then
-        print_color $RED "Prerequisites check failed. Please install missing components."
-        exit 1
-    fi
-    
-    print_color $GREEN "All prerequisites satisfied!"
-    echo ""
-}
+# Step 3: Push images to registry
+echo -e "${YELLOW}Step 3: Pushing images to GitHub Container Registry...${NC}"
 
-# Main deployment workflow
-main() {
-    print_color $CYAN "=== Prisma AIRS MCP Production Deployment ==="
-    echo ""
-    
-    # Get version from command line or use current
-    VERSION="${1:-$CURRENT_VERSION}"
-    
-    # If no argument provided, prompt for version
-    if [ $# -eq 0 ]; then
-        print_color $YELLOW "Current version: ${CURRENT_VERSION}"
-        read -p "Enter new version (or press Enter to use current): " NEW_VERSION
-        VERSION="${NEW_VERSION:-$CURRENT_VERSION}"
-    fi
-    
-    # Validate version format (basic check)
-    if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        print_color $RED "Invalid version format. Please use semantic versioning (e.g., 1.3.3)"
-        exit 1
-    fi
-    
-    # Check prerequisites
-    check_prerequisites
-    
-    # Confirm deployment
-    confirm_deployment $VERSION
-    
-    # Step 1: Update version in package.json
-    if [ "$VERSION" != "$CURRENT_VERSION" ]; then
-        update_package_version $VERSION
-    fi
-    
-    # Step 2: Run validation
-    print_color $BLUE "Step 1/6: Running validation checks..."
-    if ! pnpm run deploy:validate; then
-        print_color $RED "Validation failed. Please fix issues before deploying."
-        exit 1
-    fi
-    print_color $GREEN "✅ Validation passed"
-    echo ""
-    
-    # Step 3: Build Docker image
-    print_color $BLUE "Step 2/6: Building Docker image..."
-    if ! pnpm run docker:build:k8s; then
-        print_color $RED "Docker build failed."
-        exit 1
-    fi
-    print_color $GREEN "✅ Docker image built"
-    echo ""
-    
-    # Step 4: Push to registry
-    print_color $BLUE "Step 3/6: Pushing to registry..."
-    if ! ./scripts/docker-publish.sh --version "v${VERSION}"; then
-        print_color $RED "Docker push failed."
-        exit 1
-    fi
-    print_color $GREEN "✅ Images pushed to registry"
-    echo ""
-    
-    # Step 5: Update Kubernetes deployment
-    print_color $BLUE "Step 4/6: Updating Kubernetes deployment..."
-    
-    # Update the production kustomization to use the new version
-    print_color $YELLOW "Updating production kustomization.yaml..."
-    sed -i.bak "s/newTag: .*/newTag: v${VERSION}/" k8s/overlays/production/kustomization.yaml
-    rm k8s/overlays/production/kustomization.yaml.bak
-    
-    # Deploy to Kubernetes
-    if ! ./k8s/scripts/deploy.sh deploy production; then
-        print_color $RED "Kubernetes deployment failed."
-        exit 1
-    fi
-    print_color $GREEN "✅ Kubernetes deployment updated"
-    echo ""
-    
-    # Step 6: Monitor rollout
-    print_color $BLUE "Step 5/6: Monitoring rollout..."
-    kubectl rollout status deployment/prisma-airs-mcp -n ${NAMESPACE}
-    print_color $GREEN "✅ Rollout completed successfully"
-    echo ""
-    
-    # Step 7: Verify deployment
-    print_color $BLUE "Step 6/6: Verifying deployment..."
-    kubectl get pods -n ${NAMESPACE} -l app=prisma-airs-mcp
-    echo ""
-    
-    # Test health endpoint
-    print_color $YELLOW "Testing health endpoint..."
-    sleep 5
-    if curl -s -f https://airs.cdot.io/prisma-airs/health > /dev/null; then
-        print_color $GREEN "✅ Health check passed"
-    else
-        print_color $YELLOW "⚠️  Health check failed (service may still be starting)"
-    fi
-    
-    # Success message
-    echo ""
-    print_color $GREEN "=== Deployment Complete! ==="
-    print_color $CYAN "Version ${VERSION} is now live at: https://airs.cdot.io/prisma-airs"
-    print_color $CYAN "Images published:"
-    print_color $CYAN "  - ${FULL_IMAGE_BASE}:latest (AMD64)"
-    print_color $CYAN "  - ${FULL_IMAGE_BASE}:v${VERSION} (Multi-platform)"
-    echo ""
-    
-    # Suggest next steps
-    print_color $YELLOW "Next steps:"
-    print_color $YELLOW "1. Verify the deployment: https://airs.cdot.io/prisma-airs/health"
-    print_color $YELLOW "2. Check logs: kubectl logs -l app=prisma-airs-mcp -n ${NAMESPACE}"
-    print_color $YELLOW "3. Commit version changes: git add . && git commit -m 'Deploy v${VERSION}'"
-    print_color $YELLOW "4. Tag release: git tag v${VERSION} && git push --tags"
-}
+# Login to GitHub Container Registry if needed
+if ! docker pull ${FULL_IMAGE_BASE}:latest >/dev/null 2>&1; then
+    echo "Logging in to GitHub Container Registry..."
+    echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$USERNAME" --password-stdin
+fi
 
-# Run main function
-main "$@"
+# Push AMD64 as latest
+echo "Pushing AMD64 image as :latest..."
+docker push "${FULL_IMAGE_BASE}:latest"
+
+# Push versioned image
+echo "Pushing versioned image as :v${VERSION}..."
+docker tag "${FULL_IMAGE_BASE}:latest" "${FULL_IMAGE_BASE}:v${VERSION}"
+docker push "${FULL_IMAGE_BASE}:v${VERSION}"
+
+# Build and push multi-platform dev image
+echo "Building multi-platform dev image..."
+docker buildx build \
+    --platform linux/amd64,linux/arm64 \
+    --tag "${FULL_IMAGE_BASE}:dev" \
+    --build-arg VERSION="${VERSION}" \
+    --build-arg BUILD_DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    --push \
+    -f docker/Dockerfile \
+    --target production \
+    .
+
+echo -e "${GREEN}✓ All images pushed successfully${NC}"
+echo ""
+
+# Step 4: Update Kubernetes deployment
+echo -e "${YELLOW}Step 4: Updating Kubernetes deployment...${NC}"
+
+# Check if kubectl is available
+if ! command -v kubectl &> /dev/null; then
+    echo -e "${RED}kubectl not found. Please install kubectl to continue.${NC}"
+    exit 1
+fi
+
+# Update the kustomization.yaml with the new version
+KUSTOMIZATION_FILE="k8s/overlays/production/kustomization.yaml"
+if [ -f "$KUSTOMIZATION_FILE" ]; then
+    echo "Updating kustomization.yaml with new version tag..."
+    # Use 'latest' tag for production instead of version-specific tag
+    sed -i.bak "s/newTag:.*/newTag: latest/" "$KUSTOMIZATION_FILE"
+    rm -f "${KUSTOMIZATION_FILE}.bak"
+fi
+
+# Apply the Kubernetes configuration
+echo "Applying Kubernetes configuration..."
+kubectl apply -k k8s/overlays/production -n "$NAMESPACE"
+
+# Force rollout restart to ensure fresh image pull
+echo "Forcing rollout restart to pull fresh images..."
+kubectl rollout restart deployment/prisma-airs-mcp -n "$NAMESPACE"
+
+# Wait for rollout to complete
+echo "Waiting for deployment rollout..."
+kubectl rollout status deployment/prisma-airs-mcp -n "$NAMESPACE"
+
+echo -e "${GREEN}✓ Kubernetes deployment updated${NC}"
+echo ""
+
+# Step 5: Verify deployment
+echo -e "${YELLOW}Step 5: Verifying deployment...${NC}"
+kubectl get pods -n "$NAMESPACE" -l app=prisma-airs-mcp
+echo ""
+
+# Show the deployed image
+echo "Deployed image versions:"
+kubectl get deployment prisma-airs-mcp -n "$NAMESPACE" -o jsonpath='{.spec.template.spec.containers[0].image}' && echo
+echo ""
+
+# Step 6: Run deployment verification
+echo -e "${YELLOW}Step 6: Running deployment verification...${NC}"
+if ./scripts/verify-deployment.sh "$NAMESPACE"; then
+    echo -e "${GREEN}✓ Deployment verification passed${NC}"
+else
+    echo -e "${RED}✗ Deployment verification failed${NC}"
+    echo -e "${YELLOW}Please check the errors above and resolve them${NC}"
+    exit 1
+fi
+echo ""
+
+echo -e "${GREEN}=== Deployment Complete ===${NC}"
+echo ""
+echo "Summary:"
+echo "  - Version: v${VERSION}"
+echo "  - Namespace: ${NAMESPACE}"
+echo "  - Images pushed:"
+echo "    - ${FULL_IMAGE_BASE}:latest (AMD64 for production)"
+echo "    - ${FULL_IMAGE_BASE}:v${VERSION} (AMD64 versioned)"
+echo "    - ${FULL_IMAGE_BASE}:dev (Multi-platform)"
+echo ""
+echo "Access the service at: https://airs.cdot.io/prisma-airs"

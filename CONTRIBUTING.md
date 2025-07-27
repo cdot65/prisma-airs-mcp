@@ -84,6 +84,7 @@ By participating in this project, you agree to abide by our Code of Conduct:
     ```
 
 2. **Make your changes**
+
     - Follow the TypeScript style guide (`.claude/conventions/typescript-style-guide.md`)
     - Write clean, documented code
     - Add tests for new functionality
@@ -170,11 +171,13 @@ docs(readme): update deployment instructions
     ```
 
 2. **Update documentation**
+
     - Update README.md if needed
     - Update API documentation
     - Add/update tests
 
 3. **Create Pull Request**
+
     - Use a clear, descriptive title
     - Reference any related issues
     - Provide a detailed description
@@ -237,16 +240,19 @@ curl -X POST https://airs.cdot.io/prisma-airs \
 ### Release Process
 
 1. **Version Bumping**
+
     - Follow semantic versioning (MAJOR.MINOR.PATCH)
     - Update version in package.json
     - Update version badges in README.md
 
 2. **Changelog**
+
     - Document all changes in CHANGELOG.md
     - Group by type (Features, Fixes, etc.)
     - Include breaking changes prominently
 
 3. **Testing**
+
     - Full test suite must pass
     - Manual testing of critical paths
     - Docker image build and test

@@ -108,6 +108,11 @@ deploy() {
         # Wait for rollout
         print_color $YELLOW "Waiting for deployment to be ready..."
         kubectl rollout status deployment -l app=prisma-airs-mcp -n "$namespace" --timeout=300s
+        
+        # Force rollout restart to ensure fresh image pull
+        print_color $YELLOW "Forcing rollout restart to pull fresh images..."
+        kubectl rollout restart deployment -l app=prisma-airs-mcp -n "$namespace"
+        kubectl rollout status deployment -l app=prisma-airs-mcp -n "$namespace" --timeout=300s
     fi
     
     print_color $GREEN "Deployment completed successfully!"
@@ -169,6 +174,15 @@ test_deployment() {
     }
     
     print_color $GREEN "Ready check passed"
+    
+    # Verify image version
+    print_color $YELLOW "Verifying deployed image..."
+    deployed_image=$(kubectl get deployment prisma-airs-mcp -n "$namespace" -o jsonpath='{.spec.template.spec.containers[0].image}')
+    print_color $BLUE "Deployed image: $deployed_image"
+    
+    # Get actual running image digest
+    running_digest=$(kubectl get pods -l app=prisma-airs-mcp -n "$namespace" -o jsonpath='{.items[0].status.containerStatuses[0].imageID}' | cut -d'@' -f2)
+    print_color $BLUE "Running image digest: $running_digest"
 }
 
 # Main script

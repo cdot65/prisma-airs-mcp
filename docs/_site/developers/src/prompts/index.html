@@ -366,7 +366,9 @@ response procedures.</p>
 <h4 id="compliance-analysis-steps">Compliance Analysis Steps</h4>
 
 <ol>
-  <li><strong>Data Identification</strong> - Using <code class="language-plaintext highlighter-rouge">airs_scan_content</code> to find:
+  <li>
+    <p><strong>Data Identification</strong> - Using <code class="language-plaintext highlighter-rouge">airs_scan_content</code> to find:</p>
+
     <ul>
       <li>Personal Identifiable Information (PII)</li>
       <li>Protected Health Information (PHI)</li>
@@ -380,7 +382,9 @@ response procedures.</p>
   <li>
     <p><strong>Risk Assessment</strong> - Evaluate compliance risk level</p>
   </li>
-  <li><strong>Remediation Guidance</strong> - Provide actionable steps</li>
+  <li>
+    <p><strong>Remediation Guidance</strong> - Provide actionable steps</p>
+  </li>
 </ol>
 
 <h4 id="response-structure">Response Structure</h4>
@@ -433,35 +437,44 @@ response procedures.</p>
 <p>The prompt provides time-boxed incident response guidance:</p>
 
 <ol>
-  <li><strong>Immediate Actions (0-15 minutes)</strong>:
+  <li>
+    <p><strong>Immediate Actions (0-15 minutes)</strong>:</p>
+
     <ul>
       <li>Containment steps</li>
       <li>Evidence preservation</li>
       <li>Initial assessment</li>
     </ul>
   </li>
-  <li><strong>Investigation (15-60 minutes)</strong>:
+  <li>
+    <p><strong>Investigation (15-60 minutes)</strong>:</p>
+
     <ul>
       <li>Use <code class="language-plaintext highlighter-rouge">airs_get_threat_reports</code> if report_id provided</li>
       <li>Identify affected systems/data</li>
       <li>Determine attack vector</li>
     </ul>
   </li>
-  <li><strong>Mitigation (1-4 hours)</strong>:
+  <li>
+    <p><strong>Mitigation (1-4 hours)</strong>:</p>
+
     <ul>
       <li>Stop the threat</li>
       <li>Patch vulnerabilities</li>
       <li>Update security controls</li>
     </ul>
   </li>
-  <li><strong>Recovery (4-24 hours)</strong>:
+  <li>
+    <p><strong>Recovery (4-24 hours)</strong>:</p>
+
     <ul>
       <li>Restore normal operations</li>
       <li>Verify security posture</li>
       <li>Monitor for recurrence</li>
     </ul>
   </li>
-  <li><strong>Lessons Learned</strong>:
+  <li>
+    <p><strong>Lessons Learned</strong>:</p>
     <ul>
       <li>Root cause analysis</li>
       <li>Process improvements</li>
@@ -538,7 +551,7 @@ response procedures.</p>
             <span class="na">content</span><span class="p">:</span> <span class="p">{</span>
                 <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">text</span><span class="dl">'</span><span class="p">,</span>
                 <span class="na">text</span><span class="p">:</span> <span class="s2">`Please perform a comprehensive security analysis...
-                
+
 **Content to Analyze:**
 </span><span class="p">${</span><span class="nx">content</span><span class="p">}</span><span class="s2">
 

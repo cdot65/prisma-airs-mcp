@@ -211,10 +211,10 @@ git clone https://github.com/cdot65/prisma-airs-mcp.git
 <span class="c"># Edit .env with your API key</span>
 
 <span class="c"># Start with Docker Compose</span>
-docker compose <span class="nt">--profile</span> prod up <span class="nt">-d</span>
+pnpm run compose:up
 
 <span class="c"># View logs</span>
-docker compose logs <span class="nt">-f</span>
+pnpm run compose:logs
 </code></pre></div></div>
 
 <p><strong><a href="/deployment/docker-compose">Full Docker Compose Guide →</a></strong></p>
@@ -233,7 +233,7 @@ pnpm <span class="nb">install</span>
 <span class="c"># Edit .env with your API key</span>
 
 <span class="c"># Run in development mode</span>
-pnpm dev
+pnpm run <span class="nb">local</span>:dev
 </code></pre></div></div>
 
 <p><strong><a href="/deployment/source">Full Source Build Guide →</a></strong></p>
@@ -242,17 +242,16 @@ pnpm dev
 
 <p>For production deployments:</p>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create namespace and secret</span>
-kubectl create namespace prisma-airs-mcp-server
-kubectl create secret generic prisma-airs-secret <span class="se">\</span>
-  <span class="nt">--from-literal</span><span class="o">=</span>api-key<span class="o">=</span>your-api-key-here <span class="se">\</span>
-  <span class="nt">--from-literal</span><span class="o">=</span>profile-name<span class="o">=</span><span class="s2">"Prisma AIRS"</span> <span class="se">\</span>
-  <span class="nt">-n</span> prisma-airs-mcp-server
-
-<span class="c"># Deploy</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clone the repository</span>
 git clone https://github.com/cdot65/prisma-airs-mcp.git
 <span class="nb">cd </span>prisma-airs-mcp
-kubectl apply <span class="nt">-k</span> k8s/overlays/production
+
+<span class="c"># Create namespace and secret</span>
+kubectl create namespace prisma-airs-mcp-server
+./k8s/scripts/manage-secrets.sh create prisma-airs-mcp-server <span class="s1">'your-api-key-here'</span>
+
+<span class="c"># Deploy</span>
+pnpm run k8s:deploy:latest
 </code></pre></div></div>
 
 <p><strong><a href="/deployment/kubernetes">Full Kubernetes Guide →</a></strong></p>

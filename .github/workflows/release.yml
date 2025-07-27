@@ -1,87 +1,87 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to release (e.g., 1.0.1)'
-        required: true
-        type: string
-      release_type:
-        description: 'Release type'
-        required: true
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
+    workflow_dispatch:
+        inputs:
+            version:
+                description: "Version to release (e.g., 1.0.1)"
+                required: true
+                type: string
+            release_type:
+                description: "Release type"
+                required: true
+                type: choice
+                options:
+                    - patch
+                    - minor
+                    - major
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        token: ${{ secrets.GITHUB_TOKEN }}
-    
-    - name: Configure Git
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-    
-    - name: Use Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-    
-    - name: Install pnpm
-      uses: pnpm/action-setup@v2
-      with:
-        version: 10.6.5
-    
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
-    
-    - name: Update version using bump script
-      run: |
-        VERSION="${{ github.event.inputs.version }}"
-        chmod +x scripts/bump-version.sh
-        # Update version.json directly with the specific version
-        jq --arg version "$VERSION" \
-           --arg date "$(date +%Y-%m-%d)" \
-           --arg desc "Release version $VERSION" \
-           '.version = $version | .date = $date | .description = $desc' \
-           version.json > version.tmp.json
-        mv version.tmp.json version.json
-        # Now sync across all files
-        chmod +x scripts/sync-version.sh
-        scripts/sync-version.sh
-    
-    - name: Commit version updates
-      run: |
-        VERSION="${{ github.event.inputs.version }}"
-        git add -A
-        git commit -m "chore: bump version to $VERSION"
-    
-    - name: Create and push tag
-      run: |
-        VERSION="${{ github.event.inputs.version }}"
-        git tag -a "v$VERSION" -m "Release version $VERSION"
-        git push origin main
-        git push origin "v$VERSION"
-    
-    - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: v${{ github.event.inputs.version }}
-        name: Release v${{ github.event.inputs.version }}
-        body: |
-          ## Release v${{ github.event.inputs.version }}
-          
-          See [Release Notes](https://cdot65.github.io/prisma-airs-mcp/developers/release-notes/) for details.
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    release:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Configure Git
+              run: |
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+
+            - name: Use Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20.x"
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v2
+              with:
+                  version: 10.6.5
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Update version using bump script
+              run: |
+                  VERSION="${{ github.event.inputs.version }}"
+                  chmod +x scripts/bump-version.sh
+                  # Update version.json directly with the specific version
+                  jq --arg version "$VERSION" \
+                     --arg date "$(date +%Y-%m-%d)" \
+                     --arg desc "Release version $VERSION" \
+                     '.version = $version | .date = $date | .description = $desc' \
+                     version.json > version.tmp.json
+                  mv version.tmp.json version.json
+                  # Now sync across all files
+                  chmod +x scripts/sync-version.sh
+                  scripts/sync-version.sh
+
+            - name: Commit version updates
+              run: |
+                  VERSION="${{ github.event.inputs.version }}"
+                  git add -A
+                  git commit -m "chore: bump version to $VERSION"
+
+            - name: Create and push tag
+              run: |
+                  VERSION="${{ github.event.inputs.version }}"
+                  git tag -a "v$VERSION" -m "Release version $VERSION"
+                  git push origin main
+                  git push origin "v$VERSION"
+
+            - name: Create GitHub Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  tag_name: v${{ github.event.inputs.version }}
+                  name: Release v${{ github.event.inputs.version }}
+                  body: |
+                      ## Release v${{ github.event.inputs.version }}
+
+                      See [Release Notes](https://cdot65.github.io/prisma-airs-mcp/developers/release-notes/) for details.
+                  draft: false
+                  prerelease: false
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

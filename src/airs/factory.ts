@@ -50,9 +50,14 @@ export function getAirsClient(): EnhancedPrismaAirsClient {
 }
 
 /**
- * Reset the client instance (mainly for testing)
+ * Reset the client instance completely, clearing cache, rate limits, and destroying the singleton.
+ *
+ * This function is primarily intended for testing scenarios where you need to:
+ * - Reset the client to a clean state between tests
+ * - Force recreation of the client with new configuration
+ * - Clear all cached data and rate limit states
  */
-export function resetAIRSClient(): void {
+export function resetAirsClient(): void {
     if (clientInstance) {
         clientInstance.clearCache();
         clientInstance.resetRateLimits();

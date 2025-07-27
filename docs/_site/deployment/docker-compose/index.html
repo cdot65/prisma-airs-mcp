@@ -183,70 +183,32 @@ nano .env
 
 <h3 id="3-start-the-service">3. Start the Service</h3>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># For production</span>
-docker compose <span class="nt">--profile</span> prod up <span class="nt">-d</span>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start the service (uses dev image)</span>
+pnpm run compose:up
 
-<span class="c"># For development</span>
-docker compose <span class="nt">--profile</span> dev up <span class="nt">-d</span>
+<span class="c"># Or with docker compose directly</span>
+docker compose up <span class="nt">-d</span>
 </code></pre></div></div>
 
-<h2 id="understanding-profiles">Understanding Profiles</h2>
+<h2 id="docker-compose-setup">Docker Compose Setup</h2>
 
-<p>The project uses Docker Compose profiles to separate environments:</p>
+<p>The Docker Compose configuration has been simplified to use a single service with the development image (multi-platform support). For production deployments, we recommend using Kubernetes.</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Profile</th>
-      <th>Purpose</th>
-      <th>Features</th>
-      <th>Use Case</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">dev</code></td>
-      <td>Development</td>
-      <td>Hot reloading, debug logs, source mounting</td>
-      <td>Local development</td>
-    </tr>
-    <tr>
-      <td><code class="language-plaintext highlighter-rouge">prod</code></td>
-      <td>Production</td>
-      <td>Optimized build, resource limits, health checks</td>
-      <td>Production deployment</td>
-    </tr>
-  </tbody>
-</table>
+<h2 id="container-management">Container Management</h2>
 
-<blockquote>
-  <p><strong>Note</strong>: Only one profile can run at a time as both use port 3000.</p>
-</blockquote>
+<h3 id="starting-the-service">Starting the Service</h3>
 
-<h2 id="development-profile">Development Profile</h2>
-
-<h3 id="features">Features</h3>
-
-<ul>
-  <li><strong>Hot Reloading</strong>: Source code mounted for live updates</li>
-  <li><strong>Debug Logging</strong>: Detailed logs for troubleshooting</li>
-  <li><strong>No Resource Limits</strong>: Full system resources available</li>
-  <li><strong>Development Tools</strong>: Shell access and debugging utilities</li>
-</ul>
-
-<h3 id="starting-development">Starting Development</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start in background</span>
-docker compose <span class="nt">--profile</span> dev up <span class="nt">-d</span>
-
-<span class="c"># Start with logs</span>
-docker compose <span class="nt">--profile</span> dev up
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start the container</span>
+pnpm run compose:up
 
 <span class="c"># View logs</span>
-docker compose logs <span class="nt">-f</span> dev
+pnpm run compose:logs
 
-<span class="c"># Access shell</span>
-docker compose <span class="nt">--profile</span> dev <span class="nb">exec </span>dev sh
+<span class="c"># Restart the service</span>
+pnpm run compose:restart
+
+<span class="c"># Stop the service</span>
+pnpm run compose:down
 </code></pre></div></div>
 
 <h3 id="development-docker-composeyml">Development docker-compose.yml</h3>
@@ -275,31 +237,13 @@ docker compose <span class="nt">--profile</span> dev <span class="nb">exec </spa
         <span class="na">restart</span><span class="pi">:</span> <span class="s">unless-stopped</span>
 </code></pre></div></div>
 
-<h2 id="production-profile">Production Profile</h2>
+<h3 id="building-the-image">Building the Image</h3>
 
-<h3 id="features-1">Features</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Build the image locally</span>
+pnpm run compose:build
 
-<ul>
-  <li><strong>Optimized Image</strong>: Minimal size (149MB)</li>
-  <li><strong>Resource Limits</strong>: CPU and memory constraints</li>
-  <li><strong>Health Checks</strong>: Automatic container monitoring</li>
-  <li><strong>Security Hardening</strong>: Read-only filesystem options</li>
-  <li><strong>Auto-restart</strong>: Ensures high availability</li>
-</ul>
-
-<h3 id="starting-production">Starting Production</h3>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Start in background</span>
-docker compose <span class="nt">--profile</span> prod up <span class="nt">-d</span>
-
-<span class="c"># Start with logs</span>
-docker compose <span class="nt">--profile</span> prod up
-
-<span class="c"># View logs</span>
-docker compose logs <span class="nt">-f</span> prod
-
-<span class="c"># Check health</span>
-docker compose ps
+<span class="c"># Or pull the pre-built image</span>
+docker compose pull
 </code></pre></div></div>
 
 <h3 id="production-docker-composeyml">Production docker-compose.yml</h3>
@@ -641,28 +585,35 @@ deploy:
 <h2 id="best-practices">Best Practices</h2>
 
 <ol>
-  <li><strong>Environment Separation</strong>
+  <li>
+    <p><strong>Environment Separation</strong></p>
+
     <ul>
       <li>Never use dev profile in production</li>
       <li>Keep separate .env files for each environment</li>
       <li>Use override files for environment-specific settings</li>
     </ul>
   </li>
-  <li><strong>Security</strong>
+  <li>
+    <p><strong>Security</strong></p>
+
     <ul>
       <li>Store secrets in Docker secrets or external vaults</li>
       <li>Use read-only volumes where possible</li>
       <li>Regularly update base images</li>
     </ul>
   </li>
-  <li><strong>Performance</strong>
+  <li>
+    <p><strong>Performance</strong></p>
+
     <ul>
       <li>Set appropriate resource limits</li>
       <li>Use health checks for automatic recovery</li>
       <li>Monitor container metrics</li>
     </ul>
   </li>
-  <li><strong>Maintenance</strong>
+  <li>
+    <p><strong>Maintenance</strong></p>
     <ul>
       <li>Tag images with versions</li>
       <li>Keep compose files in version control</li>

@@ -201,6 +201,7 @@ claude mcp add <span class="nt">--transport</span> http prisma-airs-docker http:
 </code></pre></div></div>
 
 <p><strong>Example output:</strong></p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MCP Servers:
 ┌──────────────────┬───────────┬──────────────────────┬─────────┬────────────┐
 │ Name             │ Transport │ URL                  │ Scope   │ Status     │
@@ -217,6 +218,7 @@ claude mcp get prisma-airs-dev
 </code></pre></div></div>
 
 <p><strong>Output includes:</strong></p>
+
 <ul>
   <li>Available tools</li>
   <li>Resources</li>
@@ -287,6 +289,7 @@ claude mcp add <span class="nt">-s</span> project <span class="nt">--transport</
 </code></pre></div></div>
 
 <p><strong>Generated <code class="language-plaintext highlighter-rouge">.mcp.json</code>:</strong></p>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
     </span><span class="nl">"servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nl">"prisma-airs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -356,6 +359,7 @@ claude mcp add <span class="nt">-s</span> project <span class="nt">--transport</
 </code></pre></div></div>
 
 <p><strong>Output shows:</strong></p>
+
 <ul>
   <li>Connected servers and their status</li>
   <li>Available tools with descriptions</li>
@@ -401,21 +405,26 @@ def search():
 <p><strong>Solutions:</strong></p>
 
 <ol>
-  <li><strong>Verify server is running:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check health endpoint</span>
-curl http://localhost:3000/health
+  <li>
+    <p><strong>Verify server is running:</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Check health endpoint</span>
+ curl http://localhost:3000/health
 </code></pre></div>    </div>
   </li>
-  <li><strong>Check Claude Code CLI:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Verify CLI is working</span>
-claude <span class="nt">--version</span>
-   
-<span class="c"># Check authentication</span>
-claude auth status
+  <li>
+    <p><strong>Check Claude Code CLI:</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Verify CLI is working</span>
+ claude <span class="nt">--version</span>
+
+ <span class="c"># Check authentication</span>
+ claude auth status
 </code></pre></div>    </div>
   </li>
-  <li><strong>Test with verbose mode:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>claude mcp add <span class="nt">--transport</span> http <span class="nt">--verbose</span> prisma-airs http://localhost:3000
+  <li>
+    <p><strong>Test with verbose mode:</strong></p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> claude mcp add <span class="nt">--transport</span> http <span class="nt">--verbose</span> prisma-airs http://localhost:3000
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -425,6 +434,7 @@ claude auth status
 <p><strong>Error:</strong> “Server name already exists in different scope”</p>
 
 <p><strong>Solution:</strong> Use unique names per scope:</p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Remove conflicting server</span>
 claude mcp remove prisma-airs <span class="nt">--scope</span> project
 
@@ -439,13 +449,16 @@ claude mcp add <span class="nt">-s</span> project <span class="nt">--transport</
 <p><strong>Solutions:</strong></p>
 
 <ol>
-  <li><strong>Check file permissions:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">ls</span> <span class="nt">-la</span> .mcp.json
-<span class="nb">chmod </span>644 .mcp.json
+  <li>
+    <p><strong>Check file permissions:</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nb">ls</span> <span class="nt">-la</span> .mcp.json
+ <span class="nb">chmod </span>644 .mcp.json
 </code></pre></div>    </div>
   </li>
-  <li><strong>Use user scope instead:</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>claude mcp add <span class="nt">-s</span> user <span class="nt">--transport</span> http prisma-airs http://localhost:3000
+  <li>
+    <p><strong>Use user scope instead:</strong></p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> claude mcp add <span class="nt">-s</span> user <span class="nt">--transport</span> http prisma-airs http://localhost:3000
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -466,10 +479,11 @@ claude mcp add <span class="nt">--transport</span> http <span class="nt">--debug
 <h3 id="1-naming-conventions">1. Naming Conventions</h3>
 
 <p><strong>Use environment-specific names:</strong></p>
+
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Development</span>
 claude mcp add <span class="nt">--transport</span> http prisma-airs-dev http://localhost:3000
 
-<span class="c"># Staging  </span>
+<span class="c"># Staging</span>
 claude mcp add <span class="nt">--transport</span> http prisma-airs-staging https://staging.airs.example.com
 
 <span class="c"># Production</span>
@@ -481,19 +495,24 @@ claude mcp add <span class="nt">--transport</span> http prisma-airs-prod https:/
 <p><strong>Share configurations via project scope:</strong></p>
 
 <ol>
-  <li>Add server to project scope:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>claude mcp add <span class="nt">-s</span> project <span class="nt">--transport</span> http prisma-airs-team http://team-server:3000
+  <li>
+    <p>Add server to project scope:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> claude mcp add <span class="nt">-s</span> project <span class="nt">--transport</span> http prisma-airs-team http://team-server:3000
 </code></pre></div>    </div>
   </li>
-  <li>Commit <code class="language-plaintext highlighter-rouge">.mcp.json</code> to version control:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git add .mcp.json
-git commit <span class="nt">-m</span> <span class="s2">"Add Prisma AIRS MCP configuration"</span>
+  <li>
+    <p>Commit <code class="language-plaintext highlighter-rouge">.mcp.json</code> to version control:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> git add .mcp.json
+ git commit <span class="nt">-m</span> <span class="s2">"Add Prisma AIRS MCP configuration"</span>
 </code></pre></div>    </div>
   </li>
-  <li>Document in README:
-    <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gu">## Security Tools</span>
-This project uses Prisma AIRS for security scanning.
-MCP configuration is in <span class="sb">`.mcp.json`</span>.
+  <li>
+    <p>Document in README:</p>
+    <div class="language-markdown highlighter-rouge"><div class="highlight"><pre class="highlight"><code> ## Security Tools
+ This project uses Prisma AIRS for security scanning.
+ MCP configuration is in <span class="sb">`.mcp.json`</span>.
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -561,9 +580,11 @@ MCP configuration is in <span class="sb">`.mcp.json`</span>.
 <ul>
   <li><a href="https://claude.ai/docs/code">Claude Code Documentation</a></li>
   <li><a href="https://github.com/anthropics/claude-cli">MCP CLI Reference</a></li>
-  <li><a href="/prisma-airs/overview/">Prisma AIRS Security Features</a>
-```</li>
+  <li><a href="/prisma-airs/overview/">Prisma AIRS Security Features</a></li>
 </ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div></div>
 
       </article>
       

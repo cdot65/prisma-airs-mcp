@@ -28,7 +28,7 @@ create_secret() {
     
     print_color $YELLOW "Creating secret in namespace: $namespace"
     
-    kubectl create secret generic prisma-airs-mcp-server-mcp-secrets \
+    kubectl create secret generic prisma-airs-mcp-secrets \
         --from-literal=airs.api.key="$api_key" \
         --namespace="$namespace" \
         --dry-run=client -o yaml | kubectl apply -f -
@@ -47,11 +47,11 @@ verify_secret() {
     
     print_color $YELLOW "Verifying secret in namespace: $namespace"
     
-    if kubectl get secret prisma-airs-mcp-server-mcp-secrets -n "$namespace" >/dev/null 2>&1; then
+    if kubectl get secret prisma-airs-mcp-secrets -n "$namespace" >/dev/null 2>&1; then
         print_color $GREEN "Secret exists in namespace: $namespace"
         
         # Check if the key exists
-        if kubectl get secret prisma-airs-mcp-server-mcp-secrets -n "$namespace" -o jsonpath='{.data.airs\.api\.key}' | base64 -d >/dev/null 2>&1; then
+        if kubectl get secret prisma-airs-mcp-secrets -n "$namespace" -o jsonpath='{.data.airs\.api\.key}' | base64 -d >/dev/null 2>&1; then
             print_color $GREEN "API key is present in the secret"
         else
             print_color $RED "API key is missing from the secret"
@@ -78,7 +78,7 @@ rotate_secret() {
     
     # Restart deployment to pick up new secret
     print_color $YELLOW "Restarting deployment to pick up new secret..."
-    kubectl rollout restart deployment -l app=prisma-airs-mcp-server-mcp -n "$namespace"
+    kubectl rollout restart deployment -l app=prisma-airs-mcp -n "$namespace"
     
     print_color $GREEN "Secret rotation completed"
 }

@@ -23,49 +23,32 @@ The project supports both ARM64 (Apple Silicon) and AMD64 (x86_64) architectures
 ### Quick Reference
 
 ```bash
-# Local development (native platform)
-pnpm run docker:build:local
+# Development build (multi-platform)
+pnpm run docker:build:dev      # Builds for linux/amd64,linux/arm64
 
-# Platform-specific builds
-pnpm run docker:build:arm      # ARM64 only
-pnpm run docker:build:amd64    # AMD64 only
+# Production build (AMD64 only)
+pnpm run docker:build:prod     # Builds for linux/amd64 only
 
-# Multi-platform builds
-pnpm run docker:build:dev      # Development (local load)
-pnpm run docker:build:dev:multi # Development (registry push)
-pnpm run docker:build:prod     # Production (AMD64 only)
+# Run containers
+pnpm run docker:run:dev        # Run dev image on port 3000
+pnpm run docker:run:dev:3100   # Run dev image on port 3100
 ```
 
 ### Development Builds
 
-#### Native Platform Build
+#### Development Build
 
-Fastest for local development:
-
-```bash
-# Builds for your current platform
-pnpm run docker:build:local
-
-# Equivalent to:
-docker build -t ghcr.io/cdot65/prisma-airs-mcp:local .
-```
-
-#### Multi-Platform Dev Build
-
-Supports both architectures but requires registry push:
+Multi-platform build supporting both ARM64 and AMD64:
 
 ```bash
-# Build and push multi-platform image
-pnpm run docker:build:dev:multi
+# Build dev image
+pnpm run docker:build:dev
 
 # Equivalent to:
-docker buildx build \
-  --platform linux/amd64,linux/arm64 \
-  -t ghcr.io/cdot65/prisma-airs-mcp:dev \
-  --push .
+./scripts/docker-build.sh --platforms linux/amd64,linux/arm64 --tag dev
 ```
 
-> **Note**: Multi-platform images cannot be loaded directly into your local Docker daemon. They must be pushed to a registry.
+> **Note**: When building for multiple platforms with `--platforms linux/amd64,linux/arm64`, the image can only be loaded to local Docker if building for a single platform. For multi-platform images, use `--push` flag to push to registry.
 
 ### Production Builds
 
@@ -76,7 +59,7 @@ Production builds are AMD64-only for consistency:
 pnpm run docker:build:prod
 
 # Equivalent to:
-./scripts/docker-build-k8s.sh --platforms linux/amd64 --load
+./scripts/docker-build.sh --platforms linux/amd64 --tag latest
 ```
 
 ## Platform-Specific Considerations
@@ -88,8 +71,11 @@ For developers on Apple Silicon Macs:
 1. **Local Development**:
 
     ```bash
-    # Use native ARM64 build for best performance
+    # Build dev image (supports both platforms)
     pnpm run docker:build:dev
+    
+    # Run locally
+    pnpm run docker:run:dev
     ```
 
 2. **Testing AMD64 Compatibility**:
@@ -111,8 +97,8 @@ For developers on x86_64 systems:
 
 ```bash
 # All builds are native, no emulation needed
-pnpm run docker:build:local
-pnpm run docker:build:prod
+pnpm run docker:build:dev   # Multi-platform dev build
+pnpm run docker:build:prod  # AMD64 production build
 ```
 
 ## Docker Buildx Setup
@@ -213,13 +199,13 @@ docker build \
 
 ```bash
 # Development (multi-platform)
-pnpm run docker:publish:dev
+pnpm run docker:push:dev
 
 # Production (AMD64)
-pnpm run docker:publish:prod
+pnpm run docker:push:prod
 
 # Versioned release
-pnpm run docker:publish:version
+pnpm run docker:push:version
 ```
 
 ### Registry Authentication
@@ -451,11 +437,13 @@ docker buildx create \
 ## Best Practices
 
 1. **Development**
+
     - Use native platform builds for speed
     - Test on target platform before deployment
     - Keep dev and prod Dockerfiles separate
 
 2. **Production**
+
     - Always specify exact base image tags
     - Minimize layer count and image size
     - Scan images for vulnerabilities

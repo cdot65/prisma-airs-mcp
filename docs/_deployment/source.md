@@ -143,6 +143,7 @@ pnpm docker:dev
 ```
 
 This is ideal for:
+
 - Testing with MCP clients in isolation
 - Verifying Docker deployment before production
 - Development in a containerized environment

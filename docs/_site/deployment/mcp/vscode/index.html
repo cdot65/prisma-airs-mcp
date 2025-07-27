@@ -319,14 +319,17 @@
 <h3 id="example-workflows">Example Workflows</h3>
 
 <p><strong>Security Code Review:</strong></p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Can you review this function for security vulnerabilities using the Prisma AIRS tools?
 </code></pre></div></div>
 
 <p><strong>API Input Validation:</strong></p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Please scan this API endpoint input for potential injection attacks.
 </code></pre></div></div>
 
 <p><strong>Data Handling Check:</strong></p>
+
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Check if this code properly handles sensitive data according to security policies.
 </code></pre></div></div>
 
@@ -388,23 +391,29 @@
 <p><strong>Symptoms:</strong> Tools not appearing, connection errors</p>
 
 <p><strong>Solutions:</strong></p>
+
 <ol>
-  <li>Verify server is running:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Check server health</span>
-curl http://localhost:3000/health
-   
-<span class="c"># For Docker deployments</span>
-docker ps | <span class="nb">grep </span>prisma-airs
+  <li>
+    <p>Verify server is running:</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Check server health</span>
+ curl http://localhost:3000/health
+
+ <span class="c"># For Docker deployments</span>
+ docker ps | <span class="nb">grep </span>prisma-airs
 </code></pre></div>    </div>
   </li>
-  <li>Check VS Code MCP logs:
+  <li>
+    <p>Check VS Code MCP logs:</p>
+
     <ul>
       <li>Extensions view → MCP Servers → Right-click → Show Output</li>
     </ul>
   </li>
-  <li>Verify configuration file syntax:
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Validate JSON</span>
-<span class="nb">cat</span> .vscode/mcp.json | jq <span class="nb">.</span>
+  <li>
+    <p>Verify configuration file syntax:</p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Validate JSON</span>
+ <span class="nb">cat</span> .vscode/mcp.json | jq <span class="nb">.</span>
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -414,6 +423,7 @@ docker ps | <span class="nb">grep </span>prisma-airs
 <p><strong>Error:</strong> “Cannot have more than 128 tools per request”</p>
 
 <p><strong>Solution:</strong> Disable unused MCP servers:</p>
+
 <ol>
   <li>Open Chat view → Tools picker</li>
   <li>Deselect unnecessary tools/servers</li>
@@ -425,6 +435,7 @@ docker ps | <span class="nb">grep </span>prisma-airs
 <p><strong>Symptoms:</strong> MCP features disabled</p>
 
 <p><strong>Solutions:</strong></p>
+
 <ul>
   <li>Check organization policies for MCP support</li>
   <li>Verify GitHub Copilot subscription is active</li>
@@ -434,27 +445,34 @@ docker ps | <span class="nb">grep </span>prisma-airs
 <h2 id="best-practices">Best Practices</h2>
 
 <ol>
-  <li><strong>Environment Naming</strong>
+  <li>
+    <p><strong>Environment Naming</strong></p>
+
     <ul>
       <li>Use descriptive names: <code class="language-plaintext highlighter-rouge">prisma-airs-dev</code>, <code class="language-plaintext highlighter-rouge">prisma-airs-staging</code></li>
       <li>Helps prevent accidental connections to wrong environment</li>
     </ul>
   </li>
-  <li><strong>Team Collaboration</strong>
+  <li>
+    <p><strong>Team Collaboration</strong></p>
+
     <ul>
       <li>Use workspace settings (<code class="language-plaintext highlighter-rouge">.vscode/mcp.json</code>) for shared configs</li>
       <li>Commit MCP configuration to version control</li>
       <li>Document server URLs in README</li>
     </ul>
   </li>
-  <li><strong>Security</strong>
+  <li>
+    <p><strong>Security</strong></p>
+
     <ul>
       <li>Always use HTTPS for production servers</li>
       <li>Don’t commit sensitive URLs to public repositories</li>
       <li>Use environment-specific configurations</li>
     </ul>
   </li>
-  <li><strong>Performance</strong>
+  <li>
+    <p><strong>Performance</strong></p>
     <ul>
       <li>Limit active tools to those you need</li>
       <li>Monitor rate limits through server resources</li>
@@ -466,6 +484,7 @@ docker ps | <span class="nb">grep </span>prisma-airs
 <h2 id="integration-examples">Integration Examples</h2>
 
 <h3 id="pre-commit-security-check">Pre-commit Security Check</h3>
+
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">//</span><span class="w"> </span><span class="err">In</span><span class="w"> </span><span class="err">.vscode/tasks.json</span><span class="w">
 </span><span class="p">{</span><span class="w">
     </span><span class="nl">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Security Scan"</span><span class="p">,</span><span class="w">
@@ -476,6 +495,7 @@ docker ps | <span class="nb">grep </span>prisma-airs
 </span></code></pre></div></div>
 
 <h3 id="code-review-workflow">Code Review Workflow</h3>
+
 <ol>
   <li>Open PR in VS Code</li>
   <li>Use Copilot with Prisma AIRS tools</li>

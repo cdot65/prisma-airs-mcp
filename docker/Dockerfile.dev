@@ -26,4 +26,4 @@ EXPOSE 3000
 ENV NODE_ENV=development
 
 # Start with nodemon for hot reloading
-CMD ["pnpm", "dev"]
+CMD ["pnpm", "run", "local:dev"]

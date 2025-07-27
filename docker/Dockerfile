@@ -38,7 +38,7 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Build the application
-RUN pnpm run build
+RUN pnpm run local:build
 
 # Stage 3: Production
 FROM node:20-alpine AS production

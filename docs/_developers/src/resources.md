@@ -75,7 +75,7 @@ All resources follow the URI pattern: `airs://{type}/{id}`
 ### Resource Types
 
 | Type                | URI Pattern                        | Description              | Listed |
-|---------------------|------------------------------------|--------------------------|--------|
+| ------------------- | ---------------------------------- | ------------------------ | ------ |
 | `scan-results`      | `airs://scan-results/{scanId}`     | Individual scan results  | No     |
 | `threat-reports`    | `airs://threat-reports/{reportId}` | Detailed threat reports  | No     |
 | `cache-stats`       | `airs://cache-stats/current`       | Current cache statistics | Yes    |
@@ -532,7 +532,7 @@ The resources module uses centralized types from `src/types/`:
 ### MCP Resource Types
 
 | Type                     | Module    | Purpose                            |
-|--------------------------|-----------|------------------------------------|
+| ------------------------ | --------- | ---------------------------------- |
 | `McpResource`            | `./types` | Resource definition with metadata  |
 | `McpResourceContent`     | `./types` | Resource content with URI and data |
 | `McpResourcesListParams` | `./types` | Parameters for listing resources   |
@@ -545,13 +545,13 @@ The resources module uses centralized types from `src/types/`:
 ### External Dependencies
 
 | Module    | Purpose            |
-|-----------|--------------------|
+| --------- | ------------------ |
 | `winston` | Structured logging |
 
 ### Internal Dependencies
 
 | Module            | Import            | Purpose               |
-|-------------------|-------------------|-----------------------|
+| ----------------- | ----------------- | --------------------- |
 | `../utils/logger` | `getLogger()`     | Logger instance       |
 | `../airs/factory` | `getAirsClient()` | AIRS client singleton |
 | `../types`        | Various types     | Type definitions      |

@@ -61,10 +61,10 @@ cp .env.example .env
 # Edit .env with your API key
 
 # Start with Docker Compose
-docker compose --profile prod up -d
+pnpm run compose:up
 
 # View logs
-docker compose logs -f
+pnpm run compose:logs
 ```
 
 **[Full Docker Compose Guide →]({{ site.baseurl }}/deployment/docker-compose)**
@@ -84,7 +84,7 @@ cp .env.example .env
 # Edit .env with your API key
 
 # Run in development mode
-pnpm dev
+pnpm run local:dev
 ```
 
 **[Full Source Build Guide →]({{ site.baseurl }}/deployment/source)**
@@ -94,17 +94,16 @@ pnpm dev
 For production deployments:
 
 ```bash
-# Create namespace and secret
-kubectl create namespace prisma-airs-mcp-server
-kubectl create secret generic prisma-airs-secret \
-  --from-literal=api-key=your-api-key-here \
-  --from-literal=profile-name="Prisma AIRS" \
-  -n prisma-airs-mcp-server
-
-# Deploy
+# Clone the repository
 git clone https://github.com/cdot65/prisma-airs-mcp.git
 cd prisma-airs-mcp
-kubectl apply -k k8s/overlays/production
+
+# Create namespace and secret
+kubectl create namespace prisma-airs-mcp-server
+./k8s/scripts/manage-secrets.sh create prisma-airs-mcp-server 'your-api-key-here'
+
+# Deploy
+pnpm run k8s:deploy:latest
 ```
 
 **[Full Kubernetes Guide →]({{ site.baseurl }}/deployment/kubernetes)**

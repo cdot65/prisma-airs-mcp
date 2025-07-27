@@ -45,12 +45,12 @@ Create a `.vscode/mcp.json` file in your workspace to configure the Prisma AIRS 
 
 Replace `YOUR_PRISMA_AIRS_URL` with your server endpoint:
 
-| Environment | URL Example |
-|-------------|-------------|
-| Local Development | `http://localhost:3000` |
-| Docker (default) | `http://localhost:3000` |
-| Docker (custom port) | `http://localhost:3100` |
-| Production | `https://airs.example.com` |
+| Environment          | URL Example                |
+| -------------------- | -------------------------- |
+| Local Development    | `http://localhost:3000`    |
+| Docker (default)     | `http://localhost:3000`    |
+| Docker (custom port) | `http://localhost:3100`    |
+| Production           | `https://airs.example.com` |
 
 ### Option 2: User Settings (For Individual Use)
 
@@ -103,13 +103,13 @@ To configure the Prisma AIRS MCP server for all your workspaces:
 
 Once connected, these Prisma AIRS security tools become available:
 
-| Tool Name | Description |
-|-----------|-------------|
-| `airs_scan_content` | Real-time security scanning |
-| `airs_scan_async` | Batch content scanning |
-| `airs_get_scan_results` | Retrieve scan results |
-| `airs_get_threat_reports` | Detailed threat analysis |
-| `airs_clear_cache` | Clear server cache |
+| Tool Name                 | Description                 |
+| ------------------------- | --------------------------- |
+| `airs_scan_content`       | Real-time security scanning |
+| `airs_scan_async`         | Batch content scanning      |
+| `airs_get_scan_results`   | Retrieve scan results       |
+| `airs_get_threat_reports` | Detailed threat analysis    |
+| `airs_clear_cache`        | Clear server cache          |
 
 ### Accessing Tools in VS Code
 
@@ -121,16 +121,19 @@ Once connected, these Prisma AIRS security tools become available:
 ### Example Workflows
 
 **Security Code Review:**
+
 ```
 Can you review this function for security vulnerabilities using the Prisma AIRS tools?
 ```
 
 **API Input Validation:**
+
 ```
 Please scan this API endpoint input for potential injection attacks.
 ```
 
 **Data Handling Check:**
+
 ```
 Check if this code properly handles sensitive data according to security policies.
 ```
@@ -145,13 +148,13 @@ Check if this code properly handles sensitive data according to security policie
 
 ### Available Actions
 
-| Action | Description | How to Access |
-|--------|-------------|---------------|
-| Start/Stop | Control server connection | Right-click → Start/Stop |
-| View Logs | See server output | Right-click → Show Output |
-| Check Config | Review current settings | Right-click → Show Configuration |
-| Browse Resources | See available resources | Right-click → Browse Resources |
-| Remove | Uninstall server | Right-click → Uninstall |
+| Action           | Description               | How to Access                    |
+| ---------------- | ------------------------- | -------------------------------- |
+| Start/Stop       | Control server connection | Right-click → Start/Stop         |
+| View Logs        | See server output         | Right-click → Show Output        |
+| Check Config     | Review current settings   | Right-click → Show Configuration |
+| Browse Resources | See available resources   | Right-click → Browse Resources   |
+| Remove           | Uninstall server          | Right-click → Uninstall          |
 
 ## Troubleshooting
 
@@ -162,29 +165,33 @@ Check if this code properly handles sensitive data according to security policie
 **Symptoms:** Tools not appearing, connection errors
 
 **Solutions:**
+
 1. Verify server is running:
-   ```bash
-   # Check server health
-   curl http://localhost:3000/health
-   
-   # For Docker deployments
-   docker ps | grep prisma-airs
-   ```
+
+    ```bash
+    # Check server health
+    curl http://localhost:3000/health
+
+    # For Docker deployments
+    docker ps | grep prisma-airs
+    ```
 
 2. Check VS Code MCP logs:
-   - Extensions view → MCP Servers → Right-click → Show Output
+
+    - Extensions view → MCP Servers → Right-click → Show Output
 
 3. Verify configuration file syntax:
-   ```bash
-   # Validate JSON
-   cat .vscode/mcp.json | jq .
-   ```
+    ```bash
+    # Validate JSON
+    cat .vscode/mcp.json | jq .
+    ```
 
 #### Tool Limit Exceeded
 
 **Error:** "Cannot have more than 128 tools per request"
 
 **Solution:** Disable unused MCP servers:
+
 1. Open Chat view → Tools picker
 2. Deselect unnecessary tools/servers
 3. Keep only required Prisma AIRS tools active
@@ -194,6 +201,7 @@ Check if this code properly handles sensitive data according to security policie
 **Symptoms:** MCP features disabled
 
 **Solutions:**
+
 - Check organization policies for MCP support
 - Verify GitHub Copilot subscription is active
 - Contact IT if MCP is disabled by policy
@@ -201,27 +209,31 @@ Check if this code properly handles sensitive data according to security policie
 ## Best Practices
 
 1. **Environment Naming**
-   - Use descriptive names: `prisma-airs-dev`, `prisma-airs-staging`
-   - Helps prevent accidental connections to wrong environment
+
+    - Use descriptive names: `prisma-airs-dev`, `prisma-airs-staging`
+    - Helps prevent accidental connections to wrong environment
 
 2. **Team Collaboration**
-   - Use workspace settings (`.vscode/mcp.json`) for shared configs
-   - Commit MCP configuration to version control
-   - Document server URLs in README
+
+    - Use workspace settings (`.vscode/mcp.json`) for shared configs
+    - Commit MCP configuration to version control
+    - Document server URLs in README
 
 3. **Security**
-   - Always use HTTPS for production servers
-   - Don't commit sensitive URLs to public repositories
-   - Use environment-specific configurations
+
+    - Always use HTTPS for production servers
+    - Don't commit sensitive URLs to public repositories
+    - Use environment-specific configurations
 
 4. **Performance**
-   - Limit active tools to those you need
-   - Monitor rate limits through server resources
-   - Use caching effectively
+    - Limit active tools to those you need
+    - Monitor rate limits through server resources
+    - Use caching effectively
 
 ## Integration Examples
 
 ### Pre-commit Security Check
+
 ```json
 // In .vscode/tasks.json
 {
@@ -233,6 +245,7 @@ Check if this code properly handles sensitive data according to security policie
 ```
 
 ### Code Review Workflow
+
 1. Open PR in VS Code
 2. Use Copilot with Prisma AIRS tools
 3. Ask: "Scan this PR for security issues"

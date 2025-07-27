@@ -161,6 +161,7 @@
 </code></pre></div></div>
 
 <p><strong>Key Features</strong>:</p>
+
 <ul>
   <li>🔒 Type-safe configuration with TypeScript interfaces</li>
   <li>✅ Runtime validation using Zod schemas</li>
@@ -252,11 +253,13 @@
 </table>
 
 <p><strong>Environment Values</strong>:</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">development</code>, <code class="language-plaintext highlighter-rouge">production</code>, <code class="language-plaintext highlighter-rouge">test</code></li>
 </ul>
 
 <p><strong>Log Levels</strong> (in order of verbosity):</p>
+
 <ul>
   <li><code class="language-plaintext highlighter-rouge">error</code>, <code class="language-plaintext highlighter-rouge">warn</code>, <code class="language-plaintext highlighter-rouge">info</code>, <code class="language-plaintext highlighter-rouge">debug</code></li>
 </ul>
@@ -616,19 +619,24 @@ Configuration validation failed: <span class="o">[</span>
 <h3 id="common-issues">Common Issues</h3>
 
 <ol>
-  <li><strong>Invalid URL Format</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">AIRS_API_URL</span><span class="o">=</span>not-a-url
-<span class="c"># Error: Invalid URL</span>
+  <li>
+    <p><strong>Invalid URL Format</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">AIRS_API_URL</span><span class="o">=</span>not-a-url
+ <span class="c"># Error: Invalid URL</span>
 </code></pre></div>    </div>
   </li>
-  <li><strong>Out of Range Values</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">CACHE_TTL_SECONDS</span><span class="o">=</span><span class="nt">-1</span>
-<span class="c"># Error: Number must be greater than or equal to 0</span>
+  <li>
+    <p><strong>Out of Range Values</strong></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">CACHE_TTL_SECONDS</span><span class="o">=</span><span class="nt">-1</span>
+ <span class="c"># Error: Number must be greater than or equal to 0</span>
 </code></pre></div>    </div>
   </li>
-  <li><strong>Invalid Enum Values</strong>
-    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">NODE_ENV</span><span class="o">=</span>staging
-<span class="c"># Error: Invalid enum value. Expected 'development' | 'production' | 'test'</span>
+  <li>
+    <p><strong>Invalid Enum Values</strong></p>
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="nv">NODE_ENV</span><span class="o">=</span>staging
+ <span class="c"># Error: Invalid enum value. Expected 'development' | 'production' | 'test'</span>
 </code></pre></div>    </div>
   </li>
 </ol>
@@ -705,9 +713,9 @@ dotenv <span class="nt">-e</span> .env.production <span class="nt">--</span> npm
 
     <span class="nx">it</span><span class="p">(</span><span class="dl">'</span><span class="s1">should load default configuration</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
         <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_API_KEY</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">test-key</span><span class="dl">'</span><span class="p">;</span>
-        
+
         <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
-        
+
         <span class="nx">expect</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
         <span class="nx">expect</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">environment</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="dl">'</span><span class="s1">development</span><span class="dl">'</span><span class="p">);</span>
     <span class="p">});</span>
@@ -716,9 +724,9 @@ dotenv <span class="nt">-e</span> .env.production <span class="nt">--</span> npm
         <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">8080</span><span class="dl">'</span><span class="p">;</span>
         <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NODE_ENV</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">;</span>
         <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">AIRS_API_KEY</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">test-key</span><span class="dl">'</span><span class="p">;</span>
-        
+
         <span class="kd">const</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfig</span><span class="p">();</span>
-        
+
         <span class="nx">expect</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="mi">8080</span><span class="p">);</span>
         <span class="nx">expect</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">environment</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="dl">'</span><span class="s1">production</span><span class="dl">'</span><span class="p">);</span>
     <span class="p">});</span>
