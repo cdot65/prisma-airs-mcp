@@ -641,28 +641,35 @@ deploy:
 <h2 id="best-practices">Best Practices</h2>
 
 <ol>
-  <li><strong>Environment Separation</strong>
+  <li>
+    <p><strong>Environment Separation</strong></p>
+
     <ul>
       <li>Never use dev profile in production</li>
       <li>Keep separate .env files for each environment</li>
       <li>Use override files for environment-specific settings</li>
     </ul>
   </li>
-  <li><strong>Security</strong>
+  <li>
+    <p><strong>Security</strong></p>
+
     <ul>
       <li>Store secrets in Docker secrets or external vaults</li>
       <li>Use read-only volumes where possible</li>
       <li>Regularly update base images</li>
     </ul>
   </li>
-  <li><strong>Performance</strong>
+  <li>
+    <p><strong>Performance</strong></p>
+
     <ul>
       <li>Set appropriate resource limits</li>
       <li>Use health checks for automatic recovery</li>
       <li>Monitor container metrics</li>
     </ul>
   </li>
-  <li><strong>Maintenance</strong>
+  <li>
+    <p><strong>Maintenance</strong></p>
     <ul>
       <li>Tag images with versions</li>
       <li>Keep compose files in version control</li>

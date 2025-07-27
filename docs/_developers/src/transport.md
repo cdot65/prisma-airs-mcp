@@ -503,11 +503,13 @@ describe('Transport Integration', () => {
 ### Common Issues
 
 1. **SSE Connection Drops**
+
     - Check proxy timeout settings
     - Ensure `X-Accel-Buffering: no` header
     - Implement heartbeat mechanism
 
 2. **Session Not Found**
+
     - Sessions are in-memory only
     - Check `Mcp-Session-Id` header
     - Verify session creation
@@ -528,11 +530,13 @@ LOG_LEVEL=debug npm start
 ## Future Enhancements
 
 1. **Streaming Implementation**
+
     - Add progress events for long operations
     - Implement chunked responses
     - Support cancellation
 
 2. **Session Persistence**
+
     - Redis-backed sessions
     - Session expiration
     - Multi-instance support

@@ -407,16 +407,19 @@ const config: AirsEnhancedClientConfig = {
 ### Common Issues
 
 1. **Authentication Failures**
+
     - Verify `AIRS_API_KEY` is set correctly
     - Check API key permissions
     - Ensure `x-pan-token` header is sent
 
 2. **Rate Limiting**
+
     - Monitor rate limit status
     - Adjust limits based on quota
     - Implement backoff strategies
 
 3. **Cache Misses**
+
     - Check TTL configuration
     - Monitor cache size
     - Verify key generation

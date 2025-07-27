@@ -771,21 +771,26 @@ data: <span class="o">{</span><span class="s2">"connected"</span>:true<span clas
 <h3 id="common-issues">Common Issues</h3>
 
 <ol>
-  <li><strong>SSE Connection Drops</strong>
+  <li>
+    <p><strong>SSE Connection Drops</strong></p>
+
     <ul>
       <li>Check proxy timeout settings</li>
       <li>Ensure <code class="language-plaintext highlighter-rouge">X-Accel-Buffering: no</code> header</li>
       <li>Implement heartbeat mechanism</li>
     </ul>
   </li>
-  <li><strong>Session Not Found</strong>
+  <li>
+    <p><strong>Session Not Found</strong></p>
+
     <ul>
       <li>Sessions are in-memory only</li>
       <li>Check <code class="language-plaintext highlighter-rouge">Mcp-Session-Id</code> header</li>
       <li>Verify session creation</li>
     </ul>
   </li>
-  <li><strong>Method Routing Errors</strong>
+  <li>
+    <p><strong>Method Routing Errors</strong></p>
     <ul>
       <li>Verify method name in switch statement</li>
       <li>Check handler registration</li>
@@ -804,21 +809,26 @@ data: <span class="o">{</span><span class="s2">"connected"</span>:true<span clas
 <h2 id="future-enhancements">Future Enhancements</h2>
 
 <ol>
-  <li><strong>Streaming Implementation</strong>
+  <li>
+    <p><strong>Streaming Implementation</strong></p>
+
     <ul>
       <li>Add progress events for long operations</li>
       <li>Implement chunked responses</li>
       <li>Support cancellation</li>
     </ul>
   </li>
-  <li><strong>Session Persistence</strong>
+  <li>
+    <p><strong>Session Persistence</strong></p>
+
     <ul>
       <li>Redis-backed sessions</li>
       <li>Session expiration</li>
       <li>Multi-instance support</li>
     </ul>
   </li>
-  <li><strong>Enhanced Security</strong>
+  <li>
+    <p><strong>Enhanced Security</strong></p>
     <ul>
       <li>Rate limiting per session</li>
       <li>Request size limits</li>

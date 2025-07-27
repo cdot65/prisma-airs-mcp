@@ -27,10 +27,10 @@ echo ""
 
 # Step 1: Validate code
 print_color $BLUE "Step 1/4: Validating code..."
-pnpm run lint:fix
-pnpm run format
-pnpm run typecheck
-pnpm run build
+pnpm run local:lint:fix
+pnpm run local:format
+pnpm run local:typecheck
+pnpm run local:build
 print_color $GREEN "✅ Validation complete"
 echo ""
 

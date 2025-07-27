@@ -177,6 +177,7 @@ Check if this code properly handles sensitive data according to security policie
     ```
 
 2. Check VS Code MCP logs:
+
     - Extensions view → MCP Servers → Right-click → Show Output
 
 3. Verify configuration file syntax:
@@ -208,15 +209,18 @@ Check if this code properly handles sensitive data according to security policie
 ## Best Practices
 
 1. **Environment Naming**
+
     - Use descriptive names: `prisma-airs-dev`, `prisma-airs-staging`
     - Helps prevent accidental connections to wrong environment
 
 2. **Team Collaboration**
+
     - Use workspace settings (`.vscode/mcp.json`) for shared configs
     - Commit MCP configuration to version control
     - Document server URLs in README
 
 3. **Security**
+
     - Always use HTTPS for production servers
     - Don't commit sensitive URLs to public repositories
     - Use environment-specific configurations

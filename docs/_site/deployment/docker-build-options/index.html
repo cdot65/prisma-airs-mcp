@@ -658,14 +658,18 @@ docker buildx create <span class="se">\</span>
 <h2 id="best-practices">Best Practices</h2>
 
 <ol>
-  <li><strong>Development</strong>
+  <li>
+    <p><strong>Development</strong></p>
+
     <ul>
       <li>Use native platform builds for speed</li>
       <li>Test on target platform before deployment</li>
       <li>Keep dev and prod Dockerfiles separate</li>
     </ul>
   </li>
-  <li><strong>Production</strong>
+  <li>
+    <p><strong>Production</strong></p>
+
     <ul>
       <li>Always specify exact base image tags</li>
       <li>Minimize layer count and image size</li>
@@ -673,7 +677,8 @@ docker buildx create <span class="se">\</span>
       <li>Use multi-stage builds</li>
     </ul>
   </li>
-  <li><strong>Multi-platform</strong>
+  <li>
+    <p><strong>Multi-platform</strong></p>
     <ul>
       <li>Test on all target platforms</li>
       <li>Use platform-specific optimizations carefully</li>

@@ -451,11 +451,13 @@ docker buildx create \
 ## Best Practices
 
 1. **Development**
+
     - Use native platform builds for speed
     - Test on target platform before deployment
     - Keep dev and prod Dockerfiles separate
 
 2. **Production**
+
     - Always specify exact base image tags
     - Minimize layer count and image size
     - Scan images for vulnerabilities

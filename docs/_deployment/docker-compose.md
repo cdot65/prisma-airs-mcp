@@ -492,16 +492,19 @@ deploy:
 ## Best Practices
 
 1. **Environment Separation**
+
     - Never use dev profile in production
     - Keep separate .env files for each environment
     - Use override files for environment-specific settings
 
 2. **Security**
+
     - Store secrets in Docker secrets or external vaults
     - Use read-only volumes where possible
     - Regularly update base images
 
 3. **Performance**
+
     - Set appropriate resource limits
     - Use health checks for automatic recovery
     - Monitor container metrics

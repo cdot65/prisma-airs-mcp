@@ -428,11 +428,13 @@ logger.info('Operation completed', {
 ### Common Issues
 
 1. **No Log Output**
+
     - Check `LOG_LEVEL` environment variable
     - Verify `NODE_ENV` is set correctly
     - Ensure logger is initialized
 
 2. **Wrong Format**
+
     - Development uses colorized simple format
     - Production uses JSON format
     - Check `NODE_ENV` setting
@@ -479,6 +481,7 @@ The logger module uses standard Winston types:
 Potential additions to the utils module:
 
 1. **Additional Utilities**:
+
     - Error helpers and custom error classes
     - Validation utilities
     - Data sanitization functions

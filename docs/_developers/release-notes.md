@@ -18,24 +18,28 @@ This is the first official release of the Prisma AIRS MCP Server, bringing enter
 ### Features
 
 - **Full MCP Protocol Support**
+
     - Tools for security scanning and threat detection
     - Resources for accessing scan results and reports
     - Pre-configured security workflow prompts
     - Server-Sent Events (SSE) support for streaming
 
 - **Prisma AIRS Integration**
+
     - Synchronous content scanning for immediate results
     - Asynchronous batch scanning for multiple requests
     - Comprehensive threat detection across multiple categories
     - Support for custom security profiles
 
 - **Performance & Reliability**
+
     - Built-in LRU caching to reduce API calls
     - Token bucket rate limiting for API protection
     - Automatic retry logic with exponential backoff
     - Connection pooling for efficient resource usage
 
 - **Deployment Options**
+
     - Docker containers with multi-architecture support
     - Kubernetes manifests with Kustomize overlays
     - Local development with hot-reload

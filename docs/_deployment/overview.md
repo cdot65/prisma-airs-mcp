@@ -98,11 +98,13 @@ All deployment methods provide:
 For production deployments:
 
 1. **Security**
+
     - Use secrets management (not plain text)
     - Enable TLS/HTTPS
     - Implement network policies
 
 2. **Reliability**
+
     - Configure health checks
     - Set up monitoring
     - Plan for high availability

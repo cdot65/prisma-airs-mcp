@@ -317,6 +317,7 @@ Error: Invalid configuration
     ```
 
 2. **Use secret management tools**
+
     - Kubernetes Secrets
     - AWS Secrets Manager
     - HashiCorp Vault
@@ -327,10 +328,12 @@ Error: Invalid configuration
 ### Performance
 
 1. **Tune cache settings based on usage**
+
     - High-traffic: Increase TTL and size
     - Frequent updates: Decrease TTL
 
 2. **Monitor rate limits**
+
     - Adjust based on actual usage
     - Consider per-user limits
 

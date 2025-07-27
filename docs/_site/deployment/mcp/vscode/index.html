@@ -403,12 +403,15 @@
  docker ps | <span class="nb">grep </span>prisma-airs
 </code></pre></div>    </div>
   </li>
-  <li>Check VS Code MCP logs:
+  <li>
+    <p>Check VS Code MCP logs:</p>
+
     <ul>
       <li>Extensions view → MCP Servers → Right-click → Show Output</li>
     </ul>
   </li>
-  <li>Verify configuration file syntax:
+  <li>
+    <p>Verify configuration file syntax:</p>
     <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c"># Validate JSON</span>
  <span class="nb">cat</span> .vscode/mcp.json | jq <span class="nb">.</span>
 </code></pre></div>    </div>
@@ -442,27 +445,34 @@
 <h2 id="best-practices">Best Practices</h2>
 
 <ol>
-  <li><strong>Environment Naming</strong>
+  <li>
+    <p><strong>Environment Naming</strong></p>
+
     <ul>
       <li>Use descriptive names: <code class="language-plaintext highlighter-rouge">prisma-airs-dev</code>, <code class="language-plaintext highlighter-rouge">prisma-airs-staging</code></li>
       <li>Helps prevent accidental connections to wrong environment</li>
     </ul>
   </li>
-  <li><strong>Team Collaboration</strong>
+  <li>
+    <p><strong>Team Collaboration</strong></p>
+
     <ul>
       <li>Use workspace settings (<code class="language-plaintext highlighter-rouge">.vscode/mcp.json</code>) for shared configs</li>
       <li>Commit MCP configuration to version control</li>
       <li>Document server URLs in README</li>
     </ul>
   </li>
-  <li><strong>Security</strong>
+  <li>
+    <p><strong>Security</strong></p>
+
     <ul>
       <li>Always use HTTPS for production servers</li>
       <li>Don’t commit sensitive URLs to public repositories</li>
       <li>Use environment-specific configurations</li>
     </ul>
   </li>
-  <li><strong>Performance</strong>
+  <li>
+    <p><strong>Performance</strong></p>
     <ul>
       <li>Limit active tools to those you need</li>
       <li>Monitor rate limits through server resources</li>

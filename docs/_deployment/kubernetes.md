@@ -439,11 +439,13 @@ kubectl exec -it prisma-airs-mcp-xxxxx -n prisma-airs-mcp-server -- nslookup ser
 #### Optimization Strategies
 
 1. **Intelligent Caching**
+
     - In-memory cache with 5-minute TTL
     - Cache hit rate >80% for repeated scans
     - Automatic cache invalidation
 
 2. **Connection Pooling**
+
     - Reuse HTTPS connections to AIRS API
     - Configurable pool size and timeout
     - Automatic retry with exponential backoff

@@ -159,6 +159,7 @@ The investigation is formatted as a professional security report with structured
 #### Compliance Analysis Steps
 
 1. **Data Identification** - Using `airs_scan_content` to find:
+
     - Personal Identifiable Information (PII)
     - Protected Health Information (PHI)
     - Payment Card Information (PCI)
@@ -197,21 +198,25 @@ The investigation is formatted as a professional security report with structured
 The prompt provides time-boxed incident response guidance:
 
 1. **Immediate Actions (0-15 minutes)**:
+
     - Containment steps
     - Evidence preservation
     - Initial assessment
 
 2. **Investigation (15-60 minutes)**:
+
     - Use `airs_get_threat_reports` if report_id provided
     - Identify affected systems/data
     - Determine attack vector
 
 3. **Mitigation (1-4 hours)**:
+
     - Stop the threat
     - Patch vulnerabilities
     - Update security controls
 
 4. **Recovery (4-24 hours)**:
+
     - Restore normal operations
     - Verify security posture
     - Monitor for recurrence

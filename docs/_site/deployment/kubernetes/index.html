@@ -579,21 +579,26 @@ kubectl <span class="nb">exec</span> <span class="nt">-it</span> prisma-airs-mcp
 <h4 id="optimization-strategies">Optimization Strategies</h4>
 
 <ol>
-  <li><strong>Intelligent Caching</strong>
+  <li>
+    <p><strong>Intelligent Caching</strong></p>
+
     <ul>
       <li>In-memory cache with 5-minute TTL</li>
       <li>Cache hit rate &gt;80% for repeated scans</li>
       <li>Automatic cache invalidation</li>
     </ul>
   </li>
-  <li><strong>Connection Pooling</strong>
+  <li>
+    <p><strong>Connection Pooling</strong></p>
+
     <ul>
       <li>Reuse HTTPS connections to AIRS API</li>
       <li>Configurable pool size and timeout</li>
       <li>Automatic retry with exponential backoff</li>
     </ul>
   </li>
-  <li><strong>Resource Optimization</strong>
+  <li>
+    <p><strong>Resource Optimization</strong></p>
     <ul>
       <li>CPU: 0.5-2 cores per pod</li>
       <li>Memory: 512MB-2GB per pod</li>

@@ -33,10 +33,10 @@ echo ""
 
 # Step 1: Validate the codebase
 echo -e "${YELLOW}Step 1: Validating codebase...${NC}"
-pnpm run lint:fix
-pnpm run format
-pnpm run typecheck
-pnpm run build
+pnpm run local:lint:fix
+pnpm run local:format
+pnpm run local:typecheck
+pnpm run local:build
 echo -e "${GREEN}✓ Validation complete${NC}"
 echo ""
 
