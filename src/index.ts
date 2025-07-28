@@ -41,7 +41,7 @@ const createServer = (): void => {
     app.use('/mcp', (req, _res, next) => {
         if (req.query && Object.keys(req.query).length > 0) {
             logger.debug('Smithery configuration received', { query: req.query });
-            
+
             // Parse dot-notation query params and set as env vars
             Object.entries(req.query).forEach(([key, value]) => {
                 if (typeof value === 'string') {
