@@ -253,6 +253,39 @@
 
 <hr />
 
+<h2 id="version-103-2025-01-28">Version 1.0.3 (2025-01-28)</h2>
+
+<p><strong>Bug Fix Release</strong></p>
+
+<p>This release fixes a critical issue with the cache system that prevented proper deduplication of identical scan requests.</p>
+
+<h3 id="bug-fixes">Bug Fixes</h3>
+
+<ul>
+  <li><strong>Cache Key Generation</strong>
+    <ul>
+      <li>Fixed cache key generation to exclude unique identifiers (<code class="language-plaintext highlighter-rouge">tr_id</code> and <code class="language-plaintext highlighter-rouge">metadata</code>)</li>
+      <li>Cache now properly deduplicates identical scan requests</li>
+      <li>Significantly improves performance by serving cached results for repeated scans</li>
+      <li>Added comprehensive unit tests for cache behavior</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="testing">Testing</h3>
+
+<ul>
+  <li>Added 6 new unit tests specifically for cache functionality</li>
+  <li>All 31 tests pass successfully</li>
+  <li>Verified cache deduplication works correctly</li>
+</ul>
+
+<h3 id="technical-details">Technical Details</h3>
+
+<p>The previous implementation included the transaction ID (<code class="language-plaintext highlighter-rouge">tr_id</code>) in the cache key calculation, which made every request unique even when the content was identical. This fix ensures only the security profile and actual content are used for cache keys.</p>
+
+<hr />
+
 <h2 id="version-102-2025-01-27">Version 1.0.2 (2025-01-27)</h2>
 
 <p><strong>Dependency Update Release</strong></p>
@@ -270,7 +303,7 @@
   </li>
 </ul>
 
-<h3 id="testing">Testing</h3>
+<h3 id="testing-1">Testing</h3>
 
 <p>All validation tests continue to pass:</p>
 <ul>
@@ -300,7 +333,7 @@
   </li>
 </ul>
 
-<h3 id="bug-fixes">Bug Fixes</h3>
+<h3 id="bug-fixes-1">Bug Fixes</h3>
 
 <ul>
   <li>Fixed issues with cached client instances persisting stale connections</li>
@@ -329,6 +362,11 @@
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td>1.0.3</td>
+      <td>2025-01-28</td>
+      <td>Fixed cache deduplication for identical requests</td>
+    </tr>
     <tr>
       <td>1.0.2</td>
       <td>2025-01-27</td>

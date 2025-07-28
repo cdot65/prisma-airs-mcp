@@ -84,6 +84,32 @@ This project is open source and welcomes contributions. See [CONTRIBUTING.md](ht
 
 ---
 
+## Version 1.0.3 (2025-01-28)
+
+**Bug Fix Release**
+
+This release fixes a critical issue with the cache system that prevented proper deduplication of identical scan requests.
+
+### Bug Fixes
+
+- **Cache Key Generation**
+    - Fixed cache key generation to exclude unique identifiers (`tr_id` and `metadata`)
+    - Cache now properly deduplicates identical scan requests
+    - Significantly improves performance by serving cached results for repeated scans
+    - Added comprehensive unit tests for cache behavior
+
+### Testing
+
+- Added 6 new unit tests specifically for cache functionality
+- All 31 tests pass successfully
+- Verified cache deduplication works correctly
+
+### Technical Details
+
+The previous implementation included the transaction ID (`tr_id`) in the cache key calculation, which made every request unique even when the content was identical. This fix ensures only the security profile and actual content are used for cache keys.
+
+---
+
 ## Version 1.0.2 (2025-01-27)
 
 **Dependency Update Release**
@@ -137,6 +163,7 @@ This release introduces the ability to reset the AIRS client instance, addressin
 
 | Version | Date       | Description                                        |
 | ------- | ---------- | -------------------------------------------------- |
+| 1.0.3   | 2025-01-28 | Fixed cache deduplication for identical requests   |
 | 1.0.2   | 2025-01-27 | Dependency update (@modelcontextprotocol/sdk)      |
 | 1.0.1   | 2025-01-27 | Added AIRS client reset functionality              |
 | 1.0.0   | 2025-01-27 | Initial release with full MCP protocol support     |

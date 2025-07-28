@@ -1,7 +1,7 @@
 {
   "name": "Prisma AIRS MCP Server",
   "description": "MCP server for integrating with Palo Alto Networks Prisma AIRS",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "autoContext": {
     "always": [
       ".claude/instructions/CLAUDE.md",
