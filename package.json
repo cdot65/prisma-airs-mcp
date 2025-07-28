@@ -3,6 +3,7 @@
   "version": "1.0.5",
   "description": "HTTP-based Model Context Protocol server for Palo Alto Networks Prisma AIRS integration",
   "main": "dist/index.js",
+  "module": "./src/index.ts",
   "scripts": {
     "comment:local": "=== Local Development Commands ===",
     "local:dev": "nodemon --exec tsx src/index.ts",
