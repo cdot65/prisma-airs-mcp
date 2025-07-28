@@ -141,7 +141,14 @@ export class PrismaAirsCache {
      * Generate cache key for scan requests
      */
     static generateScanKey(method: string, data: unknown): string {
-        const hash = this.simpleHash(JSON.stringify(data));
+        // Only hash the content and profile, not the tr_id or metadata
+        // Type assertion is safe here as this is only called with AirsScanRequest
+        const scanData = data as { ai_profile: unknown; contents: unknown };
+        const cacheableData = {
+            profile: scanData.ai_profile,
+            contents: scanData.contents,
+        };
+        const hash = this.simpleHash(JSON.stringify(cacheableData));
         return `scan:${method}:${hash}`;
     }
 
