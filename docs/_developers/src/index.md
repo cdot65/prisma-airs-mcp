@@ -143,6 +143,34 @@ app.use((req, _res, next) => {
 - **Fields**: HTTP method, path, client IP
 - **Purpose**: Request tracing and debugging
 
+### 4. Smithery.ai Configuration Middleware
+
+```typescript
+app.use('/mcp', (req, _res, next) => {
+    if (req.query && Object.keys(req.query).length > 0) {
+        logger.debug('Smithery configuration received', { query: req.query });
+        
+        // Parse dot-notation query params and set as env vars
+        Object.entries(req.query).forEach(([key, value]) => {
+            if (typeof value === 'string') {
+                // Convert dot notation to underscore for env vars
+                // e.g., "server.port" becomes "SERVER_PORT"
+                const envKey = key.toUpperCase().replace(/\./g, '_');
+                process.env[envKey] = value;
+                logger.debug(`Set env var ${envKey}=${value}`);
+            }
+        });
+    }
+    next();
+});
+```
+
+- **Purpose**: Parse Smithery.ai configuration from query parameters
+- **Applies to**: `/mcp` endpoints only
+- **Functionality**: Converts dot-notation query params to environment variables
+- **Example**: `?AIRS_API_KEY=xxx&LOG_LEVEL=debug` sets corresponding env vars
+- **Use Case**: Smithery.ai passes configuration as query parameters for container deployments
+
 ### Endpoints
 
 #### Health Check Endpoint

@@ -37,6 +37,25 @@ const createServer = (): void => {
         next();
     });
 
+    // Smithery.ai configuration middleware - parse query params as env vars
+    app.use('/mcp', (req, _res, next) => {
+        if (req.query && Object.keys(req.query).length > 0) {
+            logger.debug('Smithery configuration received', { query: req.query });
+            
+            // Parse dot-notation query params and set as env vars
+            Object.entries(req.query).forEach(([key, value]) => {
+                if (typeof value === 'string') {
+                    // Convert dot notation to underscore for env vars
+                    // e.g., "server.port" becomes "SERVER_PORT"
+                    const envKey = key.toUpperCase().replace(/\./g, '_');
+                    process.env[envKey] = value;
+                    logger.debug(`Set env var ${envKey}=${value}`);
+                }
+            });
+        }
+        next();
+    });
+
     // Health check endpoint
     app.get('/health', (_req: Request, res: Response) => {
         res.json({
