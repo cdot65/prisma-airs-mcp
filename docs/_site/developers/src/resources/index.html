@@ -322,18 +322,7 @@ directly when their URIs are returned from tool operations.</p>
 
 <h3 id="uri-parsing">URI Parsing</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span>
-<span class="nx">parseResourceUri</span><span class="p">(</span><span class="nx">uri</span>
-<span class="p">:</span>
-<span class="kr">string</span>
-<span class="p">):</span>
-<span class="p">{</span>
-    <span class="nl">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span>
-    <span class="nl">id</span><span class="p">:</span> <span class="kr">string</span>
-<span class="p">}</span>
-<span class="o">|</span>
-<span class="kc">null</span>
-<span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">parseResourceUri</span><span class="p">(</span><span class="nx">uri</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="p">{</span> <span class="nl">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">;</span> <span class="nl">id</span><span class="p">:</span> <span class="kr">string</span> <span class="p">}</span> <span class="o">|</span> <span class="kc">null</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">match</span> <span class="o">=</span> <span class="nx">uri</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^airs:</span><span class="se">\/\/([^/]</span><span class="sr">+</span><span class="se">)\/(</span><span class="sr">.+</span><span class="se">)</span><span class="sr">$/</span><span class="p">);</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">match</span><span class="p">)</span> <span class="p">{</span>
@@ -345,6 +334,7 @@ directly when their URIs are returned from tool operations.</p>
         <span class="na">id</span><span class="p">:</span> <span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">,</span>
     <span class="p">};</span>
 <span class="p">}</span>
+
 </code></pre></div></div>
 
 <h2 id="available-resources">Available Resources</h2>
@@ -357,41 +347,32 @@ directly when their URIs are returned from tool operations.</p>
 
 <h4 id="implementation">Implementation</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">async</span>
-<span class="nx">readScanResult</span><span class="p">(</span><span class="nx">scanId</span>
-<span class="p">:</span>
-<span class="kr">string</span>
-<span class="p">):</span>
-<span class="nb">Promise</span> <span class="o">&lt;</span> <span class="nx">McpResourcesReadResult</span> <span class="o">&gt;</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">async</span> <span class="nx">readScanResult</span><span class="p">(</span><span class="nx">scanId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">McpResourcesReadResult</span><span class="o">&gt;</span> <span class="p">{</span>
     <span class="k">try</span> <span class="p">{</span>
         <span class="kd">const</span> <span class="nx">results</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">airsClient</span><span class="p">.</span><span class="nx">getScanResults</span><span class="p">([</span><span class="nx">scanId</span><span class="p">]);</span>
 
-        <span class="k">if</span><span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span>
-<span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Scan result not found: </span><span class="p">${</span><span class="nx">scanId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">results</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-<span class="kd">const</span> <span class="na">content</span><span class="p">:</span> <span class="nx">McpResourceContent</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="na">uri</span><span class="p">:</span> <span class="s2">`airs://</span><span class="p">${</span><span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">RESOURCE_TYPES</span><span class="p">.</span><span class="nx">SCAN_RESULT</span><span class="p">}</span><span class="s2">/</span><span class="p">${</span><span class="nx">scanId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
-    <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
-<span class="p">};</span>
-
-<span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">content</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="k">return</span> <span class="p">{</span><span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]};</span>
-<span class="p">}</span> <span class="k">catch</span>
-<span class="p">(</span><span class="nx">error</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to read scan result</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-        <span class="nx">scanId</span><span class="p">,</span>
-        <span class="na">error</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Unknown error</span><span class="dl">'</span><span class="p">,</span>
-    <span class="p">});</span>
-    <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
-<span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">results</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Scan result not found: </span><span class="p">${</span><span class="nx">scanId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">results</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="kd">const</span> <span class="na">content</span><span class="p">:</span> <span class="nx">McpResourceContent</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="na">uri</span><span class="p">:</span> <span class="s2">`airs://</span><span class="p">${</span><span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">RESOURCE_TYPES</span><span class="p">.</span><span class="nx">SCAN_RESULT</span><span class="p">}</span><span class="s2">/</span><span class="p">${</span><span class="nx">scanId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+            <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">};</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">content</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">result</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="p">{</span> <span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]</span> <span class="p">};</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to read scan result</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nx">scanId</span><span class="p">,</span>
+            <span class="na">error</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Unknown error</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">});</span>
+        <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -414,42 +395,34 @@ directly when their URIs are returned from tool operations.</p>
 
 <h4 id="implementation-1">Implementation</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">async</span>
-<span class="nx">readThreatReport</span><span class="p">(</span><span class="nx">reportId</span>
-<span class="p">:</span>
-<span class="kr">string</span>
-<span class="p">):</span>
-<span class="nb">Promise</span> <span class="o">&lt;</span> <span class="nx">McpResourcesReadResult</span> <span class="o">&gt;</span> <span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">async</span> <span class="nx">readThreatReport</span><span class="p">(</span><span class="nx">reportId</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">McpResourcesReadResult</span><span class="o">&gt;</span> <span class="p">{</span>
     <span class="k">try</span> <span class="p">{</span>
         <span class="kd">const</span> <span class="nx">reports</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">airsClient</span><span class="p">.</span><span class="nx">getThreatScanReports</span><span class="p">([</span><span class="nx">reportId</span><span class="p">]);</span>
 
-        <span class="k">if</span><span class="p">(</span><span class="nx">reports</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span>
-<span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Threat report not found: </span><span class="p">${</span><span class="nx">reportId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">reports</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Threat report not found: </span><span class="p">${</span><span class="nx">reportId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="kd">const</span> <span class="nx">report</span> <span class="o">=</span> <span class="nx">reports</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="kd">const</span> <span class="na">content</span><span class="p">:</span> <span class="nx">McpResourceContent</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="na">uri</span><span class="p">:</span> <span class="s2">`airs://</span><span class="p">${</span><span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">RESOURCE_TYPES</span><span class="p">.</span><span class="nx">THREAT_REPORT</span><span class="p">}</span><span class="s2">/</span><span class="p">${</span><span class="nx">reportId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+            <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">};</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="nx">report</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">content</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">report</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="p">{</span> <span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]</span> <span class="p">};</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to read threat report</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+            <span class="nx">reportId</span><span class="p">,</span>
+            <span class="na">error</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Unknown error</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">});</span>
+        <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kd">const</span> <span class="nx">report</span> <span class="o">=</span> <span class="nx">reports</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-<span class="kd">const</span> <span class="na">content</span><span class="p">:</span> <span class="nx">McpResourceContent</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="na">uri</span><span class="p">:</span> <span class="s2">`airs://</span><span class="p">${</span><span class="nx">ResourceHandler</span><span class="p">.</span><span class="nx">RESOURCE_TYPES</span><span class="p">.</span><span class="nx">THREAT_REPORT</span><span class="p">}</span><span class="s2">/</span><span class="p">${</span><span class="nx">reportId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
-    <span class="na">mimeType</span><span class="p">:</span> <span class="dl">'</span><span class="s1">application/json</span><span class="dl">'</span><span class="p">,</span>
-<span class="p">};</span>
-
-<span class="k">if</span> <span class="p">(</span><span class="nx">report</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">content</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">report</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-<span class="p">}</span>
-
-<span class="k">return</span> <span class="p">{</span><span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]};</span>
-<span class="p">}</span> <span class="k">catch</span>
-<span class="p">(</span><span class="nx">error</span><span class="p">)</span>
-<span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">'</span><span class="s1">Failed to read threat report</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-        <span class="nx">reportId</span><span class="p">,</span>
-        <span class="na">error</span><span class="p">:</span> <span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Unknown error</span><span class="dl">'</span><span class="p">,</span>
-    <span class="p">});</span>
-    <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="content-structure-1">Content Structure</h4>
@@ -471,11 +444,7 @@ directly when their URIs are returned from tool operations.</p>
 
 <h4 id="implementation-2">Implementation</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span>
-<span class="nx">readCacheStats</span><span class="p">()</span>
-<span class="p">:</span>
-<span class="nx">McpResourcesReadResult</span>
-<span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">readCacheStats</span><span class="p">():</span> <span class="nx">McpResourcesReadResult</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">stats</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">airsClient</span><span class="p">.</span><span class="nx">getCacheStats</span><span class="p">()</span> <span class="o">||</span> <span class="p">{</span>
         <span class="na">size</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
         <span class="na">count</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -495,7 +464,7 @@ directly when their URIs are returned from tool operations.</p>
         <span class="p">),</span>
     <span class="p">};</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]};</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]</span> <span class="p">};</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -505,11 +474,8 @@ directly when their URIs are returned from tool operations.</p>
 
 <div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
   </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">2048</span><span class="p">,</span><span class="w">
-  </span><span class="err">//</span><span class="w"> </span><span class="err">Current</span><span class="w"> </span><span class="err">cache</span><span class="w"> </span><span class="err">size</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="err">bytes</span><span class="w">
   </span><span class="nl">"count"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="err">//</span><span class="w"> </span><span class="err">Number</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">cached</span><span class="w"> </span><span class="err">entries</span><span class="w">
   </span><span class="nl">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="err">//</span><span class="w"> </span><span class="err">Whether</span><span class="w"> </span><span class="err">caching</span><span class="w"> </span><span class="err">is</span><span class="w"> </span><span class="err">enabled</span><span class="w">
   </span><span class="nl">"timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2024-03-20T10:30:00.000Z"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre></div></div>
@@ -528,11 +494,7 @@ that handles your request.</p>
 
 <h4 id="implementation-3">Implementation</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span>
-<span class="nx">readRateLimitStatus</span><span class="p">()</span>
-<span class="p">:</span>
-<span class="nx">McpResourcesReadResult</span>
-<span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="nx">readRateLimitStatus</span><span class="p">():</span> <span class="nx">McpResourcesReadResult</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">stats</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">airsClient</span><span class="p">.</span><span class="nx">getRateLimiterStats</span><span class="p">()</span> <span class="o">||</span> <span class="p">{</span>
         <span class="na">bucketCount</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
         <span class="na">enabled</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
@@ -551,7 +513,7 @@ that handles your request.</p>
         <span class="p">),</span>
     <span class="p">};</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]};</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="na">contents</span><span class="p">:</span> <span class="p">[</span><span class="nx">content</span><span class="p">]</span> <span class="p">};</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
@@ -572,21 +534,12 @@ need to expose per-bucket status.</p>
 
 <p>The module provides a static utility method for creating resource references in tool results:</p>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span>
-<span class="nx">createResourceReference</span><span class="p">(</span>
-    <span class="kd">type</span>
-<span class="p">:</span>
-<span class="kr">string</span><span class="p">,</span>
-    <span class="nx">id</span>
-<span class="p">:</span>
-<span class="kr">string</span><span class="p">,</span>
-    <span class="nx">_title</span>
-<span class="p">:</span>
-<span class="kr">string</span><span class="p">,</span>  <span class="c1">// Unused but available for future use</span>
-    <span class="nx">data</span> <span class="p">?</span> <span class="p">:</span> <span class="nx">unknown</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="nx">McpResourceContent</span>
-<span class="p">{</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="nx">createResourceReference</span><span class="p">(</span>
+    <span class="kd">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+    <span class="nx">id</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+    <span class="nx">_title</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+    <span class="nx">data</span><span class="p">?:</span> <span class="nx">unknown</span><span class="p">,</span>
+<span class="p">):</span> <span class="nx">McpResourceContent</span> <span class="p">{</span>
     <span class="kd">const</span> <span class="nx">uri</span> <span class="o">=</span> <span class="s2">`airs://</span><span class="p">${</span><span class="kd">type</span><span class="p">}</span><span class="s2">/</span><span class="p">${</span><span class="nx">id</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
 
     <span class="k">return</span> <span class="p">{</span>
@@ -595,6 +548,7 @@ need to expose per-bucket status.</p>
         <span class="na">text</span><span class="p">:</span> <span class="nx">data</span> <span class="p">?</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="p">:</span> <span class="kc">undefined</span><span class="p">,</span>
     <span class="p">};</span>
 <span class="p">}</span>
+
 </code></pre></div></div>
 
 <h3 id="usage-example">Usage Example</h3>
@@ -669,8 +623,7 @@ constants.</p>
 
 <h3 id="unknown-resource-type">Unknown Resource Type</h3>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">default</span><span class="p">:</span>
-<span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Unknown resource type: </span><span class="p">${</span><span class="kd">type</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">default</span><span class="p">:</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">`Unknown resource type: </span><span class="p">${</span><span class="kd">type</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
 </code></pre></div></div>
 
 <h3 id="error-logging">Error Logging</h3>

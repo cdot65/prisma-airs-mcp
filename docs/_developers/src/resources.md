@@ -151,9 +151,9 @@ export class ResourceHandler {
 
 ### URI Parsing
 
-@formatter:off
+[//]: # (@formatter:off)
 ```typescript
-    private parseResourceUri(uri: string): { type: string; id: string } | null {
+private parseResourceUri(uri: string): { type: string; id: string } | null {
     const match = uri.match(/^airs:\/\/([^/]+)\/(.+)$/);
 
     if (!match) {
@@ -178,7 +178,7 @@ export class ResourceHandler {
 
 #### Implementation
 
-@formatter:off
+[//]: # (@formatter:off)
 ```typescript
 private async readScanResult(scanId: string): Promise<McpResourcesReadResult> {
     try {
@@ -226,7 +226,7 @@ The scan result returns the complete `AirsScanIdResult` from the AIRS API, inclu
 
 #### Implementation
 
-@formatter:off
+[//]: # (@formatter:off)
 ```typescript
 private async readThreatReport(reportId: string): Promise<McpResourcesReadResult> {
     try {
@@ -275,7 +275,7 @@ The threat report returns the complete `AirsThreatScanReportObject` from the AIR
 
 #### Implementation
 
-@formatter:off
+[//]: # (@formatter:off)
 ```typescript
 private readCacheStats(): McpResourcesReadResult {
     const stats = this.airsClient.getCacheStats() || {
@@ -308,11 +308,8 @@ The cache statistics resource returns:
 ```json
 {
   "size": 2048,
-  // Current cache size in bytes
   "count": 5,
-  // Number of cached entries
   "enabled": true,
-  // Whether caching is enabled
   "timestamp": "2024-03-20T10:30:00.000Z"
 }
 ```
@@ -331,7 +328,7 @@ that handles your request.
 
 #### Implementation
 
-@formatter:off
+[//]: # (@formatter:off)
 ```typescript
 private readRateLimitStatus(): McpResourcesReadResult {
     const stats = this.airsClient.getRateLimiterStats() || {
@@ -371,7 +368,7 @@ need to expose per-bucket status.
 
 The module provides a static utility method for creating resource references in tool results:
 
-@formatter:off
+[//]: # (@formatter:off)
 ```typescript
 static createResourceReference(
     type: string,
@@ -467,8 +464,7 @@ if (!parsed) {
 ### Unknown Resource Type
 
 ```typescript
-default:
-throw new Error(`Unknown resource type: ${type}`);
+default: throw new Error(`Unknown resource type: ${type}`);
 ```
 
 ### Error Logging
