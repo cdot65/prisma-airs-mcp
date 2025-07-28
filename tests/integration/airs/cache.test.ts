@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import { PrismaAirsCache } from '../../../src/airs/cache';
 import type { AirsCacheConfig } from '../../../src/types';
 
@@ -12,6 +12,11 @@ describe('PrismaAirsCache', () => {
 
     beforeEach(() => {
         cache = new PrismaAirsCache(config);
+    });
+
+    afterEach(() => {
+        // Clean up the cache instance to prevent hanging timers
+        cache.destroy();
     });
 
     describe('generateScanKey', () => {

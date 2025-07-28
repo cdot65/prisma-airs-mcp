@@ -9,6 +9,8 @@
         "local:build": "tsc",
         "local:start": "node dist/index.js",
         "local:test": "jest",
+        "local:test:unit": "jest --config jest.config.unit.js",
+        "local:test:integration": "jest --config jest.config.integration.js",
         "local:test:watch": "jest --watch",
         "local:test:coverage": "jest --coverage",
         "local:lint": "eslint .",

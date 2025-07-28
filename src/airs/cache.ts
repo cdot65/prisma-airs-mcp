@@ -17,6 +17,7 @@ export class PrismaAirsCache {
     private readonly cache = new Map<string, CacheEntry<unknown>>();
     private readonly logger: Logger;
     private currentSize = 0;
+    private cleanupInterval?: NodeJS.Timeout;
 
     constructor(private readonly config: AirsCacheConfig) {
         this.logger = getLogger();
@@ -212,9 +213,20 @@ export class PrismaAirsCache {
     private startCleanup(): void {
         const intervalMs = Math.min(this.config.ttlSeconds * 1000, 60000); // Max 1 minute
 
-        setInterval(() => {
+        this.cleanupInterval = setInterval(() => {
             this.cleanup();
         }, intervalMs);
+    }
+
+    /**
+     * Destroy the cache and clean up resources
+     */
+    destroy(): void {
+        if (this.cleanupInterval) {
+            clearInterval(this.cleanupInterval);
+            this.cleanupInterval = undefined;
+        }
+        this.clear();
     }
 
     /**
