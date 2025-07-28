@@ -84,6 +84,51 @@ This project is open source and welcomes contributions. See [CONTRIBUTING.md](ht
 
 ---
 
+## Version 1.0.4 (2025-01-28)
+
+**Smithery.ai Integration Release**
+
+This release adds support for deploying the MCP server on Smithery.ai platform, enabling easier deployment and management of the Prisma AIRS MCP server.
+
+### Features
+
+- **Smithery.ai Deployment Support**
+    - Added `smithery.yaml` configuration file with complete environment schema
+    - Added dedicated `/mcp` endpoint for Smithery.ai compatibility
+    - Supports GET, POST, and DELETE methods as required by Smithery
+    - Maintains backward compatibility with existing endpoints
+
+- **Improved Testing Architecture**
+    - Separated unit tests from integration tests
+    - CI pipeline now runs only unit tests (no API key required)
+    - Integration tests run locally with proper configuration
+    - Added `local:test:unit` and `local:test:integration` scripts
+
+### Bug Fixes
+
+- **Cache Implementation Improvements**
+    - Removed unnecessary cleanup interval timer
+    - Simplified cache lifecycle management
+    - Fixed potential memory leak in cache cleanup
+
+- **Linting Configuration**
+    - Excluded `docs/` directory from ESLint to prevent Ruby/Jekyll file scanning
+    - Cleaned up TypeScript type issues with optional timer properties
+
+### Technical Details
+
+The `/mcp` endpoint provides full MCP protocol support with:
+- POST requests for JSON-RPC 2.0 messages
+- GET requests for SSE streaming and server information
+- DELETE requests for session cleanup (Smithery requirement)
+
+### Documentation
+
+- Added Smithery deployment guide in `docs/smithery-deployment.md`
+- Updated test documentation with unit/integration test separation
+
+---
+
 ## Version 1.0.3 (2025-01-28)
 
 **Bug Fix Release**
@@ -163,6 +208,7 @@ This release introduces the ability to reset the AIRS client instance, addressin
 
 | Version | Date       | Description                                        |
 | ------- | ---------- | -------------------------------------------------- |
+| 1.0.4   | 2025-01-28 | Smithery.ai integration and testing improvements   |
 | 1.0.3   | 2025-01-28 | Fixed cache deduplication for identical requests   |
 | 1.0.2   | 2025-01-27 | Dependency update (@modelcontextprotocol/sdk)      |
 | 1.0.1   | 2025-01-27 | Added AIRS client reset functionality              |

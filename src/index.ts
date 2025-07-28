@@ -141,6 +141,13 @@ const createServer = (): void => {
         }
     });
 
+    // DELETE endpoint for /mcp path (Smithery.ai requirement)
+    app.delete('/mcp', (_req: Request, res: Response) => {
+        // Handle session cleanup if needed
+        // For now, just acknowledge the request
+        res.status(204).send();
+    });
+
     // 404 handler
     app.use((_req: Request, res: Response) => {
         res.status(404).json({ error: 'Not found' });
