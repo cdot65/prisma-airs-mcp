@@ -196,20 +196,6 @@ The project supports building images for multiple architectures, which is essent
 - Developing on Apple Silicon (ARM64) but deploying to Intel/AMD (x86_64) Kubernetes clusters
 - Supporting diverse infrastructure with both ARM and x86 nodes
 
-### Building for Kubernetes
-
-```bash
-# Build multi-platform image (both AMD64 and ARM64)
-./scripts/docker-build-k8s.sh --tag v1.0.0
-
-# Push to GitHub Container Registry
-./scripts/docker-publish.sh                # Pushes latest (AMD64) and dev (ARM64)
-./scripts/docker-publish.sh --version v1.0.0  # Also creates versioned multi-platform image
-
-# Build for specific platform only
-./scripts/docker-build-k8s.sh --platforms linux/amd64 --tag v1.0.0 --load
-```
-
 ### Platform Notes
 
 - **Development on Apple Silicon**: Native ARM64 builds will be faster
