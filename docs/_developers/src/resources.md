@@ -151,19 +151,9 @@ export class ResourceHandler {
 
 ### URI Parsing
 
+@formatter:off
 ```typescript
-private
-parseResourceUri(uri
-:
-string
-):
-{
-    type: string;
-    id: string
-}
-|
-null
-{
+    private parseResourceUri(uri: string): { type: string; id: string } | null {
     const match = uri.match(/^airs:\/\/([^/]+)\/(.+)$/);
 
     if (!match) {
@@ -175,6 +165,7 @@ null
         id: match[2] || '',
     };
 }
+
 ```
 
 ## Available Resources
@@ -187,42 +178,34 @@ null
 
 #### Implementation
 
+@formatter:off
 ```typescript
-private async
-readScanResult(scanId
-:
-string
-):
-Promise < McpResourcesReadResult > {
+private async readScanResult(scanId: string): Promise<McpResourcesReadResult> {
     try {
         const results = await this.airsClient.getScanResults([scanId]);
 
-        if(results.length === 0
-)
-{
-    throw new Error(`Scan result not found: ${scanId}`);
-}
-
-const result = results[0];
-const content: McpResourceContent = {
-    uri: `airs://${ResourceHandler.RESOURCE_TYPES.SCAN_RESULT}/${scanId}`,
-    mimeType: 'application/json',
-};
-
-if (result) {
-    content.text = JSON.stringify(result, null, 2);
-}
-
-return {contents: [content]};
-} catch
-(error)
-{
-    this.logger.error('Failed to read scan result', {
-        scanId,
-        error: error instanceof Error ? error.message : 'Unknown error',
-    });
-    throw error;
-}
+        if (results.length === 0) {
+            throw new Error(`Scan result not found: ${scanId}`);
+        }
+        
+        const result = results[0];
+        const content: McpResourceContent = {
+            uri: `airs://${ResourceHandler.RESOURCE_TYPES.SCAN_RESULT}/${scanId}`,
+            mimeType: 'application/json',
+        };
+        
+        if (result) {
+            content.text = JSON.stringify(result, null, 2);
+        }
+        
+        return { contents: [content] };
+    } catch (error) {
+        this.logger.error('Failed to read scan result', {
+            scanId,
+            error: error instanceof Error ? error.message : 'Unknown error',
+        });
+        throw error;
+    }
 }
 ```
 
@@ -243,43 +226,36 @@ The scan result returns the complete `AirsScanIdResult` from the AIRS API, inclu
 
 #### Implementation
 
+@formatter:off
 ```typescript
-private async
-readThreatReport(reportId
-:
-string
-):
-Promise < McpResourcesReadResult > {
+private async readThreatReport(reportId: string): Promise<McpResourcesReadResult> {
     try {
         const reports = await this.airsClient.getThreatScanReports([reportId]);
 
-        if(reports.length === 0
-)
-{
-    throw new Error(`Threat report not found: ${reportId}`);
+        if (reports.length === 0) {
+            throw new Error(`Threat report not found: ${reportId}`);
+        }
+        
+        const report = reports[0];
+        const content: McpResourceContent = {
+            uri: `airs://${ResourceHandler.RESOURCE_TYPES.THREAT_REPORT}/${reportId}`,
+            mimeType: 'application/json',
+        };
+        
+        if (report) {
+            content.text = JSON.stringify(report, null, 2);
+        }
+        
+        return { contents: [content] };
+    } catch (error) {
+        this.logger.error('Failed to read threat report', {
+            reportId,
+            error: error instanceof Error ? error.message : 'Unknown error',
+        });
+        throw error;
+    }
 }
 
-const report = reports[0];
-const content: McpResourceContent = {
-    uri: `airs://${ResourceHandler.RESOURCE_TYPES.THREAT_REPORT}/${reportId}`,
-    mimeType: 'application/json',
-};
-
-if (report) {
-    content.text = JSON.stringify(report, null, 2);
-}
-
-return {contents: [content]};
-} catch
-(error)
-{
-    this.logger.error('Failed to read threat report', {
-        reportId,
-        error: error instanceof Error ? error.message : 'Unknown error',
-    });
-    throw error;
-}
-}
 ```
 
 #### Content Structure
@@ -299,12 +275,9 @@ The threat report returns the complete `AirsThreatScanReportObject` from the AIR
 
 #### Implementation
 
+@formatter:off
 ```typescript
-private
-readCacheStats()
-:
-McpResourcesReadResult
-{
+private readCacheStats(): McpResourcesReadResult {
     const stats = this.airsClient.getCacheStats() || {
         size: 0,
         count: 0,
@@ -324,7 +297,7 @@ McpResourcesReadResult
         ),
     };
 
-    return {contents: [content]};
+    return { contents: [content] };
 }
 ```
 
@@ -358,12 +331,9 @@ that handles your request.
 
 #### Implementation
 
+@formatter:off
 ```typescript
-private
-readRateLimitStatus()
-:
-McpResourcesReadResult
-{
+private readRateLimitStatus(): McpResourcesReadResult {
     const stats = this.airsClient.getRateLimiterStats() || {
         bucketCount: 0,
         enabled: false,
@@ -382,7 +352,7 @@ McpResourcesReadResult
         ),
     };
 
-    return {contents: [content]};
+    return { contents: [content] };
 }
 ```
 
@@ -401,22 +371,14 @@ need to expose per-bucket status.
 
 The module provides a static utility method for creating resource references in tool results:
 
+@formatter:off
 ```typescript
-static
-createResourceReference(
-    type
-:
-string,
-    id
-:
-string,
-    _title
-:
-string,  // Unused but available for future use
-    data ? : unknown,
-):
-McpResourceContent
-{
+static createResourceReference(
+    type: string,
+    id: string,
+    _title: string,
+    data?: unknown,
+): McpResourceContent {
     const uri = `airs://${type}/${id}`;
 
     return {
@@ -425,6 +387,7 @@ McpResourceContent
         text: data ? JSON.stringify(data, null, 2) : undefined,
     };
 }
+
 ```
 
 ### Usage Example
