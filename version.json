@@ -1,15 +1,15 @@
 {
-    "version": "1.0.4",
-    "description": "Version bump: patch",
-    "date": "2025-07-28",
-    "changes": [
-        "Initial release with full MCP protocol support",
-        "Integration with Prisma AI Runtime Security (AIRS)",
-        "Support for synchronous and asynchronous content scanning",
-        "Built-in caching and rate limiting",
-        "Resource access for scan results and threat reports",
-        "Pre-configured security workflow prompts",
-        "Docker and Kubernetes deployment support",
-        "Comprehensive documentation and examples"
-    ]
+  "version": "1.0.5",
+  "description": "Version bump: patch",
+  "date": "2025-07-28",
+  "changes": [
+    "Initial release with full MCP protocol support",
+    "Integration with Prisma AI Runtime Security (AIRS)",
+    "Support for synchronous and asynchronous content scanning",
+    "Built-in caching and rate limiting",
+    "Resource access for scan results and threat reports",
+    "Pre-configured security workflow prompts",
+    "Docker and Kubernetes deployment support",
+    "Comprehensive documentation and examples"
+  ]
 }

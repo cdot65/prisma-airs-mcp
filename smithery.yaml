@@ -54,7 +54,7 @@ startCommand:
       MCP_SERVER_VERSION:
         type: 'string'
         description: 'MCP server version'
-        default: '1.0.4'
+        default: '1.0.5'
     required: [ 'AIRS_API_KEY' ]
   exampleConfig:
     AIRS_API_KEY: 'your-prisma-airs-api-key-here'

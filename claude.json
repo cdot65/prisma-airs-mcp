@@ -1,36 +1,36 @@
 {
-    "name": "Prisma AIRS MCP Server",
-    "description": "MCP server for integrating with Palo Alto Networks Prisma AIRS",
-    "version": "1.0.4",
-    "autoContext": {
-        "always": [
-            ".claude/instructions/CLAUDE.md",
-            ".claude/documentation/mcp-full-documentation.txt",
-            ".claude/context/TASKS.md",
-            ".claude/plans/PLAN.md",
-            ".claude/conventions/typescript-style-guide.md",
-            "PRD.md"
-        ],
-        "onDemand": [
-            ".claude/context/prisma-airs-api/openapi-schema.yaml",
-            ".claude/conventions/.prettierrc",
-            ".claude/conventions/.eslintrc.js",
-            ".claude/conventions/linting-setup.md"
-        ]
-    },
-    "commands": {
-        "validate": "pnpm run validate",
-        "lint": "pnpm run lint:fix",
-        "format": "pnpm run format",
-        "test": "pnpm test",
-        "dev": "pnpm dev",
-        "build": "pnpm build"
-    },
-    "settings": {
-        "preferredLanguage": "typescript",
-        "codeStyle": "strict",
-        "testFramework": "jest",
-        "linting": true,
-        "formatting": true
-    }
+  "name": "Prisma AIRS MCP Server",
+  "description": "MCP server for integrating with Palo Alto Networks Prisma AIRS",
+  "version": "1.0.5",
+  "autoContext": {
+    "always": [
+      ".claude/instructions/CLAUDE.md",
+      ".claude/documentation/mcp-full-documentation.txt",
+      ".claude/context/TASKS.md",
+      ".claude/plans/PLAN.md",
+      ".claude/conventions/typescript-style-guide.md",
+      "PRD.md"
+    ],
+    "onDemand": [
+      ".claude/context/prisma-airs-api/openapi-schema.yaml",
+      ".claude/conventions/.prettierrc",
+      ".claude/conventions/.eslintrc.js",
+      ".claude/conventions/linting-setup.md"
+    ]
+  },
+  "commands": {
+    "validate": "pnpm run validate",
+    "lint": "pnpm run lint:fix",
+    "format": "pnpm run format",
+    "test": "pnpm test",
+    "dev": "pnpm dev",
+    "build": "pnpm build"
+  },
+  "settings": {
+    "preferredLanguage": "typescript",
+    "codeStyle": "strict",
+    "testFramework": "jest",
+    "linting": true,
+    "formatting": true
+  }
 }
