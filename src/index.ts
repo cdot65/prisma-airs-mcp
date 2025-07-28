@@ -162,7 +162,9 @@ const createServer = (): void => {
     // Start HTTP server
     app.listen(config.server.port, () => {
         logger.info(`MCP server listening on port ${config.server.port}`);
-        logger.info(`MCP endpoints: http://localhost:${config.server.port}/ and http://localhost:${config.server.port}/mcp`);
+        logger.info(
+            `MCP endpoints: http://localhost:${config.server.port}/ and http://localhost:${config.server.port}/mcp`,
+        );
         logger.info(`Health check: http://localhost:${config.server.port}/health`);
         logger.info(`Ready check: http://localhost:${config.server.port}/ready`);
     });
