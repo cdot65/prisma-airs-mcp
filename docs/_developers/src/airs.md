@@ -7,7 +7,8 @@ category: developers
 
 # AIRS Integration Layer (src/airs/)
 
-The AIRS module provides a production-ready client implementation for integrating with Prisma AI Runtime Security (AIRS) API. It features a layered architecture with caching, rate limiting, retry logic, and comprehensive error handling.
+The AIRS module provides a production-ready client implementation for integrating with Prisma AI Runtime Security (AIRS)
+API. It features a layered architecture with caching, rate limiting, retry logic, and comprehensive error handling.
 
 ## Module Structure
 
@@ -77,7 +78,7 @@ interface AirsClientConfig {
 #### API Methods
 
 | Method               | Endpoint                      | Purpose                    |
-| -------------------- | ----------------------------- | -------------------------- |
+|----------------------|-------------------------------|----------------------------|
 | `scanSync()`         | `POST /v1/scan/sync/request`  | Real-time content scanning |
 | `scanAsync()`        | `POST /v1/scan/async/request` | Batch scanning             |
 | `getScanResults()`   | `GET /v1/scan/results`        | Retrieve scan results      |
@@ -113,51 +114,75 @@ In-memory LRU cache reducing API calls and improving response times.
 
 - **LRU Eviction**: Removes least recently used items when full
 - **TTL Support**: Automatic expiration of stale entries
-- **SHA-256 Keys**: Consistent hashing for cache keys
+- **Simple Hash Keys**: Fast hash function for cache keys
 - **Hit Rate Tracking**: Performance metrics
+- **Content-Based Keys**: Cache keys based only on request content, not metadata
 
 #### Configuration
 
 ```typescript
 interface AirsCacheConfig {
     enabled?: boolean;    // Enable/disable caching (default: true)
-    maxSize?: number;     // Maximum cache entries (default: 1000)
+    maxSize?: number;     // Maximum size in bytes (default: 10MB)
     ttlSeconds?: number;  // Time-to-live in seconds (default: 300)
 }
 ```
 
 #### Cache Key Generation
 
+**Important**: As of v1.0.3, cache keys are generated based only on the actual content being scanned, not on request metadata like `tr_id` (transaction ID). This ensures that identical content will hit the cache regardless of when or how it's requested.
+
 ```typescript
-// Key format: prefix:sha256(normalized_json)
-generateKey(prefix
-:
-string, data
-:
-unknown
-):
-string
-{
-    const normalized = JSON.stringify(this.sortKeys(data));
-    const hash = crypto.createHash('sha256')
-        .update(normalized)
-        .digest('hex');
-    return `${prefix}:${hash}`;
+// For scan requests - only content and profile are hashed
+static generateScanKey(method: string, data: unknown): string {
+    // Extract only cacheable fields (ai_profile and contents)
+    const scanData = data as { ai_profile: unknown; contents: unknown };
+    const cacheableData = {
+        profile: scanData.ai_profile,
+        contents: scanData.contents,
+    };
+    const hash = this.simpleHash(JSON.stringify(cacheableData));
+    return `scan:${method}:${hash}`;
+}
+
+// For result requests - based on sorted IDs
+static generateResultKey(type: string, ids: string[]): string {
+    return `${type}:${ids.sort().join(',')}`;
 }
 ```
+
+The `simpleHash` function uses a fast 32-bit hash algorithm that's sufficient for cache key generation while being much faster than cryptographic hashes.
 
 #### Statistics
 
 ```typescript
 interface CacheStats {
-    size: number;        // Current number of entries
-    maxSize: number;     // Maximum allowed entries
-    hits: number;        // Total cache hits
-    misses: number;      // Total cache misses
-    hitRate: number;     // Hit rate percentage
-    evictions: number;   // Total evictions
+    size: number;        // Current size in bytes
+    count: number;       // Number of cached entries
+    enabled: boolean;    // Whether caching is enabled
 }
 ```
+
+#### Cache Architecture in Multi-Pod Deployments
+
+**Important consideration**: Each pod maintains its own independent in-memory cache. This means:
+
+- Cache state is not shared between pods
+- Different pods may have different cached content
+- Load balancing can result in cache misses even for repeated requests
+- Each pod builds its own cache based on the requests it receives
+
+For shared caching across pods, consider implementing Redis or Memcached in the future.
+
+#### Version 1.0.3 Cache Fix
+
+Prior to v1.0.3, the cache was ineffective because cache keys included the unique `tr_id` (transaction ID) field from each request. This meant every request generated a unique cache key, resulting in 0% hit rate.
+
+The fix implemented in v1.0.3:
+- Excludes volatile fields like `tr_id` from cache key generation
+- Only includes stable content fields (`ai_profile` and `contents`)
+- Ensures identical content always generates the same cache key
+- Results in proper cache hits for repeated content scans
 
 ### 3. Rate Limiter (rate-limiter.ts)
 
@@ -183,7 +208,7 @@ interface AirsRateLimiterConfig {
 #### Operation Types
 
 | Operation | Default Limit | Use Case         |
-| --------- | ------------- | ---------------- |
+|-----------|---------------|------------------|
 | `scan`    | 100/min       | Content scanning |
 | `report`  | 50/min        | Threat reports   |
 | `result`  | 200/min       | Result retrieval |
@@ -262,7 +287,7 @@ All types are centralized in `src/types/airs.ts` with consistent `Airs` prefixin
 ### Request Types
 
 | Type                  | Purpose                |
-| --------------------- | ---------------------- |
+|-----------------------|------------------------|
 | `AirsScanRequest`     | Synchronous scan input |
 | `AirsAsyncScanObject` | Async scan item        |
 | `AirsRequestOptions`  | Request configuration  |
@@ -270,7 +295,7 @@ All types are centralized in `src/types/airs.ts` with consistent `Airs` prefixin
 ### Response Types
 
 | Type                         | Purpose                |
-| ---------------------------- | ---------------------- |
+|------------------------------|------------------------|
 | `AirsScanResponse`           | Scan results           |
 | `AirsAsyncScanResponse`      | Async operation status |
 | `AirsScanIdResult`           | Retrieved scan result  |
@@ -279,7 +304,7 @@ All types are centralized in `src/types/airs.ts` with consistent `Airs` prefixin
 ### Configuration Types
 
 | Type                       | Purpose                |
-| -------------------------- | ---------------------- |
+|----------------------------|------------------------|
 | `AirsClientConfig`         | Base client settings   |
 | `AirsCacheConfig`          | Cache settings         |
 | `AirsRateLimiterConfig`    | Rate limit settings    |
@@ -319,8 +344,9 @@ try {
 // Get cache statistics
 const stats = client.getCacheStats();
 logger.info('Cache performance', {
-    hitRate: `${stats.hitRate}%`,
-    size: stats.size
+    size: stats.size,
+    count: stats.count,
+    enabled: stats.enabled
 });
 
 // Get rate limit status
@@ -328,7 +354,24 @@ const status = client.getRateLimitStatus();
 logger.info('Rate limit status', status);
 ```
 
-### 4. Configure Appropriately
+### 4. Cache Best Practices
+
+```typescript
+// ✅ Good - Content-only requests for better caching
+const result = await client.scanSync({
+    contents: [{ text: userInput }],
+    ai_profile: { profile_name: 'default' }
+});
+
+// ❌ Bad - Including metadata reduces cache effectiveness
+const result = await client.scanSync({
+    contents: [{ text: userInput }],
+    ai_profile: { profile_name: 'default' },
+    metadata: { timestamp: Date.now() } // Unique per request!
+});
+```
+
+### 5. Configure Appropriately
 
 ```typescript
 // Production configuration
@@ -420,9 +463,11 @@ const config: AirsEnhancedClientConfig = {
 
 3. **Cache Misses**
 
-    - Check TTL configuration
-    - Monitor cache size
-    - Verify key generation
+    - Ensure you're on v1.0.3+ (earlier versions had broken cache)
+    - Check TTL configuration (default: 300 seconds)
+    - Monitor cache stats via `airs://cache-stats/current` resource
+    - Verify requests have identical content and profile
+    - Remember each pod has its own cache in multi-pod deployments
 
 4. **Timeout Errors**
     - Increase timeout for large payloads

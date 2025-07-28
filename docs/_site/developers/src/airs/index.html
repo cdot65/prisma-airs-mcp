@@ -152,7 +152,8 @@
       <article class="content">
         <h1 id="airs-integration-layer-srcairs">AIRS Integration Layer (src/airs/)</h1>
 
-<p>The AIRS module provides a production-ready client implementation for integrating with Prisma AI Runtime Security (AIRS) API. It features a layered architecture with caching, rate limiting, retry logic, and comprehensive error handling.</p>
+<p>The AIRS module provides a production-ready client implementation for integrating with Prisma AI Runtime Security (AIRS)
+API. It features a layered architecture with caching, rate limiting, retry logic, and comprehensive error handling.</p>
 
 <h2 id="module-structure">Module Structure</h2>
 
@@ -284,49 +285,77 @@
 <ul>
   <li><strong>LRU Eviction</strong>: Removes least recently used items when full</li>
   <li><strong>TTL Support</strong>: Automatic expiration of stale entries</li>
-  <li><strong>SHA-256 Keys</strong>: Consistent hashing for cache keys</li>
+  <li><strong>Simple Hash Keys</strong>: Fast hash function for cache keys</li>
   <li><strong>Hit Rate Tracking</strong>: Performance metrics</li>
+  <li><strong>Content-Based Keys</strong>: Cache keys based only on request content, not metadata</li>
 </ul>
 
 <h4 id="configuration-1">Configuration</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">AirsCacheConfig</span> <span class="p">{</span>
     <span class="nl">enabled</span><span class="p">?:</span> <span class="nx">boolean</span><span class="p">;</span>    <span class="c1">// Enable/disable caching (default: true)</span>
-    <span class="nl">maxSize</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>     <span class="c1">// Maximum cache entries (default: 1000)</span>
+    <span class="nl">maxSize</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>     <span class="c1">// Maximum size in bytes (default: 10MB)</span>
     <span class="nl">ttlSeconds</span><span class="p">?:</span> <span class="kr">number</span><span class="p">;</span>  <span class="c1">// Time-to-live in seconds (default: 300)</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
 <h4 id="cache-key-generation">Cache Key Generation</h4>
 
-<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Key format: prefix:sha256(normalized_json)</span>
-<span class="nx">generateKey</span><span class="p">(</span><span class="nx">prefix</span>
-<span class="p">:</span>
-<span class="kr">string</span><span class="p">,</span> <span class="nx">data</span>
-<span class="p">:</span>
-<span class="nx">unknown</span>
-<span class="p">):</span>
-<span class="kr">string</span>
-<span class="p">{</span>
-    <span class="kd">const</span> <span class="nx">normalized</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sortKeys</span><span class="p">(</span><span class="nx">data</span><span class="p">));</span>
-    <span class="kd">const</span> <span class="nx">hash</span> <span class="o">=</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="dl">'</span><span class="s1">sha256</span><span class="dl">'</span><span class="p">)</span>
-        <span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">normalized</span><span class="p">)</span>
-        <span class="p">.</span><span class="nx">digest</span><span class="p">(</span><span class="dl">'</span><span class="s1">hex</span><span class="dl">'</span><span class="p">);</span>
-    <span class="k">return</span> <span class="s2">`</span><span class="p">${</span><span class="nx">prefix</span><span class="p">}</span><span class="s2">:</span><span class="p">${</span><span class="nx">hash</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+<p><strong>Important</strong>: As of v1.0.3, cache keys are generated based only on the actual content being scanned, not on request metadata like <code class="language-plaintext highlighter-rouge">tr_id</code> (transaction ID). This ensures that identical content will hit the cache regardless of when or how it’s requested.</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// For scan requests - only content and profile are hashed</span>
+<span class="k">static</span> <span class="nx">generateScanKey</span><span class="p">(</span><span class="nx">method</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">data</span><span class="p">:</span> <span class="nx">unknown</span><span class="p">):</span> <span class="kr">string</span> <span class="p">{</span>
+    <span class="c1">// Extract only cacheable fields (ai_profile and contents)</span>
+    <span class="kd">const</span> <span class="nx">scanData</span> <span class="o">=</span> <span class="nx">data</span> <span class="k">as</span> <span class="p">{</span> <span class="na">ai_profile</span><span class="p">:</span> <span class="nx">unknown</span><span class="p">;</span> <span class="nl">contents</span><span class="p">:</span> <span class="nx">unknown</span> <span class="p">};</span>
+    <span class="kd">const</span> <span class="nx">cacheableData</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="na">profile</span><span class="p">:</span> <span class="nx">scanData</span><span class="p">.</span><span class="nx">ai_profile</span><span class="p">,</span>
+        <span class="na">contents</span><span class="p">:</span> <span class="nx">scanData</span><span class="p">.</span><span class="nx">contents</span><span class="p">,</span>
+    <span class="p">};</span>
+    <span class="kd">const</span> <span class="nx">hash</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">simpleHash</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">cacheableData</span><span class="p">));</span>
+    <span class="k">return</span> <span class="s2">`scan:</span><span class="p">${</span><span class="nx">method</span><span class="p">}</span><span class="s2">:</span><span class="p">${</span><span class="nx">hash</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// For result requests - based on sorted IDs</span>
+<span class="k">static</span> <span class="nx">generateResultKey</span><span class="p">(</span><span class="kd">type</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">ids</span><span class="p">:</span> <span class="kr">string</span><span class="p">[]):</span> <span class="kr">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s2">`</span><span class="p">${</span><span class="kd">type</span><span class="p">}</span><span class="s2">:</span><span class="p">${</span><span class="nx">ids</span><span class="p">.</span><span class="nx">sort</span><span class="p">().</span><span class="nx">join</span><span class="p">(</span><span class="dl">'</span><span class="s1">,</span><span class="dl">'</span><span class="p">)}</span><span class="s2">`</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">simpleHash</code> function uses a fast 32-bit hash algorithm that’s sufficient for cache key generation while being much faster than cryptographic hashes.</p>
 
 <h4 id="statistics">Statistics</h4>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kr">interface</span> <span class="nx">CacheStats</span> <span class="p">{</span>
-    <span class="nl">size</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>        <span class="c1">// Current number of entries</span>
-    <span class="nl">maxSize</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>     <span class="c1">// Maximum allowed entries</span>
-    <span class="nl">hits</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>        <span class="c1">// Total cache hits</span>
-    <span class="nl">misses</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>      <span class="c1">// Total cache misses</span>
-    <span class="nl">hitRate</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>     <span class="c1">// Hit rate percentage</span>
-    <span class="nl">evictions</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>   <span class="c1">// Total evictions</span>
+    <span class="nl">size</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>        <span class="c1">// Current size in bytes</span>
+    <span class="nl">count</span><span class="p">:</span> <span class="kr">number</span><span class="p">;</span>       <span class="c1">// Number of cached entries</span>
+    <span class="nl">enabled</span><span class="p">:</span> <span class="nx">boolean</span><span class="p">;</span>    <span class="c1">// Whether caching is enabled</span>
 <span class="p">}</span>
 </code></pre></div></div>
+
+<h4 id="cache-architecture-in-multi-pod-deployments">Cache Architecture in Multi-Pod Deployments</h4>
+
+<p><strong>Important consideration</strong>: Each pod maintains its own independent in-memory cache. This means:</p>
+
+<ul>
+  <li>Cache state is not shared between pods</li>
+  <li>Different pods may have different cached content</li>
+  <li>Load balancing can result in cache misses even for repeated requests</li>
+  <li>Each pod builds its own cache based on the requests it receives</li>
+</ul>
+
+<p>For shared caching across pods, consider implementing Redis or Memcached in the future.</p>
+
+<h4 id="version-103-cache-fix">Version 1.0.3 Cache Fix</h4>
+
+<p>Prior to v1.0.3, the cache was ineffective because cache keys included the unique <code class="language-plaintext highlighter-rouge">tr_id</code> (transaction ID) field from each request. This meant every request generated a unique cache key, resulting in 0% hit rate.</p>
+
+<p>The fix implemented in v1.0.3:</p>
+<ul>
+  <li>Excludes volatile fields like <code class="language-plaintext highlighter-rouge">tr_id</code> from cache key generation</li>
+  <li>Only includes stable content fields (<code class="language-plaintext highlighter-rouge">ai_profile</code> and <code class="language-plaintext highlighter-rouge">contents</code>)</li>
+  <li>Ensures identical content always generates the same cache key</li>
+  <li>Results in proper cache hits for repeated content scans</li>
+</ul>
 
 <h3 id="3-rate-limiter-rate-limiterts">3. Rate Limiter (rate-limiter.ts)</h3>
 
@@ -566,8 +595,9 @@
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Get cache statistics</span>
 <span class="kd">const</span> <span class="nx">stats</span> <span class="o">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">getCacheStats</span><span class="p">();</span>
 <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Cache performance</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
-    <span class="na">hitRate</span><span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nx">stats</span><span class="p">.</span><span class="nx">hitRate</span><span class="p">}</span><span class="s2">%`</span><span class="p">,</span>
-    <span class="na">size</span><span class="p">:</span> <span class="nx">stats</span><span class="p">.</span><span class="nx">size</span>
+    <span class="na">size</span><span class="p">:</span> <span class="nx">stats</span><span class="p">.</span><span class="nx">size</span><span class="p">,</span>
+    <span class="na">count</span><span class="p">:</span> <span class="nx">stats</span><span class="p">.</span><span class="nx">count</span><span class="p">,</span>
+    <span class="na">enabled</span><span class="p">:</span> <span class="nx">stats</span><span class="p">.</span><span class="nx">enabled</span>
 <span class="p">});</span>
 
 <span class="c1">// Get rate limit status</span>
@@ -575,7 +605,23 @@
 <span class="nx">logger</span><span class="p">.</span><span class="nx">info</span><span class="p">(</span><span class="dl">'</span><span class="s1">Rate limit status</span><span class="dl">'</span><span class="p">,</span> <span class="nx">status</span><span class="p">);</span>
 </code></pre></div></div>
 
-<h3 id="4-configure-appropriately">4. Configure Appropriately</h3>
+<h3 id="4-cache-best-practices">4. Cache Best Practices</h3>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// ✅ Good - Content-only requests for better caching</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">scanSync</span><span class="p">({</span>
+    <span class="na">contents</span><span class="p">:</span> <span class="p">[{</span> <span class="na">text</span><span class="p">:</span> <span class="nx">userInput</span> <span class="p">}],</span>
+    <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">profile_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">default</span><span class="dl">'</span> <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// ❌ Bad - Including metadata reduces cache effectiveness</span>
+<span class="kd">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">scanSync</span><span class="p">({</span>
+    <span class="na">contents</span><span class="p">:</span> <span class="p">[{</span> <span class="na">text</span><span class="p">:</span> <span class="nx">userInput</span> <span class="p">}],</span>
+    <span class="na">ai_profile</span><span class="p">:</span> <span class="p">{</span> <span class="na">profile_name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">default</span><span class="dl">'</span> <span class="p">},</span>
+    <span class="na">metadata</span><span class="p">:</span> <span class="p">{</span> <span class="na">timestamp</span><span class="p">:</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span> <span class="p">}</span> <span class="c1">// Unique per request!</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<h3 id="5-configure-appropriately">5. Configure Appropriately</h3>
 
 <div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Production configuration</span>
 <span class="kd">const</span> <span class="nx">config</span><span class="p">:</span> <span class="nx">AirsEnhancedClientConfig</span> <span class="o">=</span> <span class="p">{</span>
@@ -672,9 +718,11 @@
     <p><strong>Cache Misses</strong></p>
 
     <ul>
-      <li>Check TTL configuration</li>
-      <li>Monitor cache size</li>
-      <li>Verify key generation</li>
+      <li>Ensure you’re on v1.0.3+ (earlier versions had broken cache)</li>
+      <li>Check TTL configuration (default: 300 seconds)</li>
+      <li>Monitor cache stats via <code class="language-plaintext highlighter-rouge">airs://cache-stats/current</code> resource</li>
+      <li>Verify requests have identical content and profile</li>
+      <li>Remember each pod has its own cache in multi-pod deployments</li>
     </ul>
   </li>
   <li>

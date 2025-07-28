@@ -75,7 +75,7 @@ All resources follow the URI pattern: `airs://{type}/{id}`
 ### Resource Types
 
 | Type                | URI Pattern                        | Description              | Listed |
-| ------------------- | ---------------------------------- | ------------------------ | ------ |
+|---------------------|------------------------------------|--------------------------|--------|
 | `scan-results`      | `airs://scan-results/{scanId}`     | Individual scan results  | No     |
 | `threat-reports`    | `airs://threat-reports/{reportId}` | Detailed threat reports  | No     |
 | `cache-stats`       | `airs://cache-stats/current`       | Current cache statistics | Yes    |
@@ -152,10 +152,18 @@ export class ResourceHandler {
 ### URI Parsing
 
 ```typescript
-private parseResourceUri(uri: string): {
+private
+parseResourceUri(uri
+:
+string
+):
+{
     type: string;
     id: string
-} | null {
+}
+|
+null
+{
     const match = uri.match(/^airs:\/\/([^/]+)\/(.+)$/);
 
     if (!match) {
@@ -180,11 +188,18 @@ private parseResourceUri(uri: string): {
 #### Implementation
 
 ```typescript
-private async readScanResult(scanId: string): Promise<McpResourcesReadResult> {
+private async
+readScanResult(scanId
+:
+string
+):
+Promise < McpResourcesReadResult > {
     try {
         const results = await this.airsClient.getScanResults([scanId]);
 
-        if (results.length === 0) {
+        if(results.length === 0
+)
+{
     throw new Error(`Scan result not found: ${scanId}`);
 }
 
@@ -199,7 +214,9 @@ if (result) {
 }
 
 return {contents: [content]};
-} catch (error) {
+} catch
+(error)
+{
     this.logger.error('Failed to read scan result', {
         scanId,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -227,11 +244,18 @@ The scan result returns the complete `AirsScanIdResult` from the AIRS API, inclu
 #### Implementation
 
 ```typescript
-private async readThreatReport(reportId: string): Promise<McpResourcesReadResult> {
+private async
+readThreatReport(reportId
+:
+string
+):
+Promise < McpResourcesReadResult > {
     try {
         const reports = await this.airsClient.getThreatScanReports([reportId]);
 
-        if (reports.length === 0) {
+        if(reports.length === 0
+)
+{
     throw new Error(`Threat report not found: ${reportId}`);
 }
 
@@ -246,7 +270,9 @@ if (report) {
 }
 
 return {contents: [content]};
-} catch (error) {
+} catch
+(error)
+{
     this.logger.error('Failed to read threat report', {
         reportId,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -274,7 +300,11 @@ The threat report returns the complete `AirsThreatScanReportObject` from the AIR
 #### Implementation
 
 ```typescript
-private readCacheStats(): McpResourcesReadResult {
+private
+readCacheStats()
+:
+McpResourcesReadResult
+{
     const stats = this.airsClient.getCacheStats() || {
         size: 0,
         count: 0,
@@ -300,12 +330,25 @@ private readCacheStats(): McpResourcesReadResult {
 
 #### Content Structure
 
-The cache statistics include:
+The cache statistics resource returns:
 
-- `size`: Current cache size in bytes
-- `count`: Number of cached entries
-- `enabled`: Whether caching is enabled
-- `timestamp`: When the stats were generated
+```json
+{
+  "size": 2048,
+  // Current cache size in bytes
+  "count": 5,
+  // Number of cached entries
+  "enabled": true,
+  // Whether caching is enabled
+  "timestamp": "2024-03-20T10:30:00.000Z"
+}
+```
+
+**Note**: Prior to v1.0.3, the cache was ineffective due to including unique transaction IDs in cache keys. The fix
+ensures only content and profile are used for key generation, enabling proper cache hits.
+
+**Important**: In multi-pod deployments, each pod maintains its own cache. The statistics shown are for the specific pod
+that handles your request.
 
 ### 4. Rate Limit Status
 
@@ -316,7 +359,11 @@ The cache statistics include:
 #### Implementation
 
 ```typescript
-private readRateLimitStatus(): McpResourcesReadResult {
+private
+readRateLimitStatus()
+:
+McpResourcesReadResult
+{
     const stats = this.airsClient.getRateLimiterStats() || {
         bucketCount: 0,
         enabled: false,
@@ -355,12 +402,21 @@ need to expose per-bucket status.
 The module provides a static utility method for creating resource references in tool results:
 
 ```typescript
-static createResourceReference(
-    type: string,
-    id: string,
-    _title: string,  // Unused but available for future use
-    data?: unknown,
-): McpResourceContent {
+static
+createResourceReference(
+    type
+:
+string,
+    id
+:
+string,
+    _title
+:
+string,  // Unused but available for future use
+    data ? : unknown,
+):
+McpResourceContent
+{
     const uri = `airs://${type}/${id}`;
 
     return {
@@ -532,7 +588,7 @@ The resources module uses centralized types from `src/types/`:
 ### MCP Resource Types
 
 | Type                     | Module    | Purpose                            |
-| ------------------------ | --------- | ---------------------------------- |
+|--------------------------|-----------|------------------------------------|
 | `McpResource`            | `./types` | Resource definition with metadata  |
 | `McpResourceContent`     | `./types` | Resource content with URI and data |
 | `McpResourcesListParams` | `./types` | Parameters for listing resources   |
@@ -545,13 +601,13 @@ The resources module uses centralized types from `src/types/`:
 ### External Dependencies
 
 | Module    | Purpose            |
-| --------- | ------------------ |
+|-----------|--------------------|
 | `winston` | Structured logging |
 
 ### Internal Dependencies
 
 | Module            | Import            | Purpose               |
-| ----------------- | ----------------- | --------------------- |
+|-------------------|-------------------|-----------------------|
 | `../utils/logger` | `getLogger()`     | Logger instance       |
 | `../airs/factory` | `getAirsClient()` | AIRS client singleton |
 | `../types`        | Various types     | Type definitions      |
