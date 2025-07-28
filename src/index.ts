@@ -88,6 +88,17 @@ const createServer = (): void => {
         },
     );
 
+    // Additional MCP endpoint for Smithery.ai compatibility
+    app.post(
+        '/mcp',
+        async (
+            req: Request<unknown, unknown, TransportJsonRpcRequest>,
+            res: Response<TransportJsonRpcResponse>,
+        ) => {
+            await transport.handleRequest(req as TransportStreamableRequest, res);
+        },
+    );
+
     // SSE endpoint for server-initiated streams
     app.get('/', (req: Request, res: Response) => {
         const acceptHeader = req.headers.accept || '';
@@ -103,9 +114,29 @@ const createServer = (): void => {
                 protocolVersion: config.mcp.protocolVersion,
                 endpoints: {
                     messages: '/',
+                    mcp: '/mcp',
                     health: '/health',
                     ready: '/ready',
                 },
+            });
+        }
+    });
+
+    // SSE endpoint for /mcp path (Smithery.ai compatibility)
+    app.get('/mcp', (req: Request, res: Response) => {
+        const acceptHeader = req.headers.accept || '';
+
+        if (acceptHeader.includes('text/event-stream')) {
+            // Handle SSE connection
+            transport.handleSSEConnection(req as TransportStreamableRequest, res);
+        } else {
+            // Return server information for non-SSE requests
+            res.json({
+                name: config.mcp.serverName,
+                version: config.mcp.serverVersion,
+                protocolVersion: config.mcp.protocolVersion,
+                description: 'Model Context Protocol server for Prisma AIRS integration',
+                capabilities: ['tools', 'resources', 'prompts'],
             });
         }
     });
@@ -124,6 +155,7 @@ const createServer = (): void => {
     // Start HTTP server
     app.listen(config.server.port, () => {
         logger.info(`MCP server listening on port ${config.server.port}`);
+        logger.info(`MCP endpoints: http://localhost:${config.server.port}/ and http://localhost:${config.server.port}/mcp`);
         logger.info(`Health check: http://localhost:${config.server.port}/health`);
         logger.info(`Ready check: http://localhost:${config.server.port}/ready`);
     });
