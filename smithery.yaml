@@ -1,7 +1,7 @@
 runtime: 'container'
 build:
-  dockerfile: 'Dockerfile' # Path to your Dockerfile
-  dockerBuildPath: 'docker/' # Docker build context
+  dockerfile: 'docker/Dockerfile' # Path to your Dockerfile
+  dockerBuildPath: '.' # Docker build context
 startCommand:
   type: 'http'
   configSchema: # JSON Schema for configuration
@@ -54,7 +54,7 @@ startCommand:
       MCP_SERVER_VERSION:
         type: 'string'
         description: 'MCP server version'
-        default: '1.0.3'
+        default: '1.0.4'
     required: [ 'AIRS_API_KEY' ]
   exampleConfig:
     AIRS_API_KEY: 'your-prisma-airs-api-key-here'
