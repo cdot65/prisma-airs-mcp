@@ -7,7 +7,9 @@ category: developers
 
 # Server Bootstrap (src/index.ts)
 
-The `src/index.ts` file serves as the main entry point for the Prisma AIRS MCP server. It bootstraps the Express HTTP server, configures middleware, sets up MCP protocol handling, and establishes health check endpoints for production deployments.
+The `src/index.ts` file serves as the main entry point for the Prisma AIRS MCP server. It bootstraps the Express HTTP
+server, configures middleware, sets up MCP protocol handling, and establishes health check endpoints for production
+deployments.
 
 ## Module Structure
 
@@ -53,7 +55,7 @@ Server Listen on Port
 ### External Dependencies
 
 | Package                     | Purpose                     | Usage                             |
-| --------------------------- | --------------------------- | --------------------------------- |
+|-----------------------------|-----------------------------|-----------------------------------|
 | `@modelcontextprotocol/sdk` | MCP protocol implementation | Server class for MCP capabilities |
 | `express`                   | Web framework               | HTTP server and routing           |
 | `cors`                      | CORS middleware             | Enable cross-origin requests      |
@@ -61,7 +63,7 @@ Server Listen on Port
 ### Internal Dependencies
 
 | Module                | Import                                                                              | Purpose                    |
-| --------------------- | ----------------------------------------------------------------------------------- | -------------------------- |
+|-----------------------|-------------------------------------------------------------------------------------|----------------------------|
 | `./types`             | `TransportJsonRpcRequest`, `TransportJsonRpcResponse`, `TransportStreamableRequest` | Type definitions           |
 | `./transport/http.js` | `HttpServerTransport`                                                               | HTTP/SSE transport handler |
 | `./config`            | `getConfig()`                                                                       | Configuration singleton    |
@@ -236,6 +238,67 @@ app.post(
 - `prompts/list` - List prompt templates
 - `prompts/get` - Get prompt details
 
+### MCP Smithery.ai Endpoint (/mcp)
+
+**New in v1.0.4**: Dedicated `/mcp` endpoint for Smithery.ai compatibility.
+
+```typescript
+// POST /mcp - JSON-RPC 2.0 messages
+app.post(
+    '/mcp',
+    async (req: Request<unknown, unknown, TransportJsonRpcRequest>,
+           res: Response<TransportJsonRpcResponse>) => {
+        await transport.handleRequest(req as TransportStreamableRequest, res);
+    },
+);
+
+// GET /mcp - Server info or SSE streaming
+app.get('/mcp', (req: Request, res: Response) => {
+    const acceptHeader = req.headers.accept || '';
+
+    if (acceptHeader.includes('text/event-stream')) {
+        // Handle SSE connection
+        transport.handleSSEConnection(req as TransportStreamableRequest, res);
+    } else {
+        // Return server information for non-SSE requests
+        res.json({
+            name: config.mcp.serverName,
+            version: config.mcp.serverVersion,
+            protocolVersion: config.mcp.protocolVersion,
+            description: 'Model Context Protocol server for Prisma AIRS integration',
+            capabilities: ['tools', 'resources', 'prompts'],
+        });
+    }
+});
+
+// DELETE /mcp - Session cleanup (Smithery.ai requirement)
+app.delete('/mcp', (_req: Request, res: Response) => {
+    // Handle session cleanup if needed
+    res.status(204).send();
+});
+```
+
+**Endpoint Details**:
+
+- **Methods**: GET, POST, DELETE
+- **Path**: `/mcp`
+- **Purpose**: Smithery.ai platform compatibility
+- **Behavior**: Mirrors root endpoint functionality
+
+**Method Behaviors**:
+
+| Method | Purpose                       | Response                |
+|--------|-------------------------------|-------------------------|
+| POST   | JSON-RPC 2.0 message handling | JSON-RPC response       |
+| GET    | Server info or SSE streaming  | JSON info or SSE stream |
+| DELETE | Session cleanup               | 204 No Content          |
+
+**Why Duplicate Endpoints?**
+
+- Smithery.ai requires `/mcp` path specifically
+- Maintains backwards compatibility with root `/` endpoint
+- Allows gradual migration for existing clients
+
 ### Dual-Mode Root Endpoint (GET /)
 
 ```typescript
@@ -253,6 +316,7 @@ app.get('/', (req: Request, res: Response) => {
             protocolVersion: config.mcp.protocolVersion,
             endpoints: {
                 messages: '/',
+                mcp: '/mcp',
                 health: '/health',
                 ready: '/ready',
             },
@@ -264,7 +328,7 @@ app.get('/', (req: Request, res: Response) => {
 **Mode Selection**:
 
 | Accept Header       | Response Type | Purpose            |
-| ------------------- | ------------- | ------------------ |
+|---------------------|---------------|--------------------|
 | `text/event-stream` | SSE stream    | Real-time updates  |
 | Any other           | JSON          | Server information |
 
@@ -310,7 +374,7 @@ const mcpServer = new Server(
 ### Capability Registration
 
 | Capability  | Description                        | Handler Module   |
-| ----------- | ---------------------------------- | ---------------- |
+|-------------|------------------------------------|------------------|
 | `resources` | Static and dynamic resource access | `src/resources/` |
 | `tools`     | Security scanning tools            | `src/tools/`     |
 | `prompts`   | Workflow templates                 | `src/prompts/`   |
@@ -411,7 +475,7 @@ The application uses centralized types from `./types` with consistent prefixing:
 ### Core Types Used
 
 | Type                         | Module    | Purpose                          |
-| ---------------------------- | --------- | -------------------------------- |
+|------------------------------|-----------|----------------------------------|
 | `TransportJsonRpcRequest`    | `./types` | JSON-RPC 2.0 request format      |
 | `TransportJsonRpcResponse`   | `./types` | JSON-RPC 2.0 response format     |
 | `TransportStreamableRequest` | `./types` | Express Request with SSE headers |
@@ -448,14 +512,14 @@ The server retrieves configuration via `getConfig()` singleton:
 ### Server Configuration
 
 | Key         | Path                        | Default     | Usage              |
-| ----------- | --------------------------- | ----------- | ------------------ |
+|-------------|-----------------------------|-------------|--------------------|
 | Port        | `config.server.port`        | 3000        | HTTP listener port |
 | Environment | `config.server.environment` | development | Runtime mode       |
 
 ### MCP Configuration
 
 | Key         | Path                         | Default                | Usage          |
-| ----------- | ---------------------------- | ---------------------- | -------------- |
+|-------------|------------------------------|------------------------|----------------|
 | Server Name | `config.mcp.serverName`      | prisma-airs-mcp-server | Identity       |
 | Version     | `config.mcp.serverVersion`   | 1.0.0                  | Server version |
 | Protocol    | `config.mcp.protocolVersion` | 2024-11-05             | MCP version    |
@@ -544,7 +608,7 @@ Client → GET / (SSE) → HttpServerTransport → SSE Manager → Event Stream
 ## Key Integration Points
 
 | Component       | Integration             | Purpose                 |
-| --------------- | ----------------------- | ----------------------- |
+|-----------------|-------------------------|-------------------------|
 | Transport Layer | `HttpServerTransport`   | Protocol handling       |
 | Configuration   | `getConfig()` singleton | Settings management     |
 | Logging         | `getLogger()` singleton | Structured logging      |
