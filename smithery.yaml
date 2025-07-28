@@ -1,65 +1,65 @@
-runtime: "container"
+runtime: 'container'
 build:
-  dockerfile: "Dockerfile"           # Path to your Dockerfile
-  dockerBuildPath: "."               # Docker build context
+  dockerfile: 'Dockerfile' # Path to your Dockerfile
+  dockerBuildPath: 'docker/' # Docker build context
 startCommand:
-  type: "http"
-  configSchema:                      # JSON Schema for configuration
-    type: "object"
+  type: 'http'
+  configSchema: # JSON Schema for configuration
+    type: 'object'
     properties:
       AIRS_API_KEY:
-        type: "string"
-        description: "Prisma AIRS API key for security scanning"
+        type: 'string'
+        description: 'Prisma AIRS API key for security scanning'
       AIRS_API_URL:
-        type: "string"
-        description: "Prisma AIRS API URL"
-        default: "https://service.api.aisecurity.paloaltonetworks.com"
+        type: 'string'
+        description: 'Prisma AIRS API URL'
+        default: 'https://service.api.aisecurity.paloaltonetworks.com'
       AIRS_DEFAULT_PROFILE_NAME:
-        type: "string"
-        description: "Default profile name for AIRS scans"
-        default: "Prisma AIRS"
+        type: 'string'
+        description: 'Default profile name for AIRS scans'
+        default: 'Prisma AIRS'
       NODE_ENV:
-        type: "string"
-        description: "Node environment (development/production)"
-        default: "production"
+        type: 'string'
+        description: 'Node environment (development/production)'
+        default: 'production'
       PORT:
-        type: "string"
-        description: "Server port"
-        default: "3000"
+        type: 'string'
+        description: 'Server port'
+        default: '3000'
       LOG_LEVEL:
-        type: "string"
-        description: "Logging level"
-        default: "info"
-        enum: ["error", "warn", "info", "debug"]
+        type: 'string'
+        description: 'Logging level'
+        default: 'info'
+        enum: [ 'error', 'warn', 'info', 'debug' ]
       CACHE_TTL_SECONDS:
-        type: "integer"
-        description: "Cache time-to-live in seconds"
+        type: 'integer'
+        description: 'Cache time-to-live in seconds'
         default: 300
       CACHE_MAX_SIZE:
-        type: "integer"
-        description: "Maximum cache size"
+        type: 'integer'
+        description: 'Maximum cache size'
         default: 1000
       RATE_LIMIT_MAX_REQUESTS:
-        type: "integer"
-        description: "Maximum requests per rate limit window"
+        type: 'integer'
+        description: 'Maximum requests per rate limit window'
         default: 100
       RATE_LIMIT_WINDOW_MS:
-        type: "integer"
-        description: "Rate limit window in milliseconds"
+        type: 'integer'
+        description: 'Rate limit window in milliseconds'
         default: 60000
       MCP_SERVER_NAME:
-        type: "string"
-        description: "MCP server name"
-        default: "prisma-airs-mcp"
+        type: 'string'
+        description: 'MCP server name'
+        default: 'prisma-airs-mcp'
       MCP_SERVER_VERSION:
-        type: "string"
-        description: "MCP server version"
-        default: "1.0.3"
-    required: ["AIRS_API_KEY"]
+        type: 'string'
+        description: 'MCP server version'
+        default: '1.0.3'
+    required: [ 'AIRS_API_KEY' ]
   exampleConfig:
-    AIRS_API_KEY: "your-prisma-airs-api-key-here"
-    AIRS_API_URL: "https://service.api.aisecurity.paloaltonetworks.com"
-    AIRS_DEFAULT_PROFILE_NAME: "Prisma AIRS"
-    NODE_ENV: "production"
-    PORT: "3000"
-    LOG_LEVEL: "info"
+    AIRS_API_KEY: 'your-prisma-airs-api-key-here'
+    AIRS_API_URL: 'https://service.api.aisecurity.paloaltonetworks.com'
+    AIRS_DEFAULT_PROFILE_NAME: 'Prisma AIRS'
+    NODE_ENV: 'production'
+    PORT: '3000'
+    LOG_LEVEL: 'info'
