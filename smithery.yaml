@@ -1,7 +1,4 @@
-runtime: 'container'
-build:
-  dockerfile: 'docker/Dockerfile' # Path to your Dockerfile
-  dockerBuildPath: '.' # Docker build context
+runtime: 'typescript'
 startCommand:
   type: 'http'
   configSchema: # JSON Schema for configuration
