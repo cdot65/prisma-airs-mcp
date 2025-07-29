@@ -10,6 +10,12 @@ category: developers
 The configuration implementation provides the core functionality for loading, validating, and accessing application
 configuration. It uses Zod for schema validation and provides a type-safe configuration object.
 
+The module is responsible for:
+1. Loading configuration values from environment variables
+2. Applying sensible defaults when environment variables are not set
+3. Validating all configuration values at runtime using Zod schemas
+4. Providing type-safe access to configuration throughout the application
+
 ## Overview
 
 The `index.ts` file in the config module:
@@ -27,9 +33,10 @@ The `index.ts` file in the config module:
 ```typescript
 import { z } from 'zod';
 import dotenv from 'dotenv';
-import { Config } from '../types/config.js';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import type { Config } from '../types';
 
-// Load environment variables from .env file
 dotenv.config();
 ```
 
@@ -39,115 +46,116 @@ dotenv.config();
 - Loads .env file automatically
 - Imports Config type for type safety
 
+### Version Loading
+
+The module loads version from version.json:
+
+```typescript
+// Read version from version.json if available
+let versionFromFile = '1.0.0';
+try {
+    const versionJson = JSON.parse(readFileSync(join(process.cwd(), 'version.json'), 'utf-8')) as {
+        version: string;
+    };
+    versionFromFile = versionJson.version;
+} catch {
+    // Fall back to default if file doesn't exist
+}
+```
+
 ### Schema Definition
 
 The configuration schema is defined using Zod:
 
 ```typescript
 const configSchema = z.object({
+    // Server configuration
     server: z.object({
-        port: z.number().int().positive().default(3000),
-        environment: z.string().default('development'),
-        logLevel: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
+        port: z.number().min(1).max(65535),
+        environment: z.enum(['development', 'production', 'test']),
+        logLevel: z.enum(['error', 'warn', 'info', 'debug']),
     }),
-    
+
+    // Prisma AIRS configuration
     airs: z.object({
-        apiUrl: z.string().url().default('https://service.api.aisecurity.paloaltonetworks.com'),
+        apiUrl: z.string().refine((val) => {
+            try {
+                const _ = new URL(val);
+                return true;
+            } catch {
+                return false;
+            }
+        }, 'Invalid URL'),
         apiKey: z.string().min(1),
-        timeout: z.number().positive().default(30000),
-        maxRetries: z.number().int().min(0).default(3),
-        defaultProfileName: z.string().default('Prisma AIRS'),
+        timeout: z.number().min(1000).default(30000),
+        retryAttempts: z.number().min(0).default(3),
+        retryDelay: z.number().min(100).default(1000),
+        defaultProfileId: z.string().optional(),
+        defaultProfileName: z.string().optional(),
     }),
-    
+
+    // Cache configuration
+    cache: z.object({
+        ttlSeconds: z.number().min(0).default(300),
+        maxSize: z.number().min(0).default(1000),
+        enabled: z.boolean().default(true),
+    }),
+
+    // Rate limiting configuration
+    rateLimit: z.object({
+        maxRequests: z.number().min(1).default(100),
+        windowMs: z.number().min(1000).default(60000),
+        enabled: z.boolean().default(true),
+    }),
+
+    // MCP configuration
     mcp: z.object({
         serverName: z.string().default('prisma-airs-mcp'),
         serverVersion: z.string().default('1.0.0'),
         protocolVersion: z.string().default('2024-11-05'),
     }),
-    
-    cache: z.object({
-        enabled: z.boolean().default(true),
-        ttlSeconds: z.number().positive().default(300),
-        maxSize: z.number().int().positive().default(1000),
-    }),
-    
-    rateLimit: z.object({
-        enabled: z.boolean().default(true),
-        maxRequests: z.number().int().positive().default(100),
-        windowMs: z.number().positive().default(60000),
-    }),
 });
 ```
 
-### Environment Variable Parsing
-
-The module includes helper functions for parsing environment variables:
-
-```typescript
-/**
- * Parse a boolean environment variable
- */
-function parseBoolean(value: string | undefined, defaultValue: boolean): boolean {
-    if (value === undefined) return defaultValue;
-    return value.toLowerCase() === 'true';
-}
-
-/**
- * Parse a number environment variable
- */
-function parseNumber(value: string | undefined, defaultValue: number): number {
-    if (value === undefined) return defaultValue;
-    const parsed = Number(value);
-    return isNaN(parsed) ? defaultValue : parsed;
-}
-```
 
 ### Configuration Loading
 
-The main configuration loading function:
+The configuration parsing function:
 
 ```typescript
-function loadConfig(): Config {
-    const rawConfig = {
+function parseConfig(): Config {
+    return configSchema.parse({
         server: {
-            port: parseNumber(process.env.PORT, 3000),
-            environment: process.env.NODE_ENV || 'development',
-            logLevel: process.env.LOG_LEVEL || 'info',
+            port: parseInt(process.env.PORT ?? '3000', 10),
+            environment: process.env.NODE_ENV ?? 'development',
+            logLevel: process.env.LOG_LEVEL ?? 'info',
         },
         airs: {
-            apiUrl: process.env.AIRS_API_URL || 'https://service.api.aisecurity.paloaltonetworks.com',
-            apiKey: process.env.AIRS_API_KEY || '',
-            timeout: parseNumber(process.env.AIRS_TIMEOUT, 30000),
-            maxRetries: parseNumber(process.env.AIRS_MAX_RETRIES, 3),
-            defaultProfileName: process.env.AIRS_DEFAULT_PROFILE_NAME || 'Prisma AIRS',
-        },
-        mcp: {
-            serverName: process.env.MCP_SERVER_NAME || 'prisma-airs-mcp',
-            serverVersion: process.env.MCP_SERVER_VERSION || version,
-            protocolVersion: process.env.MCP_PROTOCOL_VERSION || '2024-11-05',
+            apiUrl:
+                process.env.AIRS_API_URL ?? 'https://service.api.aisecurity.paloaltonetworks.com',
+            apiKey: process.env.AIRS_API_KEY ?? '',
+            timeout: parseInt(process.env.AIRS_TIMEOUT ?? '30000', 10),
+            retryAttempts: parseInt(process.env.AIRS_RETRY_ATTEMPTS ?? '3', 10),
+            retryDelay: parseInt(process.env.AIRS_RETRY_DELAY ?? '1000', 10),
+            defaultProfileId: process.env.AIRS_DEFAULT_PROFILE_ID,
+            defaultProfileName: process.env.AIRS_DEFAULT_PROFILE_NAME,
         },
         cache: {
-            enabled: parseBoolean(process.env.CACHE_ENABLED, true),
-            ttlSeconds: parseNumber(process.env.CACHE_TTL_SECONDS, 300),
-            maxSize: parseNumber(process.env.CACHE_MAX_SIZE, 1000),
+            ttlSeconds: parseInt(process.env.CACHE_TTL_SECONDS ?? '300', 10),
+            maxSize: parseInt(process.env.CACHE_MAX_SIZE ?? '1000', 10),
+            enabled: process.env.CACHE_ENABLED !== 'false',
         },
         rateLimit: {
-            enabled: parseBoolean(process.env.RATE_LIMIT_ENABLED, true),
-            maxRequests: parseNumber(process.env.RATE_LIMIT_MAX_REQUESTS, 100),
-            windowMs: parseNumber(process.env.RATE_LIMIT_WINDOW_MS, 60000),
+            maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS ?? '100', 10),
+            windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS ?? '60000', 10),
+            enabled: process.env.RATE_LIMIT_ENABLED !== 'false',
         },
-    };
-
-    // Validate configuration
-    try {
-        return configSchema.parse(rawConfig);
-    } catch (error) {
-        if (error instanceof z.ZodError) {
-            console.error('Configuration validation failed:', error.issues);
-            throw new Error(`Invalid configuration: ${error.message}`);
-        }
-        throw error;
-    }
+        mcp: {
+            serverName: process.env.MCP_SERVER_NAME ?? 'prisma-airs-mcp',
+            serverVersion: process.env.MCP_SERVER_VERSION ?? versionFromFile,
+            protocolVersion: process.env.MCP_PROTOCOL_VERSION ?? '2024-11-05',
+        },
+    });
 }
 ```
 
@@ -156,37 +164,29 @@ function loadConfig(): Config {
 The configuration is loaded once and cached:
 
 ```typescript
-let cachedConfig: Config | null = null;
+/**
+ * Global configuration instance
+ */
+let config: Config | null = null;
 
 /**
- * Get the application configuration
- * Uses singleton pattern to ensure configuration is loaded only once
+ * Get configuration instance
  */
 export function getConfig(): Config {
-    if (!cachedConfig) {
-        cachedConfig = loadConfig();
+    if (!config) {
+        try {
+            config = parseConfig();
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+                console.error('Configuration validation failed:', error.issues);
+                throw new Error(
+                    `Invalid configuration: ${error.issues.map((e) => e.message).join(', ')}`,
+                );
+            }
+            throw error;
+        }
     }
-    return cachedConfig;
-}
-```
-
-### Version Loading
-
-The module loads version from package.json:
-
-```typescript
-import { readFileSync } from 'fs';
-import { join } from 'path';
-
-// Load version from version.json
-const versionPath = join(process.cwd(), 'version.json');
-let version = '1.0.0';
-
-try {
-    const versionData = JSON.parse(readFileSync(versionPath, 'utf-8'));
-    version = versionData.version;
-} catch (error) {
-    console.warn('Could not load version.json, using default version');
+    return config;
 }
 ```
 
@@ -207,22 +207,22 @@ airs: z.object({
 ### Type Validation
 
 ```typescript
-// Port must be a positive integer
+// Port must be between 1 and 65535
 server: z.object({
-    port: z.number().int().positive(),
+    port: z.number().min(1).max(65535),
 })
 
-// Invalid: PORT="abc" 
-// Error: "Expected number, received nan"
+// Invalid: PORT="70000" 
+// Error: "Number must be less than or equal to 65535"
 ```
 
 ### Enum Validation
 
 ```typescript
-// Log level must be one of the allowed values
-logLevel: z.enum(['error', 'warn', 'info', 'debug'])
+// Environment must be one of the allowed values
+environment: z.enum(['development', 'production', 'test'])
 
-// Invalid: LOG_LEVEL="verbose"
+// Invalid: NODE_ENV="staging"
 // Error: "Invalid enum value"
 ```
 
@@ -315,7 +315,8 @@ logLevel: 'info'
 // AIRS defaults
 apiUrl: 'https://service.api.aisecurity.paloaltonetworks.com'
 timeout: 30000 // 30 seconds
-maxRetries: 3
+retryAttempts: 3
+retryDelay: 1000 // 1 second
 
 // Cache defaults
 enabled: true
@@ -353,7 +354,7 @@ describe('Configuration', () => {
         // Reset environment
         process.env = { ...originalEnv };
         // Clear config cache
-        cachedConfig = null;
+        config = null;
     });
 
     afterEach(() => {

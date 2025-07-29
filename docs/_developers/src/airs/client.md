@@ -5,14 +5,12 @@ permalink: /developers/src/airs/client/
 category: developers
 ---
 
-# AIRS Client Module (src/airs/client.ts)
-
 The AIRS client module provides the core REST API client for communicating with the Prisma AI Runtime Security (AIRS)
 service. It handles HTTP requests, retries, error handling, and type-safe API method implementations.
 
 ## Overview
 
-The `PrismaAIRSClient` class is the foundation of all AIRS API interactions, providing:
+The `PrismaAirsClient` class is the foundation of all AIRS API interactions, providing:
 
 - Type-safe API methods for all AIRS endpoints
 - Automatic retry logic with exponential backoff
@@ -22,32 +20,32 @@ The `PrismaAIRSClient` class is the foundation of all AIRS API interactions, pro
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────┐
-│         PrismaAIRSClient                │
+│         PrismaAirsClient                │
 │                                         │
-│  ┌───────────────────────────────────┐ │
-│  │      Configuration                 │ │
-│  │  • API URL                        │ │
-│  │  • API Key                        │ │
-│  │  • Timeout                        │ │
-│  │  • Retry Settings                 │ │
-│  └───────────────────────────────────┘ │
+│  ┌───────────────────────────────────┐  │
+│  │      Configuration                │  │
+│  │  • API URL                        │  │
+│  │  • API Key                        │  │
+│  │  • Timeout                        │  │
+│  │  • Retry Settings                 │  │
+│  └───────────────────────────────────┘  │
 │                                         │
-│  ┌───────────────────────────────────┐ │
-│  │      HTTP Methods                  │ │
-│  │  • makeRequest()                   │ │
-│  │  • handleResponse()                │ │
-│  │  • handleError()                   │ │
-│  └───────────────────────────────────┘ │
+│  ┌───────────────────────────────────┐  │
+│  │      HTTP Methods                 │  │
+│  │  • makeRequest()                  │  │
+│  │  • parseResponse()                │  │
+│  │  • handleAPIError()               │  │
+│  └───────────────────────────────────┘  │
 │                                         │
-│  ┌───────────────────────────────────┐ │
-│  │      API Methods                   │ │
-│  │  • scanSync()                      │ │
-│  │  • scanAsync()                     │ │
-│  │  • getScanResults()                │ │
-│  │  • getThreatReports()              │ │
-│  └───────────────────────────────────┘ │
+│  ┌───────────────────────────────────┐  │
+│  │      API Methods                  │  │
+│  │  • scanSync()                     │  │
+│  │  • scanAsync()                    │  │
+│  │  • getScanResults()               │  │
+│  │  • getThreatScanReports()         │  │
+│  └───────────────────────────────────┘  │
 └─────────────────────────────────────────┘
 ```
 
@@ -56,9 +54,9 @@ The `PrismaAIRSClient` class is the foundation of all AIRS API interactions, pro
 ### Client Configuration Interface
 
 ```typescript
-interface AIRSClientConfig {
+interface AirsClientConfig {
     apiKey: string;         // Required: API authentication key
-    baseUrl?: string;       // Optional: API base URL
+    apiUrl: string;         // Required: API base URL
     timeout?: number;       // Optional: Request timeout in ms
     maxRetries?: number;    // Optional: Maximum retry attempts
     retryDelay?: number;    // Optional: Initial retry delay in ms
@@ -68,8 +66,8 @@ interface AIRSClientConfig {
 ### Default Configuration
 
 ```typescript
-const DEFAULT_CONFIG = {
-    baseUrl: 'https://service.api.aisecurity.paloaltonetworks.com',
+// Defaults are applied in the constructor
+const defaults = {
     timeout: 30000,        // 30 seconds
     maxRetries: 3,         // 3 retry attempts
     retryDelay: 1000,      // 1 second initial delay
@@ -78,21 +76,30 @@ const DEFAULT_CONFIG = {
 
 ## API Methods
 
-### scanSync(request)
+### scanSync(request, options?)
 
 Performs synchronous content scanning with immediate results.
 
 ```typescript
-async scanSync(request: ScanSyncRequest): Promise<ScanSyncResponse>
+/**
+ * Send a synchronous scan request
+ */
+async scanSync(
+    request: AirsScanRequest,
+    options?: AirsRequestOptions,
+): Promise<AirsScanResponse> {
+    return this.makeRequest<AirsScanResponse>('POST', '/scan/sync/request', request, options);
+}
 ```
 
 **Parameters:**
 
-- `request: ScanSyncRequest` - Scan request containing content and profile
+- `request: AirsScanRequest` - Scan request containing content and profile
+- `options?: AirsRequestOptions` - Optional request configuration (headers, signal)
 
 **Returns:**
 
-- `ScanSyncResponse` - Scan results with threat details
+- `AirsScanResponse` - Scan results with threat details
 
 **Example:**
 
@@ -113,56 +120,99 @@ if (result.request_results[0].prompt_guard_result.high_risk_categories.length > 
 }
 ```
 
-### scanAsync(request)
+### scanAsync(requests, options?)
 
 Initiates asynchronous batch scanning for multiple requests.
 
 ```typescript
-async scanAsync(request: ScanAsyncRequest): Promise<ScanAsyncResponse>
+/**
+ * Send an asynchronous scan request
+ */
+async scanAsync(
+    requests: AirsAsyncScanObject[],
+    options?: AirsRequestOptions,
+): Promise<AirsAsyncScanResponse> {
+    return this.makeRequest<AirsAsyncScanResponse>(
+        'POST',
+        '/scan/async/request',
+        requests,
+        options,
+    );
+}
 ```
 
 **Parameters:**
 
-- `request: ScanAsyncRequest` - Batch scan request
+- `requests: AirsAsyncScanObject[]` - Array of scan objects to process
+- `options?: AirsRequestOptions` - Optional request configuration
 
 **Returns:**
 
-- `ScanAsyncResponse` - Scan ID for result retrieval
+- `AirsAsyncScanResponse` - Response containing scan IDs for result retrieval
 
 **Example:**
 
 ```typescript
-const response = await client.scanAsync({
-    requests: [
-        {
-            tr_id: 'batch_1',
-            request: [{ prompt: 'Content 1', profile_name: 'strict' }]
-        },
-        {
-            tr_id: 'batch_2',
-            request: [{ prompt: 'Content 2', profile_name: 'strict' }]
-        }
-    ]
-});
+const response = await client.scanAsync([
+    {
+        tr_id: 'batch_1',
+        request: [{prompt: 'Content 1', profile_name: 'strict'}]
+    },
+    {
+        tr_id: 'batch_2',
+        request: [{prompt: 'Content 2', profile_name: 'strict'}]
+    }
+]);
 
-console.log('Scan ID:', response.scan_id);
+// Response contains scan IDs for each request
+response.scan_ids.forEach(scanId => {
+    console.log('Scan ID:', scanId);
+});
 ```
 
-### getScanResults(scanIds)
+### getScanResults(scanIds, options?)
 
 Retrieves results for completed scans by scan ID.
 
 ```typescript
-async getScanResults(scanIds: string[]): Promise<ScanResult[]>
+/**
+ * Get scan results by scan IDs
+ */
+async getScanResults(
+    scanIds: string[],
+    options?: AirsRequestOptions,
+): Promise<AirsScanIdResult[]> {
+    if (scanIds.length === 0) {
+        throw new PrismaAirsApiError('No scan IDs provided', AirsErrorCode.BadRequest);
+    }
+
+    if (scanIds.length > AIRS_MAX_SCAN_IDS) {
+        throw new PrismaAirsApiError(
+            `Too many scan IDs: maximum ${AIRS_MAX_SCAN_IDS} allowed`,
+            AirsErrorCode.BadRequest,
+        );
+    }
+
+    const params = new URLSearchParams();
+    params.append('scan_ids', scanIds.join(','));
+
+    return this.makeRequest<AirsScanIdResult[]>(
+        'GET',
+        `/scan/results?${params.toString()}`,
+        undefined,
+        options,
+    );
+}
 ```
 
 **Parameters:**
 
-- `scanIds: string[]` - Array of scan IDs to retrieve
+- `scanIds: string[]` - Array of scan IDs to retrieve (max: 100)
+- `options?: AirsRequestOptions` - Optional request configuration
 
 **Returns:**
 
-- `ScanResult[]` - Array of scan results
+- `AirsScanIdResult[]` - Array of scan results
 
 **Example:**
 
@@ -177,29 +227,58 @@ results.forEach(result => {
 });
 ```
 
-### getThreatReports(reportIds)
+### getThreatScanReports(reportIds, options?)
 
 Retrieves detailed threat analysis reports.
 
 ```typescript
-async getThreatReports(reportIds: string[]): Promise<ThreatReport[]>
+/**
+ * Get threat scan reports by report IDs
+ */
+async getThreatScanReports(
+    reportIds: string[],
+    options?: AirsRequestOptions,
+): Promise<AirsThreatScanReportObject[]> {
+    if (reportIds.length === 0) {
+        throw new PrismaAirsApiError('No report IDs provided', AirsErrorCode.BadRequest);
+    }
+
+    if (reportIds.length > AIRS_MAX_REPORT_IDS) {
+        throw new PrismaAirsApiError(
+            `Too many report IDs: maximum ${AIRS_MAX_REPORT_IDS} allowed`,
+            AirsErrorCode.BadRequest,
+        );
+    }
+
+    const params = new URLSearchParams();
+    params.append('report_ids', reportIds.join(','));
+
+    return this.makeRequest<AirsThreatScanReportObject[]>(
+        'GET',
+        `/scan/reports?${params.toString()}`,
+        undefined,
+        options,
+    );
+}
 ```
 
 **Parameters:**
 
-- `reportIds: string[]` - Array of report IDs
+- `reportIds: string[]` - Array of report IDs (max: 100)
+- `options?: AirsRequestOptions` - Optional request configuration
 
 **Returns:**
 
-- `ThreatReport[]` - Detailed threat reports
+- `AirsThreatScanReportObject[]` - Detailed threat reports
 
 **Example:**
 
 ```typescript
-const reports = await client.getThreatReports(['report_123']);
+const reports = await client.getThreatScanReports(['report_123']);
 
 reports.forEach(report => {
-    console.log('Threat Category:', report.category);
+    console.log('Report ID:', report.report_id);
+    console.log('Category:', report.category);
     console.log('Severity:', report.severity);
     console.log('Details:', report.details);
 });
@@ -209,18 +288,17 @@ reports.forEach(report => {
 
 ### Custom Error Class
 
-The client uses a custom `AIRSAPIError` class for API-specific errors:
+The client uses a custom `PrismaAirsApiError` class for API-specific errors:
 
 ```typescript
-export class AIRSAPIError extends Error {
+export class PrismaAirsApiError extends Error {
     constructor(
         message: string,
-        public status?: number,
-        public code?: string,
-        public details?: unknown
+        public statusCode: number,
+        public response?: AirsErrorResponse
     ) {
         super(message);
-        this.name = 'AIRSAPIError';
+        this.name = 'PrismaAirsApiError';
     }
 }
 ```
@@ -228,35 +306,39 @@ export class AIRSAPIError extends Error {
 ### Error Types
 
 1. **Authentication Errors (401)**
-   ```typescript
-   try {
-       await client.scanSync(request);
-   } catch (error) {
-       if (error.status === 401) {
-           console.error('Invalid API key');
-       }
-   }
-   ```
+
+    ```typescript
+    try {
+        await client.scanSync(request);
+    } catch (error) {
+        if (error instanceof PrismaAirsApiError && error.statusCode === 401) {
+            console.error('Invalid API key');
+        }
+    }
+    ```
 
 2. **Rate Limit Errors (429)**
+
    ```typescript
-   if (error.status === 429) {
-       const retryAfter = error.details?.retry_after;
-       console.log(`Rate limited. Retry after ${retryAfter}s`);
+   if (error instanceof PrismaAirsApiError && error.statusCode === 429) {
+       const retryAfter = error.response?.error?.retry_after;
+       console.log(`Rate limited. Retry after ${retryAfter?.interval} ${retryAfter?.unit}`);
    }
    ```
 
 3. **Validation Errors (400)**
+
    ```typescript
-   if (error.status === 400) {
-       console.error('Invalid request:', error.details);
+   if (error instanceof PrismaAirsApiError && error.statusCode === 400) {
+       console.error('Invalid request:', error.response?.error?.message);
    }
    ```
 
 4. **Server Errors (500+)**
+
    ```typescript
-   if (error.status >= 500) {
-       console.error('Server error. Retrying...');
+   if (error instanceof PrismaAirsApiError && error.statusCode >= 500) {
+       console.error('Server error. Will retry automatically...');
    }
    ```
 
@@ -265,36 +347,128 @@ export class AIRSAPIError extends Error {
 The client implements exponential backoff for transient failures:
 
 ```typescript
-private async makeRequestWithRetry<T>(
+/**
+ * Make an HTTP request with retry logic and error handling
+ */
+private async makeRequest<T>(
     method: string,
-    url: string,
-    data?: unknown,
-    retryCount = 0
+    path: string,
+    body?: unknown,
+    options?: AirsRequestOptions,
+    retryCount = 0,
 ): Promise<T> {
+    const url = `${this.baseUrl}${path}`;
+    const headers: Record<string, string> = {
+        [AIRS_AUTH_HEADER]: this.config.apiKey,
+        'Content-Type': AIRS_CONTENT_TYPE,
+        Accept: AIRS_CONTENT_TYPE,
+        ...options?.headers,
+    };
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
+
     try {
-        return await this.makeRequest<T>(method, url, data);
+        this.logger.debug('Making AIRS API request', {
+            method,
+            url,
+            retryCount,
+        });
+
+        const response = await fetch(url, {
+            method,
+            headers,
+            body: body ? JSON.stringify(body) : undefined,
+            signal: options?.signal || controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        const responseText = await response.text();
+
+        // Parse response
+        const responseData = this.parseResponse(responseText, url, response.status);
+
+        if (!response.ok) {
+            const errorResponse = responseData as AirsErrorResponse;
+
+            // Handle rate limiting with retry
+            if (
+                response.status === Number(AirsErrorCode.TooManyRequests) &&
+                retryCount < this.config.maxRetries
+            ) {
+                const retryAfter = errorResponse.error?.retry_after;
+                const delay = retryAfter
+                    ? this.calculateRetryDelay(retryAfter)
+                    : this.config.retryDelay * Math.pow(2, retryCount);
+
+                this.logger.warn('Rate limited, retrying after delay', {
+                    url,
+                    retryCount,
+                    delay,
+                });
+
+                await this.sleep(delay);
+                return this.makeRequest<T>(method, path, body, options, retryCount + 1);
+            }
+
+            // Handle other errors
+            this.handleAPIError(errorResponse, response.status, url);
+        }
+
+        this.logger.debug('AIRS API request successful', {
+            url,
+            status: response.status,
+        });
+
+        return responseData as T;
     } catch (error) {
-        if (retryCount >= this.config.maxRetries) {
+        clearTimeout(timeoutId);
+
+        // Handle timeout and network errors with retry
+        if (
+            (error instanceof Error && error.name === 'AbortError') ||
+            (error instanceof TypeError && error.message.includes('fetch'))
+        ) {
+            if (retryCount < this.config.maxRetries) {
+                const delay = this.config.retryDelay * Math.pow(2, retryCount);
+
+                this.logger.warn('Request failed, retrying', {
+                    url,
+                    retryCount,
+                    delay,
+                    error: error.message,
+                });
+
+                await this.sleep(delay);
+                return this.makeRequest<T>(method, path, body, options, retryCount + 1);
+            }
+        }
+
+        // Re-throw PrismaAirsApiError as-is
+        if (error instanceof PrismaAirsApiError) {
             throw error;
         }
 
-        // Retry for specific error types
-        if (this.shouldRetry(error)) {
-            const delay = this.config.retryDelay * Math.pow(2, retryCount);
-            await this.sleep(delay);
-            return this.makeRequestWithRetry(method, url, data, retryCount + 1);
-        }
+        // Wrap other errors
+        this.logger.error('Unexpected error during API request', {
+            url,
+            error: error instanceof Error ? error.message : 'Unknown error',
+        });
 
-        throw error;
+        throw new PrismaAirsApiError(
+            error instanceof Error ? error.message : 'Unknown error',
+            0,
+        );
     }
 }
 ```
 
 ### Retryable Conditions
 
-- Network errors (ECONNRESET, ETIMEDOUT)
-- 5xx server errors
-- 429 rate limit errors (with backoff)
+- Network errors (AbortError, fetch failures)
+- Timeout errors
+- 429 rate limit errors (with server-specified or exponential backoff)
 
 ## Request/Response Handling
 
@@ -303,10 +477,11 @@ private async makeRequestWithRetry<T>(
 All requests include standard headers:
 
 ```typescript
-const headers = {
-    'Content-Type': 'application/json',
-    'x-pan-token': this.config.apiKey,
-    'User-Agent': 'prisma-airs-mcp/1.0',
+const headers: Record<string, string> = {
+    [AIRS_AUTH_HEADER]: this.config.apiKey,  // 'x-pan-token'
+    'Content-Type': AIRS_CONTENT_TYPE,       // 'application/json'
+    Accept: AIRS_CONTENT_TYPE,
+    ...options?.headers,  // Allow custom headers
 };
 ```
 
@@ -315,30 +490,31 @@ const headers = {
 Debug logging for troubleshooting:
 
 ```typescript
-this.logger.debug('AIRS API request', {
+this.logger.debug('Making AIRS API request', {
     method,
     url,
-    headers: { ...headers, 'x-pan-token': '[REDACTED]' },
-    body: data,
+    retryCount,
 });
 ```
 
 ### Response Processing
 
-Successful responses are validated and typed:
+Responses are parsed and validated:
 
 ```typescript
-private async handleResponse<T>(response: Response): Promise<T> {
-    const responseText = await response.text();
-    
-    if (!response.ok) {
-        throw this.createError(response, responseText);
-    }
-
+/**
+ * Parse response text to JSON
+ */
+private parseResponse(responseText: string, url: string, status: number): unknown {
     try {
-        return JSON.parse(responseText) as T;
-    } catch (error) {
-        throw new AIRSAPIError('Invalid JSON response', response.status);
+        return responseText ? JSON.parse(responseText) : {};
+    } catch {
+        this.logger.error('Failed to parse API response', {
+            url,
+            status,
+            responseText,
+        });
+        throw new PrismaAirsApiError('Invalid JSON response from API', status);
     }
 }
 ```
@@ -348,10 +524,11 @@ private async handleResponse<T>(response: Response): Promise<T> {
 ### Basic Usage
 
 ```typescript
-import { PrismaAIRSClient } from './airs/client';
+import {PrismaAirsClient} from './airs/client';
 
-const client = new PrismaAIRSClient({
+const client = new PrismaAirsClient({
     apiKey: process.env.AIRS_API_KEY!,
+    apiUrl: process.env.AIRS_API_URL!,
 });
 
 // Simple scan
@@ -367,9 +544,9 @@ const result = await client.scanSync({
 ### Advanced Configuration
 
 ```typescript
-const client = new PrismaAIRSClient({
+const client = new PrismaAirsClient({
     apiKey: config.apiKey,
-    baseUrl: 'https://custom.airs.endpoint.com',
+    apiUrl: 'https://custom.airs.endpoint.com',
     timeout: 60000,      // 60 second timeout
     maxRetries: 5,       // More retries
     retryDelay: 2000,    // 2 second initial delay
@@ -383,25 +560,25 @@ async function scanContentSafely(content: string) {
     try {
         return await client.scanSync({
             tr_id: generateId(),
-            request: [{ prompt: content, profile_name: 'strict' }]
+            request: [{prompt: content, profile_name: 'strict'}]
         });
     } catch (error) {
-        if (error instanceof AIRSAPIError) {
+        if (error instanceof PrismaAirsApiError) {
             // Handle AIRS-specific errors
             logger.error('AIRS API error', {
-                status: error.status,
-                code: error.code,
-                details: error.details
+                statusCode: error.statusCode,
+                message: error.message,
+                response: error.response
             });
-            
+
             // Return safe default or rethrow
-            if (error.status === 429) {
+            if (error.statusCode === 429) {
                 throw new Error('Rate limited. Please try again later.');
             }
-            
+
             throw new Error('Security scan failed');
         }
-        
+
         // Handle other errors
         throw error;
     }
@@ -437,12 +614,13 @@ Configure timeouts based on use case:
 ### Unit Testing
 
 ```typescript
-describe('PrismaAIRSClient', () => {
-    let client: PrismaAIRSClient;
-    
+describe('PrismaAirsClient', () => {
+    let client: PrismaAirsClient;
+
     beforeEach(() => {
-        client = new PrismaAIRSClient({
+        client = new PrismaAirsClient({
             apiKey: 'test-key',
+            apiUrl: 'https://test.api.com',
             maxRetries: 0  // Disable retries for tests
         });
     });
@@ -465,8 +643,9 @@ describe('PrismaAIRSClient', () => {
 ```typescript
 // Test with real API (requires valid key)
 it('should scan real content', async () => {
-    const client = new PrismaAIRSClient({
-        apiKey: process.env.TEST_API_KEY!
+    const client = new PrismaAirsClient({
+        apiKey: process.env.TEST_API_KEY!,
+        apiUrl: process.env.TEST_API_URL!
     });
 
     const result = await client.scanSync({

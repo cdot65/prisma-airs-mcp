@@ -20,684 +20,446 @@ The MCP types provide:
 - Capability declarations
 - Error types for protocol violations
 
-## Core Protocol Types
+All types are prefixed with 'Mcp' to avoid namespace conflicts.
 
-### MCPRequest
+## Resource Types
 
-Base request structure for all MCP methods.
+### McpResource
+
+Represents a resource that can be accessed via URI.
 
 ```typescript
-export interface MCPRequest {
-    /** JSON-RPC version (always "2.0") */
-    jsonrpc: "2.0";
-    
-    /** Method name (e.g., "tools/list", "resources/read") */
-    method: string;
-    
-    /** Method parameters */
-    params?: unknown;
-    
-    /** Request ID for correlation */
-    id?: string | number;
+export interface McpResource {
+    uri: string;
+    name: string;
+    description?: string;
+    mimeType?: string;
+    size?: number;
 }
 ```
 
-### MCPResponse
+### McpResourceTemplate
 
-Base response structure for MCP methods.
+Template for dynamic resources.
 
 ```typescript
-export interface MCPResponse {
-    /** JSON-RPC version (always "2.0") */
-    jsonrpc: "2.0";
-    
-    /** Success result */
-    result?: unknown;
-    
-    /** Error information */
-    error?: MCPError;
-    
-    /** Request ID for correlation */
-    id?: string | number;
-}
-
-export interface MCPError {
-    /** Error code (JSON-RPC standard) */
-    code: number;
-    
-    /** Human-readable error message */
-    message: string;
-    
-    /** Additional error data */
-    data?: unknown;
+export interface McpResourceTemplate {
+    uriTemplate: string;
+    name: string;
+    description?: string;
+    mimeType?: string;
 }
 ```
 
-### MCPNotification
-
-Server-initiated notifications.
+### Resource List Types
 
 ```typescript
-export interface MCPNotification {
-    /** JSON-RPC version */
-    jsonrpc: "2.0";
-    
-    /** Notification method */
-    method: string;
-    
-    /** Notification parameters */
-    params?: unknown;
-    
-    // Note: No ID for notifications
+export interface McpResourcesListParams {
+    cursor?: string;
+}
+
+export interface McpResourcesListResult {
+    resources: McpResource[];
+    nextCursor?: string;
 }
 ```
 
-## Initialization Types
-
-### InitializeRequest
-
-Client initialization request.
+### Resource Read Types
 
 ```typescript
-export interface InitializeRequest extends MCPRequest {
-    method: "initialize";
-    params: {
-        /** Protocol version */
-        protocolVersion: string;
-        
-        /** Client capabilities */
-        capabilities: ClientCapabilities;
-        
-        /** Client information */
-        clientInfo?: {
-            name: string;
-            version?: string;
-        };
-    };
+export interface McpResourcesReadParams {
+    uri: string;
 }
 
-export interface ClientCapabilities {
-    /** Supported sampling methods */
-    sampling?: Record<string, unknown>;
-    
-    /** Supported roots */
-    roots?: {
-        listChanged?: boolean;
-    };
-}
-```
-
-### InitializeResponse
-
-Server initialization response.
-
-```typescript
-export interface InitializeResponse extends MCPResponse {
-    result: {
-        /** Protocol version */
-        protocolVersion: string;
-        
-        /** Server capabilities */
-        capabilities: ServerCapabilities;
-        
-        /** Server information */
-        serverInfo?: {
-            name: string;
-            version?: string;
-        };
-    };
+export interface McpResourcesReadResult {
+    contents: McpResourceContent[];
 }
 
-export interface ServerCapabilities {
-    /** Resource capabilities */
-    resources?: {
-        list?: boolean;
-        read?: boolean;
-        subscribe?: boolean;
-    };
-    
-    /** Tool capabilities */
-    tools?: {
-        list?: boolean;
-        call?: boolean;
-    };
-    
-    /** Prompt capabilities */
-    prompts?: {
-        list?: boolean;
-        get?: boolean;
-    };
-    
-    /** Logging capabilities */
-    logging?: Record<string, unknown>;
+export interface McpResourceContent {
+    uri: string;
+    mimeType?: string;
+    text?: string;
+    blob?: string; // base64 encoded
 }
 ```
 
 ## Tool Types
 
-### ToolsListRequest
+### McpTool
 
-Request to list available tools.
-
-```typescript
-export interface ToolsListRequest extends MCPRequest {
-    method: "tools/list";
-    params?: {
-        /** Optional cursor for pagination */
-        cursor?: string;
-    };
-}
-```
-
-### ToolsListResponse
-
-Response with available tools.
+Defines a callable tool with its schema.
 
 ```typescript
-export interface ToolsListResponse extends MCPResponse {
-    result: {
-        /** Available tools */
-        tools: Tool[];
-        
-        /** Pagination cursor */
-        nextCursor?: string;
-    };
-}
-
-export interface Tool {
-    /** Unique tool name */
+export interface McpTool {
     name: string;
-    
-    /** Human-readable description */
+    title?: string;
     description?: string;
-    
-    /** JSON Schema for input parameters */
     inputSchema: {
-        type: "object";
+        type: 'object';
         properties?: Record<string, unknown>;
         required?: string[];
         additionalProperties?: boolean;
     };
-}
-```
-
-### ToolsCallRequest
-
-Request to execute a tool.
-
-```typescript
-export interface ToolsCallRequest extends MCPRequest {
-    method: "tools/call";
-    params: {
-        /** Tool name to execute */
-        name: string;
-        
-        /** Tool arguments */
-        arguments?: Record<string, unknown>;
+    outputSchema?: {
+        type: 'object';
+        properties?: Record<string, unknown>;
+        required?: string[];
+        additionalProperties?: boolean;
+    };
+    annotations?: {
+        title?: string;
+        readOnlyHint?: boolean;
+        progressHint?: boolean;
     };
 }
 ```
 
-### ToolsCallResponse
-
-Tool execution result.
+### Tool List Types
 
 ```typescript
-export interface ToolsCallResponse extends MCPResponse {
-    result: {
-        /** Tool output content */
-        content: Array<ToolContent>;
-        
-        /** Whether the tool encountered an error */
-        isError?: boolean;
-    };
+export interface McpToolsListParams {
+    cursor?: string;
 }
 
-export type ToolContent = 
-    | TextContent
-    | ImageContent
-    | EmbeddedResource;
-
-export interface TextContent {
-    type: "text";
-    text: string;
-}
-
-export interface ImageContent {
-    type: "image";
-    data: string;  // Base64 encoded
-    mimeType: string;
-}
-
-export interface EmbeddedResource {
-    type: "resource";
-    resource: Resource;
+export interface McpToolsListResult {
+    tools: McpTool[];
+    nextCursor?: string;
 }
 ```
 
-## Resource Types
-
-### ResourcesListRequest
-
-Request to list available resources.
+### Tool Call Types
 
 ```typescript
-export interface ResourcesListRequest extends MCPRequest {
-    method: "resources/list";
-    params?: {
-        /** Optional cursor for pagination */
-        cursor?: string;
-    };
-}
-```
-
-### ResourcesListResponse
-
-Response with available resources.
-
-```typescript
-export interface ResourcesListResponse extends MCPResponse {
-    result: {
-        /** Available resources */
-        resources: Resource[];
-        
-        /** Pagination cursor */
-        nextCursor?: string;
-    };
-}
-
-export interface Resource {
-    /** Resource URI */
-    uri: string;
-    
-    /** Human-readable name */
+export interface McpToolsCallParams {
     name: string;
-    
-    /** Resource description */
-    description?: string;
-    
-    /** MIME type */
+    arguments?: Record<string, unknown>;
+}
+
+export interface McpToolsCallResult {
+    content: McpToolResultContent[];
+    isError?: boolean;
+}
+
+export interface McpToolResultContent {
+    type: 'text' | 'image' | 'resource';
+    text?: string;
+    data?: string; // base64 for images
     mimeType?: string;
-}
-```
-
-### ResourcesReadRequest
-
-Request to read a resource.
-
-```typescript
-export interface ResourcesReadRequest extends MCPRequest {
-    method: "resources/read";
-    params: {
-        /** Resource URI */
+    resource?: {
         uri: string;
-    };
-}
-```
-
-### ResourcesReadResponse
-
-Resource content response.
-
-```typescript
-export interface ResourcesReadResponse extends MCPResponse {
-    result: {
-        /** Resource content */
-        contents: Array<ResourceContent>;
-    };
-}
-
-export type ResourceContent = TextContent | BinaryContent;
-
-export interface BinaryContent {
-    type: "blob";
-    blob: string;  // Base64 encoded
-    mimeType?: string;
-}
-```
-
-### ResourcesSubscribeRequest
-
-Subscribe to resource changes.
-
-```typescript
-export interface ResourcesSubscribeRequest extends MCPRequest {
-    method: "resources/subscribe";
-    params: {
-        /** Resource URI */
-        uri: string;
-    };
-}
-```
-
-### ResourcesUnsubscribeRequest
-
-Unsubscribe from resource changes.
-
-```typescript
-export interface ResourcesUnsubscribeRequest extends MCPRequest {
-    method: "resources/unsubscribe";
-    params: {
-        /** Resource URI */
-        uri: string;
+        title?: string;
+        mimeType?: string;
+        text?: string;
+        blob?: string;
     };
 }
 ```
 
 ## Prompt Types
 
-### PromptsListRequest
+### McpPrompt
 
-Request to list available prompts.
-
-```typescript
-export interface PromptsListRequest extends MCPRequest {
-    method: "prompts/list";
-    params?: {
-        /** Optional cursor for pagination */
-        cursor?: string;
-    };
-}
-```
-
-### PromptsListResponse
-
-Response with available prompts.
+Defines a reusable prompt workflow.
 
 ```typescript
-export interface PromptsListResponse extends MCPResponse {
-    result: {
-        /** Available prompts */
-        prompts: Prompt[];
-        
-        /** Pagination cursor */
-        nextCursor?: string;
-    };
+export interface McpPrompt {
+    name: string;
+    title?: string;
+    description?: string;
+    arguments?: McpPromptArgument[];
 }
 
-export interface Prompt {
-    /** Unique prompt name */
+export interface McpPromptArgument {
     name: string;
-    
-    /** Human-readable description */
     description?: string;
-    
-    /** Prompt arguments */
-    arguments?: Array<PromptArgument>;
-}
-
-export interface PromptArgument {
-    /** Argument name */
-    name: string;
-    
-    /** Argument description */
-    description?: string;
-    
-    /** Whether required */
     required?: boolean;
 }
 ```
 
-### PromptsGetRequest
-
-Request to get a prompt.
+### Prompt List Types
 
 ```typescript
-export interface PromptsGetRequest extends MCPRequest {
-    method: "prompts/get";
-    params: {
-        /** Prompt name */
+export interface McpPromptsListParams {
+    cursor?: string;
+}
+
+export interface McpPromptsListResult {
+    prompts: McpPrompt[];
+    nextCursor?: string;
+}
+```
+
+### Prompt Get Types
+
+```typescript
+export interface McpPromptsGetParams {
+    name: string;
+    arguments?: Record<string, string>;
+}
+
+export interface McpPromptsGetResult {
+    messages: McpPromptMessage[];
+}
+
+export interface McpPromptMessage {
+    role: 'user' | 'assistant';
+    content: McpPromptContent;
+}
+
+export interface McpPromptContent {
+    type: 'text' | 'image' | 'resource';
+    text?: string;
+    data?: string;
+    mimeType?: string;
+    resource?: {
+        uri: string;
+        title?: string;
+        mimeType?: string;
+        text?: string;
+        blob?: string;
+    };
+}
+```
+
+## Protocol Types
+
+### McpServerCapabilities
+
+Server capability declarations.
+
+```typescript
+export interface McpServerCapabilities {
+    resources?: {
+        list?: boolean;
+        read?: boolean;
+        subscribe?: boolean;
+    };
+    tools?: {
+        list?: boolean;
+        call?: boolean;
+    };
+    prompts?: {
+        list?: boolean;
+        get?: boolean;
+    };
+    logging?: Record<string, unknown>;
+}
+```
+
+### McpServerInfo
+
+Server identification.
+
+```typescript
+export interface McpServerInfo {
+    name: string;
+    version?: string;
+}
+```
+
+### McpInitializeResult
+
+Initialization response.
+
+```typescript
+export interface McpInitializeResult {
+    protocolVersion: string;
+    capabilities: McpServerCapabilities;
+    serverInfo?: McpServerInfo;
+}
+```
+
+### McpInitializeParams
+
+Initialization parameters.
+
+```typescript
+export interface McpInitializeParams {
+    protocolVersion: string;
+    capabilities?: {
+        roots?: {
+            listChanged?: boolean;
+        };
+        sampling?: Record<string, unknown>;
+    };
+    clientInfo?: {
         name: string;
-        
-        /** Prompt arguments */
-        arguments?: Record<string, string>;
+        version?: string;
     };
 }
 ```
 
-### PromptsGetResponse
+### McpResourceTemplatesListResult
 
-Prompt content response.
-
-```typescript
-export interface PromptsGetResponse extends MCPResponse {
-    result: {
-        /** User-facing prompt description */
-        description?: string;
-        
-        /** Prompt messages */
-        messages: Array<PromptMessage>;
-    };
-}
-
-export interface PromptMessage {
-    /** Message role */
-    role: "user" | "assistant" | "system";
-    
-    /** Message content */
-    content: TextContent | ImageContent | EmbeddedResource;
-}
-```
-
-## Notification Types
-
-### ResourcesListChangedNotification
-
-Notification when resource list changes.
+Resource template listing.
 
 ```typescript
-export interface ResourcesListChangedNotification extends MCPNotification {
-    method: "notifications/resources/list_changed";
-}
-```
-
-### ToolsListChangedNotification
-
-Notification when tool list changes.
-
-```typescript
-export interface ToolsListChangedNotification extends MCPNotification {
-    method: "notifications/tools/list_changed";
-}
-```
-
-### PromptsListChangedNotification
-
-Notification when prompt list changes.
-
-```typescript
-export interface PromptsListChangedNotification extends MCPNotification {
-    method: "notifications/prompts/list_changed";
-}
-```
-
-## Type Guards
-
-### Protocol validation helpers
-
-```typescript
-/** Check if request is valid MCP request */
-export function isMCPRequest(obj: unknown): obj is MCPRequest {
-    return (
-        typeof obj === 'object' &&
-        obj !== null &&
-        'jsonrpc' in obj &&
-        obj.jsonrpc === '2.0' &&
-        'method' in obj &&
-        typeof obj.method === 'string'
-    );
-}
-
-/** Check if response has error */
-export function hasError(response: MCPResponse): boolean {
-    return response.error !== undefined;
-}
-
-/** Check if notification */
-export function isNotification(msg: MCPRequest | MCPNotification): msg is MCPNotification {
-    return !('id' in msg);
-}
-
-/** Extract method type */
-export function getMethodType(method: string): 'tools' | 'resources' | 'prompts' | 'unknown' {
-    const [type] = method.split('/');
-    if (['tools', 'resources', 'prompts'].includes(type)) {
-        return type as 'tools' | 'resources' | 'prompts';
-    }
-    return 'unknown';
+export interface McpResourceTemplatesListResult {
+    resourceTemplates: McpResourceTemplate[];
 }
 ```
 
 ## Usage Examples
 
-### Handling MCP Requests
+### Type Guards
 
 ```typescript
-import { MCPRequest, MCPResponse, ToolsListRequest } from '../types/mcp';
+// Check if content is text
+function isTextContent(content: McpToolResultContent): content is { type: 'text'; text: string } {
+    return content.type === 'text' && typeof content.text === 'string';
+}
 
-async function handleMCPRequest(request: MCPRequest): Promise<MCPResponse> {
-    // Validate request
-    if (!isMCPRequest(request)) {
-        return {
-            jsonrpc: '2.0',
-            error: {
-                code: -32600,
-                message: 'Invalid request'
-            },
-            id: request.id
-        };
-    }
-    
-    // Route by method
-    switch (request.method) {
-        case 'tools/list':
-            return handleToolsList(request as ToolsListRequest);
-        
-        case 'tools/call':
-            return handleToolsCall(request);
-        
-        default:
-            return {
-                jsonrpc: '2.0',
-                error: {
-                    code: -32601,
-                    message: 'Method not found'
-                },
-                id: request.id
-            };
-    }
+// Check if content has resource
+function hasResource(content: McpToolResultContent): content is { type: 'resource'; resource: any } {
+    return content.type === 'resource' && !!content.resource;
 }
 ```
 
-### Creating Tool Definitions
+### Creating Tool Results
 
 ```typescript
-const securityScanTool: Tool = {
-    name: 'security_scan',
-    description: 'Scan content for security threats',
-    inputSchema: {
-        type: 'object',
-        properties: {
-            content: {
-                type: 'string',
-                description: 'Content to scan'
-            },
-            profile: {
-                type: 'string',
-                enum: ['default', 'strict', 'permissive'],
-                description: 'Security profile'
-            }
-        },
-        required: ['content'],
-        additionalProperties: false
+// Text result
+const textResult: McpToolResultContent = {
+    type: 'text',
+    text: 'Operation completed successfully'
+};
+
+// Resource result
+const resourceResult: McpToolResultContent = {
+    type: 'resource',
+    resource: {
+        uri: 'airs://scan-results/123',
+        title: 'Scan Results',
+        mimeType: 'application/json',
+        text: JSON.stringify(scanData)
     }
+};
+
+// Error result
+const errorResult: McpToolsCallResult = {
+    content: [{
+        type: 'text',
+        text: 'Error: Invalid input'
+    }],
+    isError: true
 };
 ```
 
-### Type-Safe Response Building
+### Implementing Handlers
 
 ```typescript
-function buildToolsListResponse(tools: Tool[]): ToolsListResponse {
-    return {
-        jsonrpc: '2.0',
-        result: {
-            tools,
-            // nextCursor only if pagination needed
-            ...(tools.length > 100 && { nextCursor: 'next-page' })
-        }
-    };
+import type { 
+    McpToolsListParams, 
+    McpToolsListResult,
+    McpToolsCallParams,
+    McpToolsCallResult 
+} from './types';
+
+class ToolHandler {
+    listTools(params: McpToolsListParams): McpToolsListResult {
+        return {
+            tools: [
+                {
+                    name: 'example_tool',
+                    description: 'An example tool',
+                    inputSchema: {
+                        type: 'object',
+                        properties: {
+                            input: { type: 'string' }
+                        },
+                        required: ['input']
+                    }
+                }
+            ]
+        };
+    }
+
+    async callTool(params: McpToolsCallParams): Promise<McpToolsCallResult> {
+        // Tool implementation
+        return {
+            content: [{
+                type: 'text',
+                text: `Executed ${params.name}`
+            }]
+        };
+    }
 }
 ```
 
-## Error Handling
+## Type Relationships
 
-### Standard JSON-RPC Error Codes
+```
+McpTool
+├── name: string
+├── inputSchema: object schema
+└── annotations?
+    ├── readOnlyHint: boolean
+    └── progressHint: boolean
 
-```typescript
-export enum JsonRpcErrorCode {
-    ParseError = -32700,
-    InvalidRequest = -32600,
-    MethodNotFound = -32601,
-    InvalidParams = -32602,
-    InternalError = -32603,
-}
+McpToolResultContent
+├── type: 'text' | 'image' | 'resource'
+├── text?: string (when type='text')
+├── data?: string (when type='image')
+└── resource?: object (when type='resource')
 
-function createError(
-    code: JsonRpcErrorCode,
-    message: string,
-    data?: unknown
-): MCPError {
-    return { code, message, data };
-}
+McpPrompt
+├── name: string
+└── arguments?: McpPromptArgument[]
+    ├── name: string
+    └── required?: boolean
 ```
 
 ## Best Practices
 
-### 1. Validate Method Names
+### 1. Use Type Guards
 
 ```typescript
-const VALID_METHODS = [
-    'initialize',
-    'tools/list',
-    'tools/call',
-    'resources/list',
-    'resources/read',
-    'prompts/list',
-    'prompts/get'
-] as const;
-
-type ValidMethod = typeof VALID_METHODS[number];
-
-function isValidMethod(method: string): method is ValidMethod {
-    return VALID_METHODS.includes(method as ValidMethod);
+// Always check content type before accessing properties
+if (content.type === 'text' && content.text) {
+    console.log(content.text);
 }
 ```
 
-### 2. Use Discriminated Unions
+### 2. Provide Complete Schemas
 
 ```typescript
-type MCPMessage = 
-    | { type: 'request'; data: MCPRequest }
-    | { type: 'response'; data: MCPResponse }
-    | { type: 'notification'; data: MCPNotification };
+// Good - complete schema
+inputSchema: {
+    type: 'object',
+    properties: {
+        prompt: { 
+            type: 'string',
+            description: 'The prompt to analyze'
+        }
+    },
+    required: ['prompt'],
+    additionalProperties: false
+}
+
+// Bad - minimal schema
+inputSchema: { type: 'object' }
 ```
 
-### 3. Type-Safe Method Handlers
+### 3. Handle Optional Fields
 
 ```typescript
-type MethodHandler<T extends MCPRequest, R extends MCPResponse> = 
-    (request: T) => Promise<R>;
+// Always check optional fields
+const title = tool.title || tool.name;
+const isReadOnly = tool.annotations?.readOnlyHint ?? false;
+```
 
-const handlers: Record<string, MethodHandler<any, any>> = {
-    'tools/list': handleToolsList,
-    'tools/call': handleToolsCall,
-    // ...
-};
+### 4. Use Consistent Naming
+
+```typescript
+// All types prefixed with Mcp
+type ToolResult = McpToolsCallResult;  // Good
+type ToolResult = ToolsCallResult;     // Bad - missing prefix
 ```
 
 ## Related Documentation
 
-- [MCP Protocol Spec](https://modelcontextprotocol.io/docs) - Official specification
 - [Transport Types]({{ site.baseurl }}/developers/src/types/transport-types/) - Transport layer types
-- [Types Overview]({{ site.baseurl }}/developers/src/types/overview/) - Type system overview
-- [Protocol Guide]({{ site.baseurl }}/developers/protocol/) - MCP implementation guide
+- [AIRS Types]({{ site.baseurl }}/developers/src/types/airs-types/) - AIRS API types
+- [Tools Module]({{ site.baseurl }}/developers/src/tools/overview/) - Tool implementation
+- [Resources Module]({{ site.baseurl }}/developers/src/resources/overview/) - Resource implementation
+- [Prompts Module]({{ site.baseurl }}/developers/src/prompts/overview/) - Prompt implementation

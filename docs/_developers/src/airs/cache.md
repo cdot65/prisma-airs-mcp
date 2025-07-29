@@ -5,11 +5,9 @@ permalink: /developers/src/airs/cache/
 category: developers
 ---
 
-# AIRS Cache Module (src/airs/cache.ts)
-
-The cache module implements an in-memory Least Recently Used (LRU) cache for AIRS API responses. It provides performance
+The cache module implements an in-memory TTL-based cache for AIRS API responses. It provides performance
 optimization by storing and reusing scan results for identical requests, reducing API calls and improving response
-times.
+times. The cache evicts entries based on expiration time when space is needed.
 
 ## Overview
 
@@ -17,36 +15,36 @@ The `PrismaAirsCache` class provides:
 
 - Content-based cache key generation for deterministic caching
 - Configurable time-to-live (TTL) for cache entries
-- Maximum size limits to control memory usage
-- Cache statistics for monitoring performance
-- Thread-safe operations
+- Maximum size limits (in bytes) to control memory usage
+- Cache statistics (size, count, enabled status)
+- Automatic eviction when size limit is reached
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │           PrismaAirsCache               │
 │                                         │
-│  ┌───────────────────────────────────┐ │
-│  │      Cache Storage                 │ │
-│  │  Map<string, CacheEntry>          │ │
-│  │  • Key: Content hash              │ │
-│  │  • Value: Response + metadata     │ │
-│  └───────────────────────────────────┘ │
+│  ┌───────────────────────────────────┐  │
+│  │      Cache Storage                │  │
+│  │  Map<string, CacheEntry>          │  │
+│  │  • Key: Content hash              │  │
+│  │  • Value: Response + metadata     │  │
+│  └───────────────────────────────────┘  │
 │                                         │
-│  ┌───────────────────────────────────┐ │
-│  │      LRU Management                │ │
-│  │  • Access tracking                 │ │
-│  │  • Eviction policy                 │ │
-│  │  • Size limits                    │ │
-│  └───────────────────────────────────┘ │
+│  ┌───────────────────────────────────┐  │
+│  │      Size Management              │  │
+│  │  • Size estimation                │  │
+│  │  • Eviction by expiration         │  │
+│  │  • Byte-based limits              │  │
+│  └───────────────────────────────────┘  │
 │                                         │
-│  ┌───────────────────────────────────┐ │
-│  │      Statistics                    │ │
-│  │  • Hit/miss counters               │ │
-│  │  • Hit rate calculation            │ │
-│  │  • Size tracking                   │ │
-│  └───────────────────────────────────┘ │
+│  ┌───────────────────────────────────┐  │
+│  │      Statistics                   │  │
+│  │  • Current size (bytes)           │  │
+│  │  • Entry count                    │  │
+│  │  • Enabled status                 │  │
+│  └───────────────────────────────────┘  │
 └─────────────────────────────────────────┘
 ```
 
@@ -54,10 +52,9 @@ The `PrismaAirsCache` class provides:
 
 ```typescript
 interface CacheEntry<T> {
-    data: T;                    // Cached response data
-    timestamp: number;          // Creation timestamp
-    lastAccessed: number;       // Last access timestamp
-    hits: number;              // Access count
+    data: T;          // Cached response data
+    expiresAt: number; // Expiration timestamp (Date.now() + ttl * 1000)
+    size: number;      // Estimated size in bytes
 }
 ```
 
@@ -65,69 +62,67 @@ interface CacheEntry<T> {
 
 ### Content-Based Hashing
 
-The cache uses a deterministic key generation algorithm that ignores transaction IDs:
+The cache uses static methods for deterministic key generation:
 
 ```typescript
-generateScanKey(request: ScanSyncRequest): string {
-    const normalized = {
-        request: request.request.map(req => ({
-            prompt: req.prompt || '',
-            response: req.response || '',
-            context: req.context || '',
-            profile_name: req.profile_name || 'default',
-        })),
+static generateScanKey(method: string, data: unknown): string {
+    // Only hash the content and profile, not the tr_id or metadata
+    const scanData = data as { ai_profile: unknown; contents: unknown };
+    const cacheableData = {
+        profile: scanData.ai_profile,
+        contents: scanData.contents,
     };
+    const hash = this.simpleHash(JSON.stringify(cacheableData));
+    return `scan:${method}:${hash}`;
+}
 
-    const content = JSON.stringify(normalized, Object.keys(normalized).sort());
-    return crypto.createHash('sha256').update(content).digest('hex');
+static generateResultKey(type: string, ids: string[]): string {
+    return `${type}:${ids.sort().join(',')}`;
 }
 ```
 
 **Key Properties:**
 
-- Same content always generates the same key
-- Transaction IDs are excluded from hashing
-- Order-independent for object properties
-- Profile names are included in the hash
+- Uses a simple hash function (not crypto hash)
+- Includes method/type prefix in the key
+- For scans: hashes profile and contents only
+- For results: concatenates sorted IDs
 
 ### Example Key Generation
 
 ```typescript
-// These requests generate the SAME cache key:
-const request1 = {
-    tr_id: 'transaction_123',
-    request: [{ prompt: 'Hello', profile_name: 'default' }]
+// Scan key generation
+const scanData = {
+    ai_profile: { name: 'default' },
+    contents: [{ text: 'Hello world' }],
+    tr_id: 'transaction_123'  // Ignored in key generation
 };
 
-const request2 = {
-    tr_id: 'transaction_456',  // Different tr_id
-    request: [{ prompt: 'Hello', profile_name: 'default' }]
-};
+const key = PrismaAirsCache.generateScanKey('sync', scanData);
+// Returns: "scan:sync:abc123" (where abc123 is the hash)
 
-// These requests generate DIFFERENT cache keys:
-const request3 = {
-    tr_id: 'transaction_789',
-    request: [{ prompt: 'Hello', profile_name: 'strict' }]  // Different profile
-};
+// Result key generation
+const resultKey = PrismaAirsCache.generateResultKey('scan-results', ['scan_123', 'scan_456']);
+// Returns: "scan-results:scan_123,scan_456"
 ```
 
 ## API Methods
 
-### constructor(options)
+### constructor(config)
 
-Creates a new cache instance with configuration options.
+Creates a new cache instance with configuration.
 
 ```typescript
-constructor(options: CacheOptions = {})
+constructor(config: AirsCacheConfig)
 ```
 
-**Options:**
+**Configuration:**
 
 ```typescript
-interface CacheOptions {
-    ttlSeconds?: number;      // Time-to-live in seconds (default: 300)
-    maxSize?: number;         // Maximum entries (default: 1000)
-    cleanupInterval?: number; // Cleanup interval in ms (default: 60000)
+interface AirsCacheConfig {
+    enabled?: boolean;    // Whether caching is enabled (default: true)
+    ttlSeconds: number;   // Time-to-live in seconds
+    maxSize: number;      // Maximum cache size in bytes
 }
 ```
 
@@ -135,37 +130,38 @@ interface CacheOptions {
 
 ```typescript
 const cache = new PrismaAirsCache({
-    ttlSeconds: 600,        // 10 minute TTL
-    maxSize: 500,           // 500 entry limit
-    cleanupInterval: 30000  // Clean every 30 seconds
+    enabled: true,
+    ttlSeconds: 300,     // 5 minute TTL
+    maxSize: 10485760    // 10MB limit
 });
 ```
 
-### set(key, data)
+### set(key, data, ttlOverride?)
 
 Stores data in the cache with automatic eviction if needed.
 
 ```typescript
-set(key: string, data: T): void
+set<T>(key: string, data: T, ttlOverride?: number): void
 ```
 
 **Parameters:**
 
-- `key: string` - Cache key (typically from generateScanKey)
+- `key: string` - Cache key
 - `data: T` - Data to cache
+- `ttlOverride?: number` - Optional TTL override in seconds
 
 **Behavior:**
 
-- Evicts LRU entry if cache is full
-- Updates existing entries
-- Tracks storage timestamp
+- Evicts oldest entries by expiration time if size limit exceeded
+- Deletes existing entry before adding new one
+- Estimates size using JSON serialization
 
 ### get(key)
 
 Retrieves data from cache if valid.
 
 ```typescript
-get(key: string): T | undefined
+get<T>(key: string): T | undefined
 ```
 
 **Parameters:**
@@ -174,30 +170,14 @@ get(key: string): T | undefined
 
 **Returns:**
 
-- `T` - Cached data if found and valid
-- `undefined` - If not found or expired
+- `T` - Cached data if found and not expired
+- `undefined` - If not found, expired, or cache disabled
 
 **Behavior:**
 
-- Updates last accessed time
-- Increments hit counter
-- Returns undefined for expired entries
-
-### has(key)
-
-Checks if a valid entry exists without updating access time.
-
-```typescript
-has(key: string): boolean
-```
-
-**Parameters:**
-
-- `key: string` - Cache key to check
-
-**Returns:**
-
-- `boolean` - True if valid entry exists
+- Checks if cache is enabled
+- Deletes expired entries automatically
+- Logs cache hits for debugging
 
 ### delete(key)
 
@@ -233,31 +213,44 @@ console.log(cache.size()); // 0
 
 ### getStats()
 
-Returns cache performance statistics.
+Returns cache statistics.
 
 ```typescript
-getStats(): CacheStats
+getStats(): {
+    size: number;
+    count: number;
+    enabled: boolean;
+}
 ```
 
 **Returns:**
 
-```typescript
-interface CacheStats {
-    hits: number;          // Total cache hits
-    misses: number;        // Total cache misses
-    hitRate: number;       // Hit rate percentage (0-100)
-    size: number;          // Current entry count
-    evictions: number;     // Total evictions
-    expirations: number;   // Total expirations
-}
-```
+- `size: number` - Current cache size in bytes
+- `count: number` - Number of cached entries
+- `enabled: boolean` - Whether cache is enabled
 
 **Example:**
 
 ```typescript
 const stats = cache.getStats();
-console.log(`Hit rate: ${stats.hitRate.toFixed(2)}%`);
-console.log(`Cache size: ${stats.size}/${cache['maxSize']}`);
+console.log(`Cache size: ${stats.size} bytes`);
+console.log(`Entry count: ${stats.count}`);
+console.log(`Enabled: ${stats.enabled}`);
+```
+
+### destroy()
+
+Destroys the cache and cleans up resources.
+
+```typescript
+destroy(): void
+```
+
+**Usage:**
+
+```typescript
+// Clean up cache when shutting down
+cache.destroy();
 ```
 
 ## Cache Behavior
@@ -267,60 +260,50 @@ console.log(`Cache size: ${stats.size}/${cache['maxSize']}`);
 Entries expire after the configured TTL:
 
 ```typescript
-private isExpired(entry: CacheEntry<T>): boolean {
-    return Date.now() - entry.timestamp > this.ttlMs;
+// Check if expired
+if (Date.now() > entry.expiresAt) {
+    this.delete(key);
+    return undefined;
 }
 ```
 
-### LRU Eviction
+### Size-Based Eviction
 
-When cache is full, least recently used entries are removed:
+When cache size limit is reached, oldest entries by expiration time are removed:
 
 ```typescript
-private evictLRU(): void {
-    let lruKey: string | null = null;
-    let lruTime = Infinity;
+private evictOldest(): void {
+    const sortedEntries = Array.from(this.cache.entries()).sort(
+        ([, a], [, b]) => a.expiresAt - b.expiresAt,
+    );
 
-    for (const [key, entry] of this.cache.entries()) {
-        if (entry.lastAccessed < lruTime) {
-            lruTime = entry.lastAccessed;
-            lruKey = key;
+    for (const [key] of sortedEntries) {
+        if (this.currentSize <= this.config.maxSize * 0.9) {
+            break;
         }
-    }
 
-    if (lruKey) {
-        this.cache.delete(lruKey);
-        this.stats.evictions++;
+        this.delete(key);
     }
 }
 ```
 
-### Automatic Cleanup
+### No Automatic Cleanup
 
-Background cleanup removes expired entries:
-
-```typescript
-private startCleanupTimer(): void {
-    this.cleanupTimer = setInterval(() => {
-        for (const [key, entry] of this.cache.entries()) {
-            if (this.isExpired(entry)) {
-                this.cache.delete(key);
-                this.stats.expirations++;
-            }
-        }
-    }, this.cleanupInterval);
-}
-```
+The cache does not have a background cleanup timer. Expired entries are removed lazily when accessed via `get()` method.
 
 ## Usage Patterns
 
 ### Basic Caching
 
 ```typescript
-const cache = new PrismaAirsCache();
+const cache = new PrismaAirsCache({
+    enabled: true,
+    ttlSeconds: 300,
+    maxSize: 10485760  // 10MB
+});
 
-// Generate cache key
-const key = cache.generateScanKey(request);
+// Generate cache key using static method
+const key = PrismaAirsCache.generateScanKey('sync', scanData);
 
 // Check cache first
 const cached = cache.get(key);
@@ -339,13 +322,17 @@ return result;
 
 ### With Enhanced Client
 
-The enhanced AIRS client uses the cache automatically:
+The enhanced AIRS client (in index.ts) uses the cache automatically:
 
 ```typescript
-// Cache is integrated in the enhanced client
-const client = new PrismaAIRSClientWithCache(baseClient, {
-    cache: new PrismaAirsCache({ ttlSeconds: 600 })
+// Cache is configured when creating enhanced client
+const cache = new PrismaAirsCache({
+    enabled: true,
+    ttlSeconds: 600,
+    maxSize: 10485760
 });
+
+const client = createEnhancedClient(baseClient, cache);
 
 // First call - cache miss, makes API request
 const result1 = await client.scanSync(request);
@@ -354,85 +341,65 @@ const result1 = await client.scanSync(request);
 const result2 = await client.scanSync(request);
 ```
 
-### Cache Bypass
-
-```typescript
-// Force fresh API call
-const freshResult = await client.scanSync(request, { 
-    bypassCache: true 
-});
-```
-
 ## Performance Optimization
 
 ### Memory Management
 
-1. **Size Limits**: Configure maxSize based on available memory
+1. **Size Limits**: Configure maxSize in bytes based on available memory
 2. **TTL Tuning**: Balance freshness vs. performance
-3. **Cleanup Interval**: Adjust based on traffic patterns
+3. **Eviction**: Automatic when size limit is reached (90% threshold)
 
 ### Cache Sizing Guidelines
 
 ```typescript
 // High-traffic production
 const cache = new PrismaAirsCache({
-    ttlSeconds: 300,     // 5 minutes
-    maxSize: 10000,      // 10k entries
+    enabled: true,
+    ttlSeconds: 300,      // 5 minutes
+    maxSize: 104857600    // 100MB
 });
 
 // Low-traffic development
 const cache = new PrismaAirsCache({
-    ttlSeconds: 3600,    // 1 hour
-    maxSize: 100,        // 100 entries
+    enabled: true,
+    ttlSeconds: 3600,     // 1 hour
+    maxSize: 10485760     // 10MB
 });
 ```
 
-### Hit Rate Optimization
+### Cache Monitoring
 
-Monitor and optimize cache hit rates:
+Monitor cache usage:
 
 ```typescript
 setInterval(() => {
     const stats = cache.getStats();
-    if (stats.hitRate < 50) {
-        logger.warn('Low cache hit rate', stats);
-        // Consider increasing TTL or cache size
-    }
+    logger.info('Cache stats', {
+        sizeBytes: stats.size,
+        entries: stats.count,
+        enabled: stats.enabled,
+        utilization: ((stats.size / maxSize) * 100).toFixed(2) + '%'
+    });
 }, 60000);
 ```
 
 ## Cache Key Examples
 
-### Simple Prompt Scan
-
 ```typescript
-const request = {
-    tr_id: 'scan_123',
-    request: [{
-        prompt: 'Check this text',
-        profile_name: 'default'
-    }]
+// For scan requests - uses static method
+const scanData = {
+    ai_profile: { name: 'default', version: '1.0' },
+    contents: [{ text: 'User input to scan' }]
 };
+const scanKey = PrismaAirsCache.generateScanKey('sync', scanData);
+// Returns: "scan:sync:abc123"
 
-// Cache key based on: prompt + profile_name
-const key = cache.generateScanKey(request);
-```
-
-### Complex Multi-Part Scan
-
-```typescript
-const request = {
-    tr_id: 'scan_456',
-    request: [{
-        prompt: 'User question',
-        response: 'AI response',
-        context: 'Previous conversation',
-        profile_name: 'strict'
-    }]
-};
-
-// Cache key based on: prompt + response + context + profile_name
-const key = cache.generateScanKey(request);
+// For result requests - uses static method  
+const resultKey = PrismaAirsCache.generateResultKey(
+    'scan-results', 
+    ['scan_123', 'scan_456']
+);
+// Returns: "scan-results:scan_123,scan_456"
 ```
 
 ## Monitoring and Debugging
@@ -444,26 +411,25 @@ function logCacheMetrics(cache: PrismaAirsCache) {
     const stats = cache.getStats();
     
     logger.info('Cache metrics', {
-        hitRate: `${stats.hitRate.toFixed(2)}%`,
-        totalRequests: stats.hits + stats.misses,
-        cacheSize: stats.size,
-        evictions: stats.evictions,
-        expirations: stats.expirations
+        sizeBytes: stats.size,
+        entryCount: stats.count,
+        enabled: stats.enabled,
+        sizeMB: (stats.size / 1048576).toFixed(2)
     });
 }
 ```
 
 ### Debug Logging
 
-```typescript
-// Log cache operations
-cache.on('hit', (key) => {
-    logger.debug('Cache hit', { key: key.substring(0, 8) });
-});
+The cache logs debug information internally:
 
-cache.on('miss', (key) => {
-    logger.debug('Cache miss', { key: key.substring(0, 8) });
-});
+```typescript
+// Cache operations are logged automatically
+// Set LOG_LEVEL=debug to see cache hits/misses
+logger.debug('Cache hit', { key });
+logger.debug('Cache miss', { key });
+logger.debug('Cache set', { key, size, expiresAt });
+logger.debug('Cache delete', { key });
 ```
 
 ## Testing
@@ -475,11 +441,15 @@ describe('PrismaAirsCache', () => {
     let cache: PrismaAirsCache;
 
     beforeEach(() => {
-        cache = new PrismaAirsCache({ ttlSeconds: 60 });
+        cache = new PrismaAirsCache({ 
+            enabled: true,
+            ttlSeconds: 60,
+            maxSize: 1048576  // 1MB
+        });
     });
 
     afterEach(() => {
-        cache.clear();
+        cache.destroy();
     });
 
     it('should cache and retrieve data', () => {
@@ -491,13 +461,13 @@ describe('PrismaAirsCache', () => {
     });
 
     it('should generate consistent keys', () => {
-        const request1 = createTestRequest('123');
-        const request2 = createTestRequest('456');
+        const data1 = { ai_profile: 'default', contents: ['test'] };
+        const data2 = { ai_profile: 'default', contents: ['test'] };
 
-        const key1 = cache.generateScanKey(request1);
-        const key2 = cache.generateScanKey(request2);
+        const key1 = PrismaAirsCache.generateScanKey('sync', data1);
+        const key2 = PrismaAirsCache.generateScanKey('sync', data2);
 
-        expect(key1).toBe(key2); // Same content, different tr_id
+        expect(key1).toBe(key2); // Same content
     });
 });
 ```
@@ -506,16 +476,29 @@ describe('PrismaAirsCache', () => {
 
 ```typescript
 it('should improve performance with caching', async () => {
-    const client = new PrismaAIRSClientWithCache(mockClient, {
-        cache: new PrismaAirsCache()
+    const cache = new PrismaAirsCache({
+        enabled: true,
+        ttlSeconds: 300,
+        maxSize: 10485760
     });
 
+    // Mock the enhanced client behavior
+    const cachedScan = async (request) => {
+        const key = PrismaAirsCache.generateScanKey('sync', request);
+        const cached = cache.get(key);
+        if (cached) return cached;
+        
+        const result = await mockClient.scanSync(request);
+        cache.set(key, result);
+        return result;
+    };
+
     const start1 = Date.now();
-    await client.scanSync(request); // Cache miss
+    await cachedScan(request); // Cache miss
     const time1 = Date.now() - start1;
 
     const start2 = Date.now();
-    await client.scanSync(request); // Cache hit
+    await cachedScan(request); // Cache hit
     const time2 = Date.now() - start2;
 
     expect(time2).toBeLessThan(time1 / 10); // 10x faster
@@ -528,13 +511,25 @@ it('should improve performance with caching', async () => {
 
 ```typescript
 // Interactive applications - shorter TTL
-new PrismaAirsCache({ ttlSeconds: 60 });
+new PrismaAirsCache({ 
+    enabled: true,
+    ttlSeconds: 60,
+    maxSize: 10485760  // 10MB
+});
 
 // Batch processing - longer TTL
-new PrismaAirsCache({ ttlSeconds: 3600 });
+new PrismaAirsCache({ 
+    enabled: true,
+    ttlSeconds: 3600,
+    maxSize: 52428800  // 50MB
+});
 
-// High-volume - larger cache
-new PrismaAirsCache({ maxSize: 10000 });
+// Development - disable cache
+new PrismaAirsCache({ 
+    enabled: false,
+    ttlSeconds: 0,
+    maxSize: 0
+});
 ```
 
 ### 2. Monitor Cache Performance
@@ -543,8 +538,9 @@ new PrismaAirsCache({ maxSize: 10000 });
 // Regular monitoring
 setInterval(() => {
     const stats = cache.getStats();
-    metrics.gauge('cache.hit_rate', stats.hitRate);
-    metrics.gauge('cache.size', stats.size);
+    metrics.gauge('cache.size_bytes', stats.size);
+    metrics.gauge('cache.entry_count', stats.count);
+    metrics.gauge('cache.enabled', stats.enabled ? 1 : 0);
 }, 60000);
 ```
 

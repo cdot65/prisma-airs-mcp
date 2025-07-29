@@ -8,7 +8,7 @@ category: developers
 # AIRS Factory Module (src/airs/factory.ts)
 
 The factory module implements a singleton pattern for managing AIRS client instances. It ensures only one client
-instance exists per configuration, provides clean lifecycle management, and supports test isolation through instance
+instance exists, provides clean lifecycle management, and supports test isolation through instance
 reset capabilities.
 
 ## Overview
@@ -31,9 +31,7 @@ The factory module provides:
 ├─────────────────────────────────────────┤
 │         Singleton Instance              │
 │     ┌─────────────────────────┐        │
-│     │  airsClient?: Client    │        │
-│     │  cache?: Cache          │        │
-│     │  rateLimiter?: Limiter  │        │
+│     │  clientInstance?: EnhancedPrismaAirsClient │
 │     └─────────────────────────┘        │
 ├─────────────────────────────────────────┤
 │           Public API                    │
@@ -57,14 +55,23 @@ The factory module provides:
 The factory ensures only one client instance exists:
 
 ```typescript
-let airsClient: PrismaAIRSClientWithCache | null = null;
+let clientInstance: EnhancedPrismaAirsClient | null = null;
 
-export function getAirsClient(): PrismaAIRSClientWithCache {
-    if (!airsClient) {
-        // Create new instance
-        airsClient = createClient();
+export function getAirsClient(): EnhancedPrismaAirsClient {
+    if (!clientInstance) {
+        const config = getConfig();
+        
+        clientInstance = new EnhancedPrismaAirsClient({
+            apiUrl: config.airs.apiUrl,
+            apiKey: config.airs.apiKey,
+            timeout: config.airs.timeout,
+            maxRetries: config.airs.retryAttempts,
+            retryDelay: config.airs.retryDelay,
+            cache: config.cache.enabled ? {...} : undefined,
+            rateLimiter: config.rateLimit.enabled ? {...} : undefined,
+        });
     }
-    return airsClient;
+    return clientInstance;
 }
 ```
 
@@ -82,12 +89,12 @@ export function getAirsClient(): PrismaAIRSClientWithCache {
 Gets or creates the singleton AIRS client instance.
 
 ```typescript
-export function getAirsClient(): PrismaAIRSClientWithCache
+export function getAirsClient(): EnhancedPrismaAirsClient
 ```
 
 **Returns:**
 
-- `PrismaAIRSClientWithCache` - Enhanced client with caching and rate limiting
+- `EnhancedPrismaAirsClient` - Enhanced client with caching and rate limiting
 
 **Behavior:**
 
@@ -119,9 +126,10 @@ export function resetAirsClient(): void
 
 **Behavior:**
 
-- Clears the cache if it exists
-- Resets rate limiter statistics
-- Destroys the client instance
+- Calls `clearCache()` method on the client instance
+- Calls `resetRateLimits()` method on the client instance
+- Sets client instance to null
+- Logs the reset action
 - Next `getAirsClient()` call creates new instance
 
 **Example:**
@@ -145,73 +153,53 @@ console.log(client === newClient); // false
 
 ### Configuration Loading
 
-The factory loads configuration from environment:
+The factory loads configuration from environment and creates the client directly:
 
 ```typescript
-function createClient(): PrismaAIRSClientWithCache {
-    const config = getConfig();
-    
-    // Validate required configuration
-    if (!config.airs.apiKey) {
-        throw new Error('AIRS_API_KEY is required');
+export function getAirsClient(): EnhancedPrismaAirsClient {
+    if (!clientInstance) {
+        const config = getConfig();
+
+        clientInstance = new EnhancedPrismaAirsClient({
+            apiUrl: config.airs.apiUrl,
+            apiKey: config.airs.apiKey,
+            timeout: config.airs.timeout,
+            maxRetries: config.airs.retryAttempts,
+            retryDelay: config.airs.retryDelay,
+            cache: config.cache.enabled
+                ? {
+                      ttlSeconds: config.cache.ttlSeconds,
+                      maxSize: config.cache.maxSize,
+                      enabled: config.cache.enabled,
+                  }
+                : undefined,
+            rateLimiter: config.rateLimit.enabled
+                ? {
+                      maxRequests: config.rateLimit.maxRequests,
+                      windowMs: config.rateLimit.windowMs,
+                      enabled: config.rateLimit.enabled,
+                  }
+                : undefined,
+        });
+
+        logger.info('AIRS client instance created', {
+            apiUrl: config.airs.apiUrl,
+            cacheEnabled: config.cache.enabled,
+            rateLimiterEnabled: config.rateLimit.enabled,
+        });
     }
 
-    // Create base client
-    const baseClient = new PrismaAIRSClient({
-        apiKey: config.airs.apiKey,
-        baseUrl: config.airs.apiUrl,
-        timeout: config.airs.timeout,
-        maxRetries: config.airs.maxRetries,
-    });
-
-    // Create enhanced client with optional features
-    return new PrismaAIRSClientWithCache(baseClient, {
-        cache: config.cache.enabled ? createCache(config) : undefined,
-        rateLimiter: config.rateLimit.enabled ? createRateLimiter(config) : undefined,
-    });
+    return clientInstance;
 }
 ```
 
-### Cache Creation
+### Configuration Structure
 
-Cache is created based on configuration:
+The `EnhancedPrismaAirsClient` accepts all configuration in its constructor:
 
-```typescript
-function createCache(config: Config): PrismaAirsCache | undefined {
-    if (!config.cache.enabled) {
-        return undefined;
-    }
-
-    return new PrismaAirsCache({
-        ttlSeconds: config.cache.ttlSeconds,
-        maxSize: config.cache.maxSize,
-    });
-}
-```
-
-### Rate Limiter Creation
-
-Rate limiter is configured per operation:
-
-```typescript
-function createRateLimiter(config: Config): TokenBucketRateLimiter | undefined {
-    if (!config.rateLimit.enabled) {
-        return undefined;
-    }
-
-    return new TokenBucketRateLimiter({
-        enabled: true,
-        limits: {
-            scanSync: {
-                maxTokens: config.rateLimit.maxRequests,
-                refillRate: config.rateLimit.maxRequests,
-                refillInterval: config.rateLimit.windowMs,
-            },
-            // ... other operations
-        },
-    });
-}
-```
+- **API Configuration**: URL, key, timeout, retry settings
+- **Cache Configuration**: Passed as object if enabled
+- **Rate Limiter Configuration**: Passed as object if enabled
 
 ## Usage Patterns
 
@@ -387,12 +375,13 @@ RATE_LIMIT_ENABLED=false
 ```
 1. Application starts
 2. First API call triggers getAirsClient()
-3. Factory loads configuration
-4. Creates base client with API credentials
-5. Wraps with cache (if enabled)
-6. Wraps with rate limiter (if enabled)
-7. Returns enhanced client
-8. Subsequent calls return same instance
+3. Factory loads configuration via getConfig()
+4. Creates EnhancedPrismaAirsClient with all config
+5. Client internally sets up cache (if enabled)
+6. Client internally sets up rate limiter (if enabled)
+7. Logs creation details
+8. Returns enhanced client instance
+9. Subsequent calls return same instance
 ```
 
 ### Cleanup Flow
@@ -400,10 +389,11 @@ RATE_LIMIT_ENABLED=false
 ```
 1. Test completes or app shuts down
 2. resetAirsClient() called
-3. Cache cleared (if exists)
-4. Rate limiter reset (if exists)
-5. Client instance destroyed
-6. Next call creates fresh instance
+3. Calls clearCache() on client instance
+4. Calls resetRateLimits() on client instance
+5. Sets clientInstance to null
+6. Logs reset action
+7. Next getAirsClient() call creates fresh instance
 ```
 
 ## Error Handling
@@ -414,9 +404,9 @@ RATE_LIMIT_ENABLED=false
 try {
     const client = getAirsClient();
 } catch (error) {
-    if (error.message.includes('AIRS_API_KEY')) {
-        console.error('Missing API key configuration');
-    }
+    // The factory will use config defaults, but the client
+    // may throw errors if required fields are missing
+    logger.error('Failed to create AIRS client', error);
 }
 ```
 
@@ -494,12 +484,15 @@ const client = getAirsClient();
 export function getClientStatus() {
     try {
         const client = getAirsClient();
+        const config = getConfig();
+        
         return {
             initialized: true,
-            cacheEnabled: !!client.cache,
-            rateLimiterEnabled: !!client.rateLimiter,
-            cacheStats: client.cache?.getStats(),
-            rateLimitStats: client.rateLimiter?.getStats(),
+            cacheEnabled: config.cache.enabled,
+            rateLimiterEnabled: config.rateLimit.enabled,
+            // Client has methods to get stats
+            cacheStats: client.getCacheStats?.(),
+            rateLimitStats: client.getRateLimitStats?.(),
         };
     } catch (error) {
         return {
@@ -540,10 +533,11 @@ export async function checkAirsHealth() {
 
 ### Common Issues
 
-1. **"AIRS_API_KEY is required" Error**
+1. **Missing API Key**
     - Set the AIRS_API_KEY environment variable
     - Check .env file is loaded
     - Verify configuration module is working
+    - The factory will create client but API calls may fail
 
 2. **Stale Client Instance**
     - Call resetAirsClient() to force recreation
@@ -558,22 +552,29 @@ export async function checkAirsHealth() {
 ### Debug Logging
 
 ```typescript
-// Add debug logging to factory
-export function getAirsClient(): PrismaAIRSClientWithCache {
-    logger.debug('Getting AIRS client instance', {
-        exists: !!airsClient,
-        config: {
-            cacheEnabled: getConfig().cache.enabled,
-            rateLimitEnabled: getConfig().rateLimit.enabled,
-        }
-    });
-    
-    if (!airsClient) {
-        logger.info('Creating new AIRS client instance');
-        airsClient = createClient();
+// Debug logging is built into the factory
+export function getAirsClient(): EnhancedPrismaAirsClient {
+    if (!clientInstance) {
+        const config = getConfig();
+        
+        // ... create client ...
+        
+        logger.info('AIRS client instance created', {
+            apiUrl: config.airs.apiUrl,
+            cacheEnabled: config.cache.enabled,
+            rateLimiterEnabled: config.rateLimit.enabled,
+        });
     }
     
-    return airsClient;
+    return clientInstance;
+}
+
+// Reset also logs
+export function resetAirsClient(): void {
+    if (clientInstance) {
+        // ... reset logic ...
+        logger.info('AIRS client instance reset');
+    }
 }
 ```
 

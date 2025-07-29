@@ -7,13 +7,13 @@ category: developers
 
 # Enhanced AIRS Client Module (src/airs/index.ts)
 
-The enhanced AIRS client module wraps the base client with additional capabilities including response caching and rate
-limiting. It provides a transparent layer that improves performance and prevents API quota exhaustion while maintaining
-the same interface as the base client.
+The enhanced AIRS client module provides an enhanced wrapper around the base Prisma AIRS API client, adding critical
+production features including response caching and rate limiting. It orchestrates the base client, cache, and rate
+limiter to provide a robust, production-ready interface.
 
 ## Overview
 
-The `PrismaAIRSClientWithCache` class provides:
+The `EnhancedPrismaAirsClient` class provides:
 
 - Transparent response caching for identical requests
 - Token bucket rate limiting for API quota management
@@ -25,7 +25,7 @@ The `PrismaAIRSClientWithCache` class provides:
 
 ```
 ┌─────────────────────────────────────────┐
-│    PrismaAIRSClientWithCache            │
+│    EnhancedPrismaAirsClient             │
 │                                         │
 │  ┌───────────────────────────────────┐ │
 │  │      Request Flow                  │ │
@@ -51,31 +51,32 @@ The `PrismaAIRSClientWithCache` class provides:
 ### Constructor
 
 ```typescript
-constructor(
-    client: PrismaAIRSClient,
-    options: {
-        cache?: PrismaAirsCache;
-        rateLimiter?: TokenBucketRateLimiter;
-    } = {}
-)
+constructor(config: AirsEnhancedClientConfig)
 ```
 
-**Parameters:**
+**Configuration:**
 
-- `client: PrismaAIRSClient` - Base AIRS client instance
-- `options.cache?: PrismaAirsCache` - Optional cache instance
-- `options.rateLimiter?: TokenBucketRateLimiter` - Optional rate limiter
+```typescript
+interface AirsEnhancedClientConfig {
+    apiUrl: string;
+    apiKey: string;
+    timeout?: number;
+    maxRetries?: number;
+    retryDelay?: number;
+    cache?: AirsCacheConfig;
+    rateLimiter?: AirsRateLimiterConfig;
+}
+```
 
 **Example:**
 
 ```typescript
-const enhancedClient = new PrismaAIRSClientWithCache(
-    baseClient,
-    {
-        cache: new PrismaAirsCache({ ttlSeconds: 300 }),
-        rateLimiter: new TokenBucketRateLimiter({ enabled: true })
-    }
-);
+const client = new EnhancedPrismaAirsClient({
+    apiUrl: 'https://api.airs.example.com',
+    apiKey: 'your-api-key',
+    cache: { ttlSeconds: 300, maxSize: 10485760, enabled: true },
+    rateLimiter: { maxRequests: 100, windowMs: 60000, enabled: true }
+});
 ```
 
 ## Enhanced Methods
@@ -86,21 +87,21 @@ Performs synchronous scanning with caching and rate limiting.
 
 ```typescript
 async scanSync(
-    request: ScanSyncRequest,
-    options?: { bypassCache?: boolean }
-): Promise<ScanSyncResponse>
+    request: AirsScanRequest,
+    options?: AirsRequestOptions
+): Promise<AirsScanResponse>
 ```
 
 **Parameters:**
 
-- `request: ScanSyncRequest` - Scan request
-- `options.bypassCache?: boolean` - Skip cache lookup
+- `request: AirsScanRequest` - Scan request
+- `options?: AirsRequestOptions` - Optional request options (headers, signal)
 
 **Flow:**
 
-1. Check rate limit availability
-2. Generate cache key from request
-3. Check cache (unless bypassed)
+1. Wait for rate limit availability (if rate limiter enabled)
+2. Generate cache key using static method
+3. Check cache for existing result
 4. Call base client on cache miss
 5. Cache successful response
 6. Return result
@@ -117,54 +118,65 @@ const result = await client.scanSync({
     }]
 });
 
-// Force fresh scan - bypass cache
-const freshResult = await client.scanSync(request, {
-    bypassCache: true
+// With custom options
+const result2 = await client.scanSync(request, {
+    headers: { 'x-custom-header': 'value' }
 });
 ```
 
-### scanAsync(request)
+### scanAsync(requests, options?)
 
 Initiates asynchronous scanning with rate limiting.
 
 ```typescript
-async scanAsync(request: ScanAsyncRequest): Promise<ScanAsyncResponse>
+async scanAsync(
+    requests: AirsAsyncScanObject[],
+    options?: AirsRequestOptions
+): Promise<AirsAsyncScanResponse>
 ```
 
 **Parameters:**
 
-- `request: ScanAsyncRequest` - Async scan request
+- `requests: AirsAsyncScanObject[]` - Array of async scan objects
+- `options?: AirsRequestOptions` - Optional request options
 
 **Note:** Async scans are not cached as they return scan IDs, not results.
 
 **Example:**
 
 ```typescript
-const response = await client.scanAsync({
-    requests: [
-        {
-            tr_id: 'batch_1',
-            request: [{ prompt: 'Content 1', profile_name: 'strict' }]
-        }
-    ]
-});
+const response = await client.scanAsync([
+    {
+        tr_id: 'batch_1',
+        request: [{ prompt: 'Content 1', profile_name: 'strict' }]
+    },
+    {
+        tr_id: 'batch_2',
+        request: [{ prompt: 'Content 2', profile_name: 'strict' }]
+    }
+]);
 
-console.log('Scan ID:', response.scan_id);
+// Response contains scan IDs for polling
+console.log('Scan IDs:', response.scan_ids);
 ```
 
-### getScanResults(scanIds)
+### getScanResults(scanIds, options?)
 
 Retrieves scan results with caching and rate limiting.
 
 ```typescript
-async getScanResults(scanIds: string[]): Promise<ScanResult[]>
+async getScanResults(
+    scanIds: string[],
+    options?: AirsRequestOptions
+): Promise<AirsScanIdResult[]>
 ```
 
 **Parameters:**
 
 - `scanIds: string[]` - Array of scan IDs
+- `options?: AirsRequestOptions` - Optional request options
 
-**Caching:** Results are cached by scan ID for completed scans.
+**Caching:** Results are only cached when ALL results have status 'complete'.
 
 **Example:**
 
@@ -175,85 +187,88 @@ const results = await client.getScanResults(['scan_123', 'scan_456']);
 const cachedResults = await client.getScanResults(['scan_123']);
 ```
 
-### getThreatReports(reportIds)
+### getThreatScanReports(reportIds, options?)
 
 Retrieves threat reports with caching and rate limiting.
 
 ```typescript
-async getThreatReports(reportIds: string[]): Promise<ThreatReport[]>
+async getThreatScanReports(
+    reportIds: string[],
+    options?: AirsRequestOptions
+): Promise<AirsThreatScanReportObject[]>
 ```
 
 **Parameters:**
 
 - `reportIds: string[]` - Array of report IDs
+- `options?: AirsRequestOptions` - Optional request options
 
 **Example:**
 
 ```typescript
-const reports = await client.getThreatReports(['report_abc']);
+const reports = await client.getThreatScanReports(['report_abc']);
 ```
 
 ## Cache Management
 
 ### Cache Key Generation
 
-The enhanced client uses content-based cache keys:
+The enhanced client uses static methods for cache key generation:
 
 ```typescript
 // For sync scans
-const cacheKey = this.cache.generateScanKey(request);
+const cacheKey = PrismaAirsCache.generateScanKey('sync', request);
 
 // For results/reports
-const cacheKey = `scan_results_${scanIds.sort().join('_')}`;
-const cacheKey = `threat_reports_${reportIds.sort().join('_')}`;
+const cacheKey = PrismaAirsCache.generateResultKey('scan-results', scanIds);
+const cacheKey = PrismaAirsCache.generateResultKey('threat-reports', reportIds);
 ```
 
 ### Cache Behavior
 
 1. **Hit**: Returns cached data immediately
 2. **Miss**: Calls base client and caches result
-3. **Bypass**: Skips cache lookup but still caches result
-4. **Error**: Errors are not cached
+3. **Error**: Errors are not cached
+4. **Complete Results**: Only complete scan results are cached
 
 ### Cache Statistics
 
 ```typescript
 const stats = client.getCacheStats();
-console.log(`Cache hit rate: ${stats.hitRate}%`);
-console.log(`Cache size: ${stats.size}`);
+if (stats) {
+    console.log(`Cache size: ${stats.size} bytes`);
+    console.log(`Entry count: ${stats.count}`);
+    console.log(`Enabled: ${stats.enabled}`);
+}
 ```
 
 ## Rate Limiting
 
 ### Rate Limit Checking
 
-Each method checks rate limits before proceeding:
+Each method waits for rate limit availability:
 
 ```typescript
-private checkRateLimit(operation: string): void {
-    if (this.rateLimiter && !this.rateLimiter.tryConsume(operation)) {
-        throw new AIRSAPIError(
-            'Rate limit exceeded. Please try again later.',
-            429,
-            'RATE_LIMIT_EXCEEDED'
-        );
-    }
+// Check rate limit
+if (this.rateLimiter) {
+    await this.rateLimiter.waitForLimit('scan');
 }
 ```
 
-### Rate Limit Operations
+### Rate Limit Keys
 
-- `scanSync`: Per sync scan request
-- `scanAsync`: Per async scan request
-- `getScanResults`: Per results retrieval
-- `getThreatReports`: Per reports retrieval
+- `scan`: For both sync and async scan requests
+- `results`: For scan results retrieval
+- `reports`: For threat report retrieval
 
-### Rate Limit Status
+### Rate Limiter Statistics
 
 ```typescript
-const status = client.getRateLimitStatus();
-console.log('Available tokens:', status.scanSync.available);
-console.log('Next refill:', status.scanSync.nextRefill);
+const stats = client.getRateLimiterStats();
+if (stats) {
+    console.log('Bucket count:', stats.bucketCount);
+    console.log('Enabled:', stats.enabled);
+}
 ```
 
 ## Usage Patterns
@@ -262,38 +277,39 @@ console.log('Next refill:', status.scanSync.nextRefill);
 
 ```typescript
 // Create enhanced client with all features
-const client = new PrismaAIRSClientWithCache(
-    new PrismaAIRSClient({ apiKey: 'your-key' }),
-    {
-        cache: new PrismaAirsCache({ ttlSeconds: 300 }),
-        rateLimiter: new TokenBucketRateLimiter({ enabled: true })
+const client = new EnhancedPrismaAirsClient({
+    apiUrl: 'https://api.airs.example.com',
+    apiKey: 'your-key',
+    cache: {
+        ttlSeconds: 300,
+        maxSize: 10485760,
+        enabled: true
+    },
+    rateLimiter: {
+        maxRequests: 100,
+        windowMs: 60000,
+        enabled: true
     }
-);
+});
 
-// Use like base client
+// Use just like base client
 const result = await client.scanSync(request);
 ```
 
-### Conditional Caching
+### Additional Methods
 
 ```typescript
-async function scanContent(content: string, useCache: boolean = true) {
-    const client = getAirsClient();
-    
-    const request = {
-        tr_id: generateId(),
-        request: [{
-            prompt: content,
-            profile_name: 'default'
-        }]
-    };
+// Clear the cache
+client.clearCache();
 
-    if (!useCache) {
-        return await client.scanSync(request, { bypassCache: true });
-    }
+// Reset rate limits
+client.resetRateLimits();
 
-    return await client.scanSync(request);
-}
+// Get cache statistics
+const cacheStats = client.getCacheStats();
+
+// Get rate limiter statistics
+const rateLimiterStats = client.getRateLimiterStats();
 ```
 
 ### Error Handling
@@ -302,12 +318,14 @@ async function scanContent(content: string, useCache: boolean = true) {
 try {
     const result = await client.scanSync(request);
 } catch (error) {
-    if (error.code === 'RATE_LIMIT_EXCEEDED') {
-        // Handle rate limiting
-        console.log('Rate limited, retry later');
-    } else if (error.status === 401) {
-        // Handle auth errors
-        console.log('Invalid API key');
+    if (error instanceof PrismaAirsApiError) {
+        if (error.statusCode === 429) {
+            // Rate limited by API (not local rate limiter)
+            console.log('API rate limit exceeded');
+        } else if (error.statusCode === 401) {
+            // Handle auth errors
+            console.log('Invalid API key');
+        }
     } else {
         // Handle other errors
         throw error;
@@ -321,17 +339,22 @@ try {
 // Log cache performance
 setInterval(() => {
     const stats = client.getCacheStats();
-    logger.info('Cache performance', {
-        hitRate: stats.hitRate,
-        size: stats.size,
-        evictions: stats.evictions
-    });
+    if (stats) {
+        logger.info('Cache performance', {
+            size: stats.size,
+            count: stats.count,
+            enabled: stats.enabled
+        });
+    }
 }, 60000);
 
-// Monitor rate limits
-const rateLimitStatus = client.getRateLimitStatus();
-if (rateLimitStatus.scanSync.available < 10) {
-    logger.warn('Low rate limit tokens', rateLimitStatus);
+// Monitor rate limiter
+const rateLimiterStats = client.getRateLimiterStats();
+if (rateLimiterStats) {
+    logger.info('Rate limiter status', {
+        bucketCount: rateLimiterStats.bucketCount,
+        enabled: rateLimiterStats.enabled
+    });
 }
 ```
 
@@ -341,90 +364,73 @@ if (rateLimitStatus.scanSync.available < 10) {
 
 ```typescript
 // Aggressive caching, moderate rate limits
-const client = new PrismaAIRSClientWithCache(
-    baseClient,
-    {
-        cache: new PrismaAirsCache({
-            ttlSeconds: 600,      // 10 minute cache
-            maxSize: 10000        // Large cache
-        }),
-        rateLimiter: new TokenBucketRateLimiter({
-            limits: {
-                scanSync: {
-                    maxTokens: 200,     // Burst capacity
-                    refillRate: 100,
-                    refillInterval: 60000
-                }
-            }
-        })
+const client = new EnhancedPrismaAirsClient({
+    apiUrl: config.apiUrl,
+    apiKey: config.apiKey,
+    cache: {
+        ttlSeconds: 600,      // 10 minute cache
+        maxSize: 104857600,   // 100MB cache
+        enabled: true
+    },
+    rateLimiter: {
+        maxRequests: 200,     // Higher limit
+        windowMs: 60000,      // Per minute
+        enabled: true
     }
-);
+});
 ```
 
 ### Conservative Setup
 
 ```typescript
 // Short cache, strict rate limits
-const client = new PrismaAIRSClientWithCache(
-    baseClient,
-    {
-        cache: new PrismaAirsCache({
-            ttlSeconds: 60,       // 1 minute cache
-            maxSize: 100          // Small cache
-        }),
-        rateLimiter: new TokenBucketRateLimiter({
-            limits: {
-                scanSync: {
-                    maxTokens: 50,
-                    refillRate: 50,
-                    refillInterval: 60000
-                }
-            }
-        })
+const client = new EnhancedPrismaAirsClient({
+    apiUrl: config.apiUrl,
+    apiKey: config.apiKey,
+    cache: {
+        ttlSeconds: 60,       // 1 minute cache
+        maxSize: 10485760,    // 10MB cache
+        enabled: true
+    },
+    rateLimiter: {
+        maxRequests: 50,      // Lower limit
+        windowMs: 60000,      // Per minute
+        enabled: true
     }
-);
+});
 ```
 
 ### No Enhancement Setup
 
 ```typescript
-// Direct base client usage
-const client = new PrismaAIRSClientWithCache(
-    baseClient,
-    {
-        // No cache or rate limiter
-    }
-);
+// Without cache or rate limiter
+const client = new EnhancedPrismaAirsClient({
+    apiUrl: config.apiUrl,
+    apiKey: config.apiKey
+    // No cache or rateLimiter config
+});
 ```
 
 ## Performance Metrics
 
-### Cache Effectiveness
+### Performance Monitoring
 
 ```typescript
-function analyzeCachePerformance(client: PrismaAIRSClientWithCache) {
-    const stats = client.getCacheStats();
+function monitorClientPerformance(client: EnhancedPrismaAirsClient) {
+    const cacheStats = client.getCacheStats();
+    const rateLimiterStats = client.getRateLimiterStats();
     
     return {
-        effectiveness: stats.hitRate,
-        memorySaved: stats.hits * AVG_RESPONSE_SIZE,
-        apiCallsSaved: stats.hits,
-        costSaved: stats.hits * API_CALL_COST
+        cache: {
+            enabled: cacheStats?.enabled || false,
+            sizeBytes: cacheStats?.size || 0,
+            entryCount: cacheStats?.count || 0
+        },
+        rateLimiter: {
+            enabled: rateLimiterStats?.enabled || false,
+            bucketCount: rateLimiterStats?.bucketCount || 0
+        }
     };
-}
-```
-
-### Rate Limit Utilization
-
-```typescript
-function analyzeRateLimitUsage(client: PrismaAIRSClientWithCache) {
-    const status = client.getRateLimitStatus();
-    
-    return Object.entries(status).map(([op, data]) => ({
-        operation: op,
-        utilization: ((data.max - data.available) / data.max) * 100,
-        rejected: data.rejected
-    }));
 }
 ```
 
@@ -433,39 +439,35 @@ function analyzeRateLimitUsage(client: PrismaAIRSClientWithCache) {
 ### Unit Tests
 
 ```typescript
-describe('PrismaAIRSClientWithCache', () => {
-    let client: PrismaAIRSClientWithCache;
-    let mockBaseClient: jest.Mocked<PrismaAIRSClient>;
-    let cache: PrismaAirsCache;
+describe('EnhancedPrismaAirsClient', () => {
+    let client: EnhancedPrismaAirsClient;
 
     beforeEach(() => {
-        mockBaseClient = createMockClient();
-        cache = new PrismaAirsCache({ ttlSeconds: 60 });
-        
-        client = new PrismaAIRSClientWithCache(mockBaseClient, {
-            cache
+        client = new EnhancedPrismaAirsClient({
+            apiUrl: 'https://test.api.com',
+            apiKey: 'test-key',
+            cache: {
+                ttlSeconds: 60,
+                maxSize: 1048576,
+                enabled: true
+            }
         });
     });
 
     it('should cache scan results', async () => {
         const request = createTestRequest();
         
+        // Mock the underlying HTTP call
+        jest.spyOn(client['client'], 'scanSync')
+            .mockResolvedValue(mockResponse);
+        
         // First call - cache miss
         await client.scanSync(request);
-        expect(mockBaseClient.scanSync).toHaveBeenCalledTimes(1);
+        expect(client['client'].scanSync).toHaveBeenCalledTimes(1);
 
         // Second call - cache hit
         await client.scanSync(request);
-        expect(mockBaseClient.scanSync).toHaveBeenCalledTimes(1);
-    });
-
-    it('should bypass cache when requested', async () => {
-        const request = createTestRequest();
-        
-        await client.scanSync(request);
-        await client.scanSync(request, { bypassCache: true });
-        
-        expect(mockBaseClient.scanSync).toHaveBeenCalledTimes(2);
+        expect(client['client'].scanSync).toHaveBeenCalledTimes(1);
     });
 });
 ```
@@ -474,25 +476,27 @@ describe('PrismaAIRSClientWithCache', () => {
 
 ```typescript
 it('should handle rate limiting gracefully', async () => {
-    const client = new PrismaAIRSClientWithCache(baseClient, {
-        rateLimiter: new TokenBucketRateLimiter({
-            limits: {
-                scanSync: {
-                    maxTokens: 2,
-                    refillRate: 1,
-                    refillInterval: 1000
-                }
-            }
-        })
+    const client = new EnhancedPrismaAirsClient({
+        apiUrl: 'https://test.api.com',
+        apiKey: 'test-key',
+        rateLimiter: {
+            maxRequests: 2,
+            windowMs: 1000,
+            enabled: true
+        }
     });
 
     // Use up tokens
     await client.scanSync(request1);
     await client.scanSync(request2);
 
-    // Should be rate limited
-    await expect(client.scanSync(request3))
-        .rejects.toThrow('Rate limit exceeded');
+    // Third request will wait for rate limit
+    const startTime = Date.now();
+    await client.scanSync(request3);
+    const elapsed = Date.now() - startTime;
+    
+    // Should have waited
+    expect(elapsed).toBeGreaterThan(900);
 });
 ```
 
@@ -507,12 +511,16 @@ import { getAirsClient } from './airs/factory';
 const client = getAirsClient(); // Properly configured
 ```
 
-### 2. Monitor Cache Hit Rate
+### 2. Monitor Cache Usage
 
 ```typescript
 // Track cache effectiveness
-if (client.getCacheStats().hitRate < 30) {
-    logger.warn('Low cache hit rate - consider adjusting TTL');
+const stats = client.getCacheStats();
+if (stats && stats.count > 0) {
+    logger.info('Cache usage', {
+        entries: stats.count,
+        sizeBytes: stats.size
+    });
 }
 ```
 
@@ -522,34 +530,36 @@ if (client.getCacheStats().hitRate < 30) {
 try {
     await client.scanSync(request);
 } catch (error) {
-    if (error.code === 'RATE_LIMIT_EXCEEDED') {
-        // Retry with backoff
-    } else if (error.status >= 500) {
-        // Server error - might be transient
-    } else {
-        // Client error - don't retry
+    if (error instanceof PrismaAirsApiError) {
+        if (error.statusCode === 429) {
+            // API rate limit - retry with backoff
+        } else if (error.statusCode >= 500) {
+            // Server error - might be transient
+        } else {
+            // Client error - don't retry
+        }
     }
 }
 ```
 
-### 4. Use Appropriate Cache TTL
+### 4. Clear Resources When Needed
 
 ```typescript
-// Short TTL for dynamic content
-const shortCache = new PrismaAirsCache({ ttlSeconds: 60 });
+// Clear cache when data changes
+client.clearCache();
 
-// Long TTL for stable content
-const longCache = new PrismaAirsCache({ ttlSeconds: 3600 });
+// Reset rate limits for testing
+client.resetRateLimits();
 ```
 
 ## Troubleshooting
 
 ### Cache Not Working
 
-1. **Check Cache Instance**: Ensure cache is provided to constructor
+1. **Check Configuration**: Ensure cache config is provided and enabled
 2. **Verify TTL**: Check if TTL is too short
 3. **Monitor Stats**: Use getCacheStats() to debug
-4. **Check Keys**: Verify cache key generation
+4. **Check Keys**: Verify cache key generation with static methods
 
 ### Rate Limiting Issues
 

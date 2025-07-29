@@ -5,15 +5,13 @@ permalink: /developers/src/airs/overview/
 category: developers
 ---
 
-# AIRS Integration Module Overview
-
 The AIRS module (`src/airs/`) provides the integration layer with Palo Alto Networks Prisma AI Runtime Security (AIRS)
 API. This module handles all communication with the AIRS service, including request management, caching, rate limiting,
 and error handling.
 
 ## Module Structure
 
-```
+```text
 src/airs/
 ├── client.ts        # Core REST API client
 ├── index.ts         # Enhanced client with caching and rate limiting
@@ -24,7 +22,7 @@ src/airs/
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    MCP Tool/Resource                        │
 │                 (Scan, Get Results, etc.)                   │
@@ -41,9 +39,9 @@ src/airs/
 │                Enhanced AIRS Client                         │
 │         (Caching + Rate Limiting Layer)                     │
 ├─────────────────────┴───────────────────────────────────────┤
-│  ┌─────────────┐    ┌──────────────┐    ┌───────────────┐ │
-│  │    Cache    │    │ Rate Limiter │    │  Base Client  │ │
-│  └─────────────┘    └──────────────┘    └───────────────┘ │
+│  ┌─────────────┐    ┌──────────────┐    ┌───────────────┐   │
+│  │    Cache    │    │ Rate Limiter │    │  Base Client  │   │
+│  └─────────────┘    └──────────────┘    └───────────────┘   │
 └─────────────────────────────────────────────────────────────┘
                       │
                       ▼
@@ -348,8 +346,6 @@ const result = await client.scanSync(testRequest);
 // Test with mocked responses
 jest.mock('./airs/client');
 ```
-
-## Error Handling
 
 ### Common Errors
 

@@ -5,49 +5,47 @@ permalink: /developers/src/airs/rate-limiter/
 category: developers
 ---
 
-# AIRS Rate Limiter Module (src/airs/rate-limiter.ts)
-
 The rate limiter module implements a token bucket algorithm to control the rate of API requests to the AIRS service. It
-prevents API quota exhaustion and ensures compliance with rate limits while allowing burst capacity for traffic spikes.
+prevents API quota exhaustion and ensures compliance with rate limits.
 
 ## Overview
 
-The `TokenBucketRateLimiter` class provides:
+The `PrismaAirsRateLimiter` class provides:
 
 - Token bucket algorithm implementation
-- Per-operation rate limiting
-- Burst capacity support
-- Non-blocking token checks
-- Rate limit statistics
-- Configurable refill rates
+- Key-based rate limiting (default key: 'default')
+- Configurable request limits and time windows
+- Non-blocking and blocking (wait) methods
+- Rate limit status checking
+- Automatic cleanup of old buckets
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────┐
-│       TokenBucketRateLimiter           │
+│       PrismaAirsRateLimiter             │
 │                                         │
-│  ┌───────────────────────────────────┐ │
-│  │      Token Buckets                 │ │
-│  │  Map<string, Bucket>               │ │
-│  │  • scanSync: 100 tokens/min        │ │
-│  │  • scanAsync: 50 tokens/min        │ │
-│  │  • getScanResults: 200 tokens/min  │ │
-│  └───────────────────────────────────┘ │
+│  ┌───────────────────────────────────┐  │
+│  │      Token Buckets                │  │
+│  │  Map<string, TokenBucket>         │  │
+│  │  • Key-based buckets              │  │
+│  │  • Configurable max requests      │  │
+│  │  • Time window in ms              │  │
+│  └───────────────────────────────────┘  │
 │                                         │
-│  ┌───────────────────────────────────┐ │
-│  │      Token Management              │ │
-│  │  • Consumption                     │ │
-│  │  • Refill logic                    │ │
-│  │  • Availability check              │ │
-│  └───────────────────────────────────┘ │
+│  ┌───────────────────────────────────┐  │
+│  │      Token Management             │  │
+│  │  • checkLimit()                   │  │
+│  │  • waitForLimit()                 │  │
+│  │  • Refill based on time elapsed   │  │
+│  └───────────────────────────────────┘  │
 │                                         │
-│  ┌───────────────────────────────────┐ │
-│  │      Statistics                    │ │
-│  │  • Tokens consumed                 │ │
-│  │  • Requests allowed/rejected       │ │
-│  │  • Current availability            │ │
-│  └───────────────────────────────────┘ │
+│  ┌───────────────────────────────────┐  │
+│  │      Bucket Management            │  │
+│  │  • Status checking                │  │
+│  │  • Reset functionality            │  │
+│  │  • Automatic cleanup              │  │
+│  └───────────────────────────────────┘  │
 └─────────────────────────────────────────┘
 ```
 
@@ -55,60 +53,41 @@ The `TokenBucketRateLimiter` class provides:
 
 ### How It Works
 
-1. **Bucket Capacity**: Each operation has a bucket with maximum tokens
-2. **Token Consumption**: Each request consumes one or more tokens
-3. **Token Refill**: Tokens are added at a configured rate
-4. **Burst Support**: Full bucket allows burst traffic
-5. **Rate Limiting**: Empty bucket blocks requests
+1. **Bucket Capacity**: Each key has a bucket with maximum tokens (maxRequests)
+2. **Token Consumption**: Each request consumes one token
+3. **Token Refill**: Tokens are refilled based on elapsed time windows
+4. **Rate Limiting**: Empty bucket blocks requests
+5. **Time Window**: Tokens refill after each time window period
 
-```
-Time →
-[████████████] Full bucket (10/10 tokens)
-     ↓ 5 requests
-[██████-----] After requests (5/10 tokens)
-     ↓ Time passes (refill)
-[████████---] After refill (8/10 tokens)
+### Token Bucket Structure
+
+```typescript
+interface TokenBucket {
+    tokens: number;      // Current available tokens
+    lastRefill: number;  // Last refill timestamp
+}
 ```
 
 ## Configuration
 
-### Rate Limiter Options
+### Rate Limiter Configuration
 
 ```typescript
-interface RateLimiterConfig {
-    enabled?: boolean;              // Enable rate limiting
-    limits?: Record<string, {       // Per-operation limits
-        maxTokens: number;          // Bucket capacity
-        refillRate: number;         // Tokens per interval
-        refillInterval: number;     // Interval in ms
-    }>;
+interface AirsRateLimiterConfig {
+    enabled?: boolean;     // Enable/disable rate limiting (default: true)
+    maxRequests: number;   // Maximum requests per window
+    windowMs: number;      // Time window in milliseconds
 }
 ```
 
-### Default Configuration
+### Example Configuration
 
 ```typescript
-const DEFAULT_LIMITS = {
-    scanSync: {
-        maxTokens: 100,
-        refillRate: 100,
-        refillInterval: 60000,    // 100 requests/minute
-    },
-    scanAsync: {
-        maxTokens: 50,
-        refillRate: 50,
-        refillInterval: 60000,    // 50 requests/minute
-    },
-    getScanResults: {
-        maxTokens: 200,
-        refillRate: 200,
-        refillInterval: 60000,    // 200 requests/minute
-    },
-    getThreatReports: {
-        maxTokens: 200,
-        refillRate: 200,
-        refillInterval: 60000,    // 200 requests/minute
-    },
+// Allow 100 requests per minute
+const config: AirsRateLimiterConfig = {
+    enabled: true,
+    maxRequests: 100,
+    windowMs: 60000  // 1 minute
 };
 ```
 
@@ -119,45 +98,39 @@ const DEFAULT_LIMITS = {
 Creates a new rate limiter instance.
 
 ```typescript
-constructor(config: RateLimiterConfig = {})
+constructor(config: AirsRateLimiterConfig)
 ```
 
 **Example:**
 
 ```typescript
-const rateLimiter = new TokenBucketRateLimiter({
+const rateLimiter = new PrismaAirsRateLimiter({
     enabled: true,
-    limits: {
-        scanSync: {
-            maxTokens: 50,
-            refillRate: 50,
-            refillInterval: 60000  // 50/minute
-        }
-    }
+    maxRequests: 50,
+    windowMs: 60000  // 50 requests per minute
 });
 ```
 
-### tryConsume(operation, tokens)
+### checkLimit(key)
 
-Attempts to consume tokens for an operation.
+Checks if a request is allowed and consumes a token if so.
 
 ```typescript
-tryConsume(operation: string, tokens: number = 1): boolean
+checkLimit(key: string = 'default'): boolean
 ```
 
 **Parameters:**
 
-- `operation: string` - Operation name (e.g., 'scanSync')
-- `tokens: number` - Number of tokens to consume (default: 1)
+- `key: string` - Rate limit key (default: 'default')
 
 **Returns:**
 
-- `boolean` - True if tokens were consumed, false if insufficient tokens
+- `boolean` - True if request is allowed, false if rate limited
 
 **Example:**
 
 ```typescript
-if (rateLimiter.tryConsume('scanSync')) {
+if (rateLimiter.checkLimit('api-calls')) {
     // Allowed - proceed with request
     const result = await client.scanSync(request);
 } else {
@@ -166,144 +139,141 @@ if (rateLimiter.tryConsume('scanSync')) {
 }
 ```
 
-### canConsume(operation, tokens)
+### waitForLimit(key)
 
-Checks if tokens are available without consuming them.
+Waits until a request is allowed.
 
 ```typescript
-canConsume(operation: string, tokens: number = 1): boolean
+async waitForLimit(key: string = 'default'): Promise<void>
 ```
 
 **Parameters:**
 
-- `operation: string` - Operation name
-- `tokens: number` - Number of tokens to check
+- `key: string` - Rate limit key (default: 'default')
+
+**Example:**
+
+```typescript
+// Wait for rate limit to allow request
+await rateLimiter.waitForLimit('api-calls');
+// Request is now allowed
+const result = await client.scanSync(request);
+```
+
+### getStatus(key)
+
+Gets current rate limit status for a key.
+
+```typescript
+getStatus(key: string = 'default'): {
+    available: number;
+    limit: number;
+    resetAt: Date;
+} | null
+```
+
+**Parameters:**
+
+- `key: string` - Rate limit key (default: 'default')
 
 **Returns:**
 
-- `boolean` - True if tokens are available
+- Object with available tokens, limit, and reset time
+- `null` if no bucket exists for key
 
 **Example:**
 
 ```typescript
-// Check availability before making request
-if (!rateLimiter.canConsume('scanSync')) {
-    logger.warn('Rate limit approaching');
-}
+const status = rateLimiter.getStatus('api-calls');
+console.log(`${status.available}/${status.limit} requests available`);
+console.log(`Resets at: ${status.resetAt}`);
 ```
 
-### getTokensAvailable(operation)
+### reset(key)
 
-Gets the current number of available tokens.
+Resets rate limit for a specific key.
 
 ```typescript
-getTokensAvailable(operation: string): number
+reset(key: string = 'default'): void
 ```
 
 **Parameters:**
 
-- `operation: string` - Operation name
-
-**Returns:**
-
-- `number` - Available tokens (0 if operation not found)
+- `key: string` - Rate limit key to reset (default: 'default')
 
 **Example:**
 
 ```typescript
-const available = rateLimiter.getTokensAvailable('scanSync');
-console.log(`${available} requests available`);
-```
+// Reset specific key
+rateLimiter.reset('api-calls');
 
-### reset(operation?)
-
-Resets token buckets to full capacity.
-
-```typescript
-reset(operation?: string): void
-```
-
-**Parameters:**
-
-- `operation?: string` - Specific operation to reset (omit for all)
-
-**Example:**
-
-```typescript
-// Reset specific operation
-rateLimiter.reset('scanSync');
-
-// Reset all operations
+// Reset default key
 rateLimiter.reset();
 ```
 
-### getStats(operation?)
+### clear()
 
-Gets rate limiting statistics.
-
-```typescript
-getStats(operation?: string): RateLimiterStats | Record<string, RateLimiterStats>
-```
-
-**Returns:**
+Clears all rate limit buckets.
 
 ```typescript
-interface RateLimiterStats {
-    tokensConsumed: number;      // Total consumed
-    requestsAllowed: number;     // Total allowed
-    requestsRejected: number;    // Total rejected
-    currentTokens: number;       // Current available
-    maxTokens: number;          // Bucket capacity
-    refillRate: number;         // Refill rate
-    refillInterval: number;     // Refill interval
-}
+clear(): void
 ```
 
 **Example:**
 
 ```typescript
-// Get stats for specific operation
-const syncStats = rateLimiter.getStats('scanSync');
-console.log(`Success rate: ${
-    (syncStats.requestsAllowed / 
-     (syncStats.requestsAllowed + syncStats.requestsRejected) * 100
-    ).toFixed(2)}%`
-);
-
-// Get all stats
-const allStats = rateLimiter.getStats();
+// Clear all rate limits
+rateLimiter.clear();
 ```
 
-## Token Bucket Implementation
+### getStats()
 
-### Bucket Structure
+Gets rate limiter statistics.
 
 ```typescript
-interface TokenBucket {
-    tokens: number;              // Current tokens
-    maxTokens: number;          // Maximum capacity
-    refillRate: number;         // Tokens per interval
-    refillInterval: number;     // Interval in ms
-    lastRefill: number;         // Last refill timestamp
+getStats(): {
+    bucketCount: number;
+    enabled: boolean;
 }
 ```
 
-### Refill Logic
+**Returns:**
 
-Tokens are refilled based on elapsed time:
+- `bucketCount: number` - Number of active buckets
+- `enabled: boolean` - Whether rate limiting is enabled
+
+**Example:**
 
 ```typescript
-private refillBucket(bucket: TokenBucket): void {
-    const now = Date.now();
-    const timePassed = now - bucket.lastRefill;
-    const intervalsElapsed = timePassed / bucket.refillInterval;
-    
-    if (intervalsElapsed >= 1) {
-        const tokensToAdd = Math.floor(intervalsElapsed) * bucket.refillRate;
-        bucket.tokens = Math.min(bucket.maxTokens, bucket.tokens + tokensToAdd);
-        bucket.lastRefill = now;
-    }
+const stats = rateLimiter.getStats();
+console.log(`Active buckets: ${stats.bucketCount}`);
+console.log(`Rate limiting enabled: ${stats.enabled}`);
+```
+
+## Token Refill Logic
+
+### How Refill Works
+
+The rate limiter refills tokens based on elapsed time windows:
+
+```typescript
+// Calculate tokens to add based on elapsed time
+const elapsed = now - bucket.lastRefill;
+const tokensToAdd = Math.floor(elapsed / this.config.windowMs) * this.config.maxRequests;
+
+if (tokensToAdd > 0) {
+    bucket.tokens = Math.min(this.config.maxRequests, bucket.tokens + tokensToAdd);
+    bucket.lastRefill = now;
 }
+```
+
+### Automatic Cleanup
+
+The rate limiter automatically cleans up old buckets that haven't been used:
+
+```typescript
+// Cleanup interval is 2x the window time (minimum 60 seconds)
+const cleanupInterval = Math.max(this.config.windowMs * 2, 60000);
 ```
 
 ## Usage Patterns
@@ -312,11 +282,15 @@ private refillBucket(bucket: TokenBucket): void {
 
 ```typescript
 class AIRSService {
-    private rateLimiter = new TokenBucketRateLimiter();
+    private rateLimiter = new PrismaAirsRateLimiter({
+        enabled: true,
+        maxRequests: 100,
+        windowMs: 60000
+    });
 
     async scanContent(content: string) {
         // Check rate limit
-        if (!this.rateLimiter.tryConsume('scanSync')) {
+        if (!this.rateLimiter.checkLimit('scan-api')) {
             throw new Error('Rate limit exceeded. Please try again later.');
         }
 
@@ -329,21 +303,18 @@ class AIRSService {
 }
 ```
 
-### With Retry Logic
+### With Wait For Limit
 
 ```typescript
-async function scanWithRetry(content: string, maxRetries = 3) {
-    for (let i = 0; i < maxRetries; i++) {
-        if (rateLimiter.tryConsume('scanSync')) {
-            return await client.scanSync(request);
-        }
-
-        // Wait before retry
-        const waitTime = Math.min(1000 * Math.pow(2, i), 10000);
-        await new Promise(resolve => setTimeout(resolve, waitTime));
-    }
-
-    throw new Error('Rate limit exceeded after retries');
+async function scanWithWait(content: string) {
+    // Wait for rate limit to allow request
+    await rateLimiter.waitForLimit('scan-api');
+    
+    // Now guaranteed to be allowed
+    return await client.scanSync({
+        tr_id: generateId(),
+        request: [{ prompt: content, profile_name: 'default' }]
+    });
 }
 ```
 
@@ -354,66 +325,53 @@ async function processBatch(items: string[]) {
     const results = [];
     
     for (const item of items) {
-        // Wait for token availability
-        while (!rateLimiter.canConsume('scanSync')) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-
-        // Consume token and process
-        if (rateLimiter.tryConsume('scanSync')) {
-            results.push(await scanItem(item));
-        }
+        // Wait for rate limit
+        await rateLimiter.waitForLimit('batch-scan');
+        
+        // Process item
+        results.push(await scanItem(item));
     }
 
     return results;
 }
 ```
 
-### Priority Queue
+### Status Checking
 
 ```typescript
-class PriorityRateLimiter {
-    async processHighPriority(request: Request) {
-        // High priority gets immediate token if available
-        if (this.rateLimiter.tryConsume('scanSync', 1)) {
-            return await this.client.scanSync(request);
+async function checkRateLimitStatus() {
+    const status = rateLimiter.getStatus('api-calls');
+    
+    if (status) {
+        console.log(`Available: ${status.available}/${status.limit}`);
+        console.log(`Resets at: ${status.resetAt.toISOString()}`);
+        
+        if (status.available === 0) {
+            const waitTime = status.resetAt.getTime() - Date.now();
+            console.log(`Rate limited. Wait ${waitTime}ms`);
         }
-        throw new Error('No tokens available');
-    }
-
-    async processLowPriority(request: Request) {
-        // Low priority only proceeds if enough tokens
-        const available = this.rateLimiter.getTokensAvailable('scanSync');
-        if (available > 10 && this.rateLimiter.tryConsume('scanSync', 1)) {
-            return await this.client.scanSync(request);
-        }
-        throw new Error('Insufficient tokens for low priority');
     }
 }
 ```
 
 ## Integration with Enhanced Client
 
-The enhanced AIRS client integrates rate limiting automatically:
+The enhanced AIRS client (in index.ts) integrates rate limiting:
 
 ```typescript
-// Rate limiting is built into the enhanced client
-const client = new PrismaAIRSClientWithCache(baseClient, {
-    rateLimiter: new TokenBucketRateLimiter({
-        enabled: true,
-        limits: {
-            scanSync: {
-                maxTokens: 60,
-                refillRate: 60,
-                refillInterval: 60000  // 60/minute
-            }
-        }
-    })
+// Create rate limiter
+const rateLimiter = new PrismaAirsRateLimiter({
+    enabled: true,
+    maxRequests: 100,
+    windowMs: 60000  // 100 requests per minute
 });
 
-// Automatic rate limiting
+// Use with enhanced client
+const enhancedClient = createEnhancedClient(baseClient, cache, rateLimiter);
+
+// Rate limiting is applied automatically
 try {
-    const result = await client.scanSync(request);
+    const result = await enhancedClient.scanSync(request);
 } catch (error) {
     if (error.message.includes('Rate limit exceeded')) {
         // Handle rate limiting
@@ -426,26 +384,25 @@ try {
 ### Real-time Monitoring
 
 ```typescript
-function monitorRateLimits(rateLimiter: TokenBucketRateLimiter) {
+function monitorRateLimits(rateLimiter: PrismaAirsRateLimiter) {
     setInterval(() => {
         const stats = rateLimiter.getStats();
+        const status = rateLimiter.getStatus();
         
-        Object.entries(stats).forEach(([operation, opStats]) => {
-            const usage = ((opStats.maxTokens - opStats.currentTokens) / 
-                          opStats.maxTokens * 100);
-            
-            logger.info('Rate limit status', {
-                operation,
-                usage: `${usage.toFixed(2)}%`,
-                available: opStats.currentTokens,
-                rejected: opStats.requestsRejected
-            });
-
-            // Alert on high usage
-            if (usage > 80) {
-                logger.warn('High rate limit usage', { operation, usage });
-            }
+        logger.info('Rate limiter stats', {
+            bucketCount: stats.bucketCount,
+            enabled: stats.enabled,
+            available: status?.available,
+            limit: status?.limit,
+            resetAt: status?.resetAt
         });
+
+        // Alert if rate limited
+        if (status && status.available === 0) {
+            logger.warn('Rate limit exhausted', {
+                resetAt: status.resetAt
+            });
+        }
     }, 30000); // Every 30 seconds
 }
 ```
@@ -453,17 +410,17 @@ function monitorRateLimits(rateLimiter: TokenBucketRateLimiter) {
 ### Metrics Export
 
 ```typescript
-function exportMetrics(rateLimiter: TokenBucketRateLimiter) {
+function exportMetrics(rateLimiter: PrismaAirsRateLimiter) {
     const stats = rateLimiter.getStats();
+    const status = rateLimiter.getStatus('default');
     
-    Object.entries(stats).forEach(([operation, opStats]) => {
-        metrics.gauge(`rate_limit.tokens.available.${operation}`, 
-                     opStats.currentTokens);
-        metrics.counter(`rate_limit.requests.allowed.${operation}`, 
-                       opStats.requestsAllowed);
-        metrics.counter(`rate_limit.requests.rejected.${operation}`, 
-                       opStats.requestsRejected);
-    });
+    metrics.gauge('rate_limit.buckets.count', stats.bucketCount);
+    metrics.gauge('rate_limit.enabled', stats.enabled ? 1 : 0);
+    
+    if (status) {
+        metrics.gauge('rate_limit.tokens.available', status.available);
+        metrics.gauge('rate_limit.tokens.limit', status.limit);
+    }
 }
 ```
 
@@ -472,43 +429,30 @@ function exportMetrics(rateLimiter: TokenBucketRateLimiter) {
 ### Conservative (Production)
 
 ```typescript
-new TokenBucketRateLimiter({
+new PrismaAirsRateLimiter({
     enabled: true,
-    limits: {
-        scanSync: {
-            maxTokens: 50,        // Lower burst
-            refillRate: 50,
-            refillInterval: 60000
-        },
-        scanAsync: {
-            maxTokens: 25,
-            refillRate: 25,
-            refillInterval: 60000
-        }
-    }
+    maxRequests: 50,      // 50 requests
+    windowMs: 60000       // per minute
 });
 ```
 
 ### Aggressive (Development)
 
 ```typescript
-new TokenBucketRateLimiter({
+new PrismaAirsRateLimiter({
     enabled: true,
-    limits: {
-        scanSync: {
-            maxTokens: 1000,      // High burst
-            refillRate: 1000,
-            refillInterval: 60000
-        }
-    }
+    maxRequests: 1000,    // 1000 requests
+    windowMs: 60000       // per minute
 });
 ```
 
 ### Disabled (Testing)
 
 ```typescript
-new TokenBucketRateLimiter({
-    enabled: false  // No rate limiting
+new PrismaAirsRateLimiter({
+    enabled: false,       // No rate limiting
+    maxRequests: 0,
+    windowMs: 0
 });
 ```
 
@@ -517,39 +461,36 @@ new TokenBucketRateLimiter({
 ### Unit Tests
 
 ```typescript
-describe('TokenBucketRateLimiter', () => {
-    let rateLimiter: TokenBucketRateLimiter;
+describe('PrismaAirsRateLimiter', () => {
+    let rateLimiter: PrismaAirsRateLimiter;
 
     beforeEach(() => {
-        rateLimiter = new TokenBucketRateLimiter({
-            limits: {
-                test: {
-                    maxTokens: 10,
-                    refillRate: 5,
-                    refillInterval: 1000
-                }
-            }
+        rateLimiter = new PrismaAirsRateLimiter({
+            enabled: true,
+            maxRequests: 10,
+            windowMs: 1000
         });
     });
 
     it('should allow requests within limit', () => {
         for (let i = 0; i < 10; i++) {
-            expect(rateLimiter.tryConsume('test')).toBe(true);
+            expect(rateLimiter.checkLimit('test')).toBe(true);
         }
-        expect(rateLimiter.tryConsume('test')).toBe(false);
+        expect(rateLimiter.checkLimit('test')).toBe(false);
     });
 
     it('should refill tokens over time', async () => {
         // Consume all tokens
         for (let i = 0; i < 10; i++) {
-            rateLimiter.tryConsume('test');
+            rateLimiter.checkLimit('test');
         }
 
-        // Wait for refill
+        // Wait for window to pass
         await new Promise(resolve => setTimeout(resolve, 1100));
 
-        // Should have 5 new tokens
-        expect(rateLimiter.getTokensAvailable('test')).toBe(5);
+        // Should have tokens again
+        const status = rateLimiter.getStatus('test');
+        expect(status.available).toBeGreaterThan(0);
     });
 });
 ```
@@ -558,22 +499,19 @@ describe('TokenBucketRateLimiter', () => {
 
 ```typescript
 it('should handle burst traffic', async () => {
-    const client = createClientWithRateLimiter({
-        maxTokens: 5,
-        refillRate: 5,
-        refillInterval: 1000
+    const rateLimiter = new PrismaAirsRateLimiter({
+        enabled: true,
+        maxRequests: 5,
+        windowMs: 1000
     });
 
-    // Burst of 5 requests should succeed
-    const promises = Array(5).fill(null).map(() => 
-        client.scanSync(testRequest)
-    );
-    
-    await expect(Promise.all(promises)).resolves.toBeDefined();
+    // First 5 requests should succeed
+    for (let i = 0; i < 5; i++) {
+        expect(rateLimiter.checkLimit()).toBe(true);
+    }
 
     // 6th request should fail
-    await expect(client.scanSync(testRequest))
-        .rejects.toThrow('Rate limit exceeded');
+    expect(rateLimiter.checkLimit()).toBe(false);
 });
 ```
 
@@ -583,24 +521,23 @@ it('should handle burst traffic', async () => {
 
 ```typescript
 // Match your API tier limits
-const rateLimiter = new TokenBucketRateLimiter({
-    limits: {
-        scanSync: {
-            maxTokens: 100,      // API limit
-            refillRate: 100,
-            refillInterval: 60000
-        }
-    }
+const rateLimiter = new PrismaAirsRateLimiter({
+    enabled: true,
+    maxRequests: 100,     // API limit
+    windowMs: 60000       // per minute
 });
 ```
 
 ### 2. Monitor and Adjust
 
 ```typescript
-// Track rejection rates
-const stats = rateLimiter.getStats('scanSync');
-if (stats.requestsRejected > stats.requestsAllowed * 0.1) {
-    logger.warn('High rejection rate - consider adjusting limits');
+// Check rate limit status
+const status = rateLimiter.getStatus();
+if (status && status.available < status.limit * 0.2) {
+    logger.warn('Rate limit usage high', {
+        available: status.available,
+        limit: status.limit
+    });
 }
 ```
 
@@ -608,19 +545,20 @@ if (stats.requestsRejected > stats.requestsAllowed * 0.1) {
 
 ```typescript
 async function scanWithFallback(content: string) {
-    // Try primary scan
-    if (rateLimiter.tryConsume('scanSync')) {
-        return await client.scanSync(request);
+    // Check rate limit status
+    if (!rateLimiter.checkLimit('scan')) {
+        const status = rateLimiter.getStatus('scan');
+        const waitTime = status ? 
+            status.resetAt.getTime() - Date.now() : 60000;
+        
+        return { 
+            status: 'rate_limited', 
+            retry_after: Math.ceil(waitTime / 1000) 
+        };
     }
 
-    // Fallback to async scan
-    if (rateLimiter.tryConsume('scanAsync')) {
-        const { scan_id } = await client.scanAsync(request);
-        return { scan_id, status: 'queued' };
-    }
-
-    // Final fallback
-    return { status: 'rate_limited', retry_after: 60 };
+    // Proceed with scan
+    return await client.scanSync(request);
 }
 ```
 
@@ -645,15 +583,18 @@ async function scanWithFallback(content: string) {
 
 ### Debug Logging
 
+The rate limiter logs debug information internally:
+
 ```typescript
-// Enable detailed logging
-rateLimiter.on('consume', ({ operation, allowed, tokens }) => {
-    logger.debug('Token consumption', {
-        operation,
-        allowed,
-        tokens,
-        remaining: rateLimiter.getTokensAvailable(operation)
-    });
+// Set LOG_LEVEL=debug to see rate limit operations
+logger.debug('Rate limit check passed', {
+    key,
+    remainingTokens: bucket.tokens,
+});
+
+logger.warn('Rate limit exceeded', {
+    key,
+    nextRefill: new Date(bucket.lastRefill + this.config.windowMs).toISOString(),
 });
 ```
 
