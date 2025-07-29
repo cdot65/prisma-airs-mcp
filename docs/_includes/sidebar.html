@@ -4,18 +4,112 @@
   <ul>
     <li><a href="{{ site.baseurl }}/developers/" {% if page.url == '/developers/' %}class="active"{% endif %}>Overview</a></li>
   </ul>
-  
-  <h4>Source Code Documentation</h4>
+
+  <h4>Source Code</h4>
+
+  <!-- Root Section -->
+  <h5>Root</h5>
   <ul>
-    <li><a href="{{ site.baseurl }}/developers/src/" {% if page.url == '/developers/src/' %}class="active"{% endif %}>Root (src/)</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src/types/" {% if page.url == '/developers/src/types/' %}class="active"{% endif %}>Types Module</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src/airs/" {% if page.url == '/developers/src/airs/' %}class="active"{% endif %}>AIRS Module</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src/config/" {% if page.url == '/developers/src/config/' %}class="active"{% endif %}>Configuration</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src/prompts/" {% if page.url == '/developers/src/prompts/' %}class="active"{% endif %}>Prompts</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src/resources/" {% if page.url == '/developers/src/resources/' %}class="active"{% endif %}>Resources</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src/tools/" {% if page.url == '/developers/src/tools/' %}class="active"{% endif %}>Tools</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src/transport/" {% if page.url == '/developers/src/transport/' %}class="active"{% endif %}>Transport</a></li>
-    <li><a href="{{ site.baseurl }}/developers/src/utils/" {% if page.url == '/developers/src/utils/' %}class="active"{% endif %}>Utilities</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/overview/" {% if page.url== '/developers/src/overview/'
+      %}class="active"{% endif %}>Overview</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/index-file/" {% if page.url== '/developers/src/index-file/'
+      %}class="active"{% endif %}>index.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/instrument-file/" {% if page.url== '/developers/src/instrument-file/'
+      %}class="active"{% endif %}>instrument.ts</a></li>
+  </ul>
+
+  <!-- AIRS Section -->
+  <h5>AIRS</h5>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/src/airs/overview/" {% if page.url== '/developers/src/airs/overview/'
+      %}class="active"{% endif %}>Overview</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/airs/client/" {% if page.url== '/developers/src/airs/client/'
+      %}class="active"{% endif %}>client.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/airs/cache/" {% if page.url== '/developers/src/airs/cache/'
+      %}class="active"{% endif %}>cache.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/airs/rate-limiter/" {% if page.url==
+      '/developers/src/airs/rate-limiter/' %}class="active"{% endif %}>rate-limiter.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/airs/factory/" {% if page.url== '/developers/src/airs/factory/'
+      %}class="active"{% endif %}>factory.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/airs/index-file/" {% if page.url== '/developers/src/airs/index-file/'
+      %}class="active"{% endif %}>index.ts</a></li>
+  </ul>
+
+  <!-- Configuration Section -->
+  <h5>Configuration</h5>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/src/config/overview/" {% if page.url== '/developers/src/config/overview/'
+      %}class="active"{% endif %}>Overview</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/config/index-file/" {% if page.url==
+      '/developers/src/config/index-file/' %}class="active"{% endif %}>index.ts</a></li>
+  </ul>
+
+  <!-- Types Section -->
+  <h5>Types</h5>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/src/types/overview/" {% if page.url== '/developers/src/types/overview/'
+      %}class="active"{% endif %}>Overview</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/airs-types/" {% if page.url==
+      '/developers/src/types/airs-types/' %}class="active"{% endif %}>airs.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/config-types/" {% if page.url==
+      '/developers/src/types/config-types/' %}class="active"{% endif %}>config.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/mcp-types/" {% if page.url== '/developers/src/types/mcp-types/'
+      %}class="active"{% endif %}>mcp.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/tools-types/" {% if page.url==
+      '/developers/src/types/tools-types/' %}class="active"{% endif %}>tools.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/transport-types/" {% if page.url==
+      '/developers/src/types/transport-types/' %}class="active"{% endif %}>transport.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/index-file/" {% if page.url==
+      '/developers/src/types/index-file/' %}class="active"{% endif %}>index.ts</a></li>
+  </ul>
+
+  <!-- Prompts Section -->
+  <h5>Prompts</h5>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/src/prompts/overview/" {% if page.url==
+      '/developers/src/prompts/overview/' %}class="active"{% endif %}>Overview</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/prompts/index-file/" {% if page.url==
+      '/developers/src/prompts/index-file/' %}class="active"{% endif %}>index.ts</a></li>
+  </ul>
+
+  <!-- Resources Section -->
+  <h5>Resources</h5>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/src/resources/overview/" {% if page.url==
+      '/developers/src/resources/overview/' %}class="active"{% endif %}>Overview</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/resources/index-file/" {% if page.url==
+      '/developers/src/resources/index-file/' %}class="active"{% endif %}>index.ts</a></li>
+  </ul>
+
+  <!-- Tools Section -->
+  <h5>Tools</h5>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/src/tools/overview/" {% if page.url== '/developers/src/tools/overview/'
+      %}class="active"{% endif %}>Overview</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/tools/index-file/" {% if page.url==
+      '/developers/src/tools/index-file/' %}class="active"{% endif %}>index.ts</a></li>
+  </ul>
+
+  <!-- Transport Section -->
+  <h5>Transport</h5>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/src/transport/overview/" {% if page.url==
+      '/developers/src/transport/overview/' %}class="active"{% endif %}>Overview</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/transport/http/" {% if page.url== '/developers/src/transport/http/'
+      %}class="active"{% endif %}>http.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/transport/sse/" {% if page.url== '/developers/src/transport/sse/'
+      %}class="active"{% endif %}>sse.ts</a></li>
+  </ul>
+
+  <!-- Utilities Section -->
+  <h5>Utilities</h5>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/src/utils/overview/" {% if page.url== '/developers/src/utils/overview/'
+      %}class="active"{% endif %}>Overview</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/utils/logger/" {% if page.url== '/developers/src/utils/logger/'
+      %}class="active"{% endif %}>logger.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/utils/monitoring/" {% if page.url==
+      '/developers/src/utils/monitoring/' %}class="active"{% endif %}>monitoring.ts</a></li>
   </ul>
   
   <h4>API</h4>
@@ -122,6 +216,19 @@
 
 .sidebar-nav h4:first-child {
   margin-top: 0;
+}
+
+.sidebar-nav h5 {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: var(--spacing-xs);
+  margin-top: var(--spacing-md);
+  padding-left: var(--spacing-sm);
+}
+
+.sidebar-nav h5:first-of-type {
+  margin-top: var(--spacing-sm);
 }
 
 .sidebar-nav ul {

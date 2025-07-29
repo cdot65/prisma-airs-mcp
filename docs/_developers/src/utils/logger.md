@@ -1,13 +1,14 @@
 ---
 layout: documentation
-title: Utils Module
-permalink: /developers/src/utils/
+title: Logger Module
+permalink: /developers/src/utils/logger/
 category: developers
 ---
 
-# Utilities (src/utils/)
+# Logger Module (src/utils/logger.ts)
 
-The utils module provides utility functions used throughout the Prisma AIRS MCP server. Currently, it contains the logging system implementation using Winston.
+The logger module provides a centralized logging system using Winston, with environment-specific formatting and
+configuration derived from the application's config module.
 
 ## Module Structure
 
@@ -53,7 +54,8 @@ src/utils/
 
 ### Overview
 
-The logger module provides a centralized logging system using Winston, with environment-specific formatting and configuration derived from the application's config module.
+The logger module provides a centralized logging system using Winston, with environment-specific formatting and
+configuration derived from the application's config module.
 
 ### Logger Configuration
 
@@ -218,7 +220,7 @@ logger.error('Operation failed', { error: error.message });
 The logger supports standard Winston log levels, configured via the `LOG_LEVEL` environment variable:
 
 | Level   | Usage                                | Example                                      |
-| ------- | ------------------------------------ | -------------------------------------------- |
+|---------|--------------------------------------|----------------------------------------------|
 | `error` | Error conditions that need attention | `logger.error('Database connection failed')` |
 | `warn`  | Warning conditions                   | `logger.warn('Rate limit approaching')`      |
 | `info`  | Informational messages               | `logger.info('Server started')`              |
@@ -458,7 +460,7 @@ console.log('Environment:', process.env.NODE_ENV);
 The logger module uses standard Winston types:
 
 | Type                    | Module    | Purpose                      |
-| ----------------------- | --------- | ---------------------------- |
+|-------------------------|-----------|------------------------------|
 | `winston.Logger`        | `winston` | Logger instance type         |
 | `winston.LoggerOptions` | `winston` | Logger configuration options |
 
@@ -467,13 +469,13 @@ The logger module uses standard Winston types:
 ### External Dependencies
 
 | Module    | Purpose           |
-| --------- | ----------------- |
+|-----------|-------------------|
 | `winston` | Logging framework |
 
 ### Internal Dependencies
 
 | Module      | Import        | Purpose              |
-| ----------- | ------------- | -------------------- |
+|-------------|---------------|----------------------|
 | `../config` | `getConfig()` | Configuration access |
 
 ## Future Enhancements
@@ -504,4 +506,6 @@ Potential additions to the utils module:
 
 ## Summary
 
-The utils module currently provides a simple but powerful logging system that adapts to different environments. The singleton pattern ensures consistent logging throughout the application, while environment-specific formatting makes logs suitable for both development debugging and production monitoring.
+The utils module currently provides a simple but powerful logging system that adapts to different environments. The
+singleton pattern ensures consistent logging throughout the application, while environment-specific formatting makes
+logs suitable for both development debugging and production monitoring.
