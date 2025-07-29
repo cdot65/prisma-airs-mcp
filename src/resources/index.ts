@@ -4,6 +4,7 @@
 
 import { getLogger } from '../utils/logger';
 import { getAirsClient } from '../airs/factory';
+import { DOCUMENTATION_RESOURCES, type DocumentationResourceId } from './docs';
 import type { Logger } from 'winston';
 
 import type {
@@ -25,6 +26,7 @@ export class ResourceHandler {
         THREAT_REPORT: 'threat-reports', // Changed to plural to match template
         CACHE_STATS: 'cache-stats',
         RATE_LIMIT_STATUS: 'rate-limit-status',
+        DEVELOPER_DOCS: 'developer-docs',
     } as const;
 
     constructor() {
@@ -52,6 +54,16 @@ export class ResourceHandler {
                 mimeType: 'application/json',
             },
         ];
+
+        // Add developer documentation resources
+        for (const [id, doc] of Object.entries(DOCUMENTATION_RESOURCES)) {
+            resources.push({
+                uri: `airs://${ResourceHandler.RESOURCE_TYPES.DEVELOPER_DOCS}/${id}`,
+                name: doc.name,
+                description: doc.description,
+                mimeType: doc.mimeType,
+            });
+        }
 
         // Note: Dynamic resources like scan results and threat reports
         // are not listed here but can be accessed directly by URI
@@ -88,6 +100,9 @@ export class ResourceHandler {
 
             case ResourceHandler.RESOURCE_TYPES.RATE_LIMIT_STATUS:
                 return this.readRateLimitStatus();
+
+            case ResourceHandler.RESOURCE_TYPES.DEVELOPER_DOCS:
+                return this.readDeveloperDoc(id);
 
             default:
                 throw new Error(`Unknown resource type: ${type}`);
@@ -218,6 +233,25 @@ export class ResourceHandler {
                 null,
                 2,
             ),
+        };
+
+        return { contents: [content] };
+    }
+
+    /**
+     * Read developer documentation
+     */
+    private readDeveloperDoc(docId: string): McpResourcesReadResult {
+        const doc = DOCUMENTATION_RESOURCES[docId as DocumentationResourceId];
+
+        if (!doc) {
+            throw new Error(`Developer documentation not found: ${docId}`);
+        }
+
+        const content: McpResourceContent = {
+            uri: `airs://${ResourceHandler.RESOURCE_TYPES.DEVELOPER_DOCS}/${docId}`,
+            mimeType: doc.mimeType,
+            text: doc.content,
         };
 
         return { contents: [content] };

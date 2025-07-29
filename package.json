@@ -1,12 +1,13 @@
 {
     "name": "prisma-airs-mcp",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "description": "HTTP-based Model Context Protocol server for Palo Alto Networks Prisma AIRS integration",
     "main": "dist/index.js",
     "scripts": {
         "comment:local": "=== Local Development Commands ===",
         "local:dev": "nodemon --exec tsx src/index.ts",
-        "local:build": "tsc",
+        "local:build": "npm run local:build:docs && tsc",
+        "local:build:docs": "tsx scripts/build-docs.ts",
         "local:start": "node dist/index.js",
         "local:test": "jest",
         "local:test:unit": "jest --config jest.config.unit.js",

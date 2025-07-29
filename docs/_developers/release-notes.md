@@ -7,6 +7,56 @@ category: developers
 
 This page contains the version history and release notes for the Prisma AIRS MCP Server.
 
+## Version 1.0.5 (2025-07-29)
+
+### Feature Release: Developer Documentation Resources
+
+This release introduces comprehensive developer documentation as MCP resources, making API documentation, integration guides, and examples directly accessible through the MCP protocol.
+
+### New Features
+
+- **Developer Documentation Resources**
+  - Added 6 comprehensive documentation resources accessible via MCP
+  - API documentation (`airs://developer-docs/airuntimesecurityapi`)
+  - Error codes reference (`airs://developer-docs/errorcodes`)
+  - Use cases and examples (`airs://developer-docs/usecases`)
+  - OpenAPI specification (`airs://developer-docs/scanservice`)
+  - Integration guide (`airs://developer-docs/integration-guide`)
+  - Security features guide (`airs://developer-docs/security-features`)
+  - Build-time documentation compilation for optimal performance
+  - Proper MIME type support (text/markdown, application/x-yaml)
+
+### Improvements
+
+- **Build Process**
+  - Added `scripts/build-docs.ts` to compile documentation at build time
+  - Documentation embedded into server bundle (no runtime file I/O)
+  - Integrated documentation build into npm build process
+  - Auto-generated TypeScript exports for type safety
+
+- **Resource Handler**
+  - Extended ResourceHandler to support documentation resources
+  - Added new resource type: `developer-docs`
+  - Total resources increased from 2 to 8 (2 system + 6 documentation)
+  - Enhanced resource listing with proper metadata
+
+### Developer Experience
+
+- **Documentation Access**
+  - AI assistants can now access comprehensive API documentation
+  - No external documentation lookups required
+  - Consistent documentation across all deployments
+  - Version-controlled documentation content
+
+### Technical Details
+
+- Documentation source files: `src/resources/docs/*.md` and `*.yaml`
+- Generated TypeScript: `src/resources/docs/index.ts`
+- Build command: `npm run build:docs` (automatically run during `npm run build`)
+- Resource URIs follow pattern: `airs://developer-docs/{doc-id}`
+
+---
+
 ## Version 1.0.4 (2025-07-29)
 
 ### Feature Release: Optional Monitoring Support
@@ -211,6 +261,8 @@ See [CONTRIBUTING.md](https://github.com/cdot65/prisma-airs-mcp/blob/main/CONTRI
 
 | Version | Date       | Description                                      |
 |---------|------------|--------------------------------------------------|
+| 1.0.5   | 2025-07-29 | Added developer documentation as MCP resources   |
+| 1.0.4   | 2025-07-29 | Added optional Sentry monitoring support         |
 | 1.0.3   | 2025-07-28 | Fixed cache deduplication for identical requests |
 | 1.0.2   | 2025-07-27 | Dependency update (@modelcontextprotocol/sdk)    |
 | 1.0.1   | 2025-07-27 | Added AIRS client reset functionality            |

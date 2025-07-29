@@ -5,15 +5,23 @@ permalink: /developers/src/resources/overview/
 category: developers
 ---
 
-The resources module (`src/resources/`) implements MCP resource handlers that provide access to AIRS data and system
-status information. Resources enable clients to retrieve scan results, threat reports, and system metrics through a
-URI-based interface.
+The resources module (`src/resources/`) implements MCP resource handlers that provide access to AIRS data, system
+status information, and comprehensive developer documentation. Resources enable clients to retrieve scan results, threat reports,
+system metrics, and API documentation through a URI-based interface.
 
 ## Module Structure
 
 ```text
 src/resources/
-└── index.ts   # Resource handler implementation
+├── index.ts        # Main resource handler implementation
+└── docs/           # Static documentation resources
+    ├── index.ts    # Auto-generated documentation exports
+    ├── airuntimesecurityapi.md  # API documentation
+    ├── errorcodes.md            # Error codes reference
+    ├── usecases.md              # Use cases and examples
+    ├── ScanService.yaml         # OpenAPI specification
+    ├── integration-guide.md     # Integration guide
+    └── security-features.md     # Security features guide
 ```
 
 ## Architecture
@@ -39,13 +47,27 @@ src/resources/
 │    • Data retrieval                     │
 └─────────────────┬───────────────────────┘
                   │
-         ┌────────┴────────┬──────────┐
-         ▼                 ▼          ▼
-┌─────────────────┐ ┌──────────────┐ ┌──────────┐
-│  AIRS Client    │ │ Cache Stats  │ │Rate Limit│
-│ • Scan results  │ │ • Metrics    │ │ • Status │
-│ • Threat reports│ │ • Performance│ │ • Quotas │
-└─────────────────┘ └──────────────┘ └──────────┘
+    ┌─────────────┼────────┬────────────┬───────────┐
+    ▼             ▼        ▼            ▼           ▼
+┌─────────┐ ┌──────────┐ ┌─────────┐ ┌──────────┐ ┌─────────┐
+│  AIRS   │ │  Cache   │ │  Rate   │ │Developer │ │  Build  │
+│ Client  │ │  Stats   │ │  Limit  │ │  Docs    │ │ Process │
+│         │ │          │ │  Status │ │          │ │         │
+│• Scans  │ │• Metrics │ │• Quotas │ │• API Docs│ │• Compile│
+│• Reports│ │• Perform.│ │• Status │ │• Examples│ │• Bundle │
+└─────────┘ └──────────┘ └─────────┘ └──────────┘ └─────────┘
+```
+
+## Documentation Build Process
+
+The documentation resources are built at compile time using a TypeScript build script:
+
+```text
+Build Process:
+1. scripts/build-docs.ts reads all .md and .yaml files
+2. Generates src/resources/docs/index.ts with exports
+3. TypeScript compilation includes docs in bundle
+4. Resources available at runtime without file I/O
 ```
 
 ## Resource Types
@@ -65,6 +87,14 @@ Always available system status resources:
     - Available quotas
     - Reset times
     - Bucket information
+
+3. **Developer Documentation** (`airs://developer-docs/{docId}`)
+    - API documentation (`airs://developer-docs/airuntimesecurityapi`)
+    - Error codes reference (`airs://developer-docs/errorcodes`)
+    - Use cases and examples (`airs://developer-docs/usecases`)
+    - OpenAPI specification (`airs://developer-docs/scanservice`)
+    - Integration guide (`airs://developer-docs/integration-guide`)
+    - Security features (`airs://developer-docs/security-features`)
 
 ### Dynamic Resources
 
@@ -103,6 +133,9 @@ airs://scan-results/scan_12345
 airs://threat-reports/report_67890
 airs://cache-stats/current
 airs://rate-limit-status/current
+airs://developer-docs/airuntimesecurityapi
+airs://developer-docs/errorcodes
+airs://developer-docs/usecases
 ```
 
 ## Resource Lifecycle
@@ -158,6 +191,18 @@ Return Data
       "name": "Rate Limit Status",
       "description": "Current rate limiting status and quotas",
       "mimeType": "application/json"
+    },
+    {
+      "uri": "airs://developer-docs/airuntimesecurityapi",
+      "name": "Prisma AIRS AI Runtime API Intercept",
+      "description": "Complete API reference and overview for Prisma AIRS",
+      "mimeType": "text/markdown"
+    },
+    {
+      "uri": "airs://developer-docs/scanservice",
+      "name": "OpenAPI Specification",
+      "description": "OpenAPI 3.0 specification for Prisma AIRS scan service",
+      "mimeType": "application/x-yaml"
     }
   ]
 }
@@ -366,7 +411,8 @@ const RESOURCE_TYPES = {
     SCAN_RESULT: 'scan-results',      // Plural, hyphenated
     THREAT_REPORT: 'threat-reports',
     CACHE_STATS: 'cache-stats',
-    RATE_LIMIT_STATUS: 'rate-limit-status'
+    RATE_LIMIT_STATUS: 'rate-limit-status',
+    DEVELOPER_DOCS: 'developer-docs'
 };
 ```
 

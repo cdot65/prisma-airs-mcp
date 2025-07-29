@@ -31,7 +31,7 @@ module.exports = [
       parserOptions: {
         ecmaVersion: 2022,
         sourceType: 'module',
-        project: ['./tsconfig.json', './tsconfig.test.json'],
+        project: ['./tsconfig.json', './tsconfig.test.json', './tsconfig.scripts.json'],
       },
       globals: {
         console: 'readonly',
@@ -114,6 +114,6 @@ module.exports = [
     },
   },
   {
-    ignores: ['node_modules/', 'dist/', 'coverage/', '*.js', '!eslint.config.js', '.claude/', 'docs/', 'vendor/'],
+    ignores: ['node_modules/', 'dist/', 'coverage/', '*.js', '!eslint.config.js', '.claude/', 'docs/', 'vendor/', 'src/resources/docs/index.ts'],
   },
 ];
