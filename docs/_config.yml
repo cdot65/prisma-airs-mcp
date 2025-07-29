@@ -34,6 +34,9 @@ collections:
     api:
         output: true
         permalink: /api/:path/
+    mcp-clients:
+        output: true
+        permalink: /mcp-clients/:path/
 
 # Default layouts
 defaults:
@@ -67,6 +70,12 @@ defaults:
       values:
           layout: "api"
           category: "api"
+    - scope:
+          path: ""
+          type: "mcp-clients"
+      values:
+          layout: "documentation"
+          category: "mcp-clients"
 
 # Site configuration
 repository: cdot65/prisma-airs-mcp

@@ -482,5 +482,5 @@ module.exports = {
 
 - Review the [Configuration Reference]({{ site.baseurl }}/deployment/configuration)
 - Follow the [Quick Start Guide]({{ site.baseurl }}/deployment/quickstart)
-- Set up [Claude Integration]({{ site.baseurl }}/deployment/mcp/claude-desktop)
+- Set up [Claude Integration]({{ site.baseurl }}/mcp-clients/claude-desktop/)
 - Consider [Docker]({{ site.baseurl }}/deployment/docker) or [Kubernetes]({{ site.baseurl }}/deployment/kubernetes) for easier deployment

@@ -2,8 +2,8 @@
 layout: documentation
 title: Claude Desktop Configuration
 description: Configure Prisma AIRS MCP for Claude Desktop application
-permalink: /deployment/mcp/claude-desktop/
-category: deployment
+permalink: /mcp-clients/claude-desktop/
+category: mcp-clients
 ---
 
 ## Overview
@@ -369,7 +369,7 @@ Enable verbose logging for troubleshooting:
 
 ## Next Steps
 
-- Configure [additional MCP clients]({{ site.baseurl }}/deployment/mcp/)
+- Configure [additional MCP clients]({{ site.baseurl }}/mcp-clients/)
 - Explore [security features]({{ site.baseurl }}/prisma-airs/)
 - Review [API documentation]({{ site.baseurl }}/developers/api/)
 

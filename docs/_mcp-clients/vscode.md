@@ -2,8 +2,8 @@
 layout: documentation
 title: Visual Studio Code Configuration
 description: Configure Prisma AIRS MCP for Visual Studio Code
-permalink: /deployment/mcp/vscode/
-category: deployment
+permalink: /mcp-clients/vscode/
+category: mcp-clients
 ---
 
 ## Overview

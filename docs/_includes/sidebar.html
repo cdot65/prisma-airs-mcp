@@ -74,13 +74,28 @@
     <li><a href="{{ site.baseurl }}/deployment/kubernetes/" {% if page.url == '/deployment/kubernetes/' %}class="active"{% endif %}>Kubernetes</a></li>
     <li><a href="{{ site.baseurl }}/deployment/docker-build-options/" {% if page.url == '/deployment/docker-build-options/' %}class="active"{% endif %}>Docker Build Options</a></li>
   </ul>
-  
-  <h4>MCP Client Config</h4>
+</nav>
+
+{% elsif page.category == 'mcp-clients' %}
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
   <ul>
-    <li><a href="{{ site.baseurl }}/deployment/mcp/" {% if page.url == '/deployment/mcp/' %}class="active"{% endif %}>Overview</a></li>
-    <li><a href="{{ site.baseurl }}/deployment/mcp/vscode/" {% if page.url == '/deployment/mcp/vscode/' %}class="active"{% endif %}>Visual Studio Code</a></li>
-    <li><a href="{{ site.baseurl }}/deployment/mcp/claude-desktop/" {% if page.url == '/deployment/mcp/claude-desktop/' %}class="active"{% endif %}>Claude Desktop</a></li>
-    <li><a href="{{ site.baseurl }}/deployment/mcp/claude-code/" {% if page.url == '/deployment/mcp/claude-code/' %}class="active"{% endif %}>Claude Code</a></li>
+    <li><a href="{{ site.baseurl }}/mcp-clients/overview/" {% if page.url == '/mcp-clients/overview/' %}class="active"{% endif %}>Overview</a></li>
+  </ul>
+  
+  <h4>Code IDE</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/mcp-clients/vscode/" {% if page.url == '/mcp-clients/vscode/' %}class="active"{% endif %}>Visual Studio Code</a></li>
+  </ul>
+  
+  <h4>CLI</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/mcp-clients/claude-code/" {% if page.url == '/mcp-clients/claude-code/' %}class="active"{% endif %}>Claude Code</a></li>
+  </ul>
+  
+  <h4>Desktop</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/mcp-clients/claude-desktop/" {% if page.url == '/mcp-clients/claude-desktop/' %}class="active"{% endif %}>Claude Desktop</a></li>
   </ul>
 </nav>
 

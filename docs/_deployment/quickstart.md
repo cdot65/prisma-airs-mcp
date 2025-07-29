@@ -173,7 +173,7 @@ RATE_LIMIT_MAX_REQUESTS=100
 2. Configure MCP integration
 3. Start using Prisma AIRS security features
 
-**[Claude Integration Guide →]({{ site.baseurl }}/deployment/mcp/claude-desktop)**
+**[Claude Integration Guide →]({{ site.baseurl }}/mcp-clients/claude-desktop/)**
 
 ### Deployment Guides
 

@@ -1,9 +1,9 @@
 ---
 layout: documentation
-title: MCP Client Configuration Overview
+title: MCP Client Overview
 description: Understanding MCP clients and how to connect to Prisma AIRS MCP server
-permalink: /deployment/mcp/
-category: deployment
+permalink: /mcp-clients/overview/
+category: mcp-clients
 ---
 
 ## What is an MCP Client?
@@ -25,21 +25,21 @@ scanning capabilities. This allows these applications to:
 
 We provide configuration guides for the following MCP clients:
 
-### 1. [Visual Studio Code]({{ site.baseurl }}/deployment/mcp/vscode/)
+### 1. [Visual Studio Code]({{ site.baseurl }}/mcp-clients/vscode/)
 
 - **Type**: IDE with AI assistant integration
 - **Use Case**: Secure code development and review
 - **Connection**: HTTP-based MCP server
 - **Key Features**: Real-time security scanning during development, code review assistance
 
-### 2. [Claude Desktop]({{ site.baseurl }}/deployment/mcp/claude-desktop/)
+### 2. [Claude Desktop]({{ site.baseurl }}/mcp-clients/claude-desktop/)
 
 - **Type**: Desktop AI assistant application
 - **Use Case**: General-purpose AI interactions with security
 - **Connection**: Via mcp-remote proxy
 - **Key Features**: Natural language security analysis, document review
 
-### 3. [Claude Code]({{ site.baseurl }}/deployment/mcp/claude-code/)
+### 3. [Claude Code]({{ site.baseurl }}/mcp-clients/claude-code/)
 
 - **Type**: Web-based AI development environment
 - **Use Case**: Secure AI-assisted coding in the browser
