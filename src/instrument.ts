@@ -3,6 +3,9 @@
  * This file is only executed if monitoring is explicitly enabled
  */
 
+// Load environment variables first
+import 'dotenv/config';
+
 import * as Sentry from '@sentry/node';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 
@@ -146,13 +149,13 @@ if (process.env.MONITORING_ENABLED === 'true' && process.env.SENTRY_DSN) {
     });
     
     // Log successful initialization (but don't log DSN)
-    console.log('Sentry monitoring initialized for environment:', 
+    console.log('✅ Sentry monitoring initialized for environment:', 
         process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV || 'development');
 } else {
     // Log why monitoring is disabled (useful for debugging)
     if (process.env.MONITORING_ENABLED !== 'true') {
-        console.log('Sentry monitoring disabled: MONITORING_ENABLED is not true');
+        console.log('ℹ️  Sentry monitoring disabled: MONITORING_ENABLED is not true');
     } else if (!process.env.SENTRY_DSN) {
-        console.log('Sentry monitoring disabled: No SENTRY_DSN provided');
+        console.log('ℹ️  Sentry monitoring disabled: No SENTRY_DSN provided');
     }
 }
