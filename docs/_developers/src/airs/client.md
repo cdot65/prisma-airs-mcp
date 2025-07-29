@@ -5,8 +5,6 @@ permalink: /developers/src/airs/client/
 category: developers
 ---
 
-# AIRS Client (src/airs/client.ts)
-
 Base REST API client for Prisma AI Runtime Security (AIRS) service. Handles HTTP communication, retries, and error management.
 
 ## Core Purpose

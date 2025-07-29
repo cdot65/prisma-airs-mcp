@@ -5,8 +5,6 @@ permalink: /developers/src/airs/rate-limiter/
 category: developers
 ---
 
-# AIRS Rate Limiter (src/airs/rate-limiter.ts)
-
 Token bucket rate limiter for AIRS API calls. Prevents API quota exhaustion and ensures smooth operation.
 
 ## Core Purpose
@@ -64,10 +62,12 @@ Different rate limits for different operations:
 ## Key Features
 
 ### Token Refill
+
 - Tokens refill over time based on window
 - Partial refills for smooth rate limiting
 
 ### Async Waiting
+
 ```typescript
 // Will wait if rate limited
 await rateLimiter.waitForLimit('scan');
@@ -75,6 +75,7 @@ await rateLimiter.waitForLimit('scan');
 ```
 
 ### Status Checking
+
 ```typescript
 const status = rateLimiter.getStatus('scan');
 // { available: 45, resetAt: Date }

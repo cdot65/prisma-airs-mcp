@@ -5,8 +5,6 @@ permalink: /developers/src/airs/index-file/
 category: developers
 ---
 
-# Enhanced AIRS Client (src/airs/index.ts)
-
 Wrapper around the base AIRS client that adds caching and rate limiting for production use.
 
 ## Core Purpose
@@ -42,7 +40,7 @@ export class EnhancedPrismaAirsClient {
 
 ### Enhancement Flow
 
-```
+```text
 Request → Rate Limit Check → Cache Check → Base Client → Cache Store → Response
          ↓ (if limited)      ↓ (if hit)                    ↑
          Wait                Return cached                Store
@@ -58,16 +56,19 @@ Request → Rate Limit Check → Cache Check → Base Client → Cache Store →
 ## Key Features
 
 ### Smart Caching
+
 - Only caches successful responses
 - TTL-based expiration
 - Size-limited cache
 
 ### Rate Limiting
+
 - Per-operation-type limits
 - Automatic waiting when limited
 - Token bucket algorithm
 
 ### Statistics
+
 - Real-time cache performance
 - Rate limit availability
 - Memory usage tracking

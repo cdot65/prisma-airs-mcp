@@ -5,8 +5,6 @@ permalink: /developers/src/airs/cache/
 category: developers
 ---
 
-# AIRS Cache (src/airs/cache.ts)
-
 In-memory TTL-based cache for AIRS API responses. Reduces API calls and improves response times.
 
 ## Core Purpose

@@ -5,8 +5,6 @@ permalink: /developers/src/airs/factory/
 category: developers
 ---
 
-# AIRS Factory (src/airs/factory.ts)
-
 Singleton factory for creating and managing the enhanced AIRS client instance. Ensures consistent configuration across the application.
 
 ## Core Purpose
@@ -61,16 +59,19 @@ const client = new EnhancedPrismaAirsClient({
 ## Key Benefits
 
 ### Singleton Pattern
+
 - Single client instance across application
 - Consistent configuration
 - Shared cache and rate limits
 
 ### Configuration Management
+
 - Centralized environment loading
 - Feature toggling (cache/rate limit)
 - Easy testing with mock clients
 
 ### Resource Management
+
 - Global cache clearing
 - Rate limit reset for testing
 - Memory efficient
