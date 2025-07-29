@@ -243,7 +243,7 @@ export class ResourceHandler {
      */
     private readDeveloperDoc(docId: string): McpResourcesReadResult {
         const doc = DOCUMENTATION_RESOURCES[docId as DocumentationResourceId];
-        
+
         if (!doc) {
             throw new Error(`Developer documentation not found: ${docId}`);
         }

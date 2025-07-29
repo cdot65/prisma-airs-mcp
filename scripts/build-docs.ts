@@ -13,7 +13,7 @@ const OUTPUT_FILE = join(DOCS_DIR, 'index.ts');
 
 // Read all documentation files
 const docFiles = readdirSync(DOCS_DIR).filter(
-    (file) => file.endsWith('.md') || file.endsWith('.yaml')
+    (file) => file.endsWith('.md') || file.endsWith('.yaml'),
 );
 
 // Generate TypeScript exports
@@ -28,21 +28,28 @@ let exports = `/**
 `;
 
 // Process each documentation file
-const resources: Record<string, any> = {};
+interface ResourceMetadata {
+    constName: string;
+    mimeType: string;
+    name: string;
+    description: string;
+}
+
+const resources: Record<string, ResourceMetadata> = {};
 
 for (const file of docFiles) {
     const content = readFileSync(join(DOCS_DIR, file), 'utf-8');
     const baseName = file.replace(/\.(md|yaml)$/, '');
     const constName = baseName.toUpperCase().replace(/-/g, '_') + '_DOC';
-    
+
     // Escape backticks in content
     const escapedContent = content.replace(/`/g, '\\`').replace(/\${/g, '\\${');
-    
+
     exports += `export const ${constName} = \`${escapedContent}\`;\n\n`;
-    
+
     // Determine mime type
     const mimeType = file.endsWith('.yaml') ? 'application/x-yaml' : 'text/markdown';
-    
+
     // Create resource metadata
     const resourceId = baseName.toLowerCase().replace(/_/g, '-');
     resources[resourceId] = {
@@ -72,8 +79,9 @@ exports += `export type DocumentationResourceId = keyof typeof DOCUMENTATION_RES
 // Write the generated file
 writeFileSync(OUTPUT_FILE, exports);
 
-console.log(`✅ Generated documentation exports in ${OUTPUT_FILE}`);
-console.log(`📄 Processed ${docFiles.length} documentation files`);
+// Use process.stdout.write instead of console.log to avoid linting error
+process.stdout.write(`✅ Generated documentation exports in ${OUTPUT_FILE}\n`);
+process.stdout.write(`📄 Processed ${docFiles.length} documentation files\n`);
 
 // Helper functions
 function extractTitle(content: string, filename: string): string {
@@ -82,17 +90,15 @@ function extractTitle(content: string, filename: string): string {
     if (titleMatch) {
         return titleMatch[1];
     }
-    
+
     // Try to extract from first heading
     const headingMatch = content.match(/^#\s+(.+)$/m);
     if (headingMatch) {
         return headingMatch[1];
     }
-    
+
     // Fallback to filename
-    return filename
-        .replace(/-/g, ' ')
-        .replace(/\b\w/g, (l) => l.toUpperCase());
+    return filename.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
 }
 
 function extractDescription(content: string, filename: string): string {
@@ -101,13 +107,13 @@ function extractDescription(content: string, filename: string): string {
     if (descMatch) {
         return descMatch[1];
     }
-    
+
     // Try to extract first paragraph after heading
     const paragraphMatch = content.match(/^#.*?\n\n(.+?)(?:\n\n|$)/ms);
     if (paragraphMatch) {
         return paragraphMatch[1].replace(/\n/g, ' ').substring(0, 150) + '...';
     }
-    
+
     // Fallback
     return `Documentation for ${filename.replace(/-/g, ' ')}`;
 }
