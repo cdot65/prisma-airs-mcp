@@ -13,11 +13,12 @@ import { HttpServerTransport } from './transport/http.js';
 import cors from 'cors';
 import { getConfig } from './config';
 import { getLogger } from './utils/logger.js';
-import { 
-    setupExpressErrorHandler, 
-    createErrorHandler, 
+import {
+    addBreadcrumb,
+    createErrorHandler,
     logMonitoringStatus,
-    addBreadcrumb 
+    setupExpressErrorHandler,
+    setupExpressRequestHandler,
 } from './utils/monitoring.js';
 
 const createServer = (): void => {
@@ -35,6 +36,9 @@ const createServer = (): void => {
     // Log monitoring status
     logMonitoringStatus();
 
+    // Setup Sentry request handler (must be first)
+    setupExpressRequestHandler(app);
+
     // Middleware
     app.use(cors());
     app.use(express.json({ limit: '10mb' }));
@@ -46,18 +50,14 @@ const createServer = (): void => {
             path: req.path,
             ip: req.ip,
         });
-        
+
         // Add monitoring breadcrumb for request tracking
-        addBreadcrumb(
-            `${req.method} ${req.path}`,
-            'http.request',
-            {
-                method: req.method,
-                path: req.path,
-                query: req.query,
-            }
-        );
-        
+        addBreadcrumb(`${req.method} ${req.path}`, 'http.request', {
+            method: req.method,
+            path: req.path,
+            query: req.query,
+        });
+
         next();
     });
 
@@ -139,10 +139,10 @@ const createServer = (): void => {
         res.status(404).json({ error: 'Not found' });
     });
 
-    // Setup Sentry error handler (must come before other error middleware)
+    // Setup Sentry error handler (must be last)
     setupExpressErrorHandler(app);
 
-    // Custom error handling middleware (works with Sentry)
+    // Custom error handling middleware (must be after Sentry)
     app.use(createErrorHandler());
 
     // Start HTTP server

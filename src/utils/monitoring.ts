@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/node';
-import type { Express, ErrorRequestHandler, Request, Response, NextFunction } from 'express';
+import type { ErrorRequestHandler, Express, NextFunction, Request, Response } from 'express';
 import { getLogger } from './logger.js';
 
 /**
@@ -7,6 +7,18 @@ import { getLogger } from './logger.js';
  */
 export function isMonitoringEnabled(): boolean {
     return process.env.MONITORING_ENABLED === 'true' && !!process.env.SENTRY_DSN;
+}
+
+/**
+ * Setup Sentry request handler for Express application
+ * This must be called BEFORE all routes
+ */
+export function setupExpressRequestHandler(_app: Express): void {
+    if (isMonitoringEnabled()) {
+        // For Sentry v8+, we don't need the request handler anymore
+        // as it's handled automatically by the SDK
+        getLogger().info('Sentry request tracking enabled');
+    }
 }
 
 /**
@@ -24,7 +36,7 @@ export function setupExpressErrorHandler(app: Express): void {
  * Capture an exception with optional context
  * Automatically filters out sensitive data
  */
-export function captureException(error: Error, context?: Record<string, any>): void {
+export function captureException(error: Error, context?: Record<string, unknown>): void {
     if (isMonitoringEnabled()) {
         Sentry.captureException(error, {
             extra: context ? sanitizeData(context) : undefined,
@@ -38,7 +50,11 @@ export function captureException(error: Error, context?: Record<string, any>): v
  * Add a breadcrumb for debugging
  * Breadcrumbs help track the sequence of events leading to an error
  */
-export function addBreadcrumb(message: string, category: string, data?: Record<string, any>): void {
+export function addBreadcrumb(
+    message: string,
+    category: string,
+    data?: Record<string, unknown>,
+): void {
     if (isMonitoringEnabled()) {
         Sentry.addBreadcrumb({
             message,
@@ -55,12 +71,15 @@ export function addBreadcrumb(message: string, category: string, data?: Record<s
  */
 export function startSpan(name: string, op: string): void {
     if (isMonitoringEnabled()) {
-        Sentry.startSpan({
-            name,
-            op,
-        }, () => {
-            // Span will be automatically ended when this callback completes
-        });
+        Sentry.startSpan(
+            {
+                name,
+                op,
+            },
+            () => {
+                // Span will be automatically ended when this callback completes
+            },
+        );
     }
 }
 
@@ -69,7 +88,7 @@ export function startSpan(name: string, op: string): void {
  */
 export function createErrorHandler(): ErrorRequestHandler {
     const logger = getLogger();
-    
+
     return (err: Error, req: Request, res: Response, _next: NextFunction) => {
         // Log the error locally
         logger.error('Request error', {
@@ -80,7 +99,7 @@ export function createErrorHandler(): ErrorRequestHandler {
             statusCode: res.statusCode,
         });
 
-        // If monitoring is enabled, add context
+        // If monitoring is enabled, capture the error with context
         if (isMonitoringEnabled()) {
             Sentry.withScope((scope) => {
                 scope.setContext('request', {
@@ -90,16 +109,17 @@ export function createErrorHandler(): ErrorRequestHandler {
                     // Don't include body or headers (may contain sensitive data)
                 });
                 scope.setTag('http.status_code', res.statusCode);
+
+                // Actually capture the exception!
+                Sentry.captureException(err);
             });
         }
 
         // Send error response
         res.status(res.statusCode >= 400 ? res.statusCode : 500).json({
-            error: process.env.NODE_ENV === 'production' 
-                ? 'Internal server error' 
-                : err.message,
+            error: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
             // Include Sentry error ID if available
-            errorId: (res as any).sentry,
+            errorId: (res as { sentry?: string }).sentry,
             timestamp: new Date().toISOString(),
         });
     };
@@ -108,19 +128,28 @@ export function createErrorHandler(): ErrorRequestHandler {
 /**
  * Remove sensitive data from objects before sending to Sentry
  */
-function sanitizeData(data: Record<string, any>): Record<string, any> {
-    const sanitized: Record<string, any> = {};
-    const sensitiveKeys = ['token', 'key', 'secret', 'password', 'auth', 'api', 'credential', 'private'];
-    
+function sanitizeData(data: Record<string, unknown>): Record<string, unknown> {
+    const sanitized: Record<string, unknown> = {};
+    const sensitiveKeys = [
+        'token',
+        'key',
+        'secret',
+        'password',
+        'auth',
+        'api',
+        'credential',
+        'private',
+    ];
+
     for (const [key, value] of Object.entries(data)) {
         const lowerKey = key.toLowerCase();
-        
+
         // Check if key contains sensitive words
-        if (sensitiveKeys.some(sensitive => lowerKey.includes(sensitive))) {
+        if (sensitiveKeys.some((sensitive) => lowerKey.includes(sensitive))) {
             sanitized[key] = '[REDACTED]';
         } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
             // Recursively sanitize nested objects
-            sanitized[key] = sanitizeData(value);
+            sanitized[key] = sanitizeData(value as Record<string, unknown>);
         } else if (typeof value === 'string' && value.length > 100) {
             // Truncate long strings that might contain sensitive data
             sanitized[key] = value.substring(0, 100) + '...[truncated]';
@@ -128,7 +157,7 @@ function sanitizeData(data: Record<string, any>): Record<string, any> {
             sanitized[key] = value;
         }
     }
-    
+
     return sanitized;
 }
 
@@ -137,7 +166,7 @@ function sanitizeData(data: Record<string, any>): Record<string, any> {
  */
 export function logMonitoringStatus(): void {
     const logger = getLogger();
-    
+
     if (isMonitoringEnabled()) {
         logger.info('Monitoring enabled', {
             provider: 'Sentry',
@@ -147,8 +176,8 @@ export function logMonitoringStatus(): void {
         });
     } else {
         logger.info('Monitoring disabled', {
-            reason: !process.env.SENTRY_DSN 
-                ? 'No SENTRY_DSN provided' 
+            reason: !process.env.SENTRY_DSN
+                ? 'No SENTRY_DSN provided'
                 : 'MONITORING_ENABLED is not true',
         });
     }

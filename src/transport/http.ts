@@ -7,6 +7,7 @@ import { ToolHandler } from '../tools';
 import { PromptHandler } from '../prompts';
 import { getConfig } from '../config';
 import { SSETransport } from './sse';
+import { captureException } from '../utils/monitoring.js';
 import type {
     McpPromptsGetParams,
     McpPromptsListParams,
@@ -189,6 +190,15 @@ export class HttpServerTransport {
                 method,
                 error: error instanceof Error ? error.message : String(error),
             });
+
+            // Capture exception in Sentry
+            if (error instanceof Error) {
+                captureException(error, {
+                    method,
+                    requestId: id,
+                    params,
+                });
+            }
 
             // Send error response
             res.status(500).json({

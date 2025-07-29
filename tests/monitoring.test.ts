@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from '@jest/globals';
 import * as monitoring from '../src/utils/monitoring.js';
 
 describe('Monitoring Utils', () => {
@@ -7,7 +7,7 @@ describe('Monitoring Utils', () => {
     beforeEach(() => {
         // Reset environment variables
         process.env = { ...originalEnv };
-        vi.clearAllMocks();
+        jest.clearAllMocks();
     });
 
     afterEach(() => {
@@ -18,28 +18,28 @@ describe('Monitoring Utils', () => {
         it('should return false when MONITORING_ENABLED is not set', () => {
             delete process.env.MONITORING_ENABLED;
             delete process.env.SENTRY_DSN;
-            
+
             expect(monitoring.isMonitoringEnabled()).toBe(false);
         });
 
         it('should return false when MONITORING_ENABLED is false', () => {
             process.env.MONITORING_ENABLED = 'false';
             process.env.SENTRY_DSN = 'https://test@sentry.io/123';
-            
+
             expect(monitoring.isMonitoringEnabled()).toBe(false);
         });
 
         it('should return false when SENTRY_DSN is not set', () => {
             process.env.MONITORING_ENABLED = 'true';
             delete process.env.SENTRY_DSN;
-            
+
             expect(monitoring.isMonitoringEnabled()).toBe(false);
         });
 
         it('should return true when both MONITORING_ENABLED and SENTRY_DSN are set', () => {
             process.env.MONITORING_ENABLED = 'true';
             process.env.SENTRY_DSN = 'https://test@sentry.io/123';
-            
+
             expect(monitoring.isMonitoringEnabled()).toBe(true);
         });
     });
@@ -47,7 +47,7 @@ describe('Monitoring Utils', () => {
     describe('addBreadcrumb', () => {
         it('should not throw when monitoring is disabled', () => {
             delete process.env.MONITORING_ENABLED;
-            
+
             expect(() => {
                 monitoring.addBreadcrumb('Test message', 'test', { foo: 'bar' });
             }).not.toThrow();
@@ -58,7 +58,7 @@ describe('Monitoring Utils', () => {
             // the function doesn't throw with sensitive data
             process.env.MONITORING_ENABLED = 'true';
             process.env.SENTRY_DSN = 'https://test@sentry.io/123';
-            
+
             expect(() => {
                 monitoring.addBreadcrumb('Test', 'test', {
                     api_key: 'secret',
@@ -73,7 +73,7 @@ describe('Monitoring Utils', () => {
         it('should not throw when monitoring is disabled', () => {
             delete process.env.MONITORING_ENABLED;
             const error = new Error('Test error');
-            
+
             expect(() => {
                 monitoring.captureException(error, { context: 'test' });
             }).not.toThrow();
@@ -89,19 +89,25 @@ describe('Monitoring Utils', () => {
         it('should handle errors without throwing', () => {
             const handler = monitoring.createErrorHandler();
             const error = new Error('Test error');
-            const req = { method: 'GET', path: '/test', query: {} } as any;
-            const res = {
+
+            const req: any = { method: 'GET', path: '/test', query: {} };
+
+            const res: any = {
                 statusCode: 500,
-                status: vi.fn().mockReturnThis(),
-                json: vi.fn(),
-            } as any;
-            const next = vi.fn();
+                status: jest.fn().mockReturnThis(),
+                json: jest.fn(),
+            };
+
+            const next: any = jest.fn();
 
             expect(() => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 handler(error, req, res, next);
             }).not.toThrow();
 
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(res.status).toHaveBeenCalledWith(500);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             expect(res.json).toHaveBeenCalled();
         });
     });
