@@ -103,6 +103,8 @@
     },
     "dependencies": {
         "@modelcontextprotocol/sdk": "^1.17.0",
+        "@sentry/node": "^9.42.1",
+        "@sentry/profiling-node": "^9.42.1",
         "cors": "^2.8.5",
         "dotenv": "^17.2.0",
         "express": "^5.1.0",

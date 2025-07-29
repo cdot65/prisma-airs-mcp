@@ -19,6 +19,15 @@ services:
             - RATE_LIMIT_ENABLED=${RATE_LIMIT_ENABLED:-true}
             - RATE_LIMIT_MAX_REQUESTS=${RATE_LIMIT_MAX_REQUESTS:-100}
             - RATE_LIMIT_WINDOW_MS=${RATE_LIMIT_WINDOW_MS:-60000}
+            # Optional Monitoring (Sentry)
+            - MONITORING_ENABLED=${MONITORING_ENABLED:-false}
+            - SENTRY_DSN=${SENTRY_DSN}
+            - SENTRY_ENVIRONMENT=${SENTRY_ENVIRONMENT:-development}
+            - SENTRY_TRACES_SAMPLE_RATE=${SENTRY_TRACES_SAMPLE_RATE:-0.1}
+            - SENTRY_PROFILES_SAMPLE_RATE=${SENTRY_PROFILES_SAMPLE_RATE:-0.1}
+            - SENTRY_RELEASE=${SENTRY_RELEASE}
+            - SENTRY_SERVER_NAME=${SENTRY_SERVER_NAME}
+            - SENTRY_SEND_DEFAULT_PII=${SENTRY_SEND_DEFAULT_PII:-false}
         env_file:
             - .env
         healthcheck:

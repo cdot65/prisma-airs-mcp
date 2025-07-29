@@ -71,6 +71,17 @@ Prisma AIRS MCP Server (this project)
 Prisma AIRS Security API
 ```
 
+## 🔒 Privacy & Monitoring
+
+This MCP server is designed with privacy in mind:
+
+- **No telemetry by default** - The server does not collect any usage data unless explicitly enabled
+- **Optional error monitoring** - Sentry.io integration is available but completely opt-in
+- **Data filtering** - When monitoring is enabled, sensitive data (API keys, scan results, etc.) is automatically filtered
+- **You control your data** - All monitoring features require explicit configuration
+
+To enable optional monitoring for debugging, see the [configuration guide](https://cdot65.github.io/prisma-airs-mcp/deployment/configuration/#optional-monitoring-sentry).
+
 ## 📚 Documentation
 
 **[Visit our comprehensive documentation →](https://cdot65.github.io/prisma-airs-mcp/)**

@@ -157,6 +157,111 @@ AIRS_RETRY_MAX_DELAY_MS=60000
 | `TRUST_PROXY`        | Trust proxy headers         | `true`  |
 | `ENABLE_COMPRESSION` | Enable response compression | `true`  |
 
+## Optional Monitoring (Sentry)
+
+The MCP server includes optional error monitoring and performance tracking via Sentry. This feature is completely opt-in and disabled by default to respect privacy.
+
+### Basic Configuration
+
+| Variable              | Description                      | Default       | Required |
+| --------------------- | -------------------------------- | ------------- | -------- |
+| `MONITORING_ENABLED`  | Enable Sentry monitoring         | `false`       | Yes      |
+| `SENTRY_DSN`          | Your Sentry project DSN          | -             | Yes*     |
+| `SENTRY_ENVIRONMENT`  | Environment name                 | `production`  | No       |
+
+*Required only if `MONITORING_ENABLED=true`
+
+### Performance Monitoring
+
+| Variable                       | Description                    | Default | Range   |
+| ------------------------------ | ------------------------------ | ------- | ------- |
+| `SENTRY_TRACES_SAMPLE_RATE`    | Transaction sampling rate      | `0.1`   | 0.0-1.0 |
+| `SENTRY_PROFILES_SAMPLE_RATE`  | Profiling sampling rate        | `0.1`   | 0.0-1.0 |
+
+### Privacy Settings
+
+| Variable                | Description                      | Default | Privacy Impact |
+| ----------------------- | -------------------------------- | ------- | -------------- |
+| `SENTRY_SEND_DEFAULT_PII` | Send personally identifiable info | `false` | High          |
+| `SENTRY_SERVER_NAME`    | Custom server identifier         | -       | Low            |
+| `SENTRY_RELEASE`        | Release version for tracking     | -       | None           |
+
+### What Data is Collected?
+
+When monitoring is enabled, the following data is collected:
+
+**Always Collected:**
+- Error messages and stack traces
+- Request paths and HTTP methods
+- Response status codes
+- Performance metrics (response times)
+- Server environment information
+
+**Never Collected:**
+- API keys or authentication tokens
+- Request/response bodies
+- AIRS scan results or content
+- User IP addresses (unless PII enabled)
+- Cookie values
+
+**Filtered Before Sending:**
+- Headers containing auth tokens
+- Any data matching sensitive patterns
+- Health check requests (`/health`, `/ready`)
+
+### Example Configurations
+
+#### Minimal Monitoring (Errors Only)
+```env
+MONITORING_ENABLED=true
+SENTRY_DSN=https://your-key@sentry.io/project-id
+SENTRY_TRACES_SAMPLE_RATE=0
+```
+
+#### Balanced Monitoring
+```env
+MONITORING_ENABLED=true
+SENTRY_DSN=https://your-key@sentry.io/project-id
+SENTRY_ENVIRONMENT=production
+SENTRY_TRACES_SAMPLE_RATE=0.1
+SENTRY_PROFILES_SAMPLE_RATE=0.1
+```
+
+#### Full Monitoring (Development)
+```env
+MONITORING_ENABLED=true
+SENTRY_DSN=https://your-key@sentry.io/project-id
+SENTRY_ENVIRONMENT=development
+SENTRY_TRACES_SAMPLE_RATE=1.0
+SENTRY_PROFILES_SAMPLE_RATE=1.0
+SENTRY_SEND_DEFAULT_PII=true
+```
+
+### Kubernetes Configuration
+
+Add to your ConfigMap:
+```yaml
+data:
+  monitoring.enabled: "false"
+  sentry.traces.sample.rate: "0.1"
+  sentry.profiles.sample.rate: "0.1"
+```
+
+Add to your Secret:
+```yaml
+stringData:
+  sentry.dsn: "https://your-key@sentry.io/project-id"
+```
+
+### Disabling Monitoring
+
+Monitoring is disabled by default. To ensure it remains disabled:
+
+```env
+MONITORING_ENABLED=false
+# or simply omit the variable entirely
+```
+
 ## Complete Example Configurations
 
 ### Development Configuration

@@ -1,3 +1,6 @@
+// IMPORTANT: This must be the very first import for Sentry to work properly
+import './instrument.js';
+
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import type { Request, Response } from 'express';
 import express from 'express';
@@ -10,6 +13,12 @@ import { HttpServerTransport } from './transport/http.js';
 import cors from 'cors';
 import { getConfig } from './config';
 import { getLogger } from './utils/logger.js';
+import { 
+    setupExpressErrorHandler, 
+    createErrorHandler, 
+    logMonitoringStatus,
+    addBreadcrumb 
+} from './utils/monitoring.js';
 
 const createServer = (): void => {
     const config = getConfig();
@@ -23,6 +32,9 @@ const createServer = (): void => {
         version: config.mcp.serverVersion,
     });
 
+    // Log monitoring status
+    logMonitoringStatus();
+
     // Middleware
     app.use(cors());
     app.use(express.json({ limit: '10mb' }));
@@ -34,6 +46,18 @@ const createServer = (): void => {
             path: req.path,
             ip: req.ip,
         });
+        
+        // Add monitoring breadcrumb for request tracking
+        addBreadcrumb(
+            `${req.method} ${req.path}`,
+            'http.request',
+            {
+                method: req.method,
+                path: req.path,
+                query: req.query,
+            }
+        );
+        
         next();
     });
 
@@ -115,11 +139,11 @@ const createServer = (): void => {
         res.status(404).json({ error: 'Not found' });
     });
 
-    // Error handling middleware
-    app.use((err: Error, _req: Request, res: Response, _next: express.NextFunction) => {
-        logger.error('Unhandled error', { error: err.message, stack: err.stack });
-        res.status(500).json({ error: 'Internal server error' });
-    });
+    // Setup Sentry error handler (must come before other error middleware)
+    setupExpressErrorHandler(app);
+
+    // Custom error handling middleware (works with Sentry)
+    app.use(createErrorHandler());
 
     // Start HTTP server
     app.listen(config.server.port, () => {
