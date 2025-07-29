@@ -3,6 +3,7 @@ layout: documentation
 title: Quick Start Guide
 description: Get Prisma AIRS MCP up and running in minutes
 category: deployment
+permalink: /deployment/quickstart/
 ---
 
 ## Overview

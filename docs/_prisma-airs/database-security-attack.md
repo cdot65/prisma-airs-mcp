@@ -3,6 +3,7 @@ layout: documentation
 title: Detect Database Security Attack
 description: Detect and block database vulnerability exploits via AI prompts and responses
 category: prisma-airs
+permalink: /prisma-airs/database-security-attack/
 ---
 
 ## Overview

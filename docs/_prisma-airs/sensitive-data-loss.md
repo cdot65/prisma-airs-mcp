@@ -3,6 +3,7 @@ layout: documentation
 title: Detect Sensitive Data Loss
 description: Detect and prevent exposure of sensitive data in prompts and responses
 category: prisma-airs
+permalink: /prisma-airs/sensitive-data-loss/
 ---
 
 ## Overview

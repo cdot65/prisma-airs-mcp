@@ -3,6 +3,7 @@ layout: documentation
 title: Custom Topic Guardrails
 description: Define and enforce custom rules to block or allow topics based on your needs
 category: prisma-airs
+permalink: /prisma-airs/custom-topic-guardrails/
 ---
 
 ## Overview

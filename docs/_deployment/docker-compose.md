@@ -3,6 +3,7 @@ layout: documentation
 title: Docker Compose Deployment
 description: Deploy Prisma AIRS MCP using Docker Compose with development and production profiles
 category: deployment
+permalink: /deployment/docker-compose/
 ---
 
 ## Overview

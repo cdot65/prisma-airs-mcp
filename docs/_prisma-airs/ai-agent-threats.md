@@ -3,6 +3,7 @@ layout: documentation
 title: Detect AI Agent Threats
 description: Identify and block threats targeting agentic AI workflows and tool misuse
 category: prisma-airs
+permalink: /prisma-airs/ai-agent-threats/
 ---
 
 ## Overview

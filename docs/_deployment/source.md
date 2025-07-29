@@ -3,6 +3,7 @@ layout: documentation
 title: Build from Source
 description: Build and run Prisma AIRS MCP from source code
 category: deployment
+permalink: /deployment/source/
 ---
 
 ## Overview

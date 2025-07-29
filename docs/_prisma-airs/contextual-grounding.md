@@ -3,6 +3,7 @@ layout: documentation
 title: Detect Contextual Grounding
 description: Ensure AI outputs are grounded in context and prevent hallucinations
 category: prisma-airs
+permalink: /prisma-airs/contextual-grounding/
 ---
 
 ## Overview

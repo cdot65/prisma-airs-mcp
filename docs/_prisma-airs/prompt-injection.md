@@ -3,6 +3,7 @@ layout: documentation
 title: Detect Prompt Injection
 description: Identify and block malicious prompt manipulation attempts in real time
 category: prisma-airs
+permalink: /prisma-airs/prompt-injection/
 ---
 
 ## Overview

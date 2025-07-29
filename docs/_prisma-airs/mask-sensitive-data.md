@@ -3,6 +3,7 @@ layout: documentation
 title: Mask Sensitive Data
 description: Automatically mask sensitive data patterns with precise offset information
 category: prisma-airs
+permalink: /prisma-airs/mask-sensitive-data/
 ---
 
 ## Overview

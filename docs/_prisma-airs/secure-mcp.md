@@ -3,6 +3,7 @@ layout: documentation
 title: Secure Model Context Protocol (MCP)
 description: Guard against tool poisoning and prompt injection in agentic AI workflows
 category: prisma-airs
+permalink: /prisma-airs/secure-mcp/
 ---
 
 ## Overview

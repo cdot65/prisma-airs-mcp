@@ -3,6 +3,7 @@ layout: documentation
 title: Docker Deployment
 description: Deploy Prisma AIRS MCP using standalone Docker
 category: deployment
+permalink: /deployment/docker/
 ---
 
 ## Overview

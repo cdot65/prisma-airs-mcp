@@ -3,6 +3,7 @@ layout: documentation
 title: Detect Toxic Content
 description: Detect and block toxic, offensive, or unsafe content using advanced content moderation
 category: prisma-airs
+permalink: /prisma-airs/toxic-content/
 ---
 
 ## Overview

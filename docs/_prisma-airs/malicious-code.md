@@ -3,6 +3,7 @@ layout: documentation
 title: Detect Malicious Code
 description: Scan and block AI-generated code that may be harmful or introduce vulnerabilities
 category: prisma-airs
+permalink: /prisma-airs/malicious-code/
 ---
 
 ## Overview

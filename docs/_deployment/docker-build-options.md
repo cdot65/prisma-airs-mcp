@@ -3,6 +3,7 @@ layout: documentation
 title: Docker Build Options
 description: Platform-specific Docker builds and multi-architecture strategies for Prisma AIRS MCP
 category: deployment
+permalink: /deployment/docker-build-options/
 ---
 
 ## Overview
