@@ -33,7 +33,7 @@ The configuration module serves as the single source of truth for all applicatio
 ┌─────────────────────────────────────────┐
 │         Environment Sources             │
 │  • process.env                          │
-│  • .env file (via dotenv)              │
+│  • .env file (via dotenv)               │
 │  • System environment                   │
 └─────────────────┬───────────────────────┘
                   │
@@ -51,15 +51,15 @@ The configuration module serves as the single source of truth for all applicatio
                   ▼
 ┌─────────────────────────────────────────┐
 │        Typed Configuration              │
-│  ┌────────────┐  ┌────────────┐       │
-│  │   Server   │  │    AIRS    │       │
-│  └────────────┘  └────────────┘       │
-│  ┌────────────┐  ┌────────────┐       │
-│  │    MCP     │  │   Cache    │       │
-│  └────────────┘  └────────────┘       │
-│  ┌────────────┐                        │
-│  │ Rate Limit │                        │
-│  └────────────┘                        │
+│  ┌────────────┐  ┌────────────┐         │
+│  │   Server   │  │    AIRS    │         │
+│  └────────────┘  └────────────┘         │
+│  ┌────────────┐  ┌────────────┐         │
+│  │    MCP     │  │   Cache    │         │
+│  └────────────┘  └────────────┘         │
+│  ┌────────────┐                         │
+│  │ Rate Limit │                         │
+│  └────────────┘                         │
 └─────────────────────────────────────────┘
 ```
 

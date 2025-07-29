@@ -41,11 +41,11 @@ src/resources/
                   │
          ┌────────┴────────┬──────────┐
          ▼                 ▼          ▼
-┌────────────────┐ ┌────────────┐ ┌──────────┐
-│  AIRS Client   │ │ Cache Stats│ │Rate Limit│
-│ • Scan results │ │ • Metrics  │ │ • Status │
+┌─────────────────┐ ┌──────────────┐ ┌──────────┐
+│  AIRS Client    │ │ Cache Stats  │ │Rate Limit│
+│ • Scan results  │ │ • Metrics    │ │ • Status │
 │ • Threat reports│ │ • Performance│ │ • Quotas │
-└────────────────┘ └────────────┘ └──────────┘
+└─────────────────┘ └──────────────┘ └──────────┘
 ```
 
 ## Resource Types
