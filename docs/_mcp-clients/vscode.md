@@ -2,8 +2,8 @@
 layout: documentation
 title: Visual Studio Code Configuration
 description: Configure Prisma AIRS MCP for Visual Studio Code
-permalink: /deployment/mcp/vscode/
-category: deployment
+permalink: /mcp-clients/vscode/
+category: mcp-clients
 ---
 
 ## Overview
@@ -254,7 +254,7 @@ Check if this code properly handles sensitive data according to security policie
 ## Next Steps
 
 - Explore [available security features]({{ site.baseurl }}/prisma-airs/)
-- Review [security best practices]({{ site.baseurl }}/prisma-airs/overview/)
+- Review [security best practices]({{ site.baseurl }}/prisma-airs/)
 - Set up [CI/CD integration]({{ site.baseurl }}/deployment/)
 
 ## Additional Resources

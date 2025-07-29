@@ -2,6 +2,7 @@
 layout: documentation
 title: Overview
 description: Developer documentation for Prisma AIRS MCP server
+permalink: /developers/
 category: developers
 ---
 

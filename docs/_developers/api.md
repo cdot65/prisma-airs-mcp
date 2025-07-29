@@ -2,12 +2,14 @@
 layout: documentation
 title: API Reference
 description: Complete API documentation for Prisma AIRS MCP
+permalink: /developers/api/
 category: developers
 ---
 
 ## Overview
 
-The Prisma AIRS MCP server provides a JSON-RPC 2.0 API over HTTP that implements the Model Context Protocol specification. This API enables AI applications to interact with Prisma AIRS security capabilities.
+The Prisma AIRS MCP server provides a JSON-RPC 2.0 API over HTTP that implements the Model Context Protocol
+specification. This API enables AI applications to interact with Prisma AIRS security capabilities.
 
 ## Base URL
 
@@ -36,7 +38,7 @@ All API requests use JSON-RPC 2.0 protocol:
 ### MCP Methods
 
 | Method                      | Description                          |
-| --------------------------- | ------------------------------------ |
+|-----------------------------|--------------------------------------|
 | `initialize`                | Initialize MCP session               |
 | `notifications/initialized` | Confirm initialization               |
 | `resources/list`            | List available resources             |
@@ -52,13 +54,14 @@ All API requests use JSON-RPC 2.0 protocol:
 ### Health Endpoints
 
 | Endpoint  | Method | Description     |
-| --------- | ------ | --------------- |
+|-----------|--------|-----------------|
 | `/health` | GET    | Health check    |
 | `/ready`  | GET    | Readiness check |
 
 ## Authentication
 
-While the MCP protocol itself doesn't require authentication at the transport layer, the underlying Prisma AIRS API requires an API key. This is configured server-side through environment variables.
+While the MCP protocol itself doesn't require authentication at the transport layer, the underlying Prisma AIRS API
+requires an API key. This is configured server-side through environment variables.
 
 ## Quick Start Example
 
@@ -341,7 +344,7 @@ eventSource.addEventListener('endpoint', (event) => {
 ### Standard JSON-RPC Errors
 
 | Code   | Message          | Description                |
-| ------ | ---------------- | -------------------------- |
+|--------|------------------|----------------------------|
 | -32700 | Parse error      | Invalid JSON               |
 | -32600 | Invalid request  | Invalid JSON-RPC structure |
 | -32601 | Method not found | Unknown method             |
@@ -351,7 +354,7 @@ eventSource.addEventListener('endpoint', (event) => {
 ### Custom MCP Errors
 
 | Code   | Message            | Description                      |
-| ------ | ------------------ | -------------------------------- |
+|--------|--------------------|----------------------------------|
 | -32001 | Resource not found | Requested resource doesn't exist |
 | -32002 | Tool not found     | Requested tool doesn't exist     |
 | -32003 | Prompt not found   | Requested prompt doesn't exist   |
@@ -384,8 +387,8 @@ MCP_PROTOCOL_VERSION=2024-11-05
 ### TypeScript/JavaScript
 
 ```typescript
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import {Client} from '@modelcontextprotocol/sdk/client/index.js';
+import {StdioClientTransport} from '@modelcontextprotocol/sdk/client/stdio.js';
 
 // Initialize client
 const transport = new StdioClientTransport({

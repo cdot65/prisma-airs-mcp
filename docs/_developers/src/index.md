@@ -7,7 +7,9 @@ category: developers
 
 # Server Bootstrap (src/index.ts)
 
-The `src/index.ts` file serves as the main entry point for the Prisma AIRS MCP server. It bootstraps the Express HTTP server, configures middleware, sets up MCP protocol handling, and establishes health check endpoints for production deployments.
+The `src/index.ts` file serves as the main entry point for the Prisma AIRS MCP server. It bootstraps the Express HTTP
+server, configures middleware, sets up MCP protocol handling, and establishes health check endpoints for production
+deployments.
 
 ## Module Structure
 
@@ -30,22 +32,160 @@ src/index.ts          # Main application entry point
 
 ## Architecture Flow
 
+### High-Level Request Flow
+
 ```
-Application Start
-       ↓
-createServer() Function
-       ↓
-Configuration & Logger Init
-       ↓
-Express App + Middleware
-       ↓
-MCP Server Instance
-       ↓
-HTTP Transport Handler
-       ↓
-Route Registration
-       ↓
-Server Listen on Port
+┌─────────────────────────────────────────────────────────────────┐
+│                        MCP Client Request                       │
+│              (Claude Desktop, VS Code, LibreChat)               │
+└───────────────────────┬─────────────────────────────────────────┘
+                        │
+                        ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    Express HTTP Server (:3000)                  │
+│  • CORS enabled for cross-origin requests                       │
+│  • JSON body parsing with 10MB limit                            │
+│  • Compression for response optimization                        │
+└───────────────────────┬─────────────────────────────────────────┘
+                        │
+        ┌───────────────┴───────────────┬─────────────────┐
+        │                               │                 │
+        ▼                               ▼                 ▼
+┌───────────────┐            ┌──────────────────┐   ┌────────────┐
+│ Health Check  │            │  MCP Endpoint    │   │  SSE Mode  │
+│   /health     │            │   POST /         │   │   GET /    │
+│   /ready      │            │  JSON-RPC 2.0    │   │  Streaming │
+└───────────────┘            └────────┬─────────┘   └─────┬──────┘
+                                      │                   │
+                                      ▼                   ▼
+                        ┌──────────────────────────────────────┐
+                        │     HttpServerTransport Handler      │
+                        │  • Request validation & routing      │
+                        │  • Session management                │
+                        │  • SSE connection handling           │
+                        └────────────────┬─────────────────────┘
+                                         │
+                                         ▼
+                        ┌──────────────────────────────────────┐
+                        │         MCP Server Instance          │
+                        │  • Protocol version: 2024-11-05      │
+                        │  • Capabilities registration         │
+                        │  • Handler coordination              │
+                        └────────────────┬─────────────────────┘
+                                         │
+                 ┌───────────────────────┼───────────────────────┐
+                 │                       │                       │
+                 ▼                       ▼                       ▼
+         ┌──────────────┐       ┌──────────────┐      ┌──────────────┐
+         │ Tool Handler │       │   Resource   │      │    Prompt    │
+         │              │       │   Handler    │      │   Handler    │
+         ├──────────────┤       ├──────────────┤      ├──────────────┤
+         │ • scan       │       │ • cache      │      │ • security   │
+         │ • results    │       │ • scan data  │      │ • workflows  │
+         │ • reports    │       │ • rate limit │      │ • templates  │
+         └──────┬───────┘       └──────┬───────┘      └──────────────┘
+                │                      │
+                └─────────┬────────────┘
+                          │
+                          ▼
+                ┌──────────────────────────┐
+                │   AIRS Client Singleton  │
+                │  • API communication     │
+                │  • Caching layer         │
+                │  • Rate limiting         │
+                └──────────┬───────────────┘
+                          │
+                          ▼
+                ┌──────────────────────────┐
+                │   Prisma AIRS API        │
+                │  (External Service)      │
+                └──────────────────────────┘
+```
+
+### Detailed Startup Sequence
+
+```
+1. Application Entry (index.ts)
+   │
+   ├─► Load Environment Variables
+   │   └─► NODE_ENV, PORT, CORS_ORIGIN
+   │
+   ├─► Initialize Configuration (getConfig)
+   │   ├─► Server settings (port, CORS)
+   │   ├─► AIRS API credentials
+   │   └─► MCP protocol version
+   │
+   ├─► Create Logger Instance (getLogger)
+   │   └─► Winston with environment-aware settings
+   │
+   ├─► Initialize Express Application
+   │   ├─► CORS middleware (configurable origins)
+   │   ├─► JSON parser (10MB limit)
+   │   ├─► Compression middleware
+   │   └─► Request logging
+   │
+   ├─► Create MCP Server Instance
+   │   ├─► Set server name and version
+   │   ├─► Define capabilities:
+   │   │   ├─► tools (5 security tools)
+   │   │   ├─► resources (cache, rate limit)
+   │   │   └─► prompts (4 workflows)
+   │   └─► Initialize handlers
+   │
+   ├─► Setup HTTP Transport
+   │   ├─► Create HttpServerTransport
+   │   ├─► Link to MCP server instance
+   │   └─► Configure JSON-RPC handling
+   │
+   ├─► Register Routes
+   │   ├─► GET /health → Liveness probe
+   │   ├─► GET /ready → Readiness probe
+   │   ├─► GET / → SSE streaming mode
+   │   └─► POST / → JSON-RPC requests
+   │
+   └─► Start Server
+       ├─► Listen on configured port
+       ├─► Log successful startup
+       └─► Begin accepting connections
+```
+
+### Request Processing Pipeline
+
+```
+Incoming HTTP Request
+        │
+        ▼
+┌─────────────────────┐
+│  Express Router     │
+│  Determines path    │
+└──────────┬──────────┘
+           │
+    ┌──────┴──────┬─────────────┬────────────┐
+    │             │             │            │
+    ▼             ▼             ▼            ▼
+  /health      /ready        POST /        GET /
+    │             │             │            │
+    ▼             ▼             ▼            ▼
+  200 OK      Ready Check  JSON-RPC     SSE Stream
+                  │             │            │
+                  ▼             ▼            ▼
+              Check AIRS   Transport    EventSource
+              Connection    Handler      Protocol
+                                │
+                                ▼
+                     ┌─────────────────┐
+                     │ MCP Protocol    │
+                     │ Message Router  │
+                     └────────┬────────┘
+                              │
+        ┌─────────────────────┼────────────────────┐
+        │                     │                    │
+        ▼                     ▼                    ▼
+    tools/call           resources/read       prompts/get
+        │                     │                    │
+        ▼                     ▼                    ▼
+    Execute Tool         Read Resource         Get Prompt
+     (AIRS Scan)          (Cache/RL)           (Workflow)
 ```
 
 ## Dependencies
@@ -53,7 +193,7 @@ Server Listen on Port
 ### External Dependencies
 
 | Package                     | Purpose                     | Usage                             |
-| --------------------------- | --------------------------- | --------------------------------- |
+|-----------------------------|-----------------------------|-----------------------------------|
 | `@modelcontextprotocol/sdk` | MCP protocol implementation | Server class for MCP capabilities |
 | `express`                   | Web framework               | HTTP server and routing           |
 | `cors`                      | CORS middleware             | Enable cross-origin requests      |
@@ -61,7 +201,7 @@ Server Listen on Port
 ### Internal Dependencies
 
 | Module                | Import                                                                              | Purpose                    |
-| --------------------- | ----------------------------------------------------------------------------------- | -------------------------- |
+|-----------------------|-------------------------------------------------------------------------------------|----------------------------|
 | `./types`             | `TransportJsonRpcRequest`, `TransportJsonRpcResponse`, `TransportStreamableRequest` | Type definitions           |
 | `./transport/http.js` | `HttpServerTransport`                                                               | HTTP/SSE transport handler |
 | `./config`            | `getConfig()`                                                                       | Configuration singleton    |
@@ -264,7 +404,7 @@ app.get('/', (req: Request, res: Response) => {
 **Mode Selection**:
 
 | Accept Header       | Response Type | Purpose            |
-| ------------------- | ------------- | ------------------ |
+|---------------------|---------------|--------------------|
 | `text/event-stream` | SSE stream    | Real-time updates  |
 | Any other           | JSON          | Server information |
 
@@ -310,7 +450,7 @@ const mcpServer = new Server(
 ### Capability Registration
 
 | Capability  | Description                        | Handler Module   |
-| ----------- | ---------------------------------- | ---------------- |
+|-------------|------------------------------------|------------------|
 | `resources` | Static and dynamic resource access | `src/resources/` |
 | `tools`     | Security scanning tools            | `src/tools/`     |
 | `prompts`   | Workflow templates                 | `src/prompts/`   |
@@ -411,7 +551,7 @@ The application uses centralized types from `./types` with consistent prefixing:
 ### Core Types Used
 
 | Type                         | Module    | Purpose                          |
-| ---------------------------- | --------- | -------------------------------- |
+|------------------------------|-----------|----------------------------------|
 | `TransportJsonRpcRequest`    | `./types` | JSON-RPC 2.0 request format      |
 | `TransportJsonRpcResponse`   | `./types` | JSON-RPC 2.0 response format     |
 | `TransportStreamableRequest` | `./types` | Express Request with SSE headers |
@@ -448,14 +588,14 @@ The server retrieves configuration via `getConfig()` singleton:
 ### Server Configuration
 
 | Key         | Path                        | Default     | Usage              |
-| ----------- | --------------------------- | ----------- | ------------------ |
+|-------------|-----------------------------|-------------|--------------------|
 | Port        | `config.server.port`        | 3000        | HTTP listener port |
 | Environment | `config.server.environment` | development | Runtime mode       |
 
 ### MCP Configuration
 
 | Key         | Path                         | Default                | Usage          |
-| ----------- | ---------------------------- | ---------------------- | -------------- |
+|-------------|------------------------------|------------------------|----------------|
 | Server Name | `config.mcp.serverName`      | prisma-airs-mcp-server | Identity       |
 | Version     | `config.mcp.serverVersion`   | 1.0.0                  | Server version |
 | Protocol    | `config.mcp.protocolVersion` | 2024-11-05             | MCP version    |
@@ -544,7 +684,7 @@ Client → GET / (SSE) → HttpServerTransport → SSE Manager → Event Stream
 ## Key Integration Points
 
 | Component       | Integration             | Purpose                 |
-| --------------- | ----------------------- | ----------------------- |
+|-----------------|-------------------------|-------------------------|
 | Transport Layer | `HttpServerTransport`   | Protocol handling       |
 | Configuration   | `getConfig()` singleton | Settings management     |
 | Logging         | `getLogger()` singleton | Structured logging      |

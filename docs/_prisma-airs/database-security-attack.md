@@ -3,6 +3,7 @@ layout: documentation
 title: Detect Database Security Attack
 description: Detect and block database vulnerability exploits via AI prompts and responses
 category: prisma-airs
+permalink: /prisma-airs/database-security-attack/
 ---
 
 ## Overview
@@ -227,5 +228,5 @@ The scan report provides additional detail about the detection:
 ## Related Resources
 
 - [API Reference]({{ site.baseurl }}/developers/api)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)
 - [Detect Sensitive Data Loss]({{ site.baseurl }}/prisma-airs/sensitive-data-loss)

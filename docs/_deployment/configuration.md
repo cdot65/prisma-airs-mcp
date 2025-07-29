@@ -2,6 +2,7 @@
 layout: documentation
 title: Configuration Reference
 description: Complete configuration reference for Prisma AIRS MCP
+permalink: /deployment/configuration/
 category: deployment
 ---
 

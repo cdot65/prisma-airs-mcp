@@ -3,6 +3,7 @@ layout: documentation
 title: Kubernetes Deployment
 description: Deploy Prisma AIRS MCP on Kubernetes
 category: deployment
+permalink: /deployment/kubernetes/
 ---
 
 ## Overview

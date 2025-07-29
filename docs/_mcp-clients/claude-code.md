@@ -2,8 +2,8 @@
 layout: documentation
 title: Claude Code Configuration
 description: Configure Prisma AIRS MCP for Claude Code (claude.ai/code)
-permalink: /deployment/mcp/claude-code/
-category: deployment
+permalink: /mcp-clients/claude-code/
+category: mcp-clients
 ---
 
 ## Overview
@@ -369,14 +369,14 @@ jobs:
 ## Next Steps
 
 - Explore [available security features]({{ site.baseurl }}/prisma-airs/)
-- Set up [additional MCP clients]({{ site.baseurl }}/deployment/mcp/)
+- Set up [additional MCP clients]({{ site.baseurl }}/mcp-clients/)
 - Review [API documentation]({{ site.baseurl }}/developers/api/)
 
 ## Additional Resources
 
 - [Claude Code Documentation](https://claude.ai/docs/code)
 - [MCP CLI Reference](https://github.com/anthropics/claude-cli)
-- [Prisma AIRS Security Features]({{ site.baseurl }}/prisma-airs/overview/)
+- [Prisma AIRS Security Features]({{ site.baseurl }}/prisma-airs/)
 
 ```
 

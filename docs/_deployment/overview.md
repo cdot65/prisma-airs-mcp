@@ -2,6 +2,7 @@
 layout: documentation
 title: Deployment Overview
 description: Comprehensive deployment guides for Prisma AIRS MCP
+permalink: /deployment/
 category: deployment
 ---
 
@@ -141,7 +142,7 @@ Before deploying, ensure you have:
 1. Choose your deployment method from the guides above
 2. Review the [Configuration Reference]({{ site.baseurl }}/deployment/configuration)
 3. Follow the [Quick Start Guide]({{ site.baseurl }}/deployment/quickstart) to test your deployment
-4. Set up [Claude Integration]({{ site.baseurl }}/deployment/mcp/claude-desktop) to use with Claude Desktop
+4. Set up [Claude Integration]({{ site.baseurl }}/mcp-clients/claude-desktop/) to use with Claude Desktop
 
 ## Need Help?
 

@@ -3,6 +3,7 @@ layout: documentation
 title: Build from Source
 description: Build and run Prisma AIRS MCP from source code
 category: deployment
+permalink: /deployment/source/
 ---
 
 ## Overview
@@ -482,5 +483,5 @@ module.exports = {
 
 - Review the [Configuration Reference]({{ site.baseurl }}/deployment/configuration)
 - Follow the [Quick Start Guide]({{ site.baseurl }}/deployment/quickstart)
-- Set up [Claude Integration]({{ site.baseurl }}/deployment/mcp/claude-desktop)
+- Set up [Claude Integration]({{ site.baseurl }}/mcp-clients/claude-desktop/)
 - Consider [Docker]({{ site.baseurl }}/deployment/docker) or [Kubernetes]({{ site.baseurl }}/deployment/kubernetes) for easier deployment

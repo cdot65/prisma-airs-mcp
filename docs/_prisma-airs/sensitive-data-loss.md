@@ -3,6 +3,7 @@ layout: documentation
 title: Detect Sensitive Data Loss
 description: Detect and prevent exposure of sensitive data in prompts and responses
 category: prisma-airs
+permalink: /prisma-airs/sensitive-data-loss/
 ---
 
 ## Overview
@@ -155,5 +156,5 @@ The specific action shown in the response is based on your AI security profile s
 ## Related Resources
 
 - [API Reference]({{ site.baseurl }}/developers/api)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)
 - [Mask Sensitive Data]({{ site.baseurl }}/prisma-airs/mask-sensitive-data)

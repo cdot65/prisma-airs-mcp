@@ -25,7 +25,7 @@ description: Enterprise-grade AI security through Model Context Protocol integra
     <div class="feature-icon">🔒</div>
     <h3>Prisma AIRS</h3>
     <p>Detect prompt injections, malicious code, data leaks, and more with Palo Alto Networks' proven security engine.</p>
-    <a href="{{ site.baseurl }}/prisma-airs/overview">Security Features →</a>
+    <a href="{{ site.baseurl }}/prisma-airs/">Security Features →</a>
   </div>
   
   <div class="feature-card">
@@ -55,26 +55,17 @@ description: Enterprise-grade AI security through Model Context Protocol integra
   </section>
 
   <section class="content-section">
-    <h2>Latest Updates</h2>
+    <h2>Latest Update</h2>
     
     <div class="update-block">
-      <h3>Version 1.3.5 - Security Hardened Release</h3>
+      <h3>Version 1.0.3 - Bug Fix Release</h3>
+      <p><em>Released: July 28, 2025</em></p>
       <ul>
-        <li>Enhanced security for public repository release</li>
-        <li>Removed all hardcoded secrets</li>
-        <li>Improved documentation and setup guides</li>
-        <li>Added comprehensive security policies</li>
+        <li>Fixed cache key generation to properly deduplicate identical scan requests</li>
+        <li>Improved performance by serving cached results for repeated scans</li>
+        <li>Added comprehensive unit tests for cache functionality</li>
       </ul>
-    </div>
-    
-    <div class="update-block">
-      <h3>Version 1.3.4 - Production Release</h3>
-      <ul>
-        <li>Fixed AIRS API profile configuration</li>
-        <li>Added SSE transport for streaming</li>
-        <li>Enhanced deployment automation</li>
-        <li>Improved error handling and logging</li>
-      </ul>
+      <p><a href="{{ site.baseurl }}/developers/release-notes/">View all release notes →</a></p>
     </div>
   </section>
 </div>

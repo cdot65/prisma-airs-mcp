@@ -3,6 +3,7 @@ layout: documentation
 title: Secure Model Context Protocol (MCP)
 description: Guard against tool poisoning and prompt injection in agentic AI workflows
 category: prisma-airs
+permalink: /prisma-airs/secure-mcp/
 ---
 
 ## Overview
@@ -227,4 +228,4 @@ MCP is on a similar path to HTTP - starting as "insecure by default" but evolvin
 
 - [API Reference]({{ site.baseurl }}/developers/api)
 - [AI Agent Threats]({{ site.baseurl }}/prisma-airs/ai-agent-threats)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)

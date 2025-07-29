@@ -31,9 +31,9 @@ collections:
     enterprise:
         output: true
         permalink: /enterprise/:path/
-    api:
+    mcp-clients:
         output: true
-        permalink: /api/:path/
+        permalink: /mcp-clients/:path/
 
 # Default layouts
 defaults:
@@ -63,10 +63,10 @@ defaults:
           category: "enterprise"
     - scope:
           path: ""
-          type: "api"
+          type: "mcp-clients"
       values:
-          layout: "api"
-          category: "api"
+          layout: "documentation"
+          category: "mcp-clients"
 
 # Site configuration
 repository: cdot65/prisma-airs-mcp

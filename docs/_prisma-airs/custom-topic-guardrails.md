@@ -3,6 +3,7 @@ layout: documentation
 title: Custom Topic Guardrails
 description: Define and enforce custom rules to block or allow topics based on your needs
 category: prisma-airs
+permalink: /prisma-airs/custom-topic-guardrails/
 ---
 
 ## Overview
@@ -210,4 +211,4 @@ Topics that are explicitly permitted:
 ## Related Resources
 
 - [API Reference]({{ site.baseurl }}/developers/api)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)

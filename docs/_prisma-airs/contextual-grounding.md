@@ -3,6 +3,7 @@ layout: documentation
 title: Detect Contextual Grounding
 description: Ensure AI outputs are grounded in context and prevent hallucinations
 category: prisma-airs
+permalink: /prisma-airs/contextual-grounding/
 ---
 
 ## Overview
@@ -228,5 +229,5 @@ The `/v1/scan/reports` endpoint provides additional details:
 ## Related Resources
 
 - [API Reference]({{ site.baseurl }}/developers/api)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)
 - [Prompt Injection Detection]({{ site.baseurl }}/prisma-airs/prompt-injection)

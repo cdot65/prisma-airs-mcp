@@ -3,6 +3,7 @@ layout: documentation
 title: Docker Deployment
 description: Deploy Prisma AIRS MCP using standalone Docker
 category: deployment
+permalink: /deployment/docker/
 ---
 
 ## Overview
@@ -387,4 +388,4 @@ docker run -d \
 - For multi-container setups, see [Docker Compose Deployment]({{ site.baseurl }}/deployment/docker-compose)
 - For production deployments, consider [Kubernetes]({{ site.baseurl }}/deployment/kubernetes)
 - Review the [Configuration Reference]({{ site.baseurl }}/deployment/configuration)
-- Set up [Claude Integration]({{ site.baseurl }}/deployment/mcp/claude-desktop)
+- Set up [Claude Integration]({{ site.baseurl }}/mcp-clients/claude-desktop/)

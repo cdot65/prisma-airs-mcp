@@ -3,6 +3,7 @@ layout: documentation
 title: Detect Toxic Content
 description: Detect and block toxic, offensive, or unsafe content using advanced content moderation
 category: prisma-airs
+permalink: /prisma-airs/toxic-content/
 ---
 
 ## Overview
@@ -139,5 +140,5 @@ When toxic content is detected, the API returns:
 ## Related Resources
 
 - [API Reference]({{ site.baseurl }}/developers/api)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)
 - [Prompt Injection Detection]({{ site.baseurl }}/prisma-airs/prompt-injection)

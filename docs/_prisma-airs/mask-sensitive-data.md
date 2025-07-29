@@ -3,6 +3,7 @@ layout: documentation
 title: Mask Sensitive Data
 description: Automatically mask sensitive data patterns with precise offset information
 category: prisma-airs
+permalink: /prisma-airs/mask-sensitive-data/
 ---
 
 ## Overview
@@ -211,4 +212,4 @@ The scan report provides additional detail with confidence levels:
 
 - [API Reference]({{ site.baseurl }}/developers/api)
 - [Detect Sensitive Data Loss]({{ site.baseurl }}/prisma-airs/sensitive-data-loss)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)

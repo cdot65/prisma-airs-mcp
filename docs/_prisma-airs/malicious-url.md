@@ -3,6 +3,7 @@ layout: documentation
 title: Detect Malicious URL
 description: Scan for and block malicious URLs in AI model outputs and responses
 category: prisma-airs
+permalink: /prisma-airs/malicious-url/
 ---
 
 ## Overview
@@ -130,5 +131,5 @@ When malicious URLs are detected:
 ## Related Resources
 
 - [API Reference]({{ site.baseurl }}/developers/api)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)
 - [Prompt Injection Detection]({{ site.baseurl }}/prisma-airs/prompt-injection)
