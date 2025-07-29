@@ -57,7 +57,7 @@ We provide configuration guides for the following MCP clients:
 
 MCP clients connect to the Prisma AIRS MCP server through different mechanisms:
 
-```
+```text
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │   VS Code       │     │ Claude Desktop  │     │  Claude Code    │
 │                 │     │                 │     │                 │

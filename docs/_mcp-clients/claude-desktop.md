@@ -276,6 +276,7 @@ Prisma AIRS tools in Claude Desktop can:
     ```
 
 3. **Use explicit registry:**
+
     ```json
     {
         "command": "npx",

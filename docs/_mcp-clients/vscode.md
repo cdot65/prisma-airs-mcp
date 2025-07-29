@@ -122,19 +122,19 @@ Once connected, these Prisma AIRS security tools become available:
 
 **Security Code Review:**
 
-```
+```text
 Can you review this function for security vulnerabilities using the Prisma AIRS tools?
 ```
 
 **API Input Validation:**
 
-```
+```text
 Please scan this API endpoint input for potential injection attacks.
 ```
 
 **Data Handling Check:**
 
-```
+```text
 Check if this code properly handles sensitive data according to security policies.
 ```
 
@@ -181,6 +181,7 @@ Check if this code properly handles sensitive data according to security policie
     - Extensions view → MCP Servers → Right-click → Show Output
 
 3. Verify configuration file syntax:
+
     ```bash
     # Validate JSON
     cat .vscode/mcp.json | jq .

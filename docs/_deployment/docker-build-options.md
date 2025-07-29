@@ -87,6 +87,7 @@ For developers on Apple Silicon Macs:
     ```
 
 3. **Using Pre-built Images**:
+
     ```bash
     # Dev tag supports both architectures
     docker pull ghcr.io/cdot65/prisma-airs-mcp:dev
@@ -270,7 +271,7 @@ FROM node:18-alpine AS production
 
 1. **Use .dockerignore**:
 
-    ```
+    ```text
     node_modules
     dist
     .git
@@ -286,6 +287,7 @@ FROM node:18-alpine AS production
     ```
 
 3. **Parallel Builds**:
+
     ```bash
     # Build multiple platforms in parallel
     docker buildx build --platform linux/amd64,linux/arm64 .

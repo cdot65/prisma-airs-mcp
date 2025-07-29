@@ -123,7 +123,7 @@ npm run dev
 
 The server will:
 
-- Start on http://localhost:3000
+- Start on localhost:3000
 - Automatically restart on file changes
 - Show detailed debug logs
 - Enable source maps for debugging
@@ -223,7 +223,7 @@ pnpm docs:serve       # Serve documentation locally
 
 ### Project Structure
 
-```
+```text
 prisma-airs-mcp/
 ├── src/                    # Source code
 │   ├── index.ts          # Application entry point
@@ -261,6 +261,7 @@ prisma-airs-mcp/
     ```
 
 3. **Build and verify:**
+
     ```bash
     pnpm build
     pnpm start
@@ -333,7 +334,7 @@ pm2 monit
 
 ### Common Issues
 
-**Module Not Found**
+Module Not Found
 
 ```bash
 # Clear node_modules and reinstall
@@ -341,7 +342,7 @@ rm -rf node_modules pnpm-lock.yaml
 pnpm install
 ```
 
-**TypeScript Errors**
+TypeScript Errors
 
 ```bash
 # Clean build directory
@@ -349,7 +350,7 @@ rm -rf dist
 pnpm build
 ```
 
-**Port Already in Use**
+Port Already in Use
 
 ```bash
 # Use a different port
@@ -360,7 +361,7 @@ lsof -i :3000
 kill -9 <PID>
 ```
 
-**Permission Errors**
+Permission Errors
 
 ```bash
 # Fix script permissions

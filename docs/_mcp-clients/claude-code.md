@@ -56,7 +56,7 @@ claude mcp list
 
 **Example output:**
 
-```
+```text
 MCP Servers:
 ┌──────────────────┬───────────┬──────────────────────┬─────────┬────────────┐
 │ Name             │ Transport │ URL                  │ Scope   │ Status     │
@@ -160,7 +160,7 @@ Once connected, these Prisma AIRS tools are available:
 
 In Claude Code, use the `/mcp` command:
 
-```
+```text
 /mcp
 ```
 
@@ -175,7 +175,7 @@ In Claude Code, use the `/mcp` command:
 
 #### Security Code Review
 
-```
+```text
 User: Please review this API endpoint for security vulnerabilities:
 
 @app.route('/api/search')
@@ -189,7 +189,7 @@ Claude will use Prisma AIRS tools to detect SQL injection vulnerability.
 
 #### Batch Security Scan
 
-```
+```text
 User: Scan all user inputs in this file for potential security threats.
 ```
 
@@ -197,7 +197,7 @@ Claude will use `airs_scan_async` for efficient batch processing.
 
 #### Compliance Check
 
-```
+```text
 User: Check if this code handles PII data according to GDPR requirements.
 ```
 
@@ -229,6 +229,7 @@ User: Check if this code handles PII data according to GDPR requirements.
     ```
 
 3. **Test with verbose mode:**
+
     ```bash
     claude mcp add --transport http --verbose prisma-airs http://localhost:3000
     ```
@@ -261,6 +262,7 @@ claude mcp add -s project --transport http prisma-airs-team http://localhost:300
     ```
 
 2. **Use user scope instead:**
+
     ```bash
     claude mcp add -s user --transport http prisma-airs http://localhost:3000
     ```
@@ -312,6 +314,7 @@ claude mcp add --transport http prisma-airs-prod https://airs.example.com
     ```
 
 3. Document in README:
+
     ```markdown
     ## Security Tools
     This project uses Prisma AIRS for security scanning.
@@ -377,7 +380,3 @@ jobs:
 - [Claude Code Documentation](https://claude.ai/docs/code)
 - [MCP CLI Reference](https://github.com/anthropics/claude-cli)
 - [Prisma AIRS Security Features]({{ site.baseurl }}/prisma-airs/)
-
-```
-
-```

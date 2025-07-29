@@ -92,7 +92,7 @@ The Kubernetes deployment includes:
 
 ### Resource Structure
 
-```
+```text
 k8s/
 ├── base/                    # Base Kubernetes resources
 │   ├── kustomization.yaml
@@ -110,7 +110,7 @@ k8s/
 
 ## Traefik IngressRoute
 
-### Overview
+### Traefik Overview
 
 The deployment uses Traefik IngressRoute for:
 
@@ -386,7 +386,7 @@ For production, consider:
 
 ### Common Issues
 
-**Pods Not Starting**
+Pods Not Starting
 
 ```bash
 # Check pod events
@@ -396,7 +396,7 @@ kubectl describe pod prisma-airs-mcp-xxxxx -n prisma-airs-mcp-server
 kubectl logs prisma-airs-mcp-xxxxx -n prisma-airs-mcp-server
 ```
 
-**IngressRoute Not Working**
+IngressRoute Not Working
 
 ```bash
 # Check IngressRoute status
@@ -409,7 +409,7 @@ kubectl logs -n traefik-system deployment/traefik | grep prisma-airs
 kubectl get middleware -n prisma-airs-mcp-server
 ```
 
-**Secret Issues**
+Secret Issues
 
 ```bash
 # Verify secret exists
@@ -424,13 +424,13 @@ kubectl get secret prisma-airs-secret -n prisma-airs-mcp-server -o yaml
 
 ### Debugging
 
-**Access Pod Shell**
+Access Pod Shell
 
 ```bash
 kubectl exec -it prisma-airs-mcp-xxxxx -n prisma-airs-mcp-server -- sh
 ```
 
-**Port Forwarding**
+Port Forwarding
 
 ```bash
 # Forward to local port
@@ -440,7 +440,7 @@ kubectl port-forward -n prisma-airs-mcp-server svc/prisma-airs-mcp 3000:3000
 curl http://localhost:3000/health
 ```
 
-**Check DNS Resolution**
+Check DNS Resolution
 
 ```bash
 # From within pod
