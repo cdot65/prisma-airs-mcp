@@ -2,6 +2,7 @@
 layout: documentation
 title: Deployment Overview
 description: Comprehensive deployment guides for Prisma AIRS MCP
+permalink: /deployment/
 category: deployment
 ---
 

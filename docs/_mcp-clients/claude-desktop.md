@@ -377,4 +377,4 @@ Enable verbose logging for troubleshooting:
 
 - [Claude Desktop Documentation](https://claude.ai/docs/desktop)
 - [MCP Remote Repository](https://github.com/modelcontextprotocol/servers/tree/main/src/mcp-remote)
-- [Prisma AIRS Overview]({{ site.baseurl }}/prisma-airs/overview/)
+- [Prisma AIRS Overview]({{ site.baseurl }}/prisma-airs/)

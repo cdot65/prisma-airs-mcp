@@ -238,5 +238,5 @@ The malicious code report shows all code snippets that are extracted and analyze
 ## Related Resources
 
 - [API Reference]({{ site.baseurl }}/developers/api)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)
 - [Database Security Attack Detection]({{ site.baseurl }}/prisma-airs/database-security-attack)

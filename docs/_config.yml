@@ -31,9 +31,6 @@ collections:
     enterprise:
         output: true
         permalink: /enterprise/:path/
-    api:
-        output: true
-        permalink: /api/:path/
     mcp-clients:
         output: true
         permalink: /mcp-clients/:path/
@@ -64,12 +61,6 @@ defaults:
       values:
           layout: "documentation"
           category: "enterprise"
-    - scope:
-          path: ""
-          type: "api"
-      values:
-          layout: "api"
-          category: "api"
     - scope:
           path: ""
           type: "mcp-clients"

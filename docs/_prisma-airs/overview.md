@@ -2,6 +2,7 @@
 layout: documentation
 title: Prisma AIRS Overview
 description: API Intercept threat detection service for securing AI applications
+permalink: /prisma-airs/
 category: prisma-airs
 ---
 

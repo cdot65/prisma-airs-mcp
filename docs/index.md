@@ -25,7 +25,7 @@ description: Enterprise-grade AI security through Model Context Protocol integra
     <div class="feature-icon">🔒</div>
     <h3>Prisma AIRS</h3>
     <p>Detect prompt injections, malicious code, data leaks, and more with Palo Alto Networks' proven security engine.</p>
-    <a href="{{ site.baseurl }}/prisma-airs/overview">Security Features →</a>
+    <a href="{{ site.baseurl }}/prisma-airs/">Security Features →</a>
   </div>
   
   <div class="feature-card">

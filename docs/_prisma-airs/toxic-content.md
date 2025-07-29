@@ -139,5 +139,5 @@ When toxic content is detected, the API returns:
 ## Related Resources
 
 - [API Reference]({{ site.baseurl }}/developers/api)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)
 - [Prompt Injection Detection]({{ site.baseurl }}/prisma-airs/prompt-injection)

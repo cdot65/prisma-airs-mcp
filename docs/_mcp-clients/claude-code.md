@@ -376,7 +376,7 @@ jobs:
 
 - [Claude Code Documentation](https://claude.ai/docs/code)
 - [MCP CLI Reference](https://github.com/anthropics/claude-cli)
-- [Prisma AIRS Security Features]({{ site.baseurl }}/prisma-airs/overview/)
+- [Prisma AIRS Security Features]({{ site.baseurl }}/prisma-airs/)
 
 ```
 

@@ -228,5 +228,5 @@ The `/v1/scan/reports` endpoint provides additional details:
 ## Related Resources
 
 - [API Reference]({{ site.baseurl }}/developers/api)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)
 - [Prompt Injection Detection]({{ site.baseurl }}/prisma-airs/prompt-injection)

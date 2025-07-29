@@ -2,7 +2,7 @@
 layout: documentation
 title: MCP Client Overview
 description: Understanding MCP clients and how to connect to Prisma AIRS MCP server
-permalink: /mcp-clients/overview/
+permalink: /mcp-clients/
 category: mcp-clients
 ---
 
@@ -187,5 +187,5 @@ Common issues across all clients:
 ## Next Steps
 
 - Choose and configure your preferred [MCP client](#supported-mcp-clients)
-- Review [security best practices]({{ site.baseurl }}/prisma-airs/overview/)
+- Review [security best practices]({{ site.baseurl }}/prisma-airs/)
 - Explore [available security features]({{ site.baseurl }}/prisma-airs/)

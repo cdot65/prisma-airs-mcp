@@ -209,5 +209,5 @@ Both requests were blocked according to the security profile settings.
 ## Related Resources
 
 - [API Reference]({{ site.baseurl }}/developers/api)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)
 - [Secure MCP Implementation]({{ site.baseurl }}/prisma-airs/secure-mcp)

@@ -211,4 +211,4 @@ The scan report provides additional detail with confidence levels:
 
 - [API Reference]({{ site.baseurl }}/developers/api)
 - [Detect Sensitive Data Loss]({{ site.baseurl }}/prisma-airs/sensitive-data-loss)
-- [Overview]({{ site.baseurl }}/prisma-airs/overview)
+- [Overview]({{ site.baseurl }}/prisma-airs/)
