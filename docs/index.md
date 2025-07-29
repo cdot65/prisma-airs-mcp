@@ -58,24 +58,27 @@ description: Enterprise-grade AI security through Model Context Protocol integra
     <h2>Latest Updates</h2>
     
     <div class="update-block">
-      <h3>Version 1.3.5 - Security Hardened Release</h3>
+      <h3>Version 1.0.3 - Bug Fix Release</h3>
+      <p><em>Released: July 28, 2025</em></p>
       <ul>
-        <li>Enhanced security for public repository release</li>
-        <li>Removed all hardcoded secrets</li>
-        <li>Improved documentation and setup guides</li>
-        <li>Added comprehensive security policies</li>
+        <li>Fixed cache key generation to properly deduplicate identical scan requests</li>
+        <li>Improved performance by serving cached results for repeated scans</li>
+        <li>Added comprehensive unit tests for cache functionality</li>
       </ul>
     </div>
     
     <div class="update-block">
-      <h3>Version 1.3.4 - Production Release</h3>
+      <h3>Version 1.0.0 - Initial Release</h3>
+      <p><em>Released: July 27, 2025</em></p>
       <ul>
-        <li>Fixed AIRS API profile configuration</li>
-        <li>Added SSE transport for streaming</li>
-        <li>Enhanced deployment automation</li>
-        <li>Improved error handling and logging</li>
+        <li>Full MCP Protocol support with tools, resources, and prompts</li>
+        <li>Complete Prisma AIRS integration for AI security scanning</li>
+        <li>Built-in caching and rate limiting for performance</li>
+        <li>Docker and Kubernetes deployment options</li>
       </ul>
     </div>
+    
+    <p><a href="{{ site.baseurl }}/developers/release-notes/">View all release notes →</a></p>
   </section>
 </div>
 
