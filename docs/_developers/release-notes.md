@@ -9,6 +9,53 @@ category: developers
 
 This page contains the version history and release notes for the Prisma AIRS MCP Server.
 
+## Version 1.0.4 (2025-07-29)
+
+**Feature Release: Optional Monitoring Support**
+
+This release adds optional error monitoring and performance tracking capabilities via Sentry.io, with a strong focus on
+privacy and user control.
+
+### New Features
+
+- **Optional Sentry.io Integration**
+    - Completely opt-in monitoring (disabled by default)
+    - Privacy-focused implementation with comprehensive data filtering
+    - Automatic removal of sensitive data (API keys, tokens, scan results)
+    - Health check endpoints excluded from monitoring
+    - Configurable performance sampling rates
+
+### Improvements
+
+- **Enhanced Version Management**
+    - Updated sync-version script to include .env.example
+    - Ensures MCP_SERVER_VERSION stays synchronized across all files
+    - Better consistency in version tracking
+
+### Privacy & Security
+
+- **No Telemetry by Default**: Monitoring requires explicit configuration
+- **Data Filtering**: Sensitive information is automatically filtered before sending
+- **User Control**: All monitoring features must be explicitly enabled via environment variables
+
+### Configuration
+
+To enable optional monitoring, set:
+
+```env
+MONITORING_ENABLED=true
+SENTRY_DSN=your-sentry-dsn-here
+```
+
+### Technical Details
+
+- Added `src/instrument.ts` for early Sentry initialization
+- Created `src/utils/monitoring.ts` with privacy-focused utilities
+- Integrated error handling throughout the Express application
+- Added comprehensive tests for monitoring functionality
+
+---
+
 ## Version 1.0.3 (2025-07-28)
 
 **Bug Fix Release**
