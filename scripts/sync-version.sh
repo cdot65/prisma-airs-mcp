@@ -57,6 +57,13 @@ if [ -f "docker/README.md" ]; then
     rm -f docker/README.md.bak
 fi
 
+# Update .env.example
+echo "Updating .env.example..."
+if [ -f ".env.example" ]; then
+    sed -i.bak "s/MCP_SERVER_VERSION=[0-9]\+\.[0-9]\+\.[0-9]\+/MCP_SERVER_VERSION=$VERSION/g" .env.example
+    rm -f .env.example.bak
+fi
+
 # Update test files (optional - only if you want tests to use current version)
 # echo "Updating test files..."
 # find tests -name "*.ts" -type f -exec sed -i.bak "s/'1\.0\.0'/'$VERSION'/g" {} \;
@@ -69,6 +76,7 @@ echo "  - version.json (source)"
 echo "  - package.json"
 echo "  - claude.json"
 echo "  - README.md"
+echo "  - .env.example"
 echo "  - Documentation files"
 echo ""
 echo "Remember to commit these changes!"

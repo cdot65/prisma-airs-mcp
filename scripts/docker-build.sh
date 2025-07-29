@@ -16,6 +16,7 @@ BUILD_TARGET="production"
 PLATFORMS=""
 USE_BUILDX=false
 PUSH=false
+NO_CACHE=false
 
 # Usage function
 usage() {
@@ -29,6 +30,7 @@ usage() {
     echo "  -m, --multi-platform   Build for multiple platforms (linux/amd64,linux/arm64)"
     echo "  --platforms PLATFORMS  Specify platforms (e.g., linux/amd64 or linux/arm64)"
     echo "  --push                 Push image to registry (requires --multi-platform)"
+    echo "  --no-cache             Build without using cache"
     echo "  -h, --help             Show this help message"
     echo ""
     echo "Examples:"
@@ -70,6 +72,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --push)
             PUSH=true
+            shift
+            ;;
+        --no-cache)
+            NO_CACHE=true
             shift
             ;;
         -h|--help)
@@ -138,6 +144,22 @@ fi
 
 # Add common flags
 BUILD_CMD="${BUILD_CMD} -f ${DOCKERFILE} -t ${IMAGE_NAME}:${IMAGE_TAG}"
+
+# Add no-cache flag if specified
+if [ "$NO_CACHE" = true ]; then
+    BUILD_CMD="${BUILD_CMD} --no-cache"
+fi
+
+# Add build arguments
+BUILD_ID=$(date +%s)
+BUILD_CMD="${BUILD_CMD} --build-arg BUILD_ID=${BUILD_ID}"
+BUILD_CMD="${BUILD_CMD} --build-arg BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+# Get version from version.json
+if [ -f "version.json" ]; then
+    VERSION=$(jq -r '.version' version.json)
+    BUILD_CMD="${BUILD_CMD} --build-arg VERSION=${VERSION}"
+fi
 
 # Add build target for production builds
 if [ "$BUILD_TARGET" == "production" ]; then

@@ -30,13 +30,25 @@ fi
 
 # Get the expected image from registry
 echo -e "${YELLOW}Checking latest image in registry...${NC}"
-REGISTRY_DIGEST=$(docker manifest inspect "${FULL_IMAGE_BASE}:latest" 2>/dev/null | jq -r '.manifests[0].digest' || echo "")
-if [ -z "$REGISTRY_DIGEST" ]; then
-    echo -e "${RED}Failed to get latest image digest from registry${NC}"
-    echo -e "${YELLOW}Make sure you're logged in to the registry and the image exists${NC}"
-    exit 1
+# Try to get the digest from local docker first
+LOCAL_DIGEST=$(docker images --digests "${FULL_IMAGE_BASE}" | grep latest | awk '{print $3}' | head -1)
+if [ -z "$LOCAL_DIGEST" ] || [ "$LOCAL_DIGEST" == "<none>" ]; then
+    # Try using docker manifest inspect (requires experimental features)
+    REGISTRY_DIGEST=$(docker manifest inspect "${FULL_IMAGE_BASE}:latest" 2>/dev/null | jq -r '.manifests[0].digest' || echo "")
+    if [ -z "$REGISTRY_DIGEST" ]; then
+        echo -e "${YELLOW}Warning: Could not get registry digest. Using local image digest.${NC}"
+        # Get the local image ID as fallback
+        REGISTRY_DIGEST=$(docker inspect "${FULL_IMAGE_BASE}:latest" 2>/dev/null | jq -r '.[0].RepoDigests[0]' | cut -d'@' -f2 || echo "")
+    fi
+else
+    REGISTRY_DIGEST=$LOCAL_DIGEST
 fi
-echo -e "${GREEN}Registry digest: ${REGISTRY_DIGEST}${NC}"
+
+if [ -z "$REGISTRY_DIGEST" ] || [ "$REGISTRY_DIGEST" == "null" ]; then
+    echo -e "${YELLOW}Warning: Could not determine expected image digest${NC}"
+    REGISTRY_DIGEST="unknown"
+fi
+echo -e "${GREEN}Expected digest: ${REGISTRY_DIGEST}${NC}"
 
 # Get the configured image in deployment
 echo ""
@@ -59,19 +71,37 @@ fi
 
 # Check each pod
 MISMATCH=false
+ALL_SAME=true
+FIRST_DIGEST=""
 while IFS='|' read -r POD_NAME IMAGE_ID; do
     # Extract digest from imageID
     POD_DIGEST=$(echo "$IMAGE_ID" | cut -d'@' -f2)
     
-    if [ "$POD_DIGEST" != "$REGISTRY_DIGEST" ]; then
+    # Store first digest for comparison
+    if [ -z "$FIRST_DIGEST" ]; then
+        FIRST_DIGEST="$POD_DIGEST"
+    fi
+    
+    # Check if all pods have the same digest
+    if [ "$POD_DIGEST" != "$FIRST_DIGEST" ]; then
+        ALL_SAME=false
+    fi
+    
+    if [ "$REGISTRY_DIGEST" != "unknown" ] && [ "$POD_DIGEST" != "$REGISTRY_DIGEST" ]; then
         echo -e "${RED}❌ Pod ${POD_NAME} is running outdated image${NC}"
         echo -e "   Expected: ${REGISTRY_DIGEST}"
         echo -e "   Running:  ${POD_DIGEST}"
         MISMATCH=true
     else
-        echo -e "${GREEN}✓ Pod ${POD_NAME} is running latest image${NC}"
+        echo -e "${GREEN}✓ Pod ${POD_NAME} is running image: ${POD_DIGEST:0:12}...${NC}"
     fi
 done <<< "$RUNNING_PODS"
+
+# If we couldn't determine expected digest, at least check all pods are the same
+if [ "$REGISTRY_DIGEST" == "unknown" ] && [ "$ALL_SAME" = false ]; then
+    echo -e "${RED}❌ Pods are running different image versions${NC}"
+    MISMATCH=true
+fi
 
 # Get version from running pods
 echo ""

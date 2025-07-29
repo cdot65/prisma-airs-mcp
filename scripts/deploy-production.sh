@@ -43,12 +43,16 @@ echo ""
 # Step 2: Build production images
 echo -e "${YELLOW}Step 2: Building production images...${NC}"
 echo "Building AMD64 image for Kubernetes production..."
+# Add a unique build arg to bust cache
+BUILD_ID=$(date +%s)
 docker buildx build \
     --platform linux/amd64 \
     --tag "${FULL_IMAGE_BASE}:latest" \
     --tag "${FULL_IMAGE_BASE}:v${VERSION}" \
     --build-arg VERSION="${VERSION}" \
     --build-arg BUILD_DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    --build-arg BUILD_ID="${BUILD_ID}" \
+    --no-cache \
     --load \
     -f docker/Dockerfile \
     --target production \
@@ -81,6 +85,7 @@ docker buildx build \
     --tag "${FULL_IMAGE_BASE}:dev" \
     --build-arg VERSION="${VERSION}" \
     --build-arg BUILD_DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    --build-arg BUILD_ID="${BUILD_ID}" \
     --push \
     -f docker/Dockerfile \
     --target production \

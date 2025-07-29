@@ -2,7 +2,7 @@
 
 > Bring enterprise-grade AI security to your MCP-enabled applications
 
-[![Version](https://img.shields.io/badge/version-1.0.1-blue)](https://github.com/cdot65/prisma-airs-mcp/releases)
+[![Version](https://img.shields.io/badge/version-1.0.4-blue)](https://github.com/cdot65/prisma-airs-mcp/releases)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/cdot65/prisma-airs-mcp/ci.yml?branch=main)](https://github.com/cdot65/prisma-airs-mcp/actions)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green)](https://github.com/cdot65/prisma-airs-mcp/blob/main/LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-cdot65.github.io-blue)](https://cdot65.github.io/prisma-airs-mcp/)
@@ -70,6 +70,17 @@ Prisma AIRS MCP Server (this project)
         ↓
 Prisma AIRS Security API
 ```
+
+## 🔒 Privacy & Monitoring
+
+This MCP server is designed with privacy in mind:
+
+- **No telemetry by default** - The server does not collect any usage data unless explicitly enabled
+- **Optional error monitoring** - Sentry.io integration is available but completely opt-in
+- **Data filtering** - When monitoring is enabled, sensitive data (API keys, scan results, etc.) is automatically filtered
+- **You control your data** - All monitoring features require explicit configuration
+
+To enable optional monitoring for debugging, see the [configuration guide](https://cdot65.github.io/prisma-airs-mcp/deployment/configuration/#optional-monitoring-sentry).
 
 ## 📚 Documentation
 
