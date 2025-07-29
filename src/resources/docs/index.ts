@@ -1163,10 +1163,6 @@ An error response in the API appears in the following format:
 | **500** | Internal Server Error | - Unexpected server error |
 `;
 
-export const INTEGRATION_GUIDE_DOC = ``;
-
-export const SECURITY_FEATURES_DOC = ``;
-
 export const USECASES_DOC = `---
 id: usecases
 title: "Use Cases: Prisma AIRS AI Runtime API Intercept"
@@ -2501,18 +2497,6 @@ export const DOCUMENTATION_RESOURCES = {
         name: 'Error Codes',
         description: 'Documentation for errorcodes',
         content: ERRORCODES_DOC,
-        mimeType: 'text/markdown' as const,
-    },
-    'integration-guide': {
-        name: 'Integration Guide',
-        description: 'Documentation for integration guide',
-        content: INTEGRATION_GUIDE_DOC,
-        mimeType: 'text/markdown' as const,
-    },
-    'security-features': {
-        name: 'Security Features',
-        description: 'Documentation for security features',
-        content: SECURITY_FEATURES_DOC,
         mimeType: 'text/markdown' as const,
     },
     'usecases': {
