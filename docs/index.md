@@ -55,7 +55,7 @@ description: Enterprise-grade AI security through Model Context Protocol integra
   </section>
 
   <section class="content-section">
-    <h2>Latest Updates</h2>
+    <h2>Latest Update</h2>
     
     <div class="update-block">
       <h3>Version 1.0.3 - Bug Fix Release</h3>
@@ -65,20 +65,8 @@ description: Enterprise-grade AI security through Model Context Protocol integra
         <li>Improved performance by serving cached results for repeated scans</li>
         <li>Added comprehensive unit tests for cache functionality</li>
       </ul>
+      <p><a href="{{ site.baseurl }}/developers/release-notes/">View all release notes →</a></p>
     </div>
-    
-    <div class="update-block">
-      <h3>Version 1.0.0 - Initial Release</h3>
-      <p><em>Released: July 27, 2025</em></p>
-      <ul>
-        <li>Full MCP Protocol support with tools, resources, and prompts</li>
-        <li>Complete Prisma AIRS integration for AI security scanning</li>
-        <li>Built-in caching and rate limiting for performance</li>
-        <li>Docker and Kubernetes deployment options</li>
-      </ul>
-    </div>
-    
-    <p><a href="{{ site.baseurl }}/developers/release-notes/">View all release notes →</a></p>
   </section>
 </div>
 
