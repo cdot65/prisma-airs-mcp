@@ -46,6 +46,13 @@ We provide configuration guides for the following MCP clients:
 - **Connection**: CLI-managed HTTP connection
 - **Key Features**: Project-scoped security policies, team collaboration
 
+### 4. [LibreChat]({{ site.baseurl }}/mcp-clients/librechat/)
+
+- **Type**: Open-source multi-user AI chat platform
+- **Use Case**: Enterprise-grade secure AI chat for teams
+- **Connection**: Streamable HTTP transport
+- **Key Features**: Multi-user support, custom agents, flexible model integration
+
 ## How MCP Clients Connect
 
 MCP clients connect to the Prisma AIRS MCP server through different mechanisms:
