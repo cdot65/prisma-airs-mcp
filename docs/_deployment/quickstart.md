@@ -16,9 +16,9 @@ Before you begin, you'll need:
 
 - **Prisma AIRS API key** from [Strata Cloud Manager](https://stratacloudmanager.paloaltonetworks.com)
 - **One of the following** depending on your deployment method:
-    - Docker (for containerized deployment)
-    - Node.js 18+ and pnpm/npm (for source deployment)
-    - Kubernetes cluster (for production deployment)
+  - Docker (for containerized deployment)
+  - Node.js 18+ and pnpm/npm (for source deployment)
+  - Kubernetes cluster (for production deployment)
 
 ## Quick Start Options
 

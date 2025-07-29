@@ -191,6 +191,7 @@ The MCP server includes optional error monitoring and performance tracking via S
 When monitoring is enabled, the following data is collected:
 
 **Always Collected:**
+
 - Error messages and stack traces
 - Request paths and HTTP methods
 - Response status codes
@@ -198,6 +199,7 @@ When monitoring is enabled, the following data is collected:
 - Server environment information
 
 **Never Collected:**
+
 - API keys or authentication tokens
 - Request/response bodies
 - AIRS scan results or content
@@ -205,6 +207,7 @@ When monitoring is enabled, the following data is collected:
 - Cookie values
 
 **Filtered Before Sending:**
+
 - Headers containing auth tokens
 - Any data matching sensitive patterns
 - Health check requests (`/health`, `/ready`)
@@ -212,6 +215,7 @@ When monitoring is enabled, the following data is collected:
 ### Example Configurations
 
 #### Minimal Monitoring (Errors Only)
+
 ```env
 MONITORING_ENABLED=true
 SENTRY_DSN=https://your-key@sentry.io/project-id
@@ -219,6 +223,7 @@ SENTRY_TRACES_SAMPLE_RATE=0
 ```
 
 #### Balanced Monitoring
+
 ```env
 MONITORING_ENABLED=true
 SENTRY_DSN=https://your-key@sentry.io/project-id
@@ -228,6 +233,7 @@ SENTRY_PROFILES_SAMPLE_RATE=0.1
 ```
 
 #### Full Monitoring (Development)
+
 ```env
 MONITORING_ENABLED=true
 SENTRY_DSN=https://your-key@sentry.io/project-id
@@ -240,6 +246,7 @@ SENTRY_SEND_DEFAULT_PII=true
 ### Kubernetes Configuration
 
 Add to your ConfigMap:
+
 ```yaml
 data:
   monitoring.enabled: "false"
@@ -248,6 +255,7 @@ data:
 ```
 
 Add to your Secret:
+
 ```yaml
 stringData:
   sentry.dsn: "https://your-key@sentry.io/project-id"
@@ -315,7 +323,7 @@ AIRS_RETRY_DELAY_MS=1000
 SHUTDOWN_TIMEOUT_MS=30000
 ```
 
-### Kubernetes Configuration
+### Kubernetes Deployment
 
 For Kubernetes deployments, use ConfigMaps and Secrets:
 
@@ -402,7 +410,7 @@ module.exports = {
 
 The server validates configuration on startup. Invalid configuration will prevent the server from starting with descriptive error messages:
 
-```
+```text
 Error: Invalid configuration
 - AIRS_API_KEY: Required
 - PORT: Must be a valid port number (received: "abc")

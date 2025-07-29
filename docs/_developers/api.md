@@ -13,7 +13,7 @@ specification. This API enables AI applications to interact with Prisma AIRS sec
 
 ## Base URL
 
-```
+```text
 Production: https://your-domain.com
 Development: http://localhost:3000
 ```

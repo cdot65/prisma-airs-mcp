@@ -133,6 +133,7 @@ MCP servers appear directly in the chat interface when using compatible endpoint
 4. All Prisma AIRS security tools become available to your model
 
 **Available Tools:**
+
 - `airs_scan_content` - Real-time security scanning
 - `airs_scan_async` - Batch content scanning
 - `airs_get_scan_results` - Retrieve scan results
@@ -185,6 +186,7 @@ mcpServers:
 ```
 
 Available placeholders:
+
 - `{{LIBRECHAT_USER_ID}}` - Unique user identifier
 - `{{LIBRECHAT_USER_EMAIL}}` - User's email address
 - `{{LIBRECHAT_USER_ROLE}}` - User role (admin, user, etc.)
@@ -298,17 +300,20 @@ Create specialized security agents:
 **Solutions:**
 
 1. **Verify configuration syntax:**
+
    ```bash
    # Validate YAML syntax
    yamllint librechat.yaml
    ```
 
 2. **Check server accessibility:**
+
    ```bash
    curl -I https://airs.cdot.io/prisma-airs
    ```
 
 3. **Restart LibreChat:**
+
    ```bash
    docker-compose restart
    # or
@@ -322,6 +327,7 @@ Create specialized security agents:
 **Solutions:**
 
 1. Increase timeout values:
+
    ```yaml
    timeout: 120000  # 2 minutes
    ```
