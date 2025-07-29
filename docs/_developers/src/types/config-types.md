@@ -5,8 +5,6 @@ permalink: /developers/src/types/config-types/
 category: developers
 ---
 
-# Configuration Types (src/types/config.ts)
-
 TypeScript interfaces for application configuration. Ensures type-safe access to settings throughout the application.
 
 ## Core Purpose
@@ -31,6 +29,7 @@ interface Config {
 ## Configuration Categories
 
 ### Server Config
+
 ```typescript
 interface ServerConfig {
     port: number
@@ -40,6 +39,7 @@ interface ServerConfig {
 ```
 
 ### AIRS Config
+
 ```typescript
 interface AirsConfig {
     apiUrl: string
@@ -53,6 +53,7 @@ interface AirsConfig {
 ```
 
 ### Cache Config
+
 ```typescript
 interface CacheConfig {
     enabled: boolean
@@ -62,6 +63,7 @@ interface CacheConfig {
 ```
 
 ### Rate Limit Config
+
 ```typescript
 interface RateLimitConfig {
     enabled: boolean
@@ -71,6 +73,7 @@ interface RateLimitConfig {
 ```
 
 ### MCP Config
+
 ```typescript
 interface McpConfig {
     serverName: string

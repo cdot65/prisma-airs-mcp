@@ -5,8 +5,6 @@ permalink: /developers/src/prompts/index-file/
 category: developers
 ---
 
-# Prompts Index (src/prompts/index.ts)
-
 MCP prompt handler providing pre-configured security workflows for AI assistants to guide users through complex security analysis tasks.
 
 ## Core Purpose
@@ -37,24 +35,28 @@ export class PromptHandler {
 ## Available Workflows
 
 ### Security Analysis
+
 - Comprehensive threat scanning
 - Risk assessment and scoring
 - Remediation recommendations
 - Arguments: content, context, severity_threshold
 
 ### Threat Investigation
+
 - Deep-dive into detected threats
 - Attack vector analysis
 - False positive assessment
 - Arguments: scan_id, focus_area
 
 ### Compliance Check
+
 - Regulatory compliance verification
 - PII/PHI/PCI detection
 - Risk matrix generation
 - Arguments: content, regulations, profile_name
 
 ### Incident Response
+
 - Step-by-step incident handling
 - Time-based action phases
 - Evidence preservation guide
@@ -70,6 +72,7 @@ export class PromptHandler {
 ## Workflow Structure
 
 Each prompt generates:
+
 1. User message with detailed instructions
 2. Assistant acknowledgment message
 3. Structured steps using MCP tools
@@ -96,16 +99,19 @@ const workflow = handler.getPrompt({
 ## Key Features
 
 ### Dynamic Content
+
 - Argument-based customization
 - Default value handling
 - Conditional instructions
 
 ### Professional Output
+
 - Markdown formatting
 - Clear section headers
 - Step-by-step guidance
 
 ### Tool Integration
+
 - References specific MCP tools
 - Provides usage instructions
 - Chains tool operations

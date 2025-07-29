@@ -5,14 +5,12 @@ permalink: /developers/src/overview/
 category: developers
 ---
 
-# Source Code Structure Overview
-
 The Prisma AIRS MCP server is organized into a modular architecture where each directory serves a specific purpose. This
 guide provides an overview of the source code structure and helps you navigate the codebase effectively.
 
 ## Directory Structure
 
-```
+```text
 src/
 ├── airs/           # AIRS API integration layer
 ├── config/         # Configuration management
@@ -28,7 +26,7 @@ src/
 
 ## Architecture Overview
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                        MCP Clients                          │
 │              (Claude, IDEs, Custom Tools)                   │

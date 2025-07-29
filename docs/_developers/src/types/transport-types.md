@@ -5,8 +5,6 @@ permalink: /developers/src/types/transport-types/
 category: developers
 ---
 
-# Transport Types (src/types/transport.ts)
-
 TypeScript interfaces for transport layer communication. Defines HTTP, SSE, and session management types for MCP client-server interaction.
 
 ## Core Purpose
@@ -19,6 +17,7 @@ TypeScript interfaces for transport layer communication. Defines HTTP, SSE, and 
 ## Key Interfaces
 
 ### Transport Message
+
 ```typescript
 interface TransportMessage {
     type: 'request' | 'response' | 'notification' | 'error'
@@ -28,6 +27,7 @@ interface TransportMessage {
 ```
 
 ### HTTP Types
+
 ```typescript
 interface TransportRequest {
     method: 'GET' | 'POST' | 'PUT' | 'DELETE'
@@ -46,6 +46,7 @@ interface TransportResponse {
 ```
 
 ### SSE Types
+
 ```typescript
 interface SSEEvent {
     event?: string          // Event type
@@ -63,6 +64,7 @@ interface SSEConnection {
 ```
 
 ### Session Management
+
 ```typescript
 interface SessionInfo {
     id: string
@@ -161,16 +163,19 @@ class SSEImpl implements SSEConnection {
 ## Key Features
 
 ### Type Safety
+
 - Strict interface definitions
 - Union types for states
 - Optional field handling
 
 ### Session Support
+
 - Client tracking
 - State persistence
 - Activity monitoring
 
 ### Error Codes
+
 - Categorized errors
 - HTTP status mapping
 - Detailed diagnostics

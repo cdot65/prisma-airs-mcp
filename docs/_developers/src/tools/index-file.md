@@ -5,8 +5,6 @@ permalink: /developers/src/tools/index-file/
 category: developers
 ---
 
-# Tools Index (src/tools/index.ts)
-
 MCP tool handler providing security scanning capabilities through Prisma AIRS API. Exposes tools for content analysis, threat detection, and security report retrieval.
 
 ## Core Purpose
@@ -38,26 +36,31 @@ export class ToolHandler {
 ## Available Tools
 
 ### Scan Content
+
 - **Purpose**: Synchronous threat scanning
 - **Inputs**: prompt, response, context, profile
 - **Output**: Category, action, threats, resource URI
 
 ### Scan Async
+
 - **Purpose**: Batch scanning multiple requests
 - **Inputs**: Array of scan requests
 - **Output**: Scan ID and report ID
 
 ### Get Scan Results
+
 - **Purpose**: Retrieve previous scan results
 - **Inputs**: Array of scan IDs (max 5)
 - **Output**: Scan data with resource URIs
 
 ### Get Threat Reports
+
 - **Purpose**: Detailed threat analysis
 - **Inputs**: Array of report IDs (max 5)
 - **Output**: Report data with resource URIs
 
 ### Clear Cache
+
 - **Purpose**: Clear response cache
 - **Inputs**: None
 - **Output**: Success confirmation
@@ -72,6 +75,7 @@ export class ToolHandler {
 ## Profile Resolution
 
 Hierarchy for security profile selection:
+
 1. Tool argument profileName
 2. Tool argument profileId
 3. Config defaultProfileId
@@ -81,6 +85,7 @@ Hierarchy for security profile selection:
 ## Key Features
 
 ### Resource Integration
+
 ```typescript
 // Create resource reference for results
 contents.push({
@@ -95,6 +100,7 @@ contents.push({
 ```
 
 ### Threat Summarization
+
 ```typescript
 // Extract and summarize detected threats
 if (result.category === 'malicious') {
@@ -107,6 +113,7 @@ if (result.category === 'malicious') {
 ```
 
 ### Error Handling
+
 - Input validation for required fields
 - API error status codes included
 - Graceful error messages

@@ -5,22 +5,20 @@ permalink: /developers/src/resources/overview/
 category: developers
 ---
 
-# Resources Module Overview
-
 The resources module (`src/resources/`) implements MCP resource handlers that provide access to AIRS data and system
 status information. Resources enable clients to retrieve scan results, threat reports, and system metrics through a
 URI-based interface.
 
 ## Module Structure
 
-```
+```text
 src/resources/
 └── index.ts   # Resource handler implementation
 ```
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │            MCP Client                   │
 │     (Claude, IDE, Tools)                │
@@ -88,7 +86,7 @@ Created from tool operations:
 
 ### Resource URI Format
 
-```
+```text
 airs://{resource-type}/{resource-id}
 ```
 
@@ -100,7 +98,7 @@ airs://{resource-type}/{resource-id}
 
 **Examples:**
 
-```
+```text
 airs://scan-results/scan_12345
 airs://threat-reports/report_67890
 airs://cache-stats/current
@@ -109,9 +107,9 @@ airs://rate-limit-status/current
 
 ## Resource Lifecycle
 
-### Static Resources
+### Static Resources Lifecycle
 
-```
+```text
 Client Request
       │
       ▼
@@ -124,9 +122,9 @@ Read Resource ──► Generate current data
 Return JSON
 ```
 
-### Dynamic Resources
+### Dynamic Resources Lifecycle
 
-```
+```text
 Tool Operation
       │
       ▼
@@ -287,17 +285,20 @@ return {
 ### Common Errors
 
 1. **Invalid URI Format**
-   ```
+
+   ```text
    Error: Invalid resource URI: airs://invalid
    ```
 
 2. **Resource Not Found**
-   ```
+
+   ```text
    Error: Scan result not found: scan_99999
    ```
 
 3. **Access Denied**
-   ```
+
+   ```text
    Error: Unauthorized access to resource
    ```
 

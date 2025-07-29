@@ -5,13 +5,11 @@ permalink: /developers/src/utils/overview/
 category: developers
 ---
 
-# Utilities Module Overview
-
 The utilities module provides essential support functions for logging and monitoring across the application.
 
 ## Module Structure
 
-```
+```text
 src/utils/
 ├── logger.ts       # Winston logging system
 └── monitoring.ts   # Sentry error tracking
@@ -29,12 +27,14 @@ src/utils/
 ### Logger (`logger.ts`)
 
 Winston-based centralized logging:
+
 - Environment-aware formatting
 - Structured logging with metadata
 - Singleton pattern
 - Silent mode for testing
 
 Key features:
+
 - Development: Colorized simple format
 - Production: JSON structured logs
 - Automatic service metadata
@@ -44,12 +44,14 @@ Key features:
 ### Monitoring (`monitoring.ts`)
 
 Sentry integration for error tracking:
+
 - Opt-in design (disabled by default)
 - Automatic sensitive data redaction
 - Performance monitoring
 - Breadcrumb tracking
 
 Key features:
+
 - Privacy-first approach
 - Configurable sampling
 - Express middleware integration
@@ -59,6 +61,7 @@ Key features:
 ## Integration in Application
 
 ### Logger Usage
+
 ```typescript
 import { getLogger } from './utils/logger';
 
@@ -81,6 +84,7 @@ export class MyService {
 ```
 
 ### Monitoring Usage
+
 ```typescript
 import { captureException, addBreadcrumb } from './utils/monitoring';
 
@@ -106,12 +110,14 @@ export class ScanService {
 ## Configuration
 
 ### Logger Environment
+
 | Variable    | Default | Description      |
 |-------------|---------|------------------|
 | `LOG_LEVEL` | `info`  | Log level filter |
 | `NODE_ENV`  | `dev`   | Environment mode |
 
 ### Monitoring Environment
+
 | Variable             | Default | Description      |
 |---------------------|---------|------------------|
 | `MONITORING_ENABLED` | `false` | Enable Sentry    |
@@ -120,6 +126,7 @@ export class ScanService {
 ## Best Practices
 
 ### Use Structured Logging
+
 ```typescript
 // Good
 logger.info('User action', { userId, action });
@@ -129,6 +136,7 @@ logger.info(`User ${userId} performed ${action}`);
 ```
 
 ### Avoid Sensitive Data
+
 ```typescript
 // Good
 captureException(error, { userId: user.id });
@@ -138,6 +146,7 @@ captureException(error, { password: user.password });
 ```
 
 ### Appropriate Log Levels
+
 - `error`: Critical failures
 - `warn`: Concerning conditions
 - `info`: Important events
@@ -161,6 +170,7 @@ process.env.MONITORING_ENABLED = 'false';
 ## Future Enhancements
 
 Potential additions:
+
 - Validation utilities
 - Retry mechanisms
 - Data sanitization helpers

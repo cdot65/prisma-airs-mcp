@@ -5,8 +5,6 @@ permalink: /developers/src/utils/logger/
 category: developers
 ---
 
-# Logger Module (src/utils/logger.ts)
-
 Winston-based structured logging with environment-specific formatting. Provides centralized logging for debugging, monitoring, and error tracking.
 
 ## Core Purpose
@@ -75,12 +73,14 @@ logger.debug('Cache hit', { key, size: data.length });
 ## Environment Formats
 
 ### Development
-```
+
+```text
 2024-01-01T12:00:00.000Z info: Server started on port 3000
 2024-01-01T12:00:01.000Z debug: Processing request {"requestId": "123"}
 ```
 
 ### Production
+
 ```json
 {"level":"info","message":"Server started on port 3000","service":"prisma-airs-mcp","version":"1.0.0","timestamp":"2024-01-01T12:00:00.000Z"}
 ```
@@ -88,6 +88,7 @@ logger.debug('Cache hit', { key, size: data.length });
 ## Best Practices
 
 ### Include Context
+
 ```typescript
 logger.error('Scan failed', {
     scanId,
@@ -98,6 +99,7 @@ logger.error('Scan failed', {
 ```
 
 ### Avoid Sensitive Data
+
 ```typescript
 // Good - sanitized
 logger.info('User login', {
@@ -107,6 +109,7 @@ logger.info('User login', {
 ```
 
 ### Consistent Fields
+
 ```typescript
 logger.info('Operation completed', {
     requestId: req.id,    // Always 'requestId'

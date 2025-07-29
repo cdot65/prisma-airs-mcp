@@ -5,14 +5,12 @@ permalink: /developers/src/transport/overview/
 category: developers
 ---
 
-# Transport Module Overview
-
 The transport module (`src/transport/`) implements the communication layer between MCP clients and the server. It
 handles HTTP requests, Server-Sent Events (SSE) for streaming, and manages the JSON-RPC 2.0 protocol used by MCP.
 
 ## Module Structure
 
-```
+```text
 src/transport/
 ├── http.ts    # HTTP server transport implementation
 └── sse.ts     # Server-Sent Events streaming support
@@ -20,7 +18,7 @@ src/transport/
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │           MCP Clients                   │
 │    (Claude, IDEs, Custom Tools)         │
@@ -90,7 +88,7 @@ Server-Sent Events provide:
 
 ### Standard Request/Response
 
-```
+```text
 Client                    Server
   │                         │
   ├──── HTTP POST ─────────>│
@@ -103,20 +101,20 @@ Client                    Server
 
 ### Streaming with SSE
 
-```
+```text
 Client                    Server
   │                         │
   ├──── HTTP POST ─────────>│
   │   Accept: text/event-stream
   │                         │
   │<──── SSE Stream ────────┤
-  │   event: data          │
-  │   data: {...}          │
+  │   event: data           │
+  │   data: {...}           │
   │                         │
-  │   event: data          │
-  │   data: {...}          │
+  │   event: data           │
+  │   data: {...}           │
   │                         │
-  │   event: done          │
+  │   event: done           │
   │                         │
 ```
 
@@ -208,7 +206,7 @@ X-Session-ID: unique-session-id
 
 ### SSE Message Format
 
-```
+```text
 event: message
 data: {"type": "progress", "value": 50}
 

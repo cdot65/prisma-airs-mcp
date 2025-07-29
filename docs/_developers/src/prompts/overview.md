@@ -5,22 +5,20 @@ permalink: /developers/src/prompts/overview/
 category: developers
 ---
 
-# Prompts Module Overview
-
 The prompts module (`src/prompts/`) implements pre-configured AI workflows for common security tasks. These prompts
 provide guided interactions that combine multiple MCP tools to accomplish complex security analysis and incident
 response scenarios.
 
 ## Module Structure
 
-```
+```text
 src/prompts/
 └── index.ts   # Prompt handler implementation
 ```
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │             MCP Client                  │
 │        (Claude, IDE, etc.)              │
@@ -45,7 +43,7 @@ src/prompts/
 ┌─────────────────────────────────────────┐
 │       Generated Workflow                │
 │    • User instructions                  │
-│    • Tool integration steps            │
+│    • Tool integration steps             │
 │    • Response templates                 │
 └─────────────────────────────────────────┘
 ```
@@ -160,31 +158,33 @@ interface PromptResult {
 
 Prompts integrate with MCP tools:
 
-```
+```text
 ┌─────────────────┐     ┌─────────────────┐
 │     Prompt      │────▶│   Tool Calls    │
 │   Workflow      │     │                 │
 └─────────────────┘     └─────────────────┘
          │                       │
          │                       ▼
-         │              ┌─────────────────┐
-         │              │ airs_scan_content│
-         │              │ airs_get_results │
-         │              │ airs_get_reports │
-         └─────────────▶└─────────────────┘
+         │              ┌───────────────────┐
+         │              │ airs_scan_content │
+         │              │ airs_get_results  │
+         │              │ airs_get_reports  │
+         └─────────────▶└───────────────────┘
 ```
 
 ### Common Tool Sequences
 
 1. **Security Analysis Flow**
-   ```
+
+   ```text
    1. airs_scan_content → Initial scan
    2. airs_get_scan_results → Retrieve details
    3. airs_get_threat_reports → Deep analysis
    ```
 
 2. **Investigation Flow**
-   ```
+
+   ```text
    1. airs_get_scan_results → Get scan data
    2. airs_get_threat_reports → Detailed reports
    3. airs_scan_content → Additional checks
@@ -194,7 +194,7 @@ Prompts integrate with MCP tools:
 
 ### Security Analysis Workflow
 
-```
+```text
 User Input:
 - Content to analyze
 - Context information
@@ -216,7 +216,7 @@ Output Structure:
 
 ### Incident Response Workflow
 
-```
+```text
 Incident Trigger:
 - Incident type
 - Urgency level
@@ -287,11 +287,13 @@ const threshold = args.severity_threshold || 'low';
 ### Adding New Prompts
 
 1. **Define the prompt**:
+
    ```typescript
    PROMPTS.NEW_WORKFLOW = 'new_workflow'
    ```
 
 2. **Add to listing**:
+
    ```typescript
    {
        name: 'new_workflow',
@@ -301,6 +303,7 @@ const threshold = args.severity_threshold || 'low';
    ```
 
 3. **Implement handler**:
+
    ```typescript
    case PROMPTS.NEW_WORKFLOW:
        return this.getNewWorkflowPrompt(args);

@@ -5,13 +5,11 @@ permalink: /developers/src/types/overview/
 category: developers
 ---
 
-# Types Module Overview
-
 The types module provides all TypeScript interfaces and type definitions for the Prisma AIRS MCP server, ensuring type safety and consistency.
 
 ## Module Structure
 
-```
+```text
 src/types/
 ├── airs.ts       # AIRS API types
 ├── config.ts     # Configuration types
@@ -31,31 +29,41 @@ src/types/
 ## Type Categories
 
 ### AIRS Types
+
 Request/response interfaces for Prisma AIRS API:
+
 - `AirsScanRequest`, `AirsScanResponse`
 - `ThreatDetection`, `ThreatReport`
 - `PrismaAirsApiError`
 
 ### Configuration Types
+
 Application settings structure:
+
 - `Config` - Main configuration
 - `ServerConfig`, `AirsConfig`
 - `CacheConfig`, `RateLimitConfig`
 
 ### MCP Types
+
 Protocol message definitions:
+
 - `McpTool`, `McpResource`, `McpPrompt`
 - `McpToolsCallResult`
 - `McpServerCapabilities`
 
 ### Tool Types
+
 Tool parameter interfaces:
+
 - `ToolsScanContentArgs`
 - `ToolsScanAsyncArgs`
 - `ToolsGetScanResultsArgs`
 
 ### Transport Types
+
 HTTP/SSE communication:
+
 - `TransportRequest`, `TransportResponse`
 - `SSEEvent`, `SSEConnection`
 - `SessionInfo`, `TransportError`
@@ -63,6 +71,7 @@ HTTP/SSE communication:
 ## Integration in Application
 
 All modules import types from this central location:
+
 ```typescript
 import { 
     Config, 
@@ -75,6 +84,7 @@ import {
 ## Key Patterns
 
 ### Union Types
+
 ```typescript
 type ScanResult = 
     | { status: 'success'; data: ScanData }
@@ -82,6 +92,7 @@ type ScanResult =
 ```
 
 ### Type Guards
+
 ```typescript
 function isTransportError(error: unknown): error is TransportError {
     return error instanceof TransportError
@@ -89,6 +100,7 @@ function isTransportError(error: unknown): error is TransportError {
 ```
 
 ### Generic Types
+
 ```typescript
 interface Result<T, E = Error> {
     success: boolean
@@ -100,6 +112,7 @@ interface Result<T, E = Error> {
 ## Type Safety Benefits
 
 ### Compile-Time Checking
+
 ```typescript
 // Error caught at compile time
 const request: AirsScanRequest = {
@@ -109,6 +122,7 @@ const request: AirsScanRequest = {
 ```
 
 ### IDE Support
+
 ```typescript
 const config = getConfig()
 // IntelliSense shows all available properties
@@ -116,6 +130,7 @@ config.server.port
 ```
 
 ### Refactoring Safety
+
 Type changes automatically propagate to all usage sites.
 
 ## Best Practices

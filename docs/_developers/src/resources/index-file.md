@@ -5,8 +5,6 @@ permalink: /developers/src/resources/index-file/
 category: developers
 ---
 
-# Resources Index (src/resources/index.ts)
-
 MCP resource handler providing URI-based access to AIRS data and system information. Enables retrieval of scan results, threat reports, and operational metrics.
 
 ## Core Purpose
@@ -36,7 +34,7 @@ export class ResourceHandler {
 
 ### URI Format
 
-```
+```text
 airs://{type}/{id}
 
 Examples:
@@ -48,12 +46,16 @@ Examples:
 ## Resource Types
 
 ### Static Resources
+
 Always available system information:
+
 - **Cache Statistics**: Current cache performance
 - **Rate Limit Status**: Current quota availability
 
 ### Dynamic Resources
+
 Created from operations:
+
 - **Scan Results**: Individual scan data
 - **Threat Reports**: Detailed threat analysis
 
@@ -66,13 +68,15 @@ Created from operations:
 
 ## Data Flow
 
-### Static Resources
+### Static Resources Flow
+
 1. Client lists available resources
 2. Handler returns system resources
 3. Client reads specific resource
 4. Handler generates current data
 
-### Dynamic Resources
+### Dynamic Resources Flow
+
 1. Tool creates scan/report
 2. Returns resource URI
 3. Client reads via URI
@@ -81,12 +85,14 @@ Created from operations:
 ## Key Features
 
 ### URI Parsing
+
 ```typescript
 parseResourceUri('airs://scan-results/scan_123')
 // Returns: { type: 'scan-results', id: 'scan_123' }
 ```
 
 ### Resource Creation
+
 ```typescript
 ResourceHandler.createResourceReference(
     'scan-results',
@@ -97,6 +103,7 @@ ResourceHandler.createResourceReference(
 ```
 
 ### Error Handling
+
 - Invalid URI validation
 - Resource not found errors
 - Detailed error logging

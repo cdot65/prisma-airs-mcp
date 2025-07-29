@@ -5,8 +5,6 @@ permalink: /developers/src/transport/sse/
 category: developers
 ---
 
-# SSE Transport (src/transport/sse.ts)
-
 Server-Sent Events transport for real-time, unidirectional communication from server to MCP clients. Enables streaming responses and notifications.
 
 ## Core Purpose
@@ -37,7 +35,8 @@ export class SSETransport {
 ## SSE Message Format
 
 ### Structure
-```
+
+```text
 id: 123
 event: message
 retry: 5000
@@ -46,6 +45,7 @@ data: {"jsonrpc":"2.0","result":{}}
 ```
 
 ### Headers
+
 | Header | Value | Purpose |
 |--------|-------|---------|
 | `Content-Type` | `text/event-stream` | SSE stream |
@@ -63,12 +63,14 @@ data: {"jsonrpc":"2.0","result":{}}
 ## Event Types
 
 ### Standard Events
+
 - **connect**: Initial connection
 - **message**: JSON-RPC response
 - **notification**: Server update
 - **endpoint**: Legacy compatibility
 
 ### Custom Events
+
 - **progress**: Operation progress
 - **error**: Error notification
 - **ping**: Keep-alive
@@ -76,12 +78,14 @@ data: {"jsonrpc":"2.0","result":{}}
 ## Connection Management
 
 ### Lifecycle
+
 1. Initialize with headers
 2. Send connect event
 3. Handle messages
 4. Clean up on close
 
 ### Features
+
 - Auto-cleanup on disconnect
 - Connection status tracking
 - Broadcast capabilities
@@ -105,7 +109,8 @@ broadcast({
 ## Client Integration
 
 ### JavaScript EventSource
-```javascript
+
+```typescript
 const source = new EventSource('/sse/connect');
 
 source.addEventListener('message', (e) => {
@@ -120,16 +125,19 @@ source.addEventListener('error', (e) => {
 ## Key Features
 
 ### Error Handling
+
 - Connection error recovery
 - Client cleanup on failure
 - Structured error logging
 
 ### Performance
+
 - O(1) client lookups
 - Efficient broadcasting
 - Optional keep-alive
 
 ### Security
+
 - Session validation
 - Connection limits
 - Data sanitization

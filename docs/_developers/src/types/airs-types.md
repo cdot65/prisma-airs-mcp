@@ -5,8 +5,6 @@ permalink: /developers/src/types/airs-types/
 category: developers
 ---
 
-# AIRS Types (src/types/airs.ts)
-
 TypeScript interfaces and types for Prisma AI Runtime Security API integration. Ensures type safety for requests, responses, and error handling.
 
 ## Core Purpose
@@ -74,6 +72,7 @@ interface ThreatDetection {
 ## Threat Categories
 
 ### Detection Types
+
 - **URL Categories**: Malicious URLs
 - **DLP**: Data loss prevention
 - **Injection**: Code injection
@@ -83,6 +82,7 @@ interface ThreatDetection {
 - **Topic Violations**: Policy breaches
 
 ### Severity Levels
+
 - **Category**: safe, malicious
 - **Action**: allow, block, review
 - **Risk Score**: Numeric severity

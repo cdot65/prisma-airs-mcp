@@ -5,8 +5,6 @@ permalink: /developers/src/config/index-file/
 category: developers
 ---
 
-# Configuration Implementation (src/config/index.ts)
-
 Environment-based configuration loader with Zod validation. Provides type-safe access to all application settings.
 
 ## Core Purpose
@@ -49,27 +47,32 @@ export function getConfig(): Config {
 ## Configuration Categories
 
 ### Server Settings
+
 - Port, environment, log level
 - Loaded from PORT, NODE_ENV, LOG_LEVEL
 
 ### AIRS API Settings
+
 - API URL, key, timeouts
 - Required: AIRS_API_KEY
 - Optional: timeout, retry settings
 
 ### Feature Toggles
+
 - Cache: enabled/disabled, TTL, size
 - Rate Limiting: enabled/disabled, limits
 
 ## Key Features
 
 ### Validation
+
 - Required fields must be present
 - Type checking (numbers, enums)
 - URL format validation
 - Range constraints
 
 ### Defaults
+
 ```typescript
 PORT=3000
 NODE_ENV=development
@@ -79,6 +82,7 @@ RATE_LIMIT_ENABLED=true
 ```
 
 ### Error Messages
+
 ```typescript
 // Missing API key
 "Invalid configuration: airs.apiKey: String must contain at least 1 character(s)"

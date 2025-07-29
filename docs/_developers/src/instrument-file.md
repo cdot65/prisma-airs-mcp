@@ -5,8 +5,6 @@ permalink: /developers/src/instrument-file/
 category: developers
 ---
 
-# Instrument Module (src/instrument.ts)
-
 Early initialization of Sentry monitoring. Must be the first import to properly instrument Node.js internals.
 
 ## Core Purpose
@@ -37,6 +35,7 @@ if (process.env.MONITORING_ENABLED === 'true' && process.env.SENTRY_DSN) {
 ### Data Sanitization
 
 The `beforeSend` hook removes:
+
 - Authentication headers (`x-pan-token`, `authorization`)
 - Request/response bodies
 - Custom contexts with AIRS data

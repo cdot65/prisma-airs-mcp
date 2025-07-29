@@ -5,14 +5,12 @@ permalink: /developers/src/tools/overview/
 category: developers
 ---
 
-# Tools Module Overview
-
 The tools module (`src/tools/`) implements the MCP tool handlers that enable AI assistants and clients to interact with
 the Prisma AIRS security scanning service. Tools are the primary way clients perform actions through the MCP protocol.
 
 ## Module Structure
 
-```
+```text
 src/tools/
 └── index.ts    # Tool definitions and handlers
 ```
@@ -58,7 +56,7 @@ Clears the response cache for fresh results.
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │          MCP Client Request             │
 │         (Tool Invocation)               │
@@ -73,10 +71,10 @@ Clears the response cache for fresh results.
                   ▼
 ┌─────────────────────────────────────────┐
 │        Tool Implementation              │
-│  ┌─────────────┐  ┌─────────────┐     │
-│  │   Validate  │  │   Execute   │     │
-│  │   Inputs    │  │   Tool      │     │
-│  └─────────────┘  └─────────────┘     │
+│  ┌─────────────┐  ┌─────────────┐       │
+│  │   Validate  │  │   Execute   │       │
+│  │   Inputs    │  │   Tool      │       │
+│  └─────────────┘  └─────────────┘       │
 └─────────────────┬───────────────────────┘
                   │
                   ▼
@@ -347,6 +345,7 @@ Tools support different security profiles for varied use cases:
 ### Common Errors
 
 1. **Missing Content**
+
    ```json
    {
        "error": "At least one of prompt, response, or context is required",
@@ -355,6 +354,7 @@ Tools support different security profiles for varied use cases:
    ```
 
 2. **Rate Limited**
+
    ```json
    {
        "error": "Rate limit exceeded. Please try again later.",
@@ -363,6 +363,7 @@ Tools support different security profiles for varied use cases:
    ```
 
 3. **API Error**
+
    ```json
    {
        "error": "AIRS API error: Invalid scan format",

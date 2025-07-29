@@ -5,8 +5,6 @@ permalink: /developers/src/transport/http/
 category: developers
 ---
 
-# HTTP Transport (src/transport/http.ts)
-
 HTTP server transport layer for MCP protocol. Handles JSON-RPC routing, session management, SSE integration, and protocol compliance.
 
 ## Core Purpose
@@ -68,10 +66,12 @@ export class HttpServerTransport {
 ## Session Management
 
 ### Session Headers
+
 - Request: `Mcp-Session-Id`
 - Response: `Mcp-Session-Id`
 
 ### Session Features
+
 - UUID-based identification
 - Client tracking
 - SSE connection association
@@ -79,6 +79,7 @@ export class HttpServerTransport {
 ## Protocol Features
 
 ### Initialization Response
+
 ```typescript
 {
     protocolVersion: "2024-11-05",
@@ -92,6 +93,7 @@ export class HttpServerTransport {
 ```
 
 ### Resource Templates
+
 ```typescript
 {
     uriTemplate: "airs://scan-results/{scanId}",
@@ -103,12 +105,14 @@ export class HttpServerTransport {
 ## Error Handling
 
 ### JSON-RPC Error Codes
+
 - `-32600`: Invalid Request
 - `-32601`: Method not found
 - `-32602`: Invalid params
 - `-32603`: Internal error
 
 ### Error Integration
+
 - Sentry exception capture
 - Structured logging
 - Generic client responses
@@ -116,11 +120,13 @@ export class HttpServerTransport {
 ## SSE Support
 
 ### Stream Detection
+
 - Check Accept header for `text/event-stream`
 - Identify streamable methods
 - Initialize SSE connection
 
 ### Streaming Flow
+
 1. Detect SSE capability
 2. Create/retrieve session
 3. Initialize SSE transport
@@ -130,16 +136,19 @@ export class HttpServerTransport {
 ## Key Features
 
 ### Request Validation
+
 - Method presence check
 - Parameter type validation
 - JSON-RPC structure verification
 
 ### Performance
+
 - Efficient method routing
 - Session caching
 - Minimal async overhead
 
 ### Security
+
 - Session isolation
 - Error sanitization
 - Input validation

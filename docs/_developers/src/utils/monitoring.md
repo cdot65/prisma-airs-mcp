@@ -5,8 +5,6 @@ permalink: /developers/src/utils/monitoring/
 category: developers
 ---
 
-# Monitoring Module (src/utils/monitoring.ts)
-
 Privacy-focused error tracking and performance monitoring using Sentry. Opt-in design with automatic data sanitization to protect sensitive information.
 
 ## Core Purpose
@@ -32,6 +30,7 @@ Privacy-focused error tracking and performance monitoring using Sentry. Opt-in d
 ## Key Functions
 
 ### Check Status
+
 ```typescript
 export function isMonitoringEnabled(): boolean {
     return process.env.MONITORING_ENABLED === 'true' && !!process.env.SENTRY_DSN;
@@ -39,6 +38,7 @@ export function isMonitoringEnabled(): boolean {
 ```
 
 ### Setup Express
+
 ```typescript
 // Before routes
 setupExpressRequestHandler(app);
@@ -49,6 +49,7 @@ app.use(createErrorHandler());
 ```
 
 ### Capture Errors
+
 ```typescript
 export function captureException(
     error: Error, 
@@ -63,6 +64,7 @@ export function captureException(
 ```
 
 ### Add Breadcrumbs
+
 ```typescript
 export function addBreadcrumb(
     message: string,
@@ -83,6 +85,7 @@ export function addBreadcrumb(
 ## Integration in Application
 
 ### Express Setup
+
 ```typescript
 import { 
     setupExpressRequestHandler,
@@ -108,6 +111,7 @@ app.use(createErrorHandler());
 ```
 
 ### Service Integration
+
 ```typescript
 export class ScanService {
     async scanContent(content: string) {
@@ -150,12 +154,14 @@ const sensitiveKeys = [
 ## Privacy Features
 
 ### What IS Captured
+
 - Error messages and stack traces
 - HTTP method, path, query params
 - Custom breadcrumbs and context
 - Application metadata
 
 ### What is NOT Captured
+
 - Request/response bodies
 - HTTP headers (auth headers)
 - API keys or credentials
@@ -165,6 +171,7 @@ const sensitiveKeys = [
 ## Error Response
 
 When monitoring is enabled:
+
 ```json
 {
     "error": "Internal server error",
@@ -176,6 +183,7 @@ When monitoring is enabled:
 ## Best Practices
 
 ### Meaningful Breadcrumbs
+
 ```typescript
 // Good
 addBreadcrumb('Payment processed', 'payment', {
@@ -188,6 +196,7 @@ addBreadcrumb('Action', 'generic');
 ```
 
 ### Structured Context
+
 ```typescript
 // Good
 captureException(error, {
@@ -198,6 +207,7 @@ captureException(error, {
 ```
 
 ### Environment Sampling
+
 ```bash
 # Production - conservative
 SENTRY_TRACES_SAMPLE_RATE=0.01  # 1%
@@ -212,6 +222,7 @@ SENTRY_TRACES_SAMPLE_RATE=1.0   # 100%
 ## Performance Monitoring
 
 Custom sampling logic:
+
 ```typescript
 tracesSampler(context) {
     // Skip health checks

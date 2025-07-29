@@ -5,7 +5,6 @@ permalink: /developers/src/config/overview/
 category: developers
 ---
 
-# Configuration Module Overview
 
 The configuration module (`src/config/`) provides centralized configuration management for the Prisma AIRS MCP server.
 It loads settings from environment variables, validates them using Zod schemas, and provides type-safe access throughout
@@ -13,7 +12,7 @@ the application.
 
 ## Module Structure
 
-```
+```text
 src/config/
 └── index.ts    # Configuration loader with validation
 ```
@@ -30,7 +29,7 @@ The configuration module serves as the single source of truth for all applicatio
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────┐
 │         Environment Sources             │
 │  • process.env                          │
@@ -225,7 +224,7 @@ const configSchema = z.object({
 
 Invalid configuration produces clear error messages:
 
-```
+```text
 Configuration validation failed:
 - server.port: Expected number, received string
 - airs.apiKey: Required
@@ -360,8 +359,6 @@ try {
     ]
 }
 ```
-
-## Testing
 
 ### Mock Configuration
 

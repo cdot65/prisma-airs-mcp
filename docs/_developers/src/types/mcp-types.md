@@ -5,8 +5,6 @@ permalink: /developers/src/types/mcp-types/
 category: developers
 ---
 
-# MCP Types (src/types/mcp.ts)
-
 TypeScript interfaces for Model Context Protocol. Defines structures for tools, resources, prompts, and protocol messages.
 
 ## Core Purpose
@@ -19,6 +17,7 @@ TypeScript interfaces for Model Context Protocol. Defines structures for tools, 
 ## Type Categories
 
 ### Tool Types
+
 ```typescript
 interface McpTool {
     name: string
@@ -43,6 +42,7 @@ interface McpToolResultContent {
 ```
 
 ### Resource Types
+
 ```typescript
 interface McpResource {
     uri: string
@@ -60,6 +60,7 @@ interface McpResourceContent {
 ```
 
 ### Prompt Types
+
 ```typescript
 interface McpPrompt {
     name: string
@@ -83,6 +84,7 @@ interface McpPromptMessage {
 ## Protocol Features
 
 ### Capabilities
+
 ```typescript
 interface McpServerCapabilities {
     resources?: { list?: boolean, read?: boolean }
@@ -92,6 +94,7 @@ interface McpServerCapabilities {
 ```
 
 ### Initialization
+
 ```typescript
 interface McpInitializeResult {
     protocolVersion: string
@@ -135,16 +138,19 @@ const result: McpToolsCallResult = {
 ## Key Features
 
 ### Type Safety
+
 - Strict interface definitions
 - Optional field handling
 - Content type unions
 
 ### Extensibility
+
 - Schema-based validation
 - Custom annotations
 - Flexible content types
 
 ### Consistency
+
 - Unified naming (Mcp prefix)
 - Standard request/response
 - Clear type hierarchy

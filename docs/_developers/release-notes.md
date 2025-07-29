@@ -5,13 +5,11 @@ permalink: /developers/release-notes/
 category: developers
 ---
 
-# Release Notes
-
 This page contains the version history and release notes for the Prisma AIRS MCP Server.
 
 ## Version 1.0.4 (2025-07-29)
 
-**Feature Release: Optional Monitoring Support**
+### Feature Release: Optional Monitoring Support
 
 This release adds optional error monitoring and performance tracking capabilities via Sentry.io, with a strong focus on
 privacy and user control.
@@ -19,18 +17,18 @@ privacy and user control.
 ### New Features
 
 - **Optional Sentry.io Integration**
-    - Completely opt-in monitoring (disabled by default)
-    - Privacy-focused implementation with comprehensive data filtering
-    - Automatic removal of sensitive data (API keys, tokens, scan results)
-    - Health check endpoints excluded from monitoring
-    - Configurable performance sampling rates
+  - Completely opt-in monitoring (disabled by default)
+  - Privacy-focused implementation with comprehensive data filtering
+  - Automatic removal of sensitive data (API keys, tokens, scan results)
+  - Health check endpoints excluded from monitoring
+  - Configurable performance sampling rates
 
 ### Improvements
 
 - **Enhanced Version Management**
-    - Updated sync-version script to include .env.example
-    - Ensures MCP_SERVER_VERSION stays synchronized across all files
-    - Better consistency in version tracking
+  - Updated sync-version script to include .env.example
+  - Ensures MCP_SERVER_VERSION stays synchronized across all files
+  - Better consistency in version tracking
 
 ### Privacy & Security
 
@@ -58,7 +56,7 @@ SENTRY_DSN=your-sentry-dsn-here
 
 ## Version 1.0.3 (2025-07-28)
 
-**Bug Fix Release**
+### Bug Fix Release
 
 This release fixes a critical issue with the cache system that prevented proper deduplication of identical scan
 requests.
@@ -66,18 +64,16 @@ requests.
 ### Bug Fixes
 
 - **Cache Key Generation**
-    - Fixed cache key generation to exclude unique identifiers (`tr_id` and `metadata`)
-    - Cache now properly deduplicates identical scan requests
-    - Significantly improves performance by serving cached results for repeated scans
-    - Added comprehensive unit tests for cache behavior
+  - Fixed cache key generation to exclude unique identifiers (`tr_id` and `metadata`)
+  - Cache now properly deduplicates identical scan requests
+  - Significantly improves performance by serving cached results for repeated scans
+  - Added comprehensive unit tests for cache behavior
 
 ### Testing
 
 - Added 6 new unit tests specifically for cache functionality
 - All 31 tests pass successfully
 - Verified cache deduplication works correctly
-
-### Technical Details
 
 The previous implementation included the transaction ID (`tr_id`) in the cache key calculation, which made every request
 unique even when the content was identical. This fix ensures only the security profile and actual content are used for
@@ -87,7 +83,7 @@ cache keys.
 
 ## Version 1.0.2 (2025-07-27)
 
-**Dependency Update Release**
+### Dependency Update Release
 
 This release updates the Model Context Protocol SDK to the latest version, ensuring compatibility with the newest MCP
 features and improvements.
@@ -95,10 +91,8 @@ features and improvements.
 ### Changes
 
 - **Dependencies**
-    - Updated `@modelcontextprotocol/sdk` from 1.15.1 to 1.17.0
-    - All tests pass successfully with the updated dependency
-
-### Testing
+  - Updated `@modelcontextprotocol/sdk` from 1.15.1 to 1.17.0
+  - All tests pass successfully with the updated dependency
 
 All validation tests continue to pass:
 
@@ -110,7 +104,7 @@ All validation tests continue to pass:
 
 ## Version 1.0.1 (2025-07-27)
 
-**Bug Fix and Enhancement Release**
+### Bug Fix and Enhancement Release
 
 This release introduces the ability to reset the AIRS client instance, addressing issues with stale connections and
 improving resource management.
@@ -118,12 +112,12 @@ improving resource management.
 ### Features
 
 - **AIRS Client Reset Functionality**
-    - Added `resetAirsClient()` method to clear cache, reset rate limits, and destroy the current client instance
-    - Enables graceful recovery from connection issues
-    - Allows dynamic configuration changes without server restart
-    - Improves test isolation by providing clean state between test runs
+  - Added `resetAirsClient()` method to clear cache, reset rate limits, and destroy the current client instance
+  - Enables graceful recovery from connection issues
+  - Allows dynamic configuration changes without server restart
+  - Improves test isolation by providing clean state between test runs
 
-### Bug Fixes
+### 1.0.1 Bug Fixes
 
 - Fixed issues with cached client instances persisting stale connections
 - Resolved rate limiter state persistence across client resets
@@ -139,46 +133,42 @@ improving resource management.
 
 ## Version 1.0.0 (2025-07-27)
 
-**Initial Release**
+### Initial Release
 
 This is the first official release of the Prisma AIRS MCP Server, bringing enterprise-grade AI security to MCP-enabled
 applications through integration with Palo Alto Networks' Prisma AI Runtime Security platform.
 
-### Features
+### 1.0.0 Features
 
 - **Full MCP Protocol Support**
-
-    - Tools for security scanning and threat detection
-    - Resources for accessing scan results and reports
-    - Pre-configured security workflow prompts
-    - Server-Sent Events (SSE) support for streaming
+  - Tools for security scanning and threat detection
+  - Resources for accessing scan results and reports
+  - Pre-configured security workflow prompts
+  - Server-Sent Events (SSE) support for streaming
 
 - **Prisma AIRS Integration**
-
-    - Synchronous content scanning for immediate results
-    - Asynchronous batch scanning for multiple requests
-    - Comprehensive threat detection across multiple categories
-    - Support for custom security profiles
+  - Synchronous content scanning for immediate results
+  - Asynchronous batch scanning for multiple requests
+  - Comprehensive threat detection across multiple categories
+  - Support for custom security profiles
 
 - **Performance & Reliability**
-
-    - Built-in LRU caching to reduce API calls
-    - Token bucket rate limiting for API protection
-    - Automatic retry logic with exponential backoff
-    - Connection pooling for efficient resource usage
+  - Built-in LRU caching to reduce API calls
+  - Token bucket rate limiting for API protection
+  - Automatic retry logic with exponential backoff
+  - Connection pooling for efficient resource usage
 
 - **Deployment Options**
-
-    - Docker containers with multi-architecture support
-    - Kubernetes manifests with Kustomize overlays
-    - Local development with hot-reload
-    - Environment-based configuration
+  - Docker containers with multi-architecture support
+  - Kubernetes manifests with Kustomize overlays
+  - Local development with hot-reload
+  - Environment-based configuration
 
 - **Developer Experience**
-    - Comprehensive TypeScript type definitions
-    - Structured logging with Winston
-    - Health and readiness endpoints
-    - Extensive documentation and examples
+  - Comprehensive TypeScript type definitions
+  - Structured logging with Winston
+  - Health and readiness endpoints
+  - Extensive documentation and examples
 
 ### Security Features
 

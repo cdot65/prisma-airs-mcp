@@ -5,8 +5,6 @@ permalink: /developers/src/index-file/
 category: developers
 ---
 
-# Main Application Module (src/index.ts)
-
 The entry point that bootstraps the Prisma AIRS MCP server, configuring Express HTTP server with MCP protocol handlers.
 
 ## Core Purpose
@@ -49,7 +47,7 @@ const createServer = (): void => {
 
 ### Error Flow
 
-```
+```text
 Request → Middleware → Routes → Handlers
            ↓ (on error)
         Sentry Handler → Custom Error Handler → Error Response

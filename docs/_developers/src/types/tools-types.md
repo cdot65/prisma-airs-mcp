@@ -5,8 +5,6 @@ permalink: /developers/src/types/tools-types/
 category: developers
 ---
 
-# Tool Types (src/types/tools.ts)
-
 TypeScript interfaces for MCP tools implementation. Defines parameter types, result structures, and error handling for tools.
 
 ## Core Purpose
@@ -19,6 +17,7 @@ TypeScript interfaces for MCP tools implementation. Defines parameter types, res
 ## Tool Parameters
 
 ### Scan Content
+
 ```typescript
 interface ToolsScanContentArgs {
     prompt?: string
@@ -36,6 +35,7 @@ interface ToolsScanContentArgs {
 ```
 
 ### Scan Async
+
 ```typescript
 interface ToolsScanAsyncArgs {
     requests: Array<{
@@ -50,6 +50,7 @@ interface ToolsScanAsyncArgs {
 ```
 
 ### Get Results
+
 ```typescript
 interface ToolsGetScanResultsArgs {
     scanIds: string[]
@@ -70,6 +71,7 @@ interface ToolsGetThreatReportsArgs {
 ## Result Types
 
 ### Tool Result Content
+
 ```typescript
 interface McpToolResultContent {
     type: 'text' | 'resource'
@@ -79,6 +81,7 @@ interface McpToolResultContent {
 ```
 
 ### Success Pattern
+
 ```typescript
 {
     content: [{
@@ -96,6 +99,7 @@ interface McpToolResultContent {
 ```
 
 ### Error Pattern
+
 ```typescript
 {
     content: [{
@@ -109,6 +113,7 @@ interface McpToolResultContent {
 ## Type Safety Benefits
 
 ### Parameter Validation
+
 ```typescript
 // At least one content field required
 if (!args.prompt && !args.response && !args.context) {
@@ -117,6 +122,7 @@ if (!args.prompt && !args.response && !args.context) {
 ```
 
 ### Profile Resolution
+
 ```typescript
 // Type-safe profile selection
 const profile = args.profileName 
@@ -126,6 +132,7 @@ const profile = args.profileName
 ```
 
 ### Result Construction
+
 ```typescript
 // Type-safe result building
 const result: McpToolsCallResult = {
