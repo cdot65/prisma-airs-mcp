@@ -9,11 +9,12 @@ category: developers
 
 This page contains the version history and release notes for the Prisma AIRS MCP Server.
 
-## Version 1.0.0 (2025-01-27)
+## Version 1.0.0 (2025-07-27)
 
 **Initial Release**
 
-This is the first official release of the Prisma AIRS MCP Server, bringing enterprise-grade AI security to MCP-enabled applications through integration with Palo Alto Networks' Prisma AI Runtime Security platform.
+This is the first official release of the Prisma AIRS MCP Server, bringing enterprise-grade AI security to MCP-enabled
+applications through integration with Palo Alto Networks' Prisma AI Runtime Security platform.
 
 ### Features
 
@@ -55,7 +56,8 @@ This is the first official release of the Prisma AIRS MCP Server, bringing enter
 
 The following Prisma AIRS security capabilities are available:
 
-- **Prompt Threats**: URL categories, DLP, injection attacks, toxic content, malicious code, agent threats, topic violations
+- **Prompt Threats**: URL categories, DLP, injection attacks, toxic content, malicious code, agent threats, topic
+  violations
 - **Response Threats**: All prompt threats plus database security and ungrounded content detection
 
 ### Supported Platforms
@@ -67,7 +69,8 @@ The following Prisma AIRS security capabilities are available:
 
 ### Documentation
 
-Complete documentation is available at [https://cdot65.github.io/prisma-airs-mcp/](https://cdot65.github.io/prisma-airs-mcp/)
+Complete documentation is available
+at [https://cdot65.github.io/prisma-airs-mcp/](https://cdot65.github.io/prisma-airs-mcp/)
 
 ### Breaking Changes
 
@@ -75,20 +78,23 @@ As this is the initial release, there are no breaking changes.
 
 ### Known Issues
 
-- Rate limiting status provides simplified statistics (detailed per-bucket information requires enhanced AIRS client implementation)
+- Rate limiting status provides simplified statistics (detailed per-bucket information requires enhanced AIRS client
+  implementation)
 - SSE reconnection handling may require client-side implementation
 
 ### Contributors
 
-This project is open source and welcomes contributions. See [CONTRIBUTING.md](https://github.com/cdot65/prisma-airs-mcp/blob/main/CONTRIBUTING.md) for details.
+This project is open source and welcomes contributions.
+See [CONTRIBUTING.md](https://github.com/cdot65/prisma-airs-mcp/blob/main/CONTRIBUTING.md) for details.
 
 ---
 
-## Version 1.0.3 (2025-01-28)
+## Version 1.0.3 (2025-07-28)
 
 **Bug Fix Release**
 
-This release fixes a critical issue with the cache system that prevented proper deduplication of identical scan requests.
+This release fixes a critical issue with the cache system that prevented proper deduplication of identical scan
+requests.
 
 ### Bug Fixes
 
@@ -106,15 +112,18 @@ This release fixes a critical issue with the cache system that prevented proper 
 
 ### Technical Details
 
-The previous implementation included the transaction ID (`tr_id`) in the cache key calculation, which made every request unique even when the content was identical. This fix ensures only the security profile and actual content are used for cache keys.
+The previous implementation included the transaction ID (`tr_id`) in the cache key calculation, which made every request
+unique even when the content was identical. This fix ensures only the security profile and actual content are used for
+cache keys.
 
 ---
 
-## Version 1.0.2 (2025-01-27)
+## Version 1.0.2 (2025-07-27)
 
 **Dependency Update Release**
 
-This release updates the Model Context Protocol SDK to the latest version, ensuring compatibility with the newest MCP features and improvements.
+This release updates the Model Context Protocol SDK to the latest version, ensuring compatibility with the newest MCP
+features and improvements.
 
 ### Changes
 
@@ -125,17 +134,19 @@ This release updates the Model Context Protocol SDK to the latest version, ensur
 ### Testing
 
 All validation tests continue to pass:
+
 - TypeScript compilation checks
 - ESLint and Prettier formatting
 - Unit test suite (25 tests)
 
 ---
 
-## Version 1.0.1 (2025-01-27)
+## Version 1.0.1 (2025-07-27)
 
 **Bug Fix and Enhancement Release**
 
-This release introduces the ability to reset the AIRS client instance, addressing issues with stale connections and improving resource management.
+This release introduces the ability to reset the AIRS client instance, addressing issues with stale connections and
+improving resource management.
 
 ### Features
 
@@ -161,12 +172,12 @@ This release introduces the ability to reset the AIRS client instance, addressin
 
 ## Version History
 
-| Version | Date       | Description                                        |
-| ------- | ---------- | -------------------------------------------------- |
-| 1.0.3   | 2025-01-28 | Fixed cache deduplication for identical requests   |
-| 1.0.2   | 2025-01-27 | Dependency update (@modelcontextprotocol/sdk)      |
-| 1.0.1   | 2025-01-27 | Added AIRS client reset functionality              |
-| 1.0.0   | 2025-01-27 | Initial release with full MCP protocol support     |
+| Version | Date       | Description                                      |
+|---------|------------|--------------------------------------------------|
+| 1.0.3   | 2025-07-28 | Fixed cache deduplication for identical requests |
+| 1.0.2   | 2025-07-27 | Dependency update (@modelcontextprotocol/sdk)    |
+| 1.0.1   | 2025-07-27 | Added AIRS client reset functionality            |
+| 1.0.0   | 2025-07-27 | Initial release with full MCP protocol support   |
 
 ---
 
@@ -201,4 +212,5 @@ Planned features for upcoming releases:
 - Metrics and monitoring integration
 - Plugin system for custom security checks
 
-For feature requests and bug reports, please visit our [GitHub Issues](https://github.com/cdot65/prisma-airs-mcp/issues).
+For feature requests and bug reports, please visit
+our [GitHub Issues](https://github.com/cdot65/prisma-airs-mcp/issues).
