@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prisma-airs-mcp
+spec:
+  template:
+    spec:
+      containers:
+      - name: prisma-airs-mcp
+        env:
+        # Optional Sentry Monitoring Configuration
+        - name: MONITORING_ENABLED
+          valueFrom:
+            configMapKeyRef:
+              name: prisma-airs-mcp-config
+              key: monitoring.enabled
+              optional: true
+        - name: SENTRY_ENVIRONMENT
+          value: production
+        - name: SENTRY_TRACES_SAMPLE_RATE
+          valueFrom:
+            configMapKeyRef:
+              name: prisma-airs-mcp-config
+              key: sentry.traces.sample.rate
+              optional: true
+        - name: SENTRY_PROFILES_SAMPLE_RATE
+          valueFrom:
+            configMapKeyRef:
+              name: prisma-airs-mcp-config
+              key: sentry.profiles.sample.rate
+              optional: true
+        - name: SENTRY_SERVER_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: SENTRY_RELEASE
+          value: "$(IMAGE_TAG)"
+        - name: SENTRY_SEND_DEFAULT_PII
+          value: "false"
+        # Sentry DSN from Secret (only if monitoring is enabled)
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: prisma-airs-mcp-secrets
+              key: sentry.dsn
+              optional: true

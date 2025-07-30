@@ -1,0 +1,46 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: prisma-airs-mcp-https
+  labels:
+    app: prisma-airs-mcp
+spec:
+  entryPoints:
+  - websecure
+  routes:
+  - match: Host(`airs.cdot.io`) && PathPrefix(`/prisma-airs`)
+    kind: Rule
+    priority: 10
+    services:
+    - name: prisma-airs-mcp
+      port: 80
+    middlewares:
+    - name: prisma-airs-mcp-stripprefix
+    - name: prisma-airs-mcp-headers
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: prisma-airs-mcp-stripprefix
+  labels:
+    app: prisma-airs-mcp
+spec:
+  stripPrefix:
+    prefixes:
+    - /prisma-airs
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: prisma-airs-mcp-headers
+  labels:
+    app: prisma-airs-mcp
+spec:
+  headers:
+    customRequestHeaders:
+      X-Forwarded-Prefix: /prisma-airs
+    customResponseHeaders:
+      X-Content-Type-Options: nosniff
+      X-Frame-Options: DENY
+      X-XSS-Protection: 1; mode=block
+      Referrer-Policy: strict-origin-when-cross-origin

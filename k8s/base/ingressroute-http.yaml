@@ -1,0 +1,29 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: prisma-airs-mcp-http
+  labels:
+    app: prisma-airs-mcp
+spec:
+  entryPoints:
+  - web
+  routes:
+  - match: Host(`airs.cdot.io`)
+    kind: Rule
+    priority: 10
+    services:
+    - name: noop@internal
+      kind: TraefikService
+    middlewares:
+    - name: prisma-airs-mcp-redirect-https
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: prisma-airs-mcp-redirect-https
+  labels:
+    app: prisma-airs-mcp
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true

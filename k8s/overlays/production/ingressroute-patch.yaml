@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: prisma-airs-mcp-https
+spec:
+  routes:
+  - match: Host(`airs.cdot.io`) && PathPrefix(`/prisma-airs`)
+    kind: Rule
+    services:
+    - name: prisma-airs-mcp
+      port: 80
+    middlewares:
+    - name: prisma-airs-mcp-stripprefix
+    - name: prisma-airs-mcp-headers
+    - name: prisma-airs-mcp-ratelimit

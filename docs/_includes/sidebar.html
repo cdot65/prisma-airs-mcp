@@ -1,0 +1,233 @@
+{% if page.category == 'developers' %}
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/" {% if page.url == '/developers/' %}class="active"{% endif %}>Overview</a></li>
+  </ul>
+
+  <h4>Source Code</h4>
+  <ul>
+    <!-- Root files -->
+    <li><a href="{{ site.baseurl }}/developers/src/overview/" {% if page.url== '/developers/src/overview/'
+      %}class="active"{% endif %}>root</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/index-file/" {% if page.url== '/developers/src/index-file/'
+      %}class="active"{% endif %}>index.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/instrument-file/" {% if page.url== '/developers/src/instrument-file/'
+      %}class="active"{% endif %}>instrument.ts</a></li>
+
+    <!-- AIRS module -->
+    <li><a href="{{ site.baseurl }}/developers/src/airs/overview/" {% if page.url== '/developers/src/airs/overview/'
+      %}class="active"{% endif %}>airs/</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/airs/client/" {% if page.url== '/developers/src/airs/client/'
+      %}class="active"{% endif %}>airs/client.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/airs/cache/" {% if page.url== '/developers/src/airs/cache/'
+      %}class="active"{% endif %}>airs/cache.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/airs/rate-limiter/" {% if page.url==
+      '/developers/src/airs/rate-limiter/' %}class="active"{% endif %}>airs/rate-limiter.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/airs/factory/" {% if page.url== '/developers/src/airs/factory/'
+      %}class="active"{% endif %}>airs/factory.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/airs/index-file/" {% if page.url== '/developers/src/airs/index-file/'
+      %}class="active"{% endif %}>airs/index.ts</a></li>
+
+    <!-- Config module -->
+    <li><a href="{{ site.baseurl }}/developers/src/config/overview/" {% if page.url== '/developers/src/config/overview/'
+      %}class="active"{% endif %}>config/</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/config/index-file/" {% if page.url==
+      '/developers/src/config/index-file/' %}class="active"{% endif %}>config/index.ts</a></li>
+
+    <!-- Prompts module -->
+    <li><a href="{{ site.baseurl }}/developers/src/prompts/overview/" {% if page.url==
+      '/developers/src/prompts/overview/' %}class="active"{% endif %}>prompts/</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/prompts/index-file/" {% if page.url==
+      '/developers/src/prompts/index-file/' %}class="active"{% endif %}>prompts/index.ts</a></li>
+
+    <!-- Resources module -->
+    <li><a href="{{ site.baseurl }}/developers/src/resources/overview/" {% if page.url==
+      '/developers/src/resources/overview/' %}class="active"{% endif %}>resources/</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/resources/index-file/" {% if page.url==
+      '/developers/src/resources/index-file/' %}class="active"{% endif %}>resources/index.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/resources/documentation-resources/" {% if page.url==
+      '/developers/src/resources/documentation-resources/' %}class="active"{% endif %}>resources/documentation-resources.ts</a></li>
+
+    <!-- Tools module -->
+    <li><a href="{{ site.baseurl }}/developers/src/tools/overview/" {% if page.url== '/developers/src/tools/overview/'
+      %}class="active"{% endif %}>tools/</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/tools/index-file/" {% if page.url==
+      '/developers/src/tools/index-file/' %}class="active"{% endif %}>tools/index.ts</a></li>
+
+    <!-- Transport module -->
+    <li><a href="{{ site.baseurl }}/developers/src/transport/overview/" {% if page.url==
+      '/developers/src/transport/overview/' %}class="active"{% endif %}>transport/</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/transport/http/" {% if page.url== '/developers/src/transport/http/'
+      %}class="active"{% endif %}>transport/http.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/transport/sse/" {% if page.url== '/developers/src/transport/sse/'
+      %}class="active"{% endif %}>transport/sse.ts</a></li>
+
+    <!-- Types module -->
+    <li><a href="{{ site.baseurl }}/developers/src/types/overview/" {% if page.url== '/developers/src/types/overview/'
+      %}class="active"{% endif %}>types/</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/airs-types/" {% if page.url==
+      '/developers/src/types/airs-types/' %}class="active"{% endif %}>types/airs.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/config-types/" {% if page.url==
+      '/developers/src/types/config-types/' %}class="active"{% endif %}>types/config.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/mcp-types/" {% if page.url== '/developers/src/types/mcp-types/'
+      %}class="active"{% endif %}>types/mcp.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/tools-types/" {% if page.url==
+      '/developers/src/types/tools-types/' %}class="active"{% endif %}>types/tools.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/transport-types/" {% if page.url==
+      '/developers/src/types/transport-types/' %}class="active"{% endif %}>types/transport.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/types/index-file/" {% if page.url==
+      '/developers/src/types/index-file/' %}class="active"{% endif %}>types/index.ts</a></li>
+
+    <!-- Utils module -->
+    <li><a href="{{ site.baseurl }}/developers/src/utils/overview/" {% if page.url== '/developers/src/utils/overview/'
+      %}class="active"{% endif %}>utils/</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/utils/logger/" {% if page.url== '/developers/src/utils/logger/'
+      %}class="active"{% endif %}>utils/logger.ts</a></li>
+    <li><a href="{{ site.baseurl }}/developers/src/utils/monitoring/" {% if page.url==
+      '/developers/src/utils/monitoring/' %}class="active"{% endif %}>utils/monitoring.ts</a></li>
+  </ul>
+  
+  <h4>API</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/api/" {% if page.url == '/developers/api/' %}class="active"{% endif %}>API Reference</a></li>
+  </ul>
+  
+  <h4>Release Notes</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/developers/release-notes/" {% if page.url == '/developers/release-notes/' %}class="active"{% endif %}>Version History</a></li>
+  </ul>
+</nav>
+
+{% elsif page.category == 'prisma-airs' %}
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/prisma-airs/" {% if page.url == '/prisma-airs/' %}class="active"{% endif %}>Overview</a></li>
+  </ul>
+  
+  <h4>Threat Detection</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/prisma-airs/prompt-injection/" {% if page.url contains 'prompt-injection' %}class="active"{% endif %}>Detect Prompt Injection</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/malicious-url/" {% if page.url contains 'malicious-url' %}class="active"{% endif %}>Detect Malicious URL</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/sensitive-data-loss/" {% if page.url contains 'sensitive-data-loss' %}class="active"{% endif %}>Detect Sensitive Data Loss</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/mask-sensitive-data/" {% if page.url contains 'mask-sensitive-data' %}class="active"{% endif %}>Mask Sensitive Data</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/database-security-attack/" {% if page.url contains 'database-security-attack' %}class="active"{% endif %}>Detect Database Security Attack</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/toxic-content/" {% if page.url contains 'toxic-content' %}class="active"{% endif %}>Detect Toxic Content</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/malicious-code/" {% if page.url contains 'malicious-code' %}class="active"{% endif %}>Detect Malicious Code</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/ai-agent-threats/" {% if page.url contains 'ai-agent-threats' %}class="active"{% endif %}>Detect AI Agent Threats</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/contextual-grounding/" {% if page.url contains 'contextual-grounding' %}class="active"{% endif %}>Detect Contextual Grounding</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/custom-topic-guardrails/" {% if page.url contains 'custom-topic-guardrails' %}class="active"{% endif %}>Custom Topic Guardrails</a></li>
+    <li><a href="{{ site.baseurl }}/prisma-airs/secure-mcp/" {% if page.url contains 'secure-mcp' %}class="active"{% endif %}>Secure Model Context Protocol</a></li>
+  </ul>
+</nav>
+
+
+{% elsif page.category == 'deployment' %}
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/deployment/" {% if page.url == '/deployment/' %}class="active"{% endif %}>Deployment Overview</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/quickstart/" {% if page.url == '/deployment/quickstart/' %}class="active"{% endif %}>Quick Start Guide</a></li>
+  </ul>
+  
+  <h4>Configuration</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/deployment/configuration/" {% if page.url == '/deployment/configuration/' %}class="active"{% endif %}>Configuration Reference</a></li>
+  </ul>
+  
+  <h4>Deployment Documentation</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/deployment/docker/" {% if page.url == '/deployment/docker/' %}class="active"{% endif %}>Docker</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/docker-compose/" {% if page.url == '/deployment/docker-compose/' %}class="active"{% endif %}>Docker Compose</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/source/" {% if page.url == '/deployment/source/' %}class="active"{% endif %}>Build from Source</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/kubernetes/" {% if page.url == '/deployment/kubernetes/' %}class="active"{% endif %}>Kubernetes</a></li>
+    <li><a href="{{ site.baseurl }}/deployment/docker-build-options/" {% if page.url == '/deployment/docker-build-options/' %}class="active"{% endif %}>Docker Build Options</a></li>
+  </ul>
+</nav>
+
+{% elsif page.category == 'mcp-clients' %}
+<nav class="sidebar-nav">
+  <h4>Getting Started</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/mcp-clients/" {% if page.url == '/mcp-clients/' %}class="active"{% endif %}>Overview</a></li>
+  </ul>
+  
+  <h4>Code IDE</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/mcp-clients/vscode/" {% if page.url == '/mcp-clients/vscode/' %}class="active"{% endif %}>Visual Studio Code</a></li>
+    <li><a href="{{ site.baseurl }}/mcp-clients/cursor/" {% if page.url == '/mcp-clients/cursor/' %}class="active"{% endif %}>Cursor</a></li>
+    <li><a href="{{ site.baseurl }}/mcp-clients/jetbrains/" {% if page.url == '/mcp-clients/jetbrains/' %}class="active"{% endif %}>JetBrains</a></li>
+  </ul>
+  
+  <h4>CLI</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/mcp-clients/claude-code/" {% if page.url == '/mcp-clients/claude-code/' %}class="active"{% endif %}>Claude Code</a></li>
+  </ul>
+  
+  <h4>Desktop</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/mcp-clients/claude-desktop/" {% if page.url == '/mcp-clients/claude-desktop/' %}class="active"{% endif %}>Claude Desktop</a></li>
+  </ul>
+  
+  <h4>Web Apps</h4>
+  <ul>
+    <li><a href="{{ site.baseurl }}/mcp-clients/librechat/" {% if page.url == '/mcp-clients/librechat/' %}class="active"{% endif %}>LibreChat</a></li>
+    <li><a href="{{ site.baseurl }}/mcp-clients/mcp-inspector/" {% if page.url == '/mcp-clients/mcp-inspector/' %}class="active"{% endif %}>MCP Inspector</a></li>
+  </ul>
+</nav>
+
+{% endif %}
+
+<style>
+.sidebar-nav {
+  padding: var(--spacing-md);
+}
+
+.sidebar-nav h4 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray);
+  margin-bottom: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.sidebar-nav h4:first-child {
+  margin-top: 0;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--spacing-md) 0;
+}
+
+.sidebar-nav li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.sidebar-nav a {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  color: var(--dark);
+  border-radius: var(--border-radius);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: var(--gray-light);
+  text-decoration: none;
+}
+
+.sidebar-nav a.active {
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 500;
+}
+
+.sidebar-nav a.active:hover {
+  background-color: var(--primary-dark);
+}
+</style>

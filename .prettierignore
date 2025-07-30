@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+*.tsbuildinfo
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Environment
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Documentation
+.claude/documentation/mcp-full-documentation.txt
+
+# Generated files
+*.generated.*
+*.gen.ts
+
+# Kubernetes
+k8s/**/*.yaml
+k8s/**/*.yml
+
+# Docker
+docker/Dockerfile*

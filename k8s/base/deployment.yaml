@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prisma-airs-mcp
+  labels:
+    app: prisma-airs-mcp
+    component: server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: prisma-airs-mcp
+      component: server
+  template:
+    metadata:
+      labels:
+        app: prisma-airs-mcp
+        component: server
+    spec:
+      imagePullSecrets:
+      - name: ghcr-login-secret
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+      containers:
+        - name: prisma-airs-mcp
+          image: ghcr.io/cdot65/prisma-airs-mcp:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "3000"
+            - name: LOG_LEVEL
+              value: info
+            # AIRS API Configuration from ConfigMap
+            - name: AIRS_API_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: prisma-airs-mcp-config
+                  key: airs.api.url
+            # Cache Configuration from ConfigMap
+            - name: CACHE_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: prisma-airs-mcp-config
+                  key: cache.enabled
+            - name: CACHE_TTL_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  name: prisma-airs-mcp-config
+                  key: cache.ttl.seconds
+            - name: CACHE_MAX_SIZE
+              valueFrom:
+                configMapKeyRef:
+                  name: prisma-airs-mcp-config
+                  key: cache.max.size
+            # Rate Limit Configuration from ConfigMap
+            - name: RATE_LIMIT_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: prisma-airs-mcp-config
+                  key: rate.limit.enabled
+            - name: RATE_LIMIT_MAX_REQUESTS
+              valueFrom:
+                configMapKeyRef:
+                  name: prisma-airs-mcp-config
+                  key: rate.limit.max.requests
+            - name: RATE_LIMIT_WINDOW_MS
+              valueFrom:
+                configMapKeyRef:
+                  name: prisma-airs-mcp-config
+                  key: rate.limit.window.ms
+            # AIRS Default Profile Configuration from ConfigMap
+            - name: AIRS_DEFAULT_PROFILE_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: prisma-airs-mcp-config
+                  key: airs.default.profile.id
+                  optional: true
+            - name: AIRS_DEFAULT_PROFILE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: prisma-airs-mcp-config
+                  key: airs.default.profile.name
+                  optional: true
+            # AIRS API Key from Secret
+            - name: AIRS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: prisma-airs-mcp-secrets
+                  key: airs.api.key
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            successThreshold: 1
+            failureThreshold: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1001
+            capabilities:
+              drop:
+                - ALL

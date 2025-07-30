@@ -1,0 +1,29 @@
+# Development Dockerfile for Prisma AIRS MCP Server
+# Includes hot reloading and development tools
+
+FROM node:20-alpine AS development
+WORKDIR /app
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@10.13.1 --activate
+
+# Install development tools
+RUN apk add --no-cache git bash
+
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
+
+# Install all dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code (will be overridden by volume mount)
+COPY . .
+
+# Expose port (default 3000)
+EXPOSE 3000
+
+# Set development environment
+ENV NODE_ENV=development
+
+# Start with nodemon for hot reloading
+CMD ["pnpm", "run", "local:dev"]

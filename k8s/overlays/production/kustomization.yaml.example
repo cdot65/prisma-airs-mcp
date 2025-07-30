@@ -1,0 +1,37 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+labels:
+- pairs:
+    environment: production
+
+resources:
+- ../../base
+- middleware-ratelimit.yaml
+
+replicas:
+- name: prisma-airs-mcp
+  count: 3
+
+patches:
+- path: deployment-patch.yaml
+- path: ingressroute-patch.yaml
+
+configMapGenerator:
+- name: prisma-airs-mcp-config
+  behavior: merge
+  literals:
+  - airs.api.url=https://service.api.aisecurity.paloaltonetworks.com
+  - cache.ttl.seconds=300
+  - rate.limit.max.requests=100
+  - airs.default.profile.name=Prisma AIRS
+
+secretGenerator:
+- name: prisma-airs-mcp-secrets
+  behavior: replace
+  literals:
+  - airs.api.key=YOUR_PRISMA_AIRS_API_KEY_HERE
+
+images:
+- name: ghcr.io/cdot65/prisma-airs-mcp
+  newTag: v1.3.4
