@@ -42,7 +42,6 @@ description: Enterprise-grade AI security through Model Context Protocol integra
     <div class="content-text">
       <p>Prisma AIRS MCP is a Model Context Protocol (MCP) server that seamlessly integrates Palo Alto Networks' Prisma AIRS (AI Runtime Security) with AI applications like Claude. It provides real-time security scanning, threat detection, and compliance enforcement for AI-generated content.</p>
     </div>
-    
     <h3>Key Capabilities</h3>
     <ul class="capabilities-list">
       <li><strong>🛡️ Real-time Threat Detection</strong>: Scan prompts and responses for security threats</li>
@@ -57,7 +56,6 @@ description: Enterprise-grade AI security through Model Context Protocol integra
   <section class="content-section">
   <section class="content-section">
     <h2>Latest Update</h2>
-    
     <div class="update-block">
       <h3>Version 1.0.0 - Initial Release</h3>
       <p><em>Released: July 30, 2025</em></p>
@@ -70,7 +68,7 @@ description: Enterprise-grade AI security through Model Context Protocol integra
       </ul>
       <p><a href="{{ site.baseurl }}/developers/release-notes/">View release notes →</a></p>
     </div>
-  </section>    </div>
+  </section>
   </section>
 </div>
 
